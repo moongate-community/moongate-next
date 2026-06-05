@@ -14,7 +14,7 @@ public sealed class NullVerdataPatchSource : IVerdataPatchSource
     public IReadOnlyList<VerdataPatch> Patches => _empty;
 
     public Stream Seek(int lookup)
-    {
-        throw new InvalidOperationException("No verdata patches are loaded; FileIndex must not request a patched stream.");
-    }
+        => throw new InvalidOperationException(
+               "No verdata patches are loaded; FileIndex must not request a patched stream."
+           );
 }

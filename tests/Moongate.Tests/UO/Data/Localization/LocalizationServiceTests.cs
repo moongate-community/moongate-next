@@ -7,23 +7,25 @@ namespace Moongate.Tests.UO.Data.Localization;
 public class LocalizationServiceTests
 {
     [Fact]
-    public void Load_ParsesEntries_AndFormats()
+    public void Load_EmptyTextEntry_DoesNotTruncateTable()
     {
         var dir = Directory.CreateTempSubdirectory("nr-uo-");
 
         try
         {
-            ClilocFixture.Write(dir.FullName,
-            [
-                new ClilocFixture.Entry(1042971, 0, "~1_NOTHING~"),
-                new ClilocFixture.Entry(500000, 0, "a dagger")
-            ]);
+            ClilocFixture.Write(
+                dir.FullName,
+                [
+                    new(1, 0, "first"),
+                    new(2, 0, ""),
+                    new(3, 0, "third")
+                ]
+            );
             var service = new LocalizationService(new UoFileResolver(dir.FullName));
 
-            Assert.Equal(2, service.Count);
-            Assert.Equal("a dagger", service.GetText(500000));
-            Assert.Equal("hello", service.Format(1042971, "hello"));
-            Assert.Null(service.GetText(999999));
+            Assert.Equal(3, service.Count);
+            Assert.Equal("", service.GetText(2));
+            Assert.Equal("third", service.GetText(3));
         }
         finally
         {
@@ -32,23 +34,25 @@ public class LocalizationServiceTests
     }
 
     [Fact]
-    public void Load_EmptyTextEntry_DoesNotTruncateTable()
+    public void Load_ParsesEntries_AndFormats()
     {
         var dir = Directory.CreateTempSubdirectory("nr-uo-");
 
         try
         {
-            ClilocFixture.Write(dir.FullName,
-            [
-                new ClilocFixture.Entry(1, 0, "first"),
-                new ClilocFixture.Entry(2, 0, ""),
-                new ClilocFixture.Entry(3, 0, "third")
-            ]);
+            ClilocFixture.Write(
+                dir.FullName,
+                [
+                    new(1042971, 0, "~1_NOTHING~"),
+                    new(500000, 0, "a dagger")
+                ]
+            );
             var service = new LocalizationService(new UoFileResolver(dir.FullName));
 
-            Assert.Equal(3, service.Count);
-            Assert.Equal("", service.GetText(2));
-            Assert.Equal("third", service.GetText(3));
+            Assert.Equal(2, service.Count);
+            Assert.Equal("a dagger", service.GetText(500000));
+            Assert.Equal("hello", service.Format(1042971, "hello"));
+            Assert.Null(service.GetText(999999));
         }
         finally
         {

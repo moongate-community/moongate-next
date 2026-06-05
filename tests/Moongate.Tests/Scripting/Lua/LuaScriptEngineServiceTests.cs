@@ -1,7 +1,7 @@
-using MoonSharp.Interpreter;
 using Moongate.Core.Utils;
 using Moongate.Scripting.Lua.Data.Scripts;
 using Moongate.Tests.Scripting.Lua.Support;
+using MoonSharp.Interpreter;
 
 namespace Moongate.Tests.Scripting.Lua;
 

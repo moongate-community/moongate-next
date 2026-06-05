@@ -1,10 +1,9 @@
 using Moongate.Abstractions.Data.Player;
+using Moongate.Abstractions.Data.Version;
 using Moongate.Abstractions.Interfaces.EventHandlers;
 using Moongate.Abstractions.Interfaces.Player;
 using Moongate.Abstractions.Types.Player;
 using Moongate.Core.Ids;
-using Moongate.Network.UO.Packets.Incoming.Login;
-using Moongate.Abstractions.Data.Version;
 using Moongate.Server.Data.Events;
 using ZLinq;
 using ZLinq.Linq;
@@ -127,6 +126,20 @@ public sealed class PlayerSessionService
         }
     }
 
+    public void Handle(PlayerConnectedEvent evt)
+    {
+        ArgumentNullException.ThrowIfNull(evt);
+
+        GetOrCreateConnected(evt.SessionId, evt.RemoteEndPoint, evt.At);
+    }
+
+    public void Handle(PlayerDisconnectedEvent evt)
+    {
+        ArgumentNullException.ThrowIfNull(evt);
+
+        Disconnect(evt.SessionId, evt.At);
+    }
+
     public ValueEnumerable<FromArray<PlayerSession>, PlayerSession> Query()
         => GetAll().ToArray().AsValueEnumerable();
 
@@ -201,20 +214,6 @@ public sealed class PlayerSessionService
 
             return Copy(session);
         }
-    }
-
-    public void Handle(PlayerConnectedEvent evt)
-    {
-        ArgumentNullException.ThrowIfNull(evt);
-
-        GetOrCreateConnected(evt.SessionId, evt.RemoteEndPoint, evt.At);
-    }
-
-    public void Handle(PlayerDisconnectedEvent evt)
-    {
-        ArgumentNullException.ThrowIfNull(evt);
-
-        Disconnect(evt.SessionId, evt.At);
     }
 
     private static PlayerSession Copy(PlayerSession session)

@@ -1,6 +1,6 @@
+using Moongate.Abstractions.Data.Version;
 using Moongate.Abstractions.Types.Player;
 using Moongate.Core.Ids;
-using Moongate.Abstractions.Data.Version;
 
 namespace Moongate.Abstractions.Data.Player;
 

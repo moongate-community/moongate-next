@@ -5,19 +5,6 @@ namespace Moongate.Tests.UO.Data.Integration;
 
 public class UoClilocIntegrationTests
 {
-    private static string? ResolveClientDir()
-    {
-        var fromEnv = Environment.GetEnvironmentVariable("NR_UO_CLIENT_DIR");
-        var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        var candidate = !string.IsNullOrWhiteSpace(fromEnv) ? fromEnv : Path.Combine(home, "uo");
-
-        var hasCliloc = Directory.Exists(candidate) &&
-                        Directory.EnumerateFiles(candidate)
-                                 .Any(f => string.Equals(Path.GetFileName(f), "cliloc.enu", StringComparison.OrdinalIgnoreCase));
-
-        return hasCliloc ? candidate : null;
-    }
-
     [SkippableFact]
     public void Load_RealCliloc_HasManyEntries()
     {
@@ -28,5 +15,24 @@ public class UoClilocIntegrationTests
 
         Assert.True(service.Count > 1000);
         Assert.False(string.IsNullOrEmpty(service.GetText(1042971)));
+    }
+
+    private static string? ResolveClientDir()
+    {
+        var fromEnv = Environment.GetEnvironmentVariable("NR_UO_CLIENT_DIR");
+        var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        var candidate = !string.IsNullOrWhiteSpace(fromEnv) ? fromEnv : Path.Combine(home, "uo");
+
+        var hasCliloc = Directory.Exists(candidate) &&
+                        Directory.EnumerateFiles(candidate)
+                                 .Any(
+                                     f => string.Equals(
+                                         Path.GetFileName(f),
+                                         "cliloc.enu",
+                                         StringComparison.OrdinalIgnoreCase
+                                     )
+                                 );
+
+        return hasCliloc ? candidate : null;
     }
 }

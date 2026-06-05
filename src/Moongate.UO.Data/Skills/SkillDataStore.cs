@@ -24,8 +24,8 @@ public sealed class SkillDataStore : ISkillDataStore
         ArgumentException.ThrowIfNullOrWhiteSpace(dataDirectory);
 
         _skills = [];
-        _byId = new Dictionary<int, SkillInfo>();
-        _byName = new Dictionary<string, SkillInfo>(StringComparer.OrdinalIgnoreCase);
+        _byId = new();
+        _byName = new(StringComparer.OrdinalIgnoreCase);
 
         var path = Path.Combine(dataDirectory, "skills.toml");
 
@@ -62,12 +62,8 @@ public sealed class SkillDataStore : ISkillDataStore
     public int Count => _skills.Count;
 
     public SkillInfo? GetById(int skillId)
-    {
-        return _byId.GetValueOrDefault(skillId);
-    }
+        => _byId.GetValueOrDefault(skillId);
 
     public SkillInfo? GetByName(string name)
-    {
-        return string.IsNullOrEmpty(name) ? null : _byName.GetValueOrDefault(name);
-    }
+        => string.IsNullOrEmpty(name) ? null : _byName.GetValueOrDefault(name);
 }

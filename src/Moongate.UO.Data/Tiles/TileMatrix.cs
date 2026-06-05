@@ -48,7 +48,7 @@ public sealed class TileMatrix : IDisposable
 
             if (mapPath != null)
             {
-                _mapStream = new FileStream(mapPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                _mapStream = new(mapPath, FileMode.Open, FileAccess.Read, FileShare.Read);
             }
             else
             {
@@ -56,7 +56,7 @@ public sealed class TileMatrix : IDisposable
 
                 if (mapPath != null)
                 {
-                    _mapStream = new FileStream(mapPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    _mapStream = new(mapPath, FileMode.Open, FileAccess.Read, FileShare.Read);
 
                     var uopEntries = UopIndexReader.ReadIndexes(_mapStream, ".dat", 0x14000, 5);
                     _uopMapEntries = new UopEntry[uopEntries.Count];
@@ -74,8 +74,8 @@ public sealed class TileMatrix : IDisposable
 
             if (indexPath != null)
             {
-                _indexStream = new FileStream(indexPath, FileMode.Open, FileAccess.Read, FileShare.Read);
-                _indexReader = new BinaryReader(_indexStream);
+                _indexStream = new(indexPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                _indexReader = new(_indexStream);
             }
             else
             {
@@ -86,7 +86,7 @@ public sealed class TileMatrix : IDisposable
 
             if (staticsPath != null)
             {
-                _dataStream = new FileStream(staticsPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                _dataStream = new(staticsPath, FileMode.Open, FileAccess.Read, FileShare.Read);
             }
             else
             {
@@ -111,18 +111,12 @@ public sealed class TileMatrix : IDisposable
         _staticTiles = new StaticTile[BlockWidth][][][][];
     }
 
-    public LandTile GetLandTile(int x, int y)
+    public void Dispose()
     {
-        var tiles = GetLandBlock(x >> SectorShift, y >> SectorShift);
-
-        return tiles[((y & 0x7) << 3) + (x & 0x7)];
-    }
-
-    public StaticTile[] GetStaticTiles(int x, int y)
-    {
-        var block = GetStaticBlock(x >> SectorShift, y >> SectorShift);
-
-        return block[x & 0x7][y & 0x7];
+        _indexReader?.Dispose();
+        _mapStream?.Dispose();
+        _indexStream?.Dispose();
+        _dataStream?.Dispose();
     }
 
     public LandTile[] GetLandBlock(int x, int y)
@@ -147,6 +141,13 @@ public sealed class TileMatrix : IDisposable
         return tiles;
     }
 
+    public LandTile GetLandTile(int x, int y)
+    {
+        var tiles = GetLandBlock(x >> SectorShift, y >> SectorShift);
+
+        return tiles[((y & 0x7) << 3) + (x & 0x7)];
+    }
+
     public StaticTile[][][] GetStaticBlock(int x, int y)
     {
         if (x < 0 || y < 0 || x >= BlockWidth || y >= BlockHeight || _dataStream == null || _indexStream == null)
@@ -165,6 +166,29 @@ public sealed class TileMatrix : IDisposable
         }
 
         return tiles;
+    }
+
+    public StaticTile[] GetStaticTiles(int x, int y)
+    {
+        var block = GetStaticBlock(x >> SectorShift, y >> SectorShift);
+
+        return block[x & 0x7][y & 0x7];
+    }
+
+    private void ConvertToMapEntries(FileStream stream)
+    {
+        Array.Sort(_uopMapEntries!, (a, b) => a.Offset.CompareTo(b.Offset));
+
+        var reader = new BinaryReader(stream);
+
+        for (var i = 0; i < _uopMapEntries!.Length; ++i)
+        {
+            var entry = _uopMapEntries[i];
+            stream.Seek(entry.Offset, SeekOrigin.Begin);
+            _uopMapEntries[i].Extra = reader.ReadInt32();
+        }
+
+        Array.Sort(_uopMapEntries, (a, b) => a.Extra.CompareTo(b.Extra));
     }
 
     private long FindOffset(long offset)
@@ -187,22 +211,6 @@ public sealed class TileMatrix : IDisposable
         return -1;
     }
 
-    private void ConvertToMapEntries(FileStream stream)
-    {
-        Array.Sort(_uopMapEntries!, (a, b) => a.Offset.CompareTo(b.Offset));
-
-        var reader = new BinaryReader(stream);
-
-        for (var i = 0; i < _uopMapEntries!.Length; ++i)
-        {
-            var entry = _uopMapEntries[i];
-            stream.Seek(entry.Offset, SeekOrigin.Begin);
-            _uopMapEntries[i].Extra = reader.ReadInt32();
-        }
-
-        Array.Sort(_uopMapEntries, (a, b) => a.Extra.CompareTo(b.Extra));
-    }
-
     private unsafe LandTile[] ReadLandBlock(int x, int y)
     {
         try
@@ -220,7 +228,7 @@ public sealed class TileMatrix : IDisposable
 
             fixed (LandTile* pTiles = tiles)
             {
-                _ = _mapStream.Read(new Span<byte>(pTiles, 192));
+                _ = _mapStream.Read(new(pTiles, 192));
             }
 
             return tiles;
@@ -264,7 +272,7 @@ public sealed class TileMatrix : IDisposable
 
             fixed (StaticTile* pTiles = staTiles)
             {
-                _ = _dataStream.Read(new Span<byte>(pTiles, length));
+                _ = _dataStream.Read(new(pTiles, length));
 
                 if (_lists == null)
                 {
@@ -276,7 +284,7 @@ public sealed class TileMatrix : IDisposable
 
                         for (var j = 0; j < 8; ++j)
                         {
-                            _lists[i][j] = new TileList();
+                            _lists[i][j] = new();
                         }
                     }
                 }
@@ -318,13 +326,5 @@ public sealed class TileMatrix : IDisposable
 
             return _emptyStaticBlock;
         }
-    }
-
-    public void Dispose()
-    {
-        _indexReader?.Dispose();
-        _mapStream?.Dispose();
-        _indexStream?.Dispose();
-        _dataStream?.Dispose();
     }
 }

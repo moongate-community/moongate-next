@@ -32,21 +32,18 @@ public sealed class Map
 
     public int Height => _definition.Height;
 
-    public TileMatrix Tiles => _tiles ??= new TileMatrix(
-        _resolver,
-        _definition.FileIndex,
-        _definition.MapId,
-        _definition.Width,
-        _definition.Height
-    );
+    public TileMatrix Tiles
+        => _tiles ??= new(
+               _resolver,
+               _definition.FileIndex,
+               _definition.MapId,
+               _definition.Width,
+               _definition.Height
+           );
 
     public LandTile GetLandTile(int x, int y)
-    {
-        return Tiles.GetLandTile(x, y);
-    }
+        => Tiles.GetLandTile(x, y);
 
     public StaticTile[] GetStaticTiles(int x, int y)
-    {
-        return Tiles.GetStaticTiles(x, y);
-    }
+        => Tiles.GetStaticTiles(x, y);
 }

@@ -61,7 +61,7 @@ public sealed class TileDataStore : ITileDataStore
 
         for (var i = 0; i < LandLength; i++)
         {
-            if (is64BitFlags ? i == 1 || (i > 0 && (i & 0x1F) == 0) : (i & 0x1F) == 0)
+            if (is64BitFlags ? i == 1 || i > 0 && (i & 0x1F) == 0 : (i & 0x1F) == 0)
             {
                 bin.ReadInt32(); // block header
             }
@@ -71,7 +71,7 @@ public sealed class TileDataStore : ITileDataStore
 
             bin.Read(buffer);
             var name = ReadName(buffer);
-            _landTable[i] = new LandData(name, flags);
+            _landTable[i] = new(name, flags);
         }
 
         for (var i = 0; i < itemLength; i++)
@@ -94,7 +94,7 @@ public sealed class TileDataStore : ITileDataStore
 
             bin.Read(buffer);
             var name = ReadName(buffer);
-            _itemTable[i] = new ItemData(name, flags, weight, quality, animation, quantity, value, height);
+            _itemTable[i] = new(name, flags, weight, quality, animation, quantity, value, height);
         }
 
         _logger.Information(
@@ -108,15 +108,11 @@ public sealed class TileDataStore : ITileDataStore
 
     public IReadOnlyList<ItemData> ItemTable => _itemTable;
 
-    public LandData GetLand(int id)
-    {
-        return id >= 0 && id < _landTable.Length ? _landTable[id] : default;
-    }
-
     public ItemData GetItem(int id)
-    {
-        return id >= 0 && id < _itemTable.Length ? _itemTable[id] : default;
-    }
+        => id >= 0 && id < _itemTable.Length ? _itemTable[id] : default;
+
+    public LandData GetLand(int id)
+        => id >= 0 && id < _landTable.Length ? _landTable[id] : default;
 
     private static string ReadName(Span<byte> buffer)
     {

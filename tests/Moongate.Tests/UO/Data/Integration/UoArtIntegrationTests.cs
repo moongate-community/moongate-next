@@ -5,23 +5,6 @@ namespace Moongate.Tests.UO.Data.Integration;
 
 public class UoArtIntegrationTests
 {
-    private static string? ResolveClientDir()
-    {
-        var fromEnv = Environment.GetEnvironmentVariable("NR_UO_CLIENT_DIR");
-        var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        var candidate = !string.IsNullOrWhiteSpace(fromEnv) ? fromEnv : Path.Combine(home, "uo");
-
-        var hasArt = Directory.Exists(candidate) &&
-                     Directory.EnumerateFiles(candidate).Any(f =>
-                     {
-                         var name = Path.GetFileName(f);
-                         return string.Equals(name, "artLegacyMUL.uop", StringComparison.OrdinalIgnoreCase) ||
-                                string.Equals(name, "art.mul", StringComparison.OrdinalIgnoreCase);
-                     });
-
-        return hasArt ? candidate : null;
-    }
-
     [SkippableFact]
     public void GetArt_RealFiles_DecodesAtLeastOneItem()
     {
@@ -43,5 +26,26 @@ public class UoArtIntegrationTests
         }
 
         Assert.True(found);
+    }
+
+    private static string? ResolveClientDir()
+    {
+        var fromEnv = Environment.GetEnvironmentVariable("NR_UO_CLIENT_DIR");
+        var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        var candidate = !string.IsNullOrWhiteSpace(fromEnv) ? fromEnv : Path.Combine(home, "uo");
+
+        var hasArt = Directory.Exists(candidate) &&
+                     Directory.EnumerateFiles(candidate)
+                              .Any(
+                                  f =>
+                                  {
+                                      var name = Path.GetFileName(f);
+
+                                      return string.Equals(name, "artLegacyMUL.uop", StringComparison.OrdinalIgnoreCase) ||
+                                             string.Equals(name, "art.mul", StringComparison.OrdinalIgnoreCase);
+                                  }
+                              );
+
+        return hasArt ? candidate : null;
     }
 }

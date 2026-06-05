@@ -24,7 +24,7 @@ public sealed class ExpansionStore : IExpansionStore
         ArgumentException.ThrowIfNullOrWhiteSpace(dataDirectory);
 
         _table = [];
-        _byId = new Dictionary<int, ExpansionInfo>();
+        _byId = new();
 
         var path = Path.Combine(dataDirectory, "expansions.toml");
 
@@ -78,12 +78,8 @@ public sealed class ExpansionStore : IExpansionStore
     }
 
     public ExpansionInfo? GetInfo(int id)
-    {
-        return _byId.GetValueOrDefault(id);
-    }
+        => _byId.GetValueOrDefault(id);
 
     public ExpansionInfo? GetInfo(UoExpansionType expansion)
-    {
-        return GetInfo((int)expansion);
-    }
+        => GetInfo((int)expansion);
 }

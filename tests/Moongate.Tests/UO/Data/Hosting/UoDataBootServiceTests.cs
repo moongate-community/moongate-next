@@ -26,8 +26,8 @@ public class UoDataBootServiceTests
         {
             TileDataFixture.Write(
                 dir.FullName,
-                land: [new TileDataFixture.LandEntry(0, 0u, "void")],
-                items: []
+                [new(0, 0u, "void")],
+                []
             );
             var resolver = new UoFileResolver(dir.FullName);
 

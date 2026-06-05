@@ -12,12 +12,12 @@ public sealed class MapService : IMapService
 {
     private static readonly MapDefinition[] _definitions =
     [
-        new MapDefinition(0, 0, 0, 7168, 4096, "Felucca", MapRulesType.FeluccaRules),
-        new MapDefinition(1, 1, 1, 7168, 4096, "Trammel", MapRulesType.TrammelRules),
-        new MapDefinition(2, 2, 2, 2304, 1600, "Ilshenar", MapRulesType.TrammelRules),
-        new MapDefinition(3, 3, 3, 2560, 2048, "Malas", MapRulesType.TrammelRules),
-        new MapDefinition(4, 4, 4, 1448, 1448, "Tokuno", MapRulesType.TrammelRules),
-        new MapDefinition(5, 5, 5, 1280, 4096, "TerMur", MapRulesType.TrammelRules)
+        new(0, 0, 0, 7168, 4096, "Felucca", MapRulesType.FeluccaRules),
+        new(1, 1, 1, 7168, 4096, "Trammel", MapRulesType.TrammelRules),
+        new(2, 2, 2, 2304, 1600, "Ilshenar", MapRulesType.TrammelRules),
+        new(3, 3, 3, 2560, 2048, "Malas", MapRulesType.TrammelRules),
+        new(4, 4, 4, 1448, 1448, "Tokuno", MapRulesType.TrammelRules),
+        new(5, 5, 5, 1280, 4096, "TerMur", MapRulesType.TrammelRules)
     ];
 
     private readonly Dictionary<int, Map> _maps;
@@ -28,7 +28,7 @@ public sealed class MapService : IMapService
         ArgumentNullException.ThrowIfNull(resolver);
 
         _all = new Map[_definitions.Length];
-        _maps = new Dictionary<int, Map>(_definitions.Length);
+        _maps = new(_definitions.Length);
 
         for (var i = 0; i < _definitions.Length; i++)
         {
@@ -41,7 +41,5 @@ public sealed class MapService : IMapService
     public IReadOnlyList<Map> Maps => _all;
 
     public Map? GetMap(int mapId)
-    {
-        return _maps.GetValueOrDefault(mapId);
-    }
+        => _maps.GetValueOrDefault(mapId);
 }

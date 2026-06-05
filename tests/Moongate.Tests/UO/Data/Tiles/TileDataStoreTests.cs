@@ -8,6 +8,21 @@ namespace Moongate.Tests.UO.Data.Tiles;
 public class TileDataStoreTests
 {
     [Fact]
+    public void Constructor_MissingTileData_Throws()
+    {
+        var dir = Directory.CreateTempSubdirectory("nr-uo-");
+
+        try
+        {
+            Assert.Throws<FileNotFoundException>(() => new TileDataStore(new UoFileResolver(dir.FullName)));
+        }
+        finally
+        {
+            dir.Delete(true);
+        }
+    }
+
+    [Fact]
     public void Load_ParsesLandAndItemEntries()
     {
         var dir = Directory.CreateTempSubdirectory("nr-uo-");
@@ -16,8 +31,8 @@ public class TileDataStoreTests
         {
             TileDataFixture.Write(
                 dir.FullName,
-                land: [new TileDataFixture.LandEntry(3, (uint)UoTileFlag.Impassable, "grass")],
-                items: [new TileDataFixture.ItemEntry(0x0A, (uint)UoTileFlag.Weapon, "dagger", 1, 0, 0, 0, 0, 5)]
+                [new(3, (uint)UoTileFlag.Impassable, "grass")],
+                [new(0x0A, (uint)UoTileFlag.Weapon, "dagger", 1, 0, 0, 0, 0, 5)]
             );
             var store = new TileDataStore(new UoFileResolver(dir.FullName));
 
@@ -30,21 +45,6 @@ public class TileDataStoreTests
             Assert.True(item.Weapon);
             Assert.Equal(1, item.Weight);
             Assert.Equal(5, item.Height);
-        }
-        finally
-        {
-            dir.Delete(true);
-        }
-    }
-
-    [Fact]
-    public void Constructor_MissingTileData_Throws()
-    {
-        var dir = Directory.CreateTempSubdirectory("nr-uo-");
-
-        try
-        {
-            Assert.Throws<FileNotFoundException>(() => new TileDataStore(new UoFileResolver(dir.FullName)));
         }
         finally
         {

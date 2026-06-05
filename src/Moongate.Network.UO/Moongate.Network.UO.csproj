@@ -7,13 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Moongate.Network\Moongate.Network.csproj" />
-        <ProjectReference Include="..\Moongate.Abstractions\Moongate.Abstractions.csproj" />
+        <ProjectReference Include="..\Moongate.Network\Moongate.Network.csproj"/>
+        <ProjectReference Include="..\Moongate.Abstractions\Moongate.Abstractions.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Data\" />
-        <Folder Include="Packets\" />
+        <Folder Include="Data\"/>
+        <Folder Include="Packets\"/>
     </ItemGroup>
 
 </Project>

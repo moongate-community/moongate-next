@@ -91,7 +91,5 @@ public sealed class UoDataBootService : IMoongateService
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
-    }
+        => Task.CompletedTask;
 }

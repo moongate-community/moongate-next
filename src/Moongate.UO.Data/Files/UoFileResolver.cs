@@ -32,41 +32,36 @@ public sealed class UoFileResolver : IUoFileResolver
         "verdata.mul"
     };
 
-    private readonly string _rootDirectory;
     private readonly Dictionary<string, string> _paths;
 
     public UoFileResolver(string rootDirectory)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(rootDirectory);
 
-        _rootDirectory = rootDirectory;
-        _paths = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        RootDirectory = rootDirectory;
+        _paths = new(StringComparer.OrdinalIgnoreCase);
 
         Scan();
     }
 
-    public string RootDirectory => _rootDirectory;
-
-    public string? Resolve(string fileName)
-    {
-        return _paths.GetValueOrDefault(fileName);
-    }
+    public string RootDirectory { get; }
 
     public bool Contains(string fileName)
-    {
-        return _paths.ContainsKey(fileName);
-    }
+        => _paths.ContainsKey(fileName);
+
+    public string? Resolve(string fileName)
+        => _paths.GetValueOrDefault(fileName);
 
     private void Scan()
     {
-        if (!Directory.Exists(_rootDirectory))
+        if (!Directory.Exists(RootDirectory))
         {
-            _logger.Warning("UO client files directory {Directory} does not exist", _rootDirectory);
+            _logger.Warning("UO client files directory {Directory} does not exist", RootDirectory);
 
             return;
         }
 
-        foreach (var file in Directory.EnumerateFiles(_rootDirectory))
+        foreach (var file in Directory.EnumerateFiles(RootDirectory))
         {
             var name = Path.GetFileName(file);
 
@@ -76,6 +71,6 @@ public sealed class UoFileResolver : IUoFileResolver
             }
         }
 
-        _logger.Information("Resolved {Count} UO client files in {Directory}", _paths.Count, _rootDirectory);
+        _logger.Information("Resolved {Count} UO client files in {Directory}", _paths.Count, RootDirectory);
     }
 }

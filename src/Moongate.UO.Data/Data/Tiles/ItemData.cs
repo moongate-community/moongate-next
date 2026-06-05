@@ -181,7 +181,5 @@ public struct ItemData
     }
 
     public override string ToString()
-    {
-        return $" {Name} ({Flags})";
-    }
+        => $" {Name} ({Flags})";
 }

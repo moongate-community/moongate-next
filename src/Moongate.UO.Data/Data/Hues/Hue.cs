@@ -24,7 +24,5 @@ public sealed class Hue
     public string Name { get; }
 
     public (byte R, byte G, byte B) GetRgb(int colorIndex)
-    {
-        return Rgb555.ToRgb(Colors[colorIndex]);
-    }
+        => Rgb555.ToRgb(Colors[colorIndex]);
 }

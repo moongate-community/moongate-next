@@ -1,5 +1,5 @@
-using MoonSharp.Interpreter;
 using Moongate.Scripting.Lua.Attributes.Scripts;
+using MoonSharp.Interpreter;
 
 namespace Moongate.Scripting.Lua.Modules;
 

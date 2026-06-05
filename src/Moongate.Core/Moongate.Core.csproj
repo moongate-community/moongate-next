@@ -16,7 +16,7 @@
         </PackageReference>
         <PackageReference Include="Serilog" Version="4.3.1"/>
         <PackageReference Include="ShaiRandom" Version="0.0.2"/>
-        <PackageReference Include="Tomlyn" Version="2.4.2" />
+        <PackageReference Include="Tomlyn" Version="2.4.2"/>
         <PackageReference Include="ZLinq" Version="1.5.6"/>
 
     </ItemGroup>

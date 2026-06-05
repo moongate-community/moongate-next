@@ -1,7 +1,6 @@
+using Moongate.Abstractions.Data.Version;
 using Moongate.Abstractions.Types.Player;
 using Moongate.Core.Ids;
-using Moongate.Network.UO.Packets.Incoming.Login;
-using Moongate.Abstractions.Data.Version;
 using Moongate.Server.Data.Events;
 using Moongate.Server.Services.Player;
 

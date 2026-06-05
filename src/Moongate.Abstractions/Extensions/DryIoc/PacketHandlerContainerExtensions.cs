@@ -1,7 +1,6 @@
 using System.Reflection;
 using DryIoc;
 using Moongate.Abstractions.Interfaces.Network;
-using Moongate.Abstractions.Interfaces.Network;
 
 namespace Moongate.Abstractions.Extensions.DryIoc;
 

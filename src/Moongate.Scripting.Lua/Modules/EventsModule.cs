@@ -1,6 +1,6 @@
-using MoonSharp.Interpreter;
 using Moongate.Scripting.Lua.Attributes.Scripts;
 using Moongate.Scripting.Lua.Interfaces.Events;
+using MoonSharp.Interpreter;
 
 namespace Moongate.Scripting.Lua.Modules;
 

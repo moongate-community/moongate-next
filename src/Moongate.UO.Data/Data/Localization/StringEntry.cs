@@ -50,9 +50,7 @@ public sealed partial class StringEntry
     }
 
     public override string ToString()
-    {
-        return $"{Number} - {Text} ({Flag})";
-    }
+        => $"{Number} - {Text} ({Flag})";
 
     private static object[] BuildArgs(IReadOnlyList<object> args)
     {

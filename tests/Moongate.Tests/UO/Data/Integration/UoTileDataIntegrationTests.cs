@@ -5,17 +5,6 @@ namespace Moongate.Tests.UO.Data.Integration;
 
 public class UoTileDataIntegrationTests
 {
-    private static string? ResolveClientDir()
-    {
-        var fromEnv = Environment.GetEnvironmentVariable("NR_UO_CLIENT_DIR");
-        var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        var candidate = !string.IsNullOrWhiteSpace(fromEnv) ? fromEnv : Path.Combine(home, "uo");
-
-        return Directory.Exists(candidate) && File.Exists(Path.Combine(candidate, "tiledata.mul"))
-            ? candidate
-            : null;
-    }
-
     [SkippableFact]
     public void Load_RealTileData_PopulatesTables()
     {
@@ -27,5 +16,16 @@ public class UoTileDataIntegrationTests
         Assert.Equal(0x4000, store.LandTable.Count);
         Assert.True(store.ItemTable.Count >= 0x4000);
         Assert.Contains(store.ItemTable, item => !string.IsNullOrEmpty(item.Name));
+    }
+
+    private static string? ResolveClientDir()
+    {
+        var fromEnv = Environment.GetEnvironmentVariable("NR_UO_CLIENT_DIR");
+        var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        var candidate = !string.IsNullOrWhiteSpace(fromEnv) ? fromEnv : Path.Combine(home, "uo");
+
+        return Directory.Exists(candidate) && File.Exists(Path.Combine(candidate, "tiledata.mul"))
+                   ? candidate
+                   : null;
     }
 }

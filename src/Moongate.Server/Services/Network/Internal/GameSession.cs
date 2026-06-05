@@ -1,6 +1,6 @@
+using Moongate.Abstractions.Interfaces.Network;
 using Moongate.Network.Client;
 using Moongate.Network.Spans;
-using Moongate.Abstractions.Interfaces.Network;
 
 namespace Moongate.Server.Services.Network.Internal;
 

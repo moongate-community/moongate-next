@@ -5,6 +5,17 @@ namespace Moongate.Tests.UO.Data.Tiles;
 public class TilePrimitivesTests
 {
     [Fact]
+    public void HuedTile_RoundTripsViaSet()
+    {
+        var tile = new HuedTile(0x12, 0x20, -5);
+        tile.Set(0x34, 0x21, 7);
+
+        Assert.Equal(0x34, tile.ID);
+        Assert.Equal(0x21, tile.Hue);
+        Assert.Equal(7, tile.Z);
+    }
+
+    [Fact]
     public void LandTile_StoresIdAndZ_AndDetectsIgnored()
     {
         var tile = new LandTile(0x0A, 5);
@@ -26,16 +37,5 @@ public class TilePrimitivesTests
         Assert.Equal(2, tile.Y);
         Assert.Equal(10, tile.Z);
         Assert.Equal(0x1F, tile.Hue);
-    }
-
-    [Fact]
-    public void HuedTile_RoundTripsViaSet()
-    {
-        var tile = new HuedTile(0x12, 0x20, -5);
-        tile.Set(0x34, 0x21, 7);
-
-        Assert.Equal(0x34, tile.ID);
-        Assert.Equal(0x21, tile.Hue);
-        Assert.Equal(7, tile.Z);
     }
 }

@@ -23,7 +23,7 @@ public sealed class MultiDataStore : IMultiDataStore
     {
         ArgumentNullException.ThrowIfNull(resolver);
 
-        _components = new Dictionary<int, MultiComponentList>();
+        _components = new();
 
         var uopPath = resolver.Resolve("MultiCollection.uop");
 
@@ -52,9 +52,7 @@ public sealed class MultiDataStore : IMultiDataStore
     public int Count => _components.Count;
 
     public MultiComponentList GetComponents(int multiId)
-    {
-        return _components.GetValueOrDefault(multiId & 0x3FFF, MultiComponentList.Empty);
-    }
+        => _components.GetValueOrDefault(multiId & 0x3FFF, MultiComponentList.Empty);
 
     public static List<MultiTileEntry> ParseUopEntry(ReadOnlySpan<byte> data)
     {
@@ -79,19 +77,44 @@ public sealed class MultiDataStore : IMultiDataStore
 
             var flags = flagValue switch
             {
-                1 => UoTileFlag.None,
+                1   => UoTileFlag.None,
                 257 => UoTileFlag.Generic,
-                _ => UoTileFlag.Background
+                _   => UoTileFlag.Background
             };
 
             var clilocsCount = BinaryPrimitives.ReadUInt32LittleEndian(data[pos..]);
             pos += 4;
             pos += (int)clilocsCount * 4;
 
-            list.Add(new MultiTileEntry(itemId, x, y, z, flags));
+            list.Add(new(itemId, x, y, z, flags));
         }
 
         return list;
+    }
+
+    private void LoadMul(string idxPath, string mulPath)
+    {
+        using var idx = new FileStream(idxPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+        using var idxReader = new BinaryReader(idx);
+        using var mul = new FileStream(mulPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+        using var mulReader = new BinaryReader(mul);
+
+        var count = (int)(idx.Length / 12);
+
+        for (var i = 0; i < count; i++)
+        {
+            var lookup = idxReader.ReadInt32();
+            var length = idxReader.ReadInt32();
+            idx.Seek(4, SeekOrigin.Current); // extra
+
+            if (lookup < 0 || length <= 0)
+            {
+                continue;
+            }
+
+            mul.Seek(lookup, SeekOrigin.Begin);
+            _components[i] = new(mulReader, length, true);
+        }
     }
 
     private void LoadUop(string path)
@@ -123,32 +146,7 @@ public sealed class MultiDataStore : IMultiDataStore
                 stream.ReadExactly(data, 0, entry.Size);
             }
 
-            _components[index] = new MultiComponentList(ParseUopEntry(data));
-        }
-    }
-
-    private void LoadMul(string idxPath, string mulPath)
-    {
-        using var idx = new FileStream(idxPath, FileMode.Open, FileAccess.Read, FileShare.Read);
-        using var idxReader = new BinaryReader(idx);
-        using var mul = new FileStream(mulPath, FileMode.Open, FileAccess.Read, FileShare.Read);
-        using var mulReader = new BinaryReader(mul);
-
-        var count = (int)(idx.Length / 12);
-
-        for (var i = 0; i < count; i++)
-        {
-            var lookup = idxReader.ReadInt32();
-            var length = idxReader.ReadInt32();
-            idx.Seek(4, SeekOrigin.Current); // extra
-
-            if (lookup < 0 || length <= 0)
-            {
-                continue;
-            }
-
-            mul.Seek(lookup, SeekOrigin.Begin);
-            _components[i] = new MultiComponentList(mulReader, length, postHsFormat: true);
+            _components[index] = new(ParseUopEntry(data));
         }
     }
 }

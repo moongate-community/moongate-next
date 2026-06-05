@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using System.Text;
 using Moongate.UO.Data.Interfaces.Files;
 
 namespace Moongate.UO.Data.Files;
@@ -19,9 +20,7 @@ public sealed class FileIndex : IDisposable
     public long IdxLength { get; }
 
     public FileIndex(string? idxPath, string? mulPath, int length, int file, IVerdataPatchSource verdata)
-        : this(idxPath, mulPath, null, length, file, ".dat", -1, false, verdata)
-    {
-    }
+        : this(idxPath, mulPath, null, length, file, ".dat", -1, false, verdata) { }
 
     public FileIndex(
         string? idxPath,
@@ -55,7 +54,7 @@ public sealed class FileIndex : IDisposable
             var fi = new FileInfo(_mulPath);
             var uopPattern = fi.Name.Replace(fi.Extension, "").ToLowerInvariant();
 
-            using var br = new BinaryReader(Stream, System.Text.Encoding.UTF8, leaveOpen: true);
+            using var br = new BinaryReader(Stream, Encoding.UTF8, true);
             br.BaseStream.Seek(0, SeekOrigin.Begin);
 
             if (br.ReadInt32() != 0x50594D)
@@ -170,26 +169,10 @@ public sealed class FileIndex : IDisposable
         ApplyPatches(file, length);
     }
 
-    private void ApplyPatches(int file, int length)
+    public void Dispose()
     {
-        var patches = _verdata.Patches;
-
-        if (file <= -1)
-        {
-            return;
-        }
-
-        for (var i = 0; i < patches.Count; ++i)
-        {
-            var patch = patches[i];
-
-            if (patch.file == file && patch.index >= 0 && patch.index < length)
-            {
-                Index[patch.index].lookup = patch.lookup;
-                Index[patch.index].length = patch.length | (1 << 31);
-                Index[patch.index].extra = patch.extra;
-            }
-        }
+        Stream?.Dispose();
+        Stream = null;
     }
 
     /// <summary>
@@ -328,8 +311,8 @@ public sealed class FileIndex : IDisposable
         if (Stream == null || !Stream.CanRead || !Stream.CanSeek)
         {
             Stream = _mulPath == null
-                ? null
-                : new FileStream(_mulPath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+                         ? null
+                         : new FileStream(_mulPath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
         }
 
         if (Stream == null)
@@ -419,9 +402,25 @@ public sealed class FileIndex : IDisposable
         return true;
     }
 
-    public void Dispose()
+    private void ApplyPatches(int file, int length)
     {
-        Stream?.Dispose();
-        Stream = null;
+        var patches = _verdata.Patches;
+
+        if (file <= -1)
+        {
+            return;
+        }
+
+        for (var i = 0; i < patches.Count; ++i)
+        {
+            var patch = patches[i];
+
+            if (patch.file == file && patch.index >= 0 && patch.index < length)
+            {
+                Index[patch.index].lookup = patch.lookup;
+                Index[patch.index].length = patch.length | (1 << 31);
+                Index[patch.index].extra = patch.extra;
+            }
+        }
     }
 }

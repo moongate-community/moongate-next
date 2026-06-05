@@ -13,7 +13,7 @@ public class TextureStoreTests
 
         try
         {
-            TextureFixture.Write64(dir.FullName, index: 3, color: 0x7FFF); // white
+            TextureFixture.Write64(dir.FullName, 3, 0x7FFF); // white
             var store = new TextureStore(new UoFileResolver(dir.FullName));
 
             using var image = store.GetTexture(3);

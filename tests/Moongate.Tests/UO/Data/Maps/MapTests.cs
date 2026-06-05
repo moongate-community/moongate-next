@@ -16,9 +16,12 @@ public class MapTests
         try
         {
             MapFixture.Write(
-                dir.FullName, fileIndex: 0, width: 8, height: 8,
-                landCells: [new MapFixture.LandCell(1, 1, 0x15, 3)],
-                statics: []
+                dir.FullName,
+                0,
+                8,
+                8,
+                [new(1, 1, 0x15, 3)],
+                []
             );
             var definition = new MapDefinition(0, 0, 0, 8, 8, "Test", MapRulesType.FeluccaRules);
             var map = new Map(definition, new UoFileResolver(dir.FullName));

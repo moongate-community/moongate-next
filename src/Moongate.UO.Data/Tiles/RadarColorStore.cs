@@ -48,12 +48,8 @@ public sealed class RadarColorStore : IRadarColorStore
     public int Count => _colors.Length;
 
     public (byte R, byte G, byte B) GetLandColor(int tileId)
-    {
-        return Rgb555.ToRgb(_colors[tileId & 0x3FFF]);
-    }
+        => Rgb555.ToRgb(_colors[tileId & 0x3FFF]);
 
     public (byte R, byte G, byte B) GetStaticColor(int tileId)
-    {
-        return Rgb555.ToRgb(_colors[(tileId & 0x3FFF) + 0x4000]);
-    }
+        => Rgb555.ToRgb(_colors[(tileId & 0x3FFF) + 0x4000]);
 }

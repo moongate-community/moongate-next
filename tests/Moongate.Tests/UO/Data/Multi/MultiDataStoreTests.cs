@@ -8,32 +8,6 @@ namespace Moongate.Tests.UO.Data.Multi;
 public class MultiDataStoreTests
 {
     [Fact]
-    public void MulPath_LoadsComponents_AndUnknownIdReturnsEmpty()
-    {
-        var dir = Directory.CreateTempSubdirectory("nr-uo-");
-
-        try
-        {
-            MultiFixture.WriteMul(dir.FullName, new Dictionary<int, IReadOnlyList<MultiFixture.Tile>>
-            {
-                [0] = [],
-                [1] = [new MultiFixture.Tile(0x100, 0, 0, 0, 1), new MultiFixture.Tile(0x101, 1, 0, 0, 1)]
-            });
-            var store = new MultiDataStore(new UoFileResolver(dir.FullName));
-
-            var house = store.GetComponents(1);
-
-            Assert.Equal(2, house.List.Length);
-            Assert.Equal(2, house.Width);
-            Assert.Empty(store.GetComponents(9999).List);
-        }
-        finally
-        {
-            dir.Delete(true);
-        }
-    }
-
-    [Fact]
     public void EmptyDirectory_YieldsEmptyStore()
     {
         var dir = Directory.CreateTempSubdirectory("nr-uo-");
@@ -44,6 +18,35 @@ public class MultiDataStoreTests
 
             Assert.Equal(0, store.Count);
             Assert.Empty(store.GetComponents(1).List);
+        }
+        finally
+        {
+            dir.Delete(true);
+        }
+    }
+
+    [Fact]
+    public void MulPath_LoadsComponents_AndUnknownIdReturnsEmpty()
+    {
+        var dir = Directory.CreateTempSubdirectory("nr-uo-");
+
+        try
+        {
+            MultiFixture.WriteMul(
+                dir.FullName,
+                new Dictionary<int, IReadOnlyList<MultiFixture.Tile>>
+                {
+                    [0] = [],
+                    [1] = [new(0x100, 0, 0, 0, 1), new(0x101, 1, 0, 0, 1)]
+                }
+            );
+            var store = new MultiDataStore(new UoFileResolver(dir.FullName));
+
+            var house = store.GetComponents(1);
+
+            Assert.Equal(2, house.List.Length);
+            Assert.Equal(2, house.Width);
+            Assert.Empty(store.GetComponents(9999).List);
         }
         finally
         {

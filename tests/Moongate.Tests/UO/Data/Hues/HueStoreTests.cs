@@ -13,7 +13,7 @@ public class HueStoreTests
 
         try
         {
-            HuesFixture.WriteSingleGroup(dir.FullName, firstColor: 0x7FFF, tableStart: 1, tableEnd: 2, name: "TestHue");
+            HuesFixture.WriteSingleGroup(dir.FullName, 0x7FFF, 1, 2, "TestHue");
             var store = new HueStore(new UoFileResolver(dir.FullName));
 
             Assert.Equal(8, store.Count);

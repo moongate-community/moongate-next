@@ -7,7 +7,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using DryIoc;
-using MoonSharp.Interpreter;
 using Moongate.Core.Data.Directories;
 using Moongate.Core.Extensions.Strings;
 using Moongate.Core.Json;
@@ -22,6 +21,7 @@ using Moongate.Scripting.Lua.Interfaces.Events;
 using Moongate.Scripting.Lua.Interfaces.Scripts;
 using Moongate.Scripting.Lua.Loaders;
 using Moongate.Scripting.Lua.Utils;
+using MoonSharp.Interpreter;
 using Serilog;
 
 #pragma warning disable IL2026 // RequiresUnreferencedCode - Lua scripting uses reflection for dynamic functionality

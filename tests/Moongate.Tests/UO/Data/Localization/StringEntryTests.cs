@@ -6,11 +6,11 @@ namespace Moongate.Tests.UO.Data.Localization;
 public class StringEntryTests
 {
     [Fact]
-    public void Format_ReplacesPlaceholderWithArgument()
+    public void Constructor_FromByteFlag_MapsToEnum()
     {
-        var entry = new StringEntry(1234, "You see ~1_val~ here.", CliLocFlagType.Original);
+        var entry = new StringEntry(7, "text", 2);
 
-        Assert.Equal("You see apple here.", entry.Format("apple"));
+        Assert.Equal(CliLocFlagType.Modified, entry.Flag);
     }
 
     [Fact]
@@ -18,18 +18,22 @@ public class StringEntryTests
     {
         var entry = new StringEntry(1, "[~1_a~|~2_b~]", CliLocFlagType.Original);
 
-        Parallel.For(0, 2000, i =>
-        {
-            var expected = $"[x{i % 2}|y{i % 2}]";
-            Assert.Equal(expected, entry.Format($"x{i % 2}", $"y{i % 2}"));
-        });
+        Parallel.For(
+            0,
+            2000,
+            i =>
+            {
+                var expected = $"[x{i % 2}|y{i % 2}]";
+                Assert.Equal(expected, entry.Format($"x{i % 2}", $"y{i % 2}"));
+            }
+        );
     }
 
     [Fact]
-    public void Constructor_FromByteFlag_MapsToEnum()
+    public void Format_ReplacesPlaceholderWithArgument()
     {
-        var entry = new StringEntry(7, "text", (byte)2);
+        var entry = new StringEntry(1234, "You see ~1_val~ here.", CliLocFlagType.Original);
 
-        Assert.Equal(CliLocFlagType.Modified, entry.Flag);
+        Assert.Equal("You see apple here.", entry.Format("apple"));
     }
 }

@@ -1,5 +1,4 @@
 using Moongate.Network.UO.Packets.Incoming.Login;
-using Moongate.Abstractions.Data.Version;
 using Moongate.Network.UO.Registry;
 
 namespace Moongate.Tests.Network.Packets;

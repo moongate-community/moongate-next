@@ -1,6 +1,6 @@
 using System.Buffers.Binary;
-using Moongate.Network.UO.Data.Packets;
 using Moongate.Abstractions.Interfaces.Network;
+using Moongate.Network.UO.Data.Packets;
 using Moongate.Network.UO.Registry;
 using Moongate.Network.UO.Types.Packets;
 using Serilog;

@@ -1,6 +1,6 @@
 using Moongate.Abstractions.Data.Player;
-using Moongate.Core.Ids;
 using Moongate.Abstractions.Data.Version;
+using Moongate.Core.Ids;
 using ZLinq;
 using ZLinq.Linq;
 
@@ -17,15 +17,6 @@ public interface IPlayerSessionService
     int Count { get; }
 
     /// <summary>
-    /// Creates a logical player session for a network session or returns the existing one.
-    /// </summary>
-    /// <param name="sessionId">Network session identifier.</param>
-    /// <param name="remoteEndPoint">Optional remote endpoint string.</param>
-    /// <param name="connectedAt">Connection timestamp.</param>
-    /// <returns>The logical player session.</returns>
-    PlayerSession GetOrCreateConnected(long sessionId, string? remoteEndPoint, DateTimeOffset connectedAt);
-
-    /// <summary>
     /// Marks a player session as authenticated.
     /// </summary>
     /// <param name="sessionId">Network session identifier.</param>
@@ -34,6 +25,14 @@ public interface IPlayerSessionService
     /// <param name="authenticatedAt">Authentication timestamp.</param>
     /// <returns>The updated player session.</returns>
     PlayerSession Authenticate(long sessionId, string userId, string username, DateTimeOffset authenticatedAt);
+
+    /// <summary>
+    /// Marks a player session as disconnected and removes mobile indexes.
+    /// </summary>
+    /// <param name="sessionId">Network session identifier.</param>
+    /// <param name="disconnectedAt">Disconnect timestamp.</param>
+    /// <returns><c>true</c> when a session was found and marked disconnected; otherwise <c>false</c>.</returns>
+    bool Disconnect(long sessionId, DateTimeOffset disconnectedAt);
 
     /// <summary>
     /// Attaches in-world character and mobile serials to a player session.
@@ -51,21 +50,24 @@ public interface IPlayerSessionService
     );
 
     /// <summary>
-    /// Updates client metadata for a player session.
+    /// Returns a snapshot of all tracked player sessions.
     /// </summary>
-    /// <param name="sessionId">Network session identifier.</param>
-    /// <param name="clientVersion">Optional client version.</param>
-    /// <param name="viewRange">Optional client view range.</param>
-    /// <returns>The updated player session.</returns>
-    PlayerSession UpdateClient(long sessionId, ClientVersion? clientVersion = null, int? viewRange = null);
+    /// <returns>The current player sessions.</returns>
+    IReadOnlyCollection<PlayerSession> GetAll();
 
     /// <summary>
-    /// Marks a player session as disconnected and removes mobile indexes.
+    /// Creates a logical player session for a network session or returns the existing one.
     /// </summary>
     /// <param name="sessionId">Network session identifier.</param>
-    /// <param name="disconnectedAt">Disconnect timestamp.</param>
-    /// <returns><c>true</c> when a session was found and marked disconnected; otherwise <c>false</c>.</returns>
-    bool Disconnect(long sessionId, DateTimeOffset disconnectedAt);
+    /// <param name="remoteEndPoint">Optional remote endpoint string.</param>
+    /// <param name="connectedAt">Connection timestamp.</param>
+    /// <returns>The logical player session.</returns>
+    PlayerSession GetOrCreateConnected(long sessionId, string? remoteEndPoint, DateTimeOffset connectedAt);
+
+    /// <summary>
+    /// Returns a ZLinq query over a snapshot of all tracked player sessions.
+    /// </summary>
+    ValueEnumerable<FromArray<PlayerSession>, PlayerSession> Query();
 
     /// <summary>
     /// Removes a logical player session completely.
@@ -73,14 +75,6 @@ public interface IPlayerSessionService
     /// <param name="sessionId">Network session identifier.</param>
     /// <returns><c>true</c> when a session was removed; otherwise <c>false</c>.</returns>
     bool Remove(long sessionId);
-
-    /// <summary>
-    /// Tries to get a player session by network session id.
-    /// </summary>
-    /// <param name="sessionId">Network session identifier.</param>
-    /// <param name="session">The player session when found.</param>
-    /// <returns><c>true</c> when found; otherwise <c>false</c>.</returns>
-    bool TryGetBySessionId(long sessionId, out PlayerSession session);
 
     /// <summary>
     /// Tries to get a player session by in-world mobile serial.
@@ -91,13 +85,19 @@ public interface IPlayerSessionService
     bool TryGetByMobileSerial(Serial mobileSerial, out PlayerSession session);
 
     /// <summary>
-    /// Returns a snapshot of all tracked player sessions.
+    /// Tries to get a player session by network session id.
     /// </summary>
-    /// <returns>The current player sessions.</returns>
-    IReadOnlyCollection<PlayerSession> GetAll();
+    /// <param name="sessionId">Network session identifier.</param>
+    /// <param name="session">The player session when found.</param>
+    /// <returns><c>true</c> when found; otherwise <c>false</c>.</returns>
+    bool TryGetBySessionId(long sessionId, out PlayerSession session);
 
     /// <summary>
-    /// Returns a ZLinq query over a snapshot of all tracked player sessions.
+    /// Updates client metadata for a player session.
     /// </summary>
-    ValueEnumerable<FromArray<PlayerSession>, PlayerSession> Query();
+    /// <param name="sessionId">Network session identifier.</param>
+    /// <param name="clientVersion">Optional client version.</param>
+    /// <param name="viewRange">Optional client view range.</param>
+    /// <returns>The updated player session.</returns>
+    PlayerSession UpdateClient(long sessionId, ClientVersion? clientVersion = null, int? viewRange = null);
 }

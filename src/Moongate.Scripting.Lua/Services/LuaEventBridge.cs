@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
-using MoonSharp.Interpreter;
 using Moongate.Scripting.Lua.Interfaces.Events;
+using MoonSharp.Interpreter;
 using Serilog;
 
 namespace Moongate.Scripting.Lua.Services;

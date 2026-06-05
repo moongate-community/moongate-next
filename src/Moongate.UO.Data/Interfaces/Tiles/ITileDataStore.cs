@@ -13,11 +13,11 @@ public interface ITileDataStore
     /// <summary>All item tile entries, indexed by item tile id.</summary>
     IReadOnlyList<ItemData> ItemTable { get; }
 
-    /// <summary>Returns the land tile data for <paramref name="id" />.</summary>
-    /// <param name="id">Land tile id.</param>
-    LandData GetLand(int id);
-
     /// <summary>Returns the item tile data for <paramref name="id" />.</summary>
     /// <param name="id">Item tile id.</param>
     ItemData GetItem(int id);
+
+    /// <summary>Returns the land tile data for <paramref name="id" />.</summary>
+    /// <param name="id">Land tile id.</param>
+    LandData GetLand(int id);
 }

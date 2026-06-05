@@ -152,6 +152,28 @@ public class PacketDispatchHandlerTests
     }
 
     [Fact]
+    public void AddMoongateNetwork_RegistersPlayerSessionServiceAndEventHandlers()
+    {
+        var container = new Container();
+        container.RegisterInstance(new PacketRegistry());
+
+        container.AddMoongateNetwork();
+
+        Assert.Same(
+            container.Resolve<IPlayerSessionService>(),
+            container.Resolve<PlayerSessionService>()
+        );
+        Assert.Contains(
+            container.ResolveMany<ITickEventHandler<PlayerConnectedEvent>>(),
+            static handler => handler is PlayerSessionService
+        );
+        Assert.Contains(
+            container.ResolveMany<ITickEventHandler<PlayerDisconnectedEvent>>(),
+            static handler => handler is PlayerSessionService
+        );
+    }
+
+    [Fact]
     public void AddMoongatePacketHandlers_RegistersDispatcherAsTickHandler()
     {
         var container = new Container();
@@ -290,28 +312,6 @@ public class PacketDispatchHandlerTests
         Assert.Same(
             container.Resolve<ISessionService>(),
             container.Resolve<INetworkSessionManager>()
-        );
-    }
-
-    [Fact]
-    public void AddMoongateNetwork_RegistersPlayerSessionServiceAndEventHandlers()
-    {
-        var container = new Container();
-        container.RegisterInstance(new PacketRegistry());
-
-        container.AddMoongateNetwork();
-
-        Assert.Same(
-            container.Resolve<IPlayerSessionService>(),
-            container.Resolve<PlayerSessionService>()
-        );
-        Assert.Contains(
-            container.ResolveMany<ITickEventHandler<PlayerConnectedEvent>>(),
-            static handler => handler is PlayerSessionService
-        );
-        Assert.Contains(
-            container.ResolveMany<ITickEventHandler<PlayerDisconnectedEvent>>(),
-            static handler => handler is PlayerSessionService
         );
     }
 

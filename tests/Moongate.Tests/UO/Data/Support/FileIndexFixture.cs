@@ -14,20 +14,24 @@ public static class FileIndexFixture
         var mulPath = Path.Combine(directory, baseName + ".mul");
 
         using (var mul = new FileStream(mulPath, FileMode.Create, FileAccess.Write, FileShare.None))
-        using (var idx = new FileStream(idxPath, FileMode.Create, FileAccess.Write, FileShare.None))
-        using (var idxWriter = new BinaryWriter(idx))
         {
-            var offset = 0;
-
-            foreach (var payload in payloads)
+            using (var idx = new FileStream(idxPath, FileMode.Create, FileAccess.Write, FileShare.None))
             {
-                mul.Write(payload.Data, 0, payload.Data.Length);
+                using (var idxWriter = new BinaryWriter(idx))
+                {
+                    var offset = 0;
 
-                idxWriter.Write(offset);              // lookup
-                idxWriter.Write(payload.Data.Length); // length
-                idxWriter.Write(payload.Extra);       // extra
+                    foreach (var payload in payloads)
+                    {
+                        mul.Write(payload.Data, 0, payload.Data.Length);
 
-                offset += payload.Data.Length;
+                        idxWriter.Write(offset);              // lookup
+                        idxWriter.Write(payload.Data.Length); // length
+                        idxWriter.Write(payload.Extra);       // extra
+
+                        offset += payload.Data.Length;
+                    }
+                }
             }
         }
 

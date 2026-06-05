@@ -75,7 +75,7 @@ public static class ClilocReader
             }
 
             var text = Encoding.UTF8.GetString(textBuffer, 0, length);
-            entries.Add(new StringEntry(number, text, flag));
+            entries.Add(new(number, text, flag));
         }
 
         return entries;

@@ -10,8 +10,14 @@ public static class MapFixture
 
     public sealed record StaticTileSpec(int X, int Y, ushort Id, byte BlockX, byte BlockY, sbyte Z, short Hue);
 
-    public static void Write(string directory, int fileIndex, int width, int height,
-        IReadOnlyList<LandCell> landCells, IReadOnlyList<StaticTileSpec> statics)
+    public static void Write(
+        string directory,
+        int fileIndex,
+        int width,
+        int height,
+        IReadOnlyList<LandCell> landCells,
+        IReadOnlyList<StaticTileSpec> statics
+    )
     {
         var blockWidth = width >> 3;
         var blockHeight = height >> 3;
@@ -20,8 +26,13 @@ public static class MapFixture
         WriteStatics(directory, fileIndex, blockWidth, blockHeight, statics);
     }
 
-    private static void WriteLand(string directory, int fileIndex, int blockWidth, int blockHeight,
-        IReadOnlyList<LandCell> landCells)
+    private static void WriteLand(
+        string directory,
+        int fileIndex,
+        int blockWidth,
+        int blockHeight,
+        IReadOnlyList<LandCell> landCells
+    )
     {
         var blockCount = blockWidth * blockHeight;
         var path = Path.Combine(directory, $"map{fileIndex}.mul");
@@ -53,8 +64,13 @@ public static class MapFixture
         }
     }
 
-    private static void WriteStatics(string directory, int fileIndex, int blockWidth, int blockHeight,
-        IReadOnlyList<StaticTileSpec> statics)
+    private static void WriteStatics(
+        string directory,
+        int fileIndex,
+        int blockWidth,
+        int blockHeight,
+        IReadOnlyList<StaticTileSpec> statics
+    )
     {
         var blockCount = blockWidth * blockHeight;
         var idxPath = Path.Combine(directory, $"staidx{fileIndex}.mul");
@@ -65,9 +81,10 @@ public static class MapFixture
         foreach (var s in statics)
         {
             var block = s.X * blockHeight + s.Y; // X/Y here are block coords
+
             if (!byBlock.TryGetValue(block, out var list))
             {
-                list = new List<StaticTileSpec>();
+                list = new();
                 byBlock[block] = list;
             }
 
@@ -95,9 +112,9 @@ public static class MapFixture
                 }
 
                 var length = list.Count * 7;
-                idxWriter.Write(offset);  // lookup
-                idxWriter.Write(length);  // length
-                idxWriter.Write(0);       // extra
+                idxWriter.Write(offset); // lookup
+                idxWriter.Write(length); // length
+                idxWriter.Write(0);      // extra
                 offset += length;
             }
             else

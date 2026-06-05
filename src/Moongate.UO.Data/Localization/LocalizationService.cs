@@ -20,7 +20,7 @@ public sealed class LocalizationService : ILocalizationService
     {
         ArgumentNullException.ThrowIfNull(resolver);
 
-        _entries = new Dictionary<int, StringEntry>();
+        _entries = new();
 
         var path = resolver.Resolve("cliloc.enu");
 
@@ -41,18 +41,12 @@ public sealed class LocalizationService : ILocalizationService
 
     public int Count => _entries.Count;
 
+    public string Format(int number, params object[] args)
+        => _entries.TryGetValue(number, out var entry) ? entry.Format(args) : "";
+
     public StringEntry? GetEntry(int number)
-    {
-        return _entries.GetValueOrDefault(number);
-    }
+        => _entries.GetValueOrDefault(number);
 
     public string? GetText(int number)
-    {
-        return _entries.TryGetValue(number, out var entry) ? entry.Text : null;
-    }
-
-    public string Format(int number, params object[] args)
-    {
-        return _entries.TryGetValue(number, out var entry) ? entry.Format(args) : "";
-    }
+        => _entries.TryGetValue(number, out var entry) ? entry.Text : null;
 }

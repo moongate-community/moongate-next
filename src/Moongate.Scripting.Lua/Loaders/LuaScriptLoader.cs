@@ -1,6 +1,6 @@
+using Moongate.Core.Extensions.Directories;
 using MoonSharp.Interpreter;
 using MoonSharp.Interpreter.Loaders;
-using Moongate.Core.Extensions.Directories;
 using Serilog;
 
 namespace Moongate.Scripting.Lua.Loaders;

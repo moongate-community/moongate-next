@@ -42,8 +42,8 @@ public static class TileDataFixture
             }
 
             var entry = landByIndex.GetValueOrDefault(i);
-            bw.Write(entry?.Flags ?? 0u);  // 4 bytes flags
-            bw.Write((short)0);            // textureId
+            bw.Write(entry?.Flags ?? 0u); // 4 bytes flags
+            bw.Write((short)0);           // textureId
             WriteName(bw, entry?.Name ?? "");
         }
 

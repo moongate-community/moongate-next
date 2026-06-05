@@ -1,9 +1,9 @@
 using System.Collections.Concurrent;
 using System.Globalization;
-using MoonSharp.Interpreter;
 using Moongate.Abstractions.Interfaces.Timing;
 using Moongate.Scripting.Lua.Attributes.Scripts;
 using Moongate.Scripting.Lua.Interfaces.Events;
+using MoonSharp.Interpreter;
 
 namespace Moongate.Scripting.Lua.Modules;
 

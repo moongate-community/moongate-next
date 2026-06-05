@@ -1,6 +1,6 @@
-using Moongate.UO.Data.Types.Expansions;
-using Moongate.Abstractions.Types.Expansions;
 using Moongate.Abstractions.Data.Version;
+using Moongate.Abstractions.Types.Expansions;
+using Moongate.UO.Data.Types.Expansions;
 
 namespace Moongate.UO.Data.Data.Expansions;
 

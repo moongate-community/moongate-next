@@ -1,7 +1,6 @@
 using Moongate.Abstractions.Data.Network;
 using Moongate.Abstractions.Interfaces.Network;
 using Moongate.Abstractions.Interfaces.Services;
-using Moongate.Abstractions.Interfaces.Network;
 
 namespace Moongate.Abstractions.Network;
 

@@ -1,5 +1,5 @@
-using Moongate.Network.Spans;
 using Moongate.Abstractions.Interfaces.Network;
+using Moongate.Network.Spans;
 
 namespace Moongate.Network.UO.Base;
 

@@ -173,7 +173,7 @@ public static class UopIndexReader
                     compressedLength > 0 &&
                     decompressedLength > 0)
                 {
-                    entries[fileIndex] = new UopEntry(offset + headerLength, decompressedLength)
+                    entries[fileIndex] = new(offset + headerLength, decompressedLength)
                     {
                         Compressed = compressed,
                         CompressedSize = compressedLength

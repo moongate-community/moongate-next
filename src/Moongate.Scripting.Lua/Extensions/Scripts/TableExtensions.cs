@@ -1,6 +1,6 @@
 using System.Reflection;
-using MoonSharp.Interpreter;
 using Moongate.Scripting.Lua.Proxies;
+using MoonSharp.Interpreter;
 
 namespace Moongate.Scripting.Lua.Extensions.Scripts;
 

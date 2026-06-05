@@ -23,7 +23,7 @@ public sealed class TextureStore : ITextureStore
     {
         ArgumentNullException.ThrowIfNull(resolver);
 
-        _fileIndex = new FileIndex(
+        _fileIndex = new(
             resolver.Resolve("texidx.mul"),
             resolver.Resolve("texmaps.mul"),
             0x4000,
@@ -74,7 +74,7 @@ public sealed class TextureStore : ITextureStore
             {
                 var color = BinaryPrimitives.ReadUInt16LittleEndian(pixels[((y * dim + x) * 2)..]);
                 var (r, g, b) = Rgb555.ToRgb(color);
-                image[x, y] = new Rgba32(r, g, b, 255);
+                image[x, y] = new(r, g, b, 255);
             }
         }
 
@@ -84,7 +84,5 @@ public sealed class TextureStore : ITextureStore
     }
 
     public bool IsValidTexture(int index)
-    {
-        return GetTexture(index) is not null;
-    }
+        => GetTexture(index) is not null;
 }

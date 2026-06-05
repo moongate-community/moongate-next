@@ -92,9 +92,9 @@ public sealed class MultiComponentList
 
     private void BuildTiles(MultiTileEntry[] allTiles, int minX, int minY, int maxX, int maxY)
     {
-        Min = new Point2D(minX, minY);
-        Max = new Point2D(maxX, maxY);
-        Center = new Point2D(-minX, -minY);
+        Min = new(minX, minY);
+        Max = new(maxX, maxY);
+        Center = new(-minX, -minY);
         Width = maxX - minX + 1;
         Height = maxY - minY + 1;
 
@@ -111,8 +111,8 @@ public sealed class MultiComponentList
                 tiles[xOffset] ??= new TileList[Height];
                 Tiles[xOffset] ??= new StaticTile[Height][];
 
-                tiles[xOffset][yOffset] ??= new TileList();
-                tiles[xOffset][yOffset].Add(new StaticTile(allTiles[i].ItemId, (sbyte)allTiles[i].OffsetZ));
+                tiles[xOffset][yOffset] ??= new();
+                tiles[xOffset][yOffset].Add(new(allTiles[i].ItemId, (sbyte)allTiles[i].OffsetZ));
             }
         }
 

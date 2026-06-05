@@ -1,7 +1,7 @@
+using Moongate.Abstractions.Types.Expansions;
 using Moongate.Network.Spans;
 using Moongate.Network.UO.Attributes;
 using Moongate.Network.UO.Base;
-using Moongate.Abstractions.Types.Expansions;
 using Moongate.Network.UO.Types.Packets;
 
 namespace Moongate.Network.UO.Packets.Outgoing.Login;

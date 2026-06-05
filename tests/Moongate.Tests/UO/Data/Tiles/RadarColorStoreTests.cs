@@ -13,11 +13,14 @@ public class RadarColorStoreTests
 
         try
         {
-            RadarColFixture.Write(dir.FullName, new Dictionary<int, ushort>
-            {
-                [5] = 0x7FFF,           // land tile 5 -> white
-                [0x4000 + 10] = 0x001F  // static tile 10 -> blue
-            });
+            RadarColFixture.Write(
+                dir.FullName,
+                new Dictionary<int, ushort>
+                {
+                    [5] = 0x7FFF,          // land tile 5 -> white
+                    [0x4000 + 10] = 0x001F // static tile 10 -> blue
+                }
+            );
             var store = new RadarColorStore(new UoFileResolver(dir.FullName));
 
             Assert.Equal(((byte)255, (byte)255, (byte)255), store.GetLandColor(5));

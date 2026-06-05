@@ -14,30 +14,34 @@ public static class TextureFixture
         var mulPath = Path.Combine(directory, "texmaps.mul");
 
         using (var mul = new FileStream(mulPath, FileMode.Create, FileAccess.Write, FileShare.None))
-        using (var bw = new BinaryWriter(mul))
         {
-            for (var i = 0; i < dim * dim; i++)
+            using (var bw = new BinaryWriter(mul))
             {
-                bw.Write(color);
+                for (var i = 0; i < dim * dim; i++)
+                {
+                    bw.Write(color);
+                }
             }
         }
 
         using (var idx = new FileStream(idxPath, FileMode.Create, FileAccess.Write, FileShare.None))
-        using (var bw = new BinaryWriter(idx))
         {
-            for (var i = 0; i <= index; i++)
+            using (var bw = new BinaryWriter(idx))
             {
-                if (i == index)
+                for (var i = 0; i <= index; i++)
                 {
-                    bw.Write(0);       // lookup
-                    bw.Write(payload); // length (8192 -> 64x64)
-                    bw.Write(0);       // extra
-                }
-                else
-                {
-                    bw.Write(-1);
-                    bw.Write(0);
-                    bw.Write(0);
+                    if (i == index)
+                    {
+                        bw.Write(0);       // lookup
+                        bw.Write(payload); // length (8192 -> 64x64)
+                        bw.Write(0);       // extra
+                    }
+                    else
+                    {
+                        bw.Write(-1);
+                        bw.Write(0);
+                        bw.Write(0);
+                    }
                 }
             }
         }

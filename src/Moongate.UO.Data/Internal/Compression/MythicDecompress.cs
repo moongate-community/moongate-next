@@ -19,14 +19,7 @@ public static class MythicDecompress
     }
 
     public static byte[] Detransform(byte[] buffer)
-    {
-        return InternalDecompress(MoveToFrontCoding.Decode(buffer));
-    }
-
-    public static byte[] Transform(byte[] buffer)
-    {
-        return MoveToFrontCoding.Encode(InternalCompress(buffer));
-    }
+        => InternalDecompress(MoveToFrontCoding.Decode(buffer));
 
     public static byte[] InternalCompress(Span<byte> input)
     {
@@ -202,6 +195,9 @@ public static class MythicDecompress
 
         return output;
     }
+
+    public static byte[] Transform(byte[] buffer)
+        => MoveToFrontCoding.Encode(InternalCompress(buffer));
 
     private static void Frequency(Span<int> input, Span<byte> output)
     {

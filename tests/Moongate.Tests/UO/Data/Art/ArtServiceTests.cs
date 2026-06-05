@@ -13,7 +13,7 @@ public class ArtServiceTests
 
         try
         {
-            ArtFixture.WriteWhitePixel(dir.FullName, itemId: 0);
+            ArtFixture.WriteWhitePixel(dir.FullName, 0);
             var service = new ArtService(new UoFileResolver(dir.FullName));
 
             using var image = service.GetArt(0);
@@ -41,29 +41,10 @@ public class ArtServiceTests
 
         try
         {
-            ArtFixture.WriteWhitePixel(dir.FullName, itemId: 0);
+            ArtFixture.WriteWhitePixel(dir.FullName, 0);
             var service = new ArtService(new UoFileResolver(dir.FullName));
 
             Assert.Null(service.GetArt(-1));
-        }
-        finally
-        {
-            dir.Delete(true);
-        }
-    }
-
-    [Fact]
-    public void IsValidArt_ReflectsPresence()
-    {
-        var dir = Directory.CreateTempSubdirectory("nr-uo-");
-
-        try
-        {
-            ArtFixture.WriteWhitePixel(dir.FullName, itemId: 0);
-            var service = new ArtService(new UoFileResolver(dir.FullName));
-
-            Assert.True(service.IsValidArt(0));
-            Assert.False(service.IsValidArt(1));
         }
         finally
         {
@@ -81,6 +62,25 @@ public class ArtServiceTests
             var service = new ArtService(new UoFileResolver(dir.FullName));
 
             Assert.Null(service.GetArt(0));
+        }
+        finally
+        {
+            dir.Delete(true);
+        }
+    }
+
+    [Fact]
+    public void IsValidArt_ReflectsPresence()
+    {
+        var dir = Directory.CreateTempSubdirectory("nr-uo-");
+
+        try
+        {
+            ArtFixture.WriteWhitePixel(dir.FullName, 0);
+            var service = new ArtService(new UoFileResolver(dir.FullName));
+
+            Assert.True(service.IsValidArt(0));
+            Assert.False(service.IsValidArt(1));
         }
         finally
         {

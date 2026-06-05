@@ -12,9 +12,9 @@ public static class Rgb555
         var b = color & 0x1F;
 
         return (
-            (byte)((r << 3) | (r >> 2)),
-            (byte)((g << 3) | (g >> 2)),
-            (byte)((b << 3) | (b >> 2))
-        );
+                   (byte)((r << 3) | (r >> 2)),
+                   (byte)((g << 3) | (g >> 2)),
+                   (byte)((b << 3) | (b >> 2))
+               );
     }
 }

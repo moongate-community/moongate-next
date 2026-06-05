@@ -1,5 +1,4 @@
 using Moongate.Abstractions.Data.Network;
-using Moongate.Abstractions.Interfaces.Network;
 
 namespace Moongate.Abstractions.Interfaces.Network;
 

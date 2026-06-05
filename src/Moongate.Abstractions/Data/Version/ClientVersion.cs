@@ -87,58 +87,38 @@ public sealed class ClientVersion : IComparable<ClientVersion>, IEquatable<Clien
     }
 
     public bool Equals(ClientVersion? other)
-    {
-        return other is not null &&
-               Major == other.Major &&
-               Minor == other.Minor &&
-               Revision == other.Revision &&
-               Patch == other.Patch;
-    }
+        => other is not null &&
+           Major == other.Major &&
+           Minor == other.Minor &&
+           Revision == other.Revision &&
+           Patch == other.Patch;
 
     public override bool Equals(object? obj)
-    {
-        return obj is ClientVersion other && Equals(other);
-    }
+        => obj is ClientVersion other && Equals(other);
 
     public override int GetHashCode()
-    {
-        return HashCode.Combine(Major, Minor, Revision, Patch);
-    }
+        => HashCode.Combine(Major, Minor, Revision, Patch);
 
     public static bool operator ==(ClientVersion? left, ClientVersion? right)
-    {
-        return left is null ? right is null : left.Equals(right);
-    }
-
-    public static bool operator !=(ClientVersion? left, ClientVersion? right)
-    {
-        return !(left == right);
-    }
+        => left is null ? right is null : left.Equals(right);
 
     public static bool operator >(ClientVersion? left, ClientVersion? right)
-    {
-        return Compare(left, right) > 0;
-    }
-
-    public static bool operator <(ClientVersion? left, ClientVersion? right)
-    {
-        return Compare(left, right) < 0;
-    }
+        => Compare(left, right) > 0;
 
     public static bool operator >=(ClientVersion? left, ClientVersion? right)
-    {
-        return Compare(left, right) >= 0;
-    }
+        => Compare(left, right) >= 0;
+
+    public static bool operator !=(ClientVersion? left, ClientVersion? right)
+        => !(left == right);
+
+    public static bool operator <(ClientVersion? left, ClientVersion? right)
+        => Compare(left, right) < 0;
 
     public static bool operator <=(ClientVersion? left, ClientVersion? right)
-    {
-        return Compare(left, right) <= 0;
-    }
+        => Compare(left, right) <= 0;
 
     public override string ToString()
-    {
-        return SourceString;
-    }
+        => SourceString;
 
     private static int Compare(ClientVersion? left, ClientVersion? right)
     {
@@ -148,11 +128,6 @@ public sealed class ClientVersion : IComparable<ClientVersion>, IEquatable<Clien
         }
 
         return left.CompareTo(right);
-    }
-
-    private static string Segment(string[] segments, int index)
-    {
-        return index < segments.Length ? segments[index] : "";
     }
 
     private static int CountLeadingDigits(string value)
@@ -173,4 +148,7 @@ public sealed class ClientVersion : IComparable<ClientVersion>, IEquatable<Clien
 
         return digits.Length > 0 && int.TryParse(digits, out var result) ? result : 0;
     }
+
+    private static string Segment(string[] segments, int index)
+        => index < segments.Length ? segments[index] : "";
 }

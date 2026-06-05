@@ -54,7 +54,7 @@ public sealed class HueStore : IHueStore
                 var nameBytes = reader.ReadBytes(20);
                 var name = Encoding.ASCII.GetString(nameBytes).TrimEnd('\0', ' ');
 
-                _hues.Add(new Hue(colors, tableStart, tableEnd, name));
+                _hues.Add(new(colors, tableStart, tableEnd, name));
             }
         }
 
@@ -66,7 +66,5 @@ public sealed class HueStore : IHueStore
     public int Count => _hues.Count;
 
     public Hue? GetHue(int index)
-    {
-        return index >= 0 && index < _hues.Count ? _hues[index] : null;
-    }
+        => index >= 0 && index < _hues.Count ? _hues[index] : null;
 }

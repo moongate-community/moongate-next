@@ -3,7 +3,6 @@ using System.Reflection;
 using Moongate.Abstractions.Data.Network;
 using Moongate.Abstractions.Interfaces.EventHandlers;
 using Moongate.Abstractions.Interfaces.Network;
-using Moongate.Abstractions.Interfaces.Network;
 using Moongate.Server.Data.Events;
 using Moongate.Server.Interfaces.Network;
 using Serilog;

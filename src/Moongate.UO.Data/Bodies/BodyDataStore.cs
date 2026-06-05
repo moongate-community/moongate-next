@@ -75,9 +75,7 @@ public sealed class BodyDataStore : IBodyDataStore
     }
 
     public UoBodyType GetBodyType(int bodyId)
-    {
-        return bodyId >= 0 && bodyId < _types.Length ? _types[bodyId] : UoBodyType.Empty;
-    }
+        => bodyId >= 0 && bodyId < _types.Length ? _types[bodyId] : UoBodyType.Empty;
 
     private void Apply(List<int> ids, UoBodyType type)
     {

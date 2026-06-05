@@ -21,7 +21,7 @@ public sealed class ArtService : IArtService
     {
         ArgumentNullException.ThrowIfNull(resolver);
 
-        _fileIndex = new FileIndex(
+        _fileIndex = new(
             resolver.Resolve("artidx.mul"),
             resolver.Resolve("art.mul"),
             resolver.Resolve("artLegacyMUL.uop"),
@@ -69,9 +69,7 @@ public sealed class ArtService : IArtService
     }
 
     public bool IsValidArt(int itemId)
-    {
-        return GetArt(itemId) is not null;
-    }
+        => GetArt(itemId) is not null;
 
     private static Rgba32 ConvertArgb1555ToRgba(ushort value)
     {
@@ -80,7 +78,7 @@ public sealed class ArtService : IArtService
         var g = (byte)(((value >> 5) & 0x1F) * 255 / 31);
         var b = (byte)((value & 0x1F) * 255 / 31);
 
-        return new Rgba32(r, g, b, a);
+        return new(r, g, b, a);
     }
 
     private int GetLegalItemId(int itemId)

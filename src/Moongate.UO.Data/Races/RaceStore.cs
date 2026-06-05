@@ -23,7 +23,7 @@ public sealed class RaceStore : IRaceStore
         ArgumentException.ThrowIfNullOrWhiteSpace(dataDirectory);
 
         _races = [];
-        _byId = new Dictionary<int, RaceDefinition>();
+        _byId = new();
 
         var path = Path.Combine(dataDirectory, "races.toml");
 
@@ -57,7 +57,5 @@ public sealed class RaceStore : IRaceStore
     public IReadOnlyList<RaceDefinition> Races => _races;
 
     public RaceDefinition? GetById(int raceId)
-    {
-        return _byId.GetValueOrDefault(raceId);
-    }
+        => _byId.GetValueOrDefault(raceId);
 }
