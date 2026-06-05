@@ -1,0 +1,68 @@
+using DryIoc;
+using Moongate.Abstractions.Data.Logging;
+using Moongate.Abstractions.Interfaces.Metrics;
+using Moongate.Abstractions.Interfaces.Services;
+using Moongate.Abstractions.Interfaces.Timing;
+using Moongate.Core.Types;
+using Moongate.Network.UO.Registry;
+using Moongate.Scripting.Lua.Interfaces.Scripts;
+using Moongate.Server.Bootstrap;
+
+namespace Moongate.Tests.Server.Bootstrap;
+
+public sealed class MoongateBootstrapTests : IDisposable
+{
+    private readonly string _root = Path.Combine(Path.GetTempPath(), $"nr-bootstrap-{Guid.NewGuid():N}");
+
+    [Fact]
+    public void ConfigureContainer_RegistersCoreServicesAndConfig()
+    {
+        using var container = new Container();
+        var context = MoongateBootstrap.CreateContext(new([], _root, false, false));
+
+        MoongateBootstrap.ConfigureContainer(container, context);
+
+        Assert.Same(context.PacketRegistry, container.Resolve<PacketRegistry>());
+        Assert.NotNull(container.Resolve<IEventBusService>());
+        Assert.NotNull(container.Resolve<ITimerService>());
+        Assert.NotNull(container.Resolve<IMetricsService>());
+        Assert.NotNull(container.Resolve<IScriptEngineService>());
+        Assert.NotNull(container.Resolve<LoggerConfig>());
+        Assert.True(File.Exists(Path.Combine(context.Directories[DirectoryType.Config], "moongate.toml")));
+    }
+
+    [Fact]
+    public void CreateContext_ResolvesDirectoriesAndRegistersPackets()
+    {
+        var options = new MoongateBootstrapOptions([], _root, false, false);
+
+        var context = MoongateBootstrap.CreateContext(options);
+
+        Assert.Equal(_root, context.Directories.Root);
+        Assert.True(context.RegisteredPacketCount > 0);
+        Assert.NotNull(context.PacketRegistry);
+        Assert.True(Directory.Exists(context.Directories[DirectoryType.Config]));
+    }
+
+    public void Dispose()
+    {
+        if (Directory.Exists(_root))
+        {
+            Directory.Delete(_root, true);
+        }
+
+        GC.SuppressFinalize(this);
+    }
+
+    [Fact]
+    public void Options_ExposeCliValues()
+    {
+        var args = new[] { "--debug" };
+        var options = new MoongateBootstrapOptions(args, _root, true, false);
+
+        Assert.Same(args, options.Args);
+        Assert.True(options.Debug);
+        Assert.False(options.ShowHeader);
+        Assert.Equal(_root, options.RootDirectory);
+    }
+}

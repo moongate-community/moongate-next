@@ -1,4 +1,22 @@
 <Solution>
-    <Project Path="src/Moongate.Core/Moongate.Core.csproj"/>
-    <Project Path="tests/Moongate.Tests/Moongate.Tests.csproj"/>
+    <Folder Name="/src/">
+        <Project Path="src/Moongate.Core/Moongate.Core.csproj"/>
+        <Project Path="src/Moongate.Abstractions/Moongate.Abstractions.csproj"/>
+        <Project Path="src/Moongate.Network/Moongate.Network.csproj"/>
+        <Project Path="src/Moongate.Network.UO/Moongate.Network.UO.csproj"/>
+        <Project Path="src/Moongate.Persistence/Moongate.Persistence.csproj"/>
+        <Project Path="src/Moongate.Plugins/Moongate.Plugins.csproj"/>
+        <Project Path="src/Moongate.Scripting.Lua/Moongate.Scripting.Lua.csproj"/>
+        <Project Path="src/Moongate.UO.Data/Moongate.UO.Data.csproj"/>
+        <Project Path="src/Moongate.UO.Domain/Moongate.UO.Domain.csproj"/>
+        <Project Path="src/Moongate.Server/Moongate.Server.csproj"/>
+    </Folder>
+    <Folder Name="/tests/">
+        <Project Path="tests/Moongate.Tests/Moongate.Tests.csproj"/>
+    </Folder>
+    <Folder Name="/tests/Plugin Fixtures/">
+        <Project Path="tests/Moongate.PluginFixtures.Basic/Moongate.PluginFixtures.Basic.csproj"/>
+        <Project Path="tests/Moongate.PluginFixtures.Empty/Moongate.PluginFixtures.Empty.csproj"/>
+        <Project Path="tests/Moongate.PluginFixtures.Multiple/Moongate.PluginFixtures.Multiple.csproj"/>
+    </Folder>
 </Solution>

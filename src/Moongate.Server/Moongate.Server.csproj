@@ -1,0 +1,66 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <Version>0.1.0</Version>
+        <Codename>Lilly</Codename>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+            <_Parameter1>Codename</_Parameter1>
+            <_Parameter2>$(Codename)</_Parameter2>
+        </AssemblyAttribute>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="ConsoleAppFramework" Version="5.7.13">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="DryIoc.Microsoft.DependencyInjection" Version="6.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.8" />
+        <PackageReference Include="Scalar.AspNetCore" Version="2.14.14" />
+        <PackageReference Include="Serilog" Version="4.3.1" />
+        <PackageReference Include="Serilog.Extensions.Logging" Version="10.0.0" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
+        <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="..\..\.dockerignore">
+            <Link>.dockerignore</Link>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="Assets\uo_files\**\*.toml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Moongate.Core\Moongate.Core.csproj" />
+        <ProjectReference Include="..\Moongate.UO.Domain\Moongate.UO.Domain.csproj" />
+        <ProjectReference Include="..\Moongate.Abstractions\Moongate.Abstractions.csproj" />
+        <ProjectReference Include="..\Moongate.Network\Moongate.Network.csproj" />
+        <ProjectReference Include="..\Moongate.Persistence\Moongate.Persistence.csproj" />
+        <ProjectReference Include="..\Moongate.Plugins\Moongate.Plugins.csproj" />
+        <ProjectReference Include="..\Moongate.Network.UO\Moongate.Network.UO.csproj" />
+        <ProjectReference Include="..\Moongate.Scripting.Lua\Moongate.Scripting.Lua.csproj" />
+        <ProjectReference Include="..\Moongate.UO.Data\Moongate.UO.Data.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="Moongate.Tests" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="Assets\**\*.*" />
+        <EmbeddedResource Include="Assets\**\*.*" />
+    </ItemGroup>
+
+</Project>

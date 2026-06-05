@@ -1,0 +1,8 @@
+ _______                                 __               ___ __ _ __ ___
+|   |   |.-----.-----.-----.-----.---.-.|  |_.-----.    ,'  _|  | |  |_  `.
+|       ||  _  |  _  |     |  _  |  _  ||   _|  -__|    |  |  >     <  |  |
+|__|_|__||_____|_____|__|__|___  |___._||____|_____|    |  |_|__|_|__|_|  |
+                           |_____|                      `.___|       |___,'
+               ++ New generation of Ultima Online server ++
+  !! Please support me on Patreon: https://www.patreon.com/MoongateServer  !!
+         Source code: https://github.com/moongate-community/moongate-next

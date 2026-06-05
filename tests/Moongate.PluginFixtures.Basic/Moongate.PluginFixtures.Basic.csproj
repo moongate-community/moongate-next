@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Moongate.Plugins\Moongate.Plugins.csproj"/>
+        <ProjectReference Include="..\..\src\Moongate.Server\Moongate.Server.csproj"/>
+        <ProjectReference Include="..\..\src\Moongate.Scripting.Lua\Moongate.Scripting.Lua.csproj"/>
+    </ItemGroup>
+
+</Project>

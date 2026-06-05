@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="DryIoc.dll" Version="5.4.3" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.8" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.8" />
+        <PackageReference Include="Serilog" Version="4.3.1" />
+        <PackageReference Include="Tomlyn" Version="2.4.2" />
+        <PackageReference Include="ZLinq" Version="1.5.6" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Moongate.Core\Moongate.Core.csproj" />
+        <ProjectReference Include="..\Moongate.Network\Moongate.Network.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- The Server registers the orchestrator/descriptor natively on DryIoc; they stay internal. -->
+        <InternalsVisibleTo Include="Moongate.Server" />
+        <InternalsVisibleTo Include="Moongate.Tests" />
+    </ItemGroup>
+
+</Project>

@@ -1,25 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+        <!-- CS1591: missing XML doc from Tomlyn source-generated context (test-only). -->
+        <NoWarn>$(NoWarn);CS1591</NoWarn>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="coverlet.collector" Version="10.0.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.6.0" />
-    <PackageReference Include="xunit" Version="2.9.3" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="coverlet.collector" Version="10.0.1" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.8" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.6.0" />
+        <PackageReference Include="Tomlyn" Version="2.4.2" />
+        <PackageReference Include="xunit" Version="2.9.3" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
+        <PackageReference Include="Xunit.SkippableFact" Version="1.5.61" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Using Include="Xunit" />
-  </ItemGroup>
+    <ItemGroup>
+        <Using Include="Xunit" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Moongate.Core\Moongate.Core.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Moongate.Core\Moongate.Core.csproj" />
+        <ProjectReference Include="..\..\src\Moongate.UO.Domain\Moongate.UO.Domain.csproj" />
+        <ProjectReference Include="..\..\src\Moongate.Abstractions\Moongate.Abstractions.csproj" />
+        <ProjectReference Include="..\..\src\Moongate.Network\Moongate.Network.csproj" />
+        <ProjectReference Include="..\..\src\Moongate.Persistence\Moongate.Persistence.csproj" />
+        <ProjectReference Include="..\..\src\Moongate.Plugins\Moongate.Plugins.csproj" />
+        <ProjectReference Include="..\..\src\Moongate.Server\Moongate.Server.csproj" />
+        <ProjectReference Include="..\Moongate.PluginFixtures.Basic\Moongate.PluginFixtures.Basic.csproj" />
+        <ProjectReference Include="..\Moongate.PluginFixtures.Empty\Moongate.PluginFixtures.Empty.csproj" />
+        <ProjectReference Include="..\Moongate.PluginFixtures.Multiple\Moongate.PluginFixtures.Multiple.csproj" />
+        <ProjectReference Include="..\..\src\Moongate.UO.Data\Moongate.UO.Data.csproj" />
+    </ItemGroup>
 
 </Project>
