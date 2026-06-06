@@ -1,0 +1,72 @@
+{
+  "$schema": "https://raw.githubusercontent.com/dotnet/docfx/main/schemas/docfx.schema.json",
+  "metadata": [
+    {
+      "src": [
+        {
+          "files": [
+            "src/Moongate.Core/bin/Release/net10.0/Moongate.Core.dll",
+            "src/Moongate.Abstractions/bin/Release/net10.0/Moongate.Abstractions.dll",
+            "src/Moongate.Network/bin/Release/net10.0/Moongate.Network.dll",
+            "src/Moongate.Network.UO/bin/Release/net10.0/Moongate.Network.UO.dll",
+            "src/Moongate.Persistence/bin/Release/net10.0/Moongate.Persistence.dll",
+            "src/Moongate.Plugins/bin/Release/net10.0/Moongate.Plugins.dll",
+            "src/Moongate.Scripting.Lua/bin/Release/net10.0/Moongate.Scripting.Lua.dll",
+            "src/Moongate.UO.Data/bin/Release/net10.0/Moongate.UO.Data.dll",
+            "src/Moongate.UO.Domain/bin/Release/net10.0/Moongate.UO.Domain.dll",
+            "src/Moongate.Server/bin/Release/net10.0/Moongate.Server.dll"
+          ],
+          "src": "../.."
+        }
+      ],
+      "dest": "api",
+      "memberLayout": "samePage",
+      "namespaceLayout": "nested"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "api/**/*.yml",
+          "api/**/toc.yml"
+        ]
+      },
+      {
+        "files": [
+          "index.md",
+          "toc.yml",
+          "articles/**/*.md",
+          "articles/**/toc.yml"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "images/**"
+        ],
+        "src": ".."
+      }
+    ],
+    "xref": [
+      "https://learn.microsoft.com/dotnet/.xrefmap.json"
+    ],
+    "output": "_site",
+    "template": [
+      "default"
+    ],
+    "globalMetadata": {
+      "_appName": "Moongate",
+      "_appTitle": "Moongate Documentation",
+      "_enableSearch": "true",
+      "_gitContribute": {
+        "repo": "https://github.com/moongate-community/moongate-next",
+        "branch": "master"
+      }
+    },
+    "sitemap": {
+      "baseUrl": "https://moongate-community.github.io/moongate-next/"
+    }
+  }
+}

@@ -1,3 +1,5 @@
+using Moongate.Abstractions.Interfaces.EventHandlers;
+
 namespace Moongate.Abstractions.Interfaces.Events;
 
 /// <summary>

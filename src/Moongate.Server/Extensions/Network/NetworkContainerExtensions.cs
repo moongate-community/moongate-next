@@ -5,6 +5,7 @@ using Moongate.Abstractions.Interfaces.EventHandlers;
 using Moongate.Abstractions.Interfaces.Network;
 using Moongate.Abstractions.Interfaces.Player;
 using Moongate.Abstractions.Interfaces.Services;
+using Moongate.Network.UO.Registry;
 using Moongate.Server.Data.Events;
 using Moongate.Server.Extensions.Hosting;
 using Moongate.Server.Interfaces.Network;
@@ -22,7 +23,7 @@ public static class NetworkContainerExtensions
 
     /// <summary>
     /// Registers <see cref="NetworkService" /> and <see cref="SessionService" /> with the Moongate
-    /// hosting orchestrator. Requires a <see cref="Network.UO.Registry.PacketRegistry" /> singleton
+    /// hosting orchestrator. Requires a <see cref="PacketRegistry" /> singleton
     /// to have been registered earlier.
     /// </summary>
     /// <param name="container">DryIoc container.</param>

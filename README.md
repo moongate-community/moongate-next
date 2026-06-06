@@ -16,6 +16,19 @@ dotnet build Moongate.slnx
 dotnet test Moongate.slnx
 ```
 
+## Documentation
+
+Moongate uses DocFX for documentation and API reference generation.
+
+```bash
+dotnet tool restore
+dotnet build Moongate.slnx --configuration Release
+dotnet tool run docfx docs/docfx/docfx.json
+```
+
+The generated site is written to `docs/docfx/_site`. GitHub Pages deployment is
+handled by the `Docs` workflow.
+
 ## Configuration
 
 Moongate uses YAML for runtime configuration. The main server config is

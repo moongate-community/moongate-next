@@ -1,9 +1,10 @@
 using Moongate.UO.Data.Data.Internal;
+using Moongate.UO.Data.Files;
 
 namespace Moongate.UO.Data.Interfaces.Files;
 
 /// <summary>
-/// Supplies <c>verdata.mul</c> patch entries and the patched data stream to <see cref="Files.FileIndex" />.
+/// Supplies <c>verdata.mul</c> patch entries and the patched data stream to <see cref="FileIndex" />.
 /// Implementations report no patches when verdata patching is disabled or unavailable.
 /// </summary>
 public interface IVerdataPatchSource
