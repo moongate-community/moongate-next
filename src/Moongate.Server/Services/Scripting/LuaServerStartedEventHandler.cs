@@ -1,5 +1,6 @@
 using Moongate.Abstractions.Interfaces.EventHandlers;
 using Moongate.Scripting.Lua.Interfaces.Events;
+using Moongate.Scripting.Lua.Utils;
 using Moongate.Server.Data.Events;
 
 namespace Moongate.Server.Services.Scripting;
@@ -16,9 +17,6 @@ public sealed class LuaServerStartedEventHandler : ITickEventHandler<ServerStart
     public void Handle(ServerStartedEvent evt)
         => _events.Publish(
             "server.started",
-            new Dictionary<string, object?>
-            {
-                ["at"] = evt.At
-            }
+            LuaPayloadBuilder.ServerStarted(evt.At)
         );
 }

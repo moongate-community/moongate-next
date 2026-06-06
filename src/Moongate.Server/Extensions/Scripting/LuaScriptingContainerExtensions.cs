@@ -55,6 +55,7 @@ public static class LuaScriptingContainerExtensions
         container.AddMoongateService<LuaScriptHostedService>(LuaScriptingPriority);
 
         container.RegisterScriptModule<EventsModule>();
+        container.RegisterScriptModule<CommandsModule>();
         container.RegisterScriptModule<LogModule>();
         container.RegisterScriptModule<RandomModule>();
         container.RegisterScriptModule<TimersModule>();

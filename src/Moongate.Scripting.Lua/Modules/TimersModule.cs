@@ -3,6 +3,7 @@ using System.Globalization;
 using Moongate.Abstractions.Interfaces.Timing;
 using Moongate.Scripting.Lua.Attributes.Scripts;
 using Moongate.Scripting.Lua.Interfaces.Events;
+using Moongate.Scripting.Lua.Utils;
 using MoonSharp.Interpreter;
 
 namespace Moongate.Scripting.Lua.Modules;
@@ -86,11 +87,7 @@ public sealed class TimersModule : IDisposable
             parsedInterval,
             () => _events.Invoke(
                 callback,
-                new Dictionary<string, object?>
-                {
-                    ["name"] = name,
-                    ["repeat"] = repeat
-                }
+                LuaPayloadBuilder.Timer(name, repeat)
             ),
             repeat: repeat
         );

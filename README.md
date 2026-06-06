@@ -32,6 +32,25 @@ uo:
   starting_city: Britain
 ```
 
+## Commands
+
+Moongate exposes one command registry for built-in server commands and trusted
+plugins. Commands can be executed from the interactive server console or from
+in-game speech with the `.` prefix, for example `.help`.
+
+Plugins register commands during `Configure` through
+`PluginContext.RegisterCommand`. No source generator is required; command
+registration is explicit and can choose console-only, in-game-only, or shared
+sources.
+
+Lua scripts can register commands through the `commands` module:
+
+```lua
+commands.register("hello", "all", "Greets the caller.", function(ctx)
+    return "hello " .. ctx.args[1]
+end)
+```
+
 ## Bundled Data Assets
 
 Moongate ships editable YAML reference data under

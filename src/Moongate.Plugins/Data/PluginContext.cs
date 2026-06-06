@@ -1,4 +1,7 @@
 using Moongate.Abstractions.Configuration;
+using Moongate.Abstractions.Data.Commands;
+using Moongate.Abstractions.Interfaces.Commands;
+using Moongate.Abstractions.Types.Commands;
 using Moongate.Core.Data.Directories;
 using Serilog;
 
@@ -10,8 +13,13 @@ namespace Moongate.Plugins.Data;
 public sealed class PluginContext
 {
     private readonly ILogger _logger = Log.ForContext<PluginContext>();
+    private readonly ICommandRegistry? _commandRegistry;
 
-    public PluginContext(string pluginDirectory, DirectoriesConfig directories)
+    public PluginContext(
+        string pluginDirectory,
+        DirectoriesConfig directories,
+        ICommandRegistry? commandRegistry = null
+    )
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(pluginDirectory);
         ArgumentNullException.ThrowIfNull(directories);
@@ -19,6 +27,7 @@ public sealed class PluginContext
         PluginDirectory = Path.GetFullPath(pluginDirectory);
         PluginConfigPath = Path.Combine(PluginDirectory, "plugin.yaml");
         Directories = directories;
+        _commandRegistry = commandRegistry;
     }
 
     /// <summary>Absolute directory containing the plugin package.</summary>
@@ -72,5 +81,35 @@ public sealed class PluginContext
                 ex
             );
         }
+    }
+
+    /// <summary>
+    /// Registers a command owned by this plugin.
+    /// </summary>
+    /// <param name="commandName">Primary command name or aliases separated by <c>|</c>.</param>
+    /// <param name="handler">Command handler.</param>
+    /// <param name="description">Help description.</param>
+    /// <param name="source">Allowed command sources.</param>
+    /// <param name="autocompleteProvider">Optional autocomplete provider.</param>
+    public void RegisterCommand(
+        string commandName,
+        Func<CommandSystemContext, Task> handler,
+        string description = "",
+        CommandSourceType source = CommandSourceType.Console,
+        Func<CommandAutocompleteContext, IReadOnlyList<string>>? autocompleteProvider = null
+    )
+    {
+        if (_commandRegistry is null)
+        {
+            throw new InvalidOperationException("Command registration is not available for this plugin context.");
+        }
+
+        _commandRegistry.RegisterCommand(
+            commandName,
+            handler,
+            description,
+            source,
+            autocompleteProvider
+        );
     }
 }

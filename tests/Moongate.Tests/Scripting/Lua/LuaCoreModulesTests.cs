@@ -1,9 +1,13 @@
 using DryIoc;
+using Moongate.Abstractions.Interfaces.Commands;
 using Moongate.Abstractions.Interfaces.Timing;
+using Moongate.Abstractions.Services.Commands;
+using Moongate.Abstractions.Types.Commands;
 using Moongate.Scripting.Lua.Data.Internal;
 using Moongate.Scripting.Lua.Interfaces.Events;
 using Moongate.Scripting.Lua.Modules;
 using Moongate.Scripting.Lua.Services;
+using Moongate.Server.Services.Commands;
 using Moongate.Server.Services.Timing;
 using Moongate.Tests.Scripting.Lua.Support;
 
@@ -11,6 +15,74 @@ namespace Moongate.Tests.Scripting.Lua;
 
 public class LuaCoreModulesTests
 {
+    [Fact]
+    public async Task Commands_Execute_RunsRegisteredCommand()
+    {
+        using var fixture = NewFixture(
+            typeof(CommandsModule),
+            container =>
+            {
+                container.Register<ICommandRegistry, CommandRegistry>(Reuse.Singleton);
+                container.Register<ICommandSystemService, CommandSystemService>(Reuse.Singleton);
+            }
+        );
+        var registry = fixture.Container.Resolve<ICommandRegistry>();
+        registry.RegisterCommand(
+            "server_echo",
+            context =>
+            {
+                context.Print("server {0}", context.Arguments[0]);
+
+                return Task.CompletedTask;
+            },
+            source: CommandSourceType.All
+        );
+
+        await fixture.Engine.StartAsync();
+        fixture.Engine.ExecuteScript(
+            """
+            command_output = commands.execute("server_echo moon", "console")
+            command_exists = commands.exists("server_echo")
+            """
+        );
+
+        Assert.Equal("server moon", fixture.Engine.ExecuteFunction("command_output").Data);
+        Assert.True((bool)fixture.Engine.ExecuteFunction("command_exists").Data!);
+    }
+
+    [Fact]
+    public async Task Commands_Register_CreatesLuaBackedCommand()
+    {
+        using var fixture = NewFixture(
+            typeof(CommandsModule),
+            container =>
+            {
+                container.Register<ICommandRegistry, CommandRegistry>(Reuse.Singleton);
+                container.Register<ICommandSystemService, CommandSystemService>(Reuse.Singleton);
+            }
+        );
+
+        await fixture.Engine.StartAsync();
+        fixture.Engine.ExecuteScript(
+            """
+            captured_source = nil
+            captured_arg = nil
+            commands.register("lua_echo", "all", "Echoes Lua arguments.", function(ctx)
+                captured_source = ctx.source
+                captured_arg = ctx.args[1]
+                return ctx.args[1] .. " " .. ctx.args[2]
+            end)
+            """
+        );
+
+        var commands = fixture.Container.Resolve<ICommandSystemService>();
+        var output = await commands.ExecuteCommandWithOutputAsync("lua_echo hello Britannia", CommandSourceType.Console);
+
+        Assert.Equal(["hello Britannia"], output);
+        Assert.Equal("Console", fixture.Engine.ExecuteFunction("captured_source").Data);
+        Assert.Equal("hello", fixture.Engine.ExecuteFunction("captured_arg").Data);
+    }
+
     [Fact]
     public async Task Events_On_InvokesRegisteredCallback()
     {

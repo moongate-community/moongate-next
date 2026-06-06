@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Runtime.Loader;
 using DryIoc;
+using Moongate.Abstractions.Interfaces.Commands;
 using Moongate.Core.Data.Directories;
 using Moongate.Core.Types;
 using Moongate.Plugins.Data;
@@ -34,7 +35,8 @@ public sealed class PluginLoaderService
 
         foreach (var plugin in sorted)
         {
-            var context = new PluginContext(plugin.PluginDirectory, directories);
+            var commandRegistry = container.Resolve<ICommandRegistry>(IfUnresolved.ReturnDefault);
+            var context = new PluginContext(plugin.PluginDirectory, directories, commandRegistry);
 
             try
             {

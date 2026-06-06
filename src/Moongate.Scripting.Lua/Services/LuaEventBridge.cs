@@ -22,7 +22,7 @@ public sealed class LuaEventBridge : ILuaEventBridge
         _script = script;
     }
 
-    public void Invoke(Closure callback, IReadOnlyDictionary<string, object?> payload)
+    public DynValue Invoke(Closure callback, IReadOnlyDictionary<string, object?> payload)
     {
         ArgumentNullException.ThrowIfNull(callback);
         ArgumentNullException.ThrowIfNull(payload);
@@ -30,7 +30,7 @@ public sealed class LuaEventBridge : ILuaEventBridge
         var script = _script ?? throw new InvalidOperationException("Lua event bridge is not attached to a script.");
         var table = CreatePayloadTable(script, payload);
 
-        script.Call(callback, table);
+        return script.Call(callback, table);
     }
 
     public void Publish(string eventName, IReadOnlyDictionary<string, object?> payload)
@@ -88,7 +88,24 @@ public sealed class LuaEventBridge : ILuaEventBridge
             return DynValue.NewTable(CreatePayloadTable(script, dictionary));
         }
 
+        if (value is IReadOnlyList<object?> list)
+        {
+            return DynValue.NewTable(CreateArrayTable(script, list));
+        }
+
         return DynValue.FromObject(script, value);
+    }
+
+    private static Table CreateArrayTable(Script script, IReadOnlyList<object?> values)
+    {
+        var table = new Table(script);
+
+        for (var i = 0; i < values.Count; i++)
+        {
+            table[i + 1] = ConvertValue(script, values[i]);
+        }
+
+        return table;
     }
 
     private static Table CreatePayloadTable(Script script, IReadOnlyDictionary<string, object?> payload)

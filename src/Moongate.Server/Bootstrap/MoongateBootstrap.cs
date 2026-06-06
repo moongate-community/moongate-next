@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using DryIoc;
 using DryIoc.Microsoft.DependencyInjection;
 using Moongate.Abstractions.Data.Logging;
@@ -10,6 +11,7 @@ using Moongate.Network.UO.Registry;
 using Moongate.Server.Bootstrap.Internal;
 using Moongate.Server.Data;
 using Moongate.Server.Data.Events;
+using Moongate.Server.Extensions.Commands;
 using Moongate.Server.Extensions.Configuration;
 using Moongate.Server.Extensions.Endpoints;
 using Moongate.Server.Extensions.EventBus;
@@ -40,12 +42,13 @@ public static class MoongateBootstrap
     {
         ArgumentNullException.ThrowIfNull(options);
 
+        var startTime = Stopwatch.GetTimestamp();
         var context = CreateContext(options);
         HeaderPrinter.Print(context, options.ShowHeader);
 
         var builder = CreateBuilder(options, context);
         var app = builder.Build();
-        ConfigurePipeline(app);
+        ConfigurePipeline(app, startTime);
 
         return app;
     }
@@ -54,13 +57,14 @@ public static class MoongateBootstrap
     {
         ArgumentNullException.ThrowIfNull(options);
 
+        var startTime = Stopwatch.GetTimestamp();
         var context = CreateContext(options);
         using var pidFileGuard = PidFileGuard.Acquire(context.Directories);
         HeaderPrinter.Print(context, options.ShowHeader);
 
         var builder = CreateBuilder(options, context);
         await using var app = builder.Build();
-        ConfigurePipeline(app);
+        ConfigurePipeline(app, startTime);
 
         await app.RunAsync(cancellationToken);
     }
@@ -105,6 +109,7 @@ public static class MoongateBootstrap
         // Network: TCP game listeners + UDP ping server + packet parser (priority 20).
         container.AddMoongateNetwork();
         container.AddMoongatePacketHandlers();
+        container.AddMoongateCommands();
         container.AddMetricProvider<NetworkService>();
 
         // Lua scripting engine (priority 30).
@@ -176,7 +181,7 @@ public static class MoongateBootstrap
         return new(directories, packetRegistry, registeredPacketCount);
     }
 
-    private static void ConfigurePipeline(WebApplication app)
+    private static void ConfigurePipeline(WebApplication app, long startTime)
     {
         ArgumentNullException.ThrowIfNull(app);
 
@@ -187,6 +192,13 @@ public static class MoongateBootstrap
             {
                 var bus = app.Services.GetRequiredService<IEventBusService>();
                 bus.Publish(new ServerStartedEvent(DateTimeOffset.UtcNow));
+                var elapsed = Stopwatch.GetElapsedTime(startTime);
+
+                Log.Information(
+                    "Server ready in {Elapsed} ({ElapsedMilliseconds:F0} ms)",
+                    elapsed,
+                    elapsed.TotalMilliseconds
+                );
             }
         );
 

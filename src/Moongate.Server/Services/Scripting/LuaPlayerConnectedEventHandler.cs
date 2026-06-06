@@ -1,5 +1,6 @@
 using Moongate.Abstractions.Interfaces.EventHandlers;
 using Moongate.Scripting.Lua.Interfaces.Events;
+using Moongate.Scripting.Lua.Utils;
 using Moongate.Server.Data.Events;
 
 namespace Moongate.Server.Services.Scripting;
@@ -16,11 +17,6 @@ public sealed class LuaPlayerConnectedEventHandler : ITickEventHandler<PlayerCon
     public void Handle(PlayerConnectedEvent evt)
         => _events.Publish(
             "player.connected",
-            new Dictionary<string, object?>
-            {
-                ["session_id"] = evt.SessionId,
-                ["remote_endpoint"] = evt.RemoteEndPoint,
-                ["at"] = evt.At
-            }
+            LuaPayloadBuilder.PlayerConnection(evt.SessionId, evt.RemoteEndPoint, evt.At)
         );
 }

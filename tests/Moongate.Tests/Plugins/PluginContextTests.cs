@@ -1,3 +1,5 @@
+using Moongate.Abstractions.Services.Commands;
+using Moongate.Abstractions.Types.Commands;
 using Moongate.Core.Types;
 using Moongate.Plugins.Data;
 
@@ -67,6 +69,31 @@ public sealed class PluginContextTests : IDisposable
         Assert.Contains("weather_interval_seconds: 2", File.ReadAllText(context.PluginConfigPath));
     }
 
-    private PluginContext CreateContext()
-        => new(PluginDirectory, new(_root, Enum.GetNames<DirectoryType>()));
+    [Fact]
+    public void RegisterCommand_WithCommandRegistry_RegistersPluginCommand()
+    {
+        var registry = new CommandRegistry();
+        var context = CreateContext(registry);
+
+        context.RegisterCommand(
+            "weather",
+            static _ => Task.CompletedTask,
+            "Controls weather.",
+            CommandSourceType.All
+        );
+
+        Assert.True(registry.TryGetCommand("weather", out var command));
+        Assert.Equal(CommandSourceType.All, command.Source);
+    }
+
+    [Fact]
+    public void RegisterCommand_WithoutCommandRegistry_Throws()
+    {
+        var context = CreateContext();
+
+        Assert.Throws<InvalidOperationException>(() => context.RegisterCommand("weather", static _ => Task.CompletedTask));
+    }
+
+    private PluginContext CreateContext(CommandRegistry? registry = null)
+        => new(PluginDirectory, new(_root, Enum.GetNames<DirectoryType>()), registry);
 }

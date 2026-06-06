@@ -27,7 +27,7 @@ internal sealed class MoongateServiceOrchestrator : IHostedService
         for (var i = 0; i < _startOrder.Length; i++)
         {
             var descriptor = _startOrder[i];
-            _logger.Information(
+            _logger.Debug(
                 "Starting {Service} (priority {Priority})",
                 descriptor.Service.GetType().Name,
                 descriptor.Priority
@@ -42,7 +42,7 @@ internal sealed class MoongateServiceOrchestrator : IHostedService
         for (var i = 0; i < _stopOrder.Length; i++)
         {
             var descriptor = _stopOrder[i];
-            _logger.Information(
+            _logger.Debug(
                 "Stopping {Service} (priority {Priority})",
                 descriptor.Service.GetType().Name,
                 descriptor.Priority

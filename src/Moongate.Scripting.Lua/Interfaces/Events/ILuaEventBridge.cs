@@ -18,7 +18,8 @@ public interface ILuaEventBridge
     /// </summary>
     /// <param name="callback">Lua closure to invoke.</param>
     /// <param name="payload">Payload exposed to Lua as a table.</param>
-    void Invoke(Closure callback, IReadOnlyDictionary<string, object?> payload);
+    /// <returns>The Lua callback result.</returns>
+    DynValue Invoke(Closure callback, IReadOnlyDictionary<string, object?> payload);
 
     /// <summary>
     /// Publishes a named event to every Lua callback registered for it.

@@ -1484,7 +1484,7 @@ public class LuaScriptEngineService : IScriptEngineService, IDisposable
     [RequiresUnreferencedCode("Enum metadata is discovered dynamically when building Lua documentation.")]
     private void RegisterEnums()
     {
-        var enumsFound = LuaDocumentationGenerator.FoundEnums;
+        var enumsFound = LuaDocumentationGenerator.FoundEnums.ToArray();
 
         foreach (var enumType in enumsFound)
         {
