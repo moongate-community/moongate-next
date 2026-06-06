@@ -117,15 +117,15 @@ public class ServerAssetDataLoader
                          .ThenBy(file => file.SourcePath, StringComparer.Ordinal)
                          .ToArray();
 
-        foreach (var spawnFile in spawnFiles)
+        foreach (var (FullPath, SourcePath) in spawnFiles)
         {
-            var sourceGroup = GetSourceGroup(spawnFile.SourcePath);
-            var sourceFile = GetSourceFile(spawnFile.SourcePath);
-            var table = YamlUtils.DeserializeFromFile<ServerAssetSpawnTable>(spawnFile.FullPath);
+            var sourceGroup = GetSourceGroup(SourcePath);
+            var sourceFile = GetSourceFile(SourcePath);
+            var table = YamlUtils.DeserializeFromFile<ServerAssetSpawnTable>(FullPath);
 
             foreach (var spawn in table.Spawn)
             {
-                if (TryMapSpawnDefinition(spawn, sourceGroup, sourceFile, spawnFile.SourcePath, out var entry))
+                if (TryMapSpawnDefinition(spawn, sourceGroup, sourceFile, SourcePath, out var entry))
                 {
                     entries.Add(entry);
                 }
