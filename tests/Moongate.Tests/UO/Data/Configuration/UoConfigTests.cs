@@ -1,4 +1,7 @@
+using Moongate.Abstractions.Configuration;
+using Moongate.Core.Geometry;
 using Moongate.UO.Data.Data;
+using Moongate.UO.Data.Types.Maps;
 
 namespace Moongate.Tests.UO.Data.Configuration;
 
@@ -17,10 +20,8 @@ public class UoConfigTests
     {
         var config = new UoConfig();
 
-        Assert.Equal(1, config.StartingMapId);
-        Assert.Equal(1496, config.StartingX);
-        Assert.Equal(1628, config.StartingY);
-        Assert.Equal(10, config.StartingZ);
+        Assert.Equal(UoMapFacetType.Trammel, config.StartingMap);
+        Assert.Equal(new Point3D(1496, 1628, 10), config.Starting);
         Assert.Equal("Britain", config.StartingCity);
     }
 
@@ -75,14 +76,18 @@ public class UoConfigTests
     }
 
     [Fact]
-    public void Validate_StartingMapInRange_IsValid()
+    public void Validate_KnownStartingMap_IsValid()
     {
         var dir = Directory.CreateTempSubdirectory("nr-uo-");
 
         try
         {
             File.WriteAllBytes(Path.Combine(dir.FullName, "tiledata.mul"), [0]);
-            var config = new UoConfig { ClientFilesDirectory = dir.FullName, StartingMapId = 0 };
+            var config = new UoConfig
+            {
+                ClientFilesDirectory = dir.FullName,
+                StartingMap = UoMapFacetType.Felucca
+            };
 
             Assert.Empty(config.Validate());
         }
@@ -93,14 +98,18 @@ public class UoConfigTests
     }
 
     [Fact]
-    public void Validate_StartingMapOutOfRange_ReturnsError()
+    public void Validate_UnknownStartingMap_ReturnsError()
     {
         var dir = Directory.CreateTempSubdirectory("nr-uo-");
 
         try
         {
             File.WriteAllBytes(Path.Combine(dir.FullName, "tiledata.mul"), [0]);
-            var config = new UoConfig { ClientFilesDirectory = dir.FullName, StartingMapId = 9 };
+            var config = new UoConfig
+            {
+                ClientFilesDirectory = dir.FullName,
+                StartingMap = (UoMapFacetType)9
+            };
 
             Assert.Contains(config.Validate(), e => e.Contains("starting"));
         }
@@ -108,5 +117,33 @@ public class UoConfigTests
         {
             dir.Delete(true);
         }
+    }
+
+    [Fact]
+    public void Deserialize_CompactStartingLocation_BindsMapAndPoint()
+    {
+        const string yaml = """
+                            client_files_directory: ~/uo
+                            starting_map: Trammel
+                            starting: 1496,1628,10
+                            starting_city: Britain
+                            """;
+
+        var config = ConfigYamlOptions.Deserializer.Deserialize<UoConfig>(yaml);
+
+        Assert.NotNull(config);
+        Assert.Equal(UoMapFacetType.Trammel, config.StartingMap);
+        Assert.Equal(new Point3D(1496, 1628, 10), config.Starting);
+    }
+
+    [Fact]
+    public void Serialize_DefaultStartingLocation_WritesCompactPoint()
+    {
+        var yaml = ConfigYamlOptions.Serializer.Serialize(new UoConfig());
+
+        Assert.Contains("starting_map: Trammel", yaml);
+        Assert.Contains("starting: 1496,1628,10", yaml);
+        Assert.DoesNotContain("starting_map_id", yaml);
+        Assert.DoesNotContain("starting_x", yaml);
     }
 }

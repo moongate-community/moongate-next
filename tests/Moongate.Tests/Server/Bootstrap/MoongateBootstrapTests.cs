@@ -3,10 +3,13 @@ using Moongate.Abstractions.Data.Logging;
 using Moongate.Abstractions.Interfaces.Metrics;
 using Moongate.Abstractions.Interfaces.Services;
 using Moongate.Abstractions.Interfaces.Timing;
+using Moongate.Abstractions.Internal;
 using Moongate.Core.Types;
 using Moongate.Network.UO.Registry;
 using Moongate.Scripting.Lua.Interfaces.Scripts;
 using Moongate.Server.Bootstrap;
+using Moongate.Server.Interfaces.Services.World;
+using Moongate.Server.Services.WorldData;
 
 namespace Moongate.Tests.Server.Bootstrap;
 
@@ -27,8 +30,28 @@ public sealed class MoongateBootstrapTests : IDisposable
         Assert.NotNull(container.Resolve<ITimerService>());
         Assert.NotNull(container.Resolve<IMetricsService>());
         Assert.NotNull(container.Resolve<IScriptEngineService>());
+        Assert.NotNull(container.Resolve<IDoorDataService>());
+        Assert.NotNull(container.Resolve<ISpawnsDataService>());
+        Assert.NotNull(container.Resolve<ITeleportersDataService>());
+        Assert.NotNull(container.Resolve<ServerAssetDataLoader>());
+        Assert.NotNull(container.Resolve<ServerAssetDataBootService>());
         Assert.NotNull(container.Resolve<LoggerConfig>());
         Assert.True(File.Exists(Path.Combine(context.Directories[DirectoryType.Config], "moongate.yaml")));
+
+        var dataServices = container.ResolveMany<IDataService>().ToArray();
+        Assert.Equal(12, dataServices.Length);
+        Assert.All(
+            dataServices,
+            service =>
+            {
+                Assert.True(service.IsLazy);
+                Assert.False(service.IsLoaded);
+            }
+        );
+
+        var descriptor = container.Resolve<MoongateServiceDescriptor>(serviceKey: typeof(ServerAssetDataBootService));
+        Assert.IsType<ServerAssetDataBootService>(descriptor.Service);
+        Assert.Equal(11, descriptor.Priority);
     }
 
     [Fact]

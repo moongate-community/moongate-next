@@ -1,5 +1,7 @@
 using Moongate.Abstractions.Interfaces.Config;
 using Moongate.Core.Extensions.Directories;
+using Moongate.Core.Geometry;
+using Moongate.UO.Data.Types.Maps;
 
 namespace Moongate.UO.Data.Data;
 
@@ -15,17 +17,11 @@ public sealed class UoConfig : IValidatableConfig
     /// </summary>
     public string ClientFilesDirectory { get; set; } = "~/uo";
 
-    /// <summary>Facet id new characters start on (0 = Felucca, 1 = Trammel, ...). Default 1.</summary>
-    public int StartingMapId { get; set; } = 1;
+    /// <summary>Facet new characters start on. Default Trammel.</summary>
+    public UoMapFacetType StartingMap { get; set; } = UoMapFacetType.Trammel;
 
-    /// <summary>Starting world X coordinate. Default 1496 (Britain).</summary>
-    public int StartingX { get; set; } = 1496;
-
-    /// <summary>Starting world Y coordinate. Default 1628 (Britain).</summary>
-    public int StartingY { get; set; } = 1628;
-
-    /// <summary>Starting world Z coordinate. Default 10 (Britain).</summary>
-    public int StartingZ { get; set; } = 10;
+    /// <summary>Starting world coordinates. Default 1496,1628,10 (Britain).</summary>
+    public Point3D Starting { get; set; } = new(1496, 1628, 10);
 
     /// <summary>Display name of the starting city. Default "Britain".</summary>
     public string StartingCity { get; set; } = "Britain";
@@ -33,9 +29,9 @@ public sealed class UoConfig : IValidatableConfig
     /// <inheritdoc />
     public IEnumerable<string> Validate()
     {
-        if (StartingMapId is < 0 or > 5)
+        if (!Enum.IsDefined(StartingMap))
         {
-            yield return $"starting map id {StartingMapId} must be between 0 and 5";
+            yield return $"starting map '{StartingMap}' must be a known UO map facet";
         }
 
         var directory = ClientFilesDirectory?.ResolvePathAndEnvs();
