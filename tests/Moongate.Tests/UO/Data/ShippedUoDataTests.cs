@@ -48,7 +48,7 @@ public class ShippedUoDataTests
 
         for (var i = 0; i < 8 && dir is not null; i++)
         {
-            var candidate = Path.Combine(dir.FullName, "src", "Moongate.Server", "Assets", "uo_files");
+            var candidate = Path.Combine(dir.FullName, "src", "Moongate.Server", "Assets", "data", "uo_files");
 
             if (Directory.Exists(candidate))
             {
@@ -58,6 +58,6 @@ public class ShippedUoDataTests
             dir = dir.Parent;
         }
 
-        throw new DirectoryNotFoundException("Could not locate src/Moongate.Server/uo_files from the test output.");
+        throw new DirectoryNotFoundException("Could not locate src/Moongate.Server/Assets/data/uo_files.");
     }
 }

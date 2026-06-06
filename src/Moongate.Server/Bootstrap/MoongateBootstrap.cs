@@ -23,6 +23,7 @@ using Moongate.Server.Extensions.Seed;
 using Moongate.Server.Extensions.Timing;
 using Moongate.Server.Extensions.UoData;
 using Moongate.Server.Extensions.Users;
+using Moongate.Server.Extensions.WorldData;
 using Moongate.Server.Services.Diagnostics;
 using Moongate.Server.Services.EventBus;
 using Moongate.Server.Services.GameLoop;
@@ -95,18 +96,11 @@ public static class MoongateBootstrap
         // Persistence (priority 15): snapshot + journal.
         container.AddMoongatePersistence(directories[DirectoryType.Save]);
 
-        // UO static data: seed bundled reference data, then register client-file + reference stores.
-        UoDataAssetsBootstrapper.EnsureDataAssets(
-            Path.Combine(AppContext.BaseDirectory, "Assets", "uo_files"),
-            directories[DirectoryType.Data],
-            Log.Logger
-        );
-        UoDataAssetsBootstrapper.EnsureDataAssets(
-            Path.Combine(AppContext.BaseDirectory, "Assets", "data"),
-            directories[DirectoryType.Data],
-            Log.Logger
-        );
-        container.AddMoongateUoData(directories[DirectoryType.Data]);
+        // Seed bundled YAML assets from embedded resources, then register client-file + UO stores.
+        var dataDirectory = directories[DirectoryType.Data];
+        BundledDataAssetsBootstrapper.EnsureDataAssets(dataDirectory, Log.Logger);
+        container.AddMoongateUoData(Path.Combine(dataDirectory, "uo_files"));
+        container.AddMoongateWorldData(dataDirectory);
 
         // Network: TCP game listeners + UDP ping server + packet parser (priority 20).
         container.AddMoongateNetwork();

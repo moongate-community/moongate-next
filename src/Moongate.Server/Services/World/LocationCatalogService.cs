@@ -1,0 +1,33 @@
+using Moongate.Server.Data.World;
+using Moongate.Server.Interfaces.Services.World;
+
+namespace Moongate.Server.Services.World;
+
+/// <summary>
+/// In-memory location catalog populated at startup by server asset data.
+/// </summary>
+public class LocationCatalogService : ILocationCatalogService
+{
+    private readonly object _sync = new();
+    private List<WorldLocationEntry> _locations = [];
+
+    public IReadOnlyList<WorldLocationEntry> GetAllLocations()
+    {
+        lock (_sync)
+        {
+            return [.. _locations];
+        }
+    }
+
+    public void SetLocations(IReadOnlyList<WorldLocationEntry> locations)
+    {
+        ArgumentNullException.ThrowIfNull(locations);
+
+        var snapshot = locations.ToList();
+
+        lock (_sync)
+        {
+            _locations = snapshot;
+        }
+    }
+}
