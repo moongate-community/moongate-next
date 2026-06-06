@@ -5,7 +5,7 @@ namespace Moongate.Server.Interfaces.Services.World;
 /// <summary>
 /// Provides access to door component metadata loaded from data/components/doors.yaml.
 /// </summary>
-public interface IDoorDataService
+public interface IDoorDataService : IDataService
 {
     /// <summary>
     /// Returns all loaded door component entries.

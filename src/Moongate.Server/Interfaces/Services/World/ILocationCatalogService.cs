@@ -5,7 +5,7 @@ namespace Moongate.Server.Interfaces.Services.World;
 /// <summary>
 /// Provides access to flattened world location catalog entries.
 /// </summary>
-public interface ILocationCatalogService
+public interface ILocationCatalogService : IDataService
 {
     /// <summary>
     /// Returns all loaded location entries.

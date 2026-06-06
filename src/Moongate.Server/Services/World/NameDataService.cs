@@ -1,18 +1,34 @@
 using Moongate.Server.Data.World;
 using Moongate.Server.Interfaces.Services.World;
+using Moongate.Server.Services.World.Internal;
+using Moongate.Server.Services.WorldData;
 
 namespace Moongate.Server.Services.World;
 
 /// <summary>
-/// In-memory store for name groups loaded at startup.
+/// Lazy in-memory store for name groups.
 /// </summary>
-public class NameDataService : INameDataService
+public class NameDataService : LazyDataService, INameDataService
 {
-    private readonly object _sync = new();
+    private readonly ServerAssetDataLoader? _loader;
+    private readonly Lock _sync = new();
     private List<NameGroupEntry> _groups = [];
+
+    public NameDataService()
+    {
+    }
+
+    public NameDataService(ServerAssetDataLoader loader)
+    {
+        ArgumentNullException.ThrowIfNull(loader);
+
+        _loader = loader;
+    }
 
     public IReadOnlyList<NameGroupEntry> GetAllGroups()
     {
+        EnsureLoaded();
+
         lock (_sync)
         {
             return [.. _groups];
@@ -29,5 +45,12 @@ public class NameDataService : INameDataService
         {
             _groups = snapshot;
         }
+
+        MarkLoaded();
+    }
+
+    protected override void LoadCore()
+    {
+        _loader?.LoadNames(this);
     }
 }

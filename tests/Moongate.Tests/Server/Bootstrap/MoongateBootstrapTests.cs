@@ -38,6 +38,17 @@ public sealed class MoongateBootstrapTests : IDisposable
         Assert.NotNull(container.Resolve<LoggerConfig>());
         Assert.True(File.Exists(Path.Combine(context.Directories[DirectoryType.Config], "moongate.yaml")));
 
+        var dataServices = container.ResolveMany<IDataService>().ToArray();
+        Assert.Equal(12, dataServices.Length);
+        Assert.All(
+            dataServices,
+            service =>
+            {
+                Assert.True(service.IsLazy);
+                Assert.False(service.IsLoaded);
+            }
+        );
+
         var descriptor = container.Resolve<MoongateServiceDescriptor>(serviceKey: typeof(ServerAssetDataBootService));
         Assert.IsType<ServerAssetDataBootService>(descriptor.Service);
         Assert.Equal(11, descriptor.Priority);

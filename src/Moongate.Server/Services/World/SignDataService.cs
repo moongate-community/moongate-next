@@ -1,19 +1,35 @@
 using Moongate.Server.Data.World;
 using Moongate.Server.Interfaces.Services.World;
+using Moongate.Server.Services.World.Internal;
+using Moongate.Server.Services.WorldData;
 
 namespace Moongate.Server.Services.World;
 
 /// <summary>
-/// In-memory store for sign entries loaded at startup.
+/// Lazy in-memory store for sign entries.
 /// </summary>
-public class SignDataService : ISignDataService
+public class SignDataService : LazyDataService, ISignDataService
 {
-    private readonly object _sync = new();
+    private readonly ServerAssetDataLoader? _loader;
+    private readonly Lock _sync = new();
     private List<SignEntry> _entries = [];
     private Dictionary<int, List<SignEntry>> _entriesByMap = [];
 
+    public SignDataService()
+    {
+    }
+
+    public SignDataService(ServerAssetDataLoader loader)
+    {
+        ArgumentNullException.ThrowIfNull(loader);
+
+        _loader = loader;
+    }
+
     public IReadOnlyList<SignEntry> GetAllEntries()
     {
+        EnsureLoaded();
+
         lock (_sync)
         {
             return [.. _entries];
@@ -22,6 +38,8 @@ public class SignDataService : ISignDataService
 
     public IReadOnlyList<SignEntry> GetEntriesByMap(int mapId)
     {
+        EnsureLoaded();
+
         lock (_sync)
         {
             if (!_entriesByMap.TryGetValue(mapId, out var entries))
@@ -49,5 +67,12 @@ public class SignDataService : ISignDataService
                     static grouping => grouping.ToList()
                 );
         }
+
+        MarkLoaded();
+    }
+
+    protected override void LoadCore()
+    {
+        _loader?.LoadSigns(this);
     }
 }

@@ -5,7 +5,7 @@ namespace Moongate.Server.Interfaces.Services.World;
 /// <summary>
 /// Provides access to spawn definitions loaded from data/spawns.
 /// </summary>
-public interface ISpawnsDataService
+public interface ISpawnsDataService : IDataService
 {
     /// <summary>
     /// Returns all loaded spawn definitions.

@@ -6,7 +6,7 @@ namespace Moongate.Server.Interfaces.Services.World;
 /// <summary>
 /// Provides access to teleporter definitions loaded from server asset data.
 /// </summary>
-public interface ITeleportersDataService
+public interface ITeleportersDataService : IDataService
 {
     /// <summary>
     /// Returns all loaded teleporter definitions.

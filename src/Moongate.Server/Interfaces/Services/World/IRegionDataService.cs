@@ -5,7 +5,7 @@ namespace Moongate.Server.Interfaces.Services.World;
 /// <summary>
 /// Provides access to region definitions loaded from server asset data.
 /// </summary>
-public interface IRegionDataService
+public interface IRegionDataService : IDataService
 {
     /// <summary>
     /// Returns all loaded region entries.

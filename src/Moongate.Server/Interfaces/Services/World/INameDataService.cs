@@ -5,7 +5,7 @@ namespace Moongate.Server.Interfaces.Services.World;
 /// <summary>
 /// Provides access to name groups loaded from server asset data.
 /// </summary>
-public interface INameDataService
+public interface INameDataService : IDataService
 {
     /// <summary>
     /// Returns all loaded name groups.

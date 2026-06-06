@@ -26,22 +26,70 @@ public static class WorldDataContainerExtensions
         var normalizedDataDirectory = Path.GetFullPath(dataDirectory);
 
         container.RegisterDelegate(_ => new ServerAssetDataLoader(normalizedDataDirectory), Reuse.Singleton);
-        container.Register<IDoorDataService, DoorDataService>(Reuse.Singleton);
-        container.Register<ISpawnsDataService, SpawnsDataService>(Reuse.Singleton);
-        container.Register<ITeleportersDataService, TeleportersDataService>(Reuse.Singleton);
-        container.Register<IRegionDataService, RegionDataService>(Reuse.Singleton);
-        container.Register<IWeatherDataService, WeatherDataService>(Reuse.Singleton);
-        container.Register<IContainerDataService, ContainerDataService>(Reuse.Singleton);
-        container.Register<ILocationCatalogService, LocationCatalogService>(Reuse.Singleton);
-        container.Register<INameDataService, NameDataService>(Reuse.Singleton);
-        container.Register<IProfessionDataService, ProfessionDataService>(Reuse.Singleton);
-        container.Register<ISignDataService, SignDataService>(Reuse.Singleton);
-        container.Register<IDecorationDataService, DecorationDataService>(Reuse.Singleton);
-        container.Register<IMountDataService, MountDataService>(Reuse.Singleton);
+        RegisterDataService<IDoorDataService, DoorDataService>(
+            container,
+            resolver => new DoorDataService(resolver.Resolve<ServerAssetDataLoader>())
+        );
+        RegisterDataService<ISpawnsDataService, SpawnsDataService>(
+            container,
+            resolver => new SpawnsDataService(resolver.Resolve<ServerAssetDataLoader>())
+        );
+        RegisterDataService<ITeleportersDataService, TeleportersDataService>(
+            container,
+            resolver => new TeleportersDataService(resolver.Resolve<ServerAssetDataLoader>())
+        );
+        RegisterDataService<IRegionDataService, RegionDataService>(
+            container,
+            resolver => new RegionDataService(resolver.Resolve<ServerAssetDataLoader>())
+        );
+        RegisterDataService<IWeatherDataService, WeatherDataService>(
+            container,
+            resolver => new WeatherDataService(resolver.Resolve<ServerAssetDataLoader>())
+        );
+        RegisterDataService<IContainerDataService, ContainerDataService>(
+            container,
+            resolver => new ContainerDataService(resolver.Resolve<ServerAssetDataLoader>())
+        );
+        RegisterDataService<ILocationCatalogService, LocationCatalogService>(
+            container,
+            resolver => new LocationCatalogService(resolver.Resolve<ServerAssetDataLoader>())
+        );
+        RegisterDataService<INameDataService, NameDataService>(
+            container,
+            resolver => new NameDataService(resolver.Resolve<ServerAssetDataLoader>())
+        );
+        RegisterDataService<IProfessionDataService, ProfessionDataService>(
+            container,
+            resolver => new ProfessionDataService(resolver.Resolve<ServerAssetDataLoader>())
+        );
+        RegisterDataService<ISignDataService, SignDataService>(
+            container,
+            resolver => new SignDataService(resolver.Resolve<ServerAssetDataLoader>())
+        );
+        RegisterDataService<IDecorationDataService, DecorationDataService>(
+            container,
+            resolver => new DecorationDataService(resolver.Resolve<ServerAssetDataLoader>())
+        );
+        RegisterDataService<IMountDataService, MountDataService>(
+            container,
+            resolver => new MountDataService(resolver.Resolve<ServerAssetDataLoader>())
+        );
 
         container.AddMoongateHosting();
         container.AddMoongateService<ServerAssetDataBootService>(WorldDataBootPriority);
 
         return container;
+    }
+
+    private static void RegisterDataService<TInterface, TImplementation>(
+        IContainer container,
+        Func<IResolverContext, TImplementation> factory
+    )
+        where TInterface : class, IDataService
+        where TImplementation : class, TInterface, IDataService
+    {
+        container.RegisterDelegate(factory, Reuse.Singleton);
+        container.RegisterMapping<TInterface, TImplementation>();
+        container.RegisterMapping<IDataService, TImplementation>();
     }
 }

@@ -5,7 +5,7 @@ namespace Moongate.Server.Interfaces.Services.World;
 /// <summary>
 /// Provides access to decoration entries loaded from server asset data.
 /// </summary>
-public interface IDecorationDataService
+public interface IDecorationDataService : IDataService
 {
     /// <summary>
     /// Returns all loaded decoration entries.

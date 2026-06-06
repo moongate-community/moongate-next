@@ -35,9 +35,11 @@ At startup, missing bundled YAML files are copied from embedded resources into
 the runtime data directory. Existing runtime files are never overwritten, so
 operators can customize shard data after first boot.
 
-After the data seed runs, Moongate loads the runtime `data/` tree into world
-data services for doors, spawns, teleporters, regions, weather, containers,
-locations, names, professions, signs, decorations, and mount conversion data.
+After the data seed runs, Moongate registers lazy world data services for doors,
+spawns, teleporters, regions, weather, containers, locations, names,
+professions, signs, decorations, and mount conversion data. Each service loads
+its YAML data on first query and can be reloaded through the common data service
+contract.
 
 ## License
 

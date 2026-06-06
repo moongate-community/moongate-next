@@ -5,7 +5,7 @@ namespace Moongate.Server.Interfaces.Services.World;
 /// <summary>
 /// Provides access to weather definitions loaded from server asset data.
 /// </summary>
-public interface IWeatherDataService
+public interface IWeatherDataService : IDataService
 {
     /// <summary>
     /// Returns all loaded weather entries.

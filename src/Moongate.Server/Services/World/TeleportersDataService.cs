@@ -1,23 +1,39 @@
 using Moongate.Core.Geometry;
 using Moongate.Server.Data.World;
 using Moongate.Server.Interfaces.Services.World;
+using Moongate.Server.Services.World.Internal;
+using Moongate.Server.Services.WorldData;
 
 namespace Moongate.Server.Services.World;
 
 /// <summary>
-/// In-memory store for teleporter definitions loaded at startup.
+/// Lazy in-memory store for teleporter definitions.
 /// </summary>
-public class TeleportersDataService : ITeleportersDataService
+public class TeleportersDataService : LazyDataService, ITeleportersDataService
 {
     private const int SectorShift = 4;
 
-    private readonly object _sync = new();
+    private readonly ServerAssetDataLoader? _loader;
+    private readonly Lock _sync = new();
     private List<TeleporterEntry> _entries = [];
     private Dictionary<int, List<TeleporterEntry>> _entriesBySourceMap = [];
     private Dictionary<(int MapId, int SectorX, int SectorY), List<TeleporterEntry>> _entriesBySourceSector = [];
 
+    public TeleportersDataService()
+    {
+    }
+
+    public TeleportersDataService(ServerAssetDataLoader loader)
+    {
+        ArgumentNullException.ThrowIfNull(loader);
+
+        _loader = loader;
+    }
+
     public IReadOnlyList<TeleporterEntry> GetAllEntries()
     {
+        EnsureLoaded();
+
         lock (_sync)
         {
             return [.. _entries];
@@ -26,6 +42,8 @@ public class TeleportersDataService : ITeleportersDataService
 
     public IReadOnlyList<TeleporterEntry> GetEntriesBySourceMap(int mapId)
     {
+        EnsureLoaded();
+
         lock (_sync)
         {
             if (!_entriesBySourceMap.TryGetValue(mapId, out var entries))
@@ -39,6 +57,8 @@ public class TeleportersDataService : ITeleportersDataService
 
     public IReadOnlyList<TeleporterEntry> GetEntriesBySourceSector(int mapId, int sectorX, int sectorY)
     {
+        EnsureLoaded();
+
         lock (_sync)
         {
             if (!_entriesBySourceSector.TryGetValue((mapId, sectorX, sectorY), out var entries))
@@ -78,6 +98,8 @@ public class TeleportersDataService : ITeleportersDataService
                     static grouping => grouping.ToList()
                 );
         }
+
+        MarkLoaded();
     }
 
     public bool TryGetEntryAtLocation(int mapId, Point3D location, out TeleporterEntry entry)
@@ -132,5 +154,10 @@ public class TeleportersDataService : ITeleportersDataService
         destinationLocation = currentLocation;
 
         return true;
+    }
+
+    protected override void LoadCore()
+    {
+        _loader?.LoadTeleporters(this);
     }
 }

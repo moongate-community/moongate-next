@@ -8,7 +8,7 @@ public sealed class ServerAssetDataBootServiceTests : IDisposable
     private readonly string _dataDirectory = Path.Combine(Path.GetTempPath(), $"mg-world-data-boot-{Guid.NewGuid():N}");
 
     [Fact]
-    public async Task StartAsync_LoadsRegisteredWorldDataServices()
+    public async Task StartAsync_DoesNotForceWorldDataLoading()
     {
         Directory.CreateDirectory(Path.Combine(_dataDirectory, "components"));
         File.WriteAllText(
@@ -22,40 +22,17 @@ public sealed class ServerAssetDataBootServiceTests : IDisposable
             """
         );
 
-        var doors = new DoorDataService();
-        var spawns = new SpawnsDataService();
-        var teleporters = new TeleportersDataService();
-        var regions = new RegionDataService();
-        var weather = new WeatherDataService();
-        var containers = new ContainerDataService();
-        var locations = new LocationCatalogService();
-        var names = new NameDataService();
-        var professions = new ProfessionDataService();
-        var signs = new SignDataService();
-        var decorations = new DecorationDataService();
-        var mounts = new MountDataService();
-        var service = new ServerAssetDataBootService(
-            new ServerAssetDataLoader(_dataDirectory),
-            doors,
-            spawns,
-            teleporters,
-            regions,
-            weather,
-            containers,
-            locations,
-            names,
-            professions,
-            signs,
-            decorations,
-            mounts
-        );
+        var doors = new DoorDataService(new ServerAssetDataLoader(_dataDirectory));
+        var service = new ServerAssetDataBootService();
 
         await service.StartAsync(CancellationToken.None);
+
+        Assert.False(doors.IsLoaded);
 
         Assert.Single(doors.GetAllEntries());
         Assert.True(doors.TryGetToggleDefinition(1701, out var definition));
         Assert.Equal(1702, definition.NextItemId);
-        Assert.Empty(spawns.GetAllEntries());
+        Assert.True(doors.IsLoaded);
 
         await service.StopAsync(CancellationToken.None);
     }

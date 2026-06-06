@@ -106,14 +106,16 @@ public class ServerAssetDataLoader
 
         var entries = new List<SpawnDefinitionEntry>();
         var spawnFiles = Directory
-            .EnumerateFiles(spawnsDirectory, "*.yaml", SearchOption.AllDirectories)
-            .Select(path => (
-                FullPath: path,
-                SourcePath: ToSourcePath(Path.GetRelativePath(spawnsDirectory, path))
-            ))
-            .OrderBy(file => file.SourcePath, StringComparer.OrdinalIgnoreCase)
-            .ThenBy(file => file.SourcePath, StringComparer.Ordinal)
-            .ToArray();
+                         .EnumerateFiles(spawnsDirectory, "*.yaml", SearchOption.AllDirectories)
+                         .Select(
+                             path => (
+                                         FullPath: path,
+                                         SourcePath: ToSourcePath(Path.GetRelativePath(spawnsDirectory, path))
+                                     )
+                         )
+                         .OrderBy(file => file.SourcePath, StringComparer.OrdinalIgnoreCase)
+                         .ThenBy(file => file.SourcePath, StringComparer.Ordinal)
+                         .ToArray();
 
         foreach (var spawnFile in spawnFiles)
         {
@@ -133,13 +135,16 @@ public class ServerAssetDataLoader
         spawnsDataService.SetEntries(entries);
     }
 
-    private void LoadTeleporters(ITeleportersDataService teleportersDataService)
+    public void LoadTeleporters(ITeleportersDataService teleportersDataService)
     {
         var teleportersDirectory = Path.Combine(_dataDirectory, "teleporters");
 
         if (!Directory.Exists(teleportersDirectory))
         {
-            _logger.Warning("Teleporter asset directory {Path} was not found; clearing teleporter data", teleportersDirectory);
+            _logger.Warning(
+                "Teleporter asset directory {Path} was not found; clearing teleporter data",
+                teleportersDirectory
+            );
             teleportersDataService.SetEntries([]);
 
             return;
@@ -163,7 +168,7 @@ public class ServerAssetDataLoader
         teleportersDataService.SetEntries(entries);
     }
 
-    private void LoadRegions(IRegionDataService regionDataService)
+    public void LoadRegions(IRegionDataService regionDataService)
     {
         var regionsDirectory = Path.Combine(_dataDirectory, "regions");
 
@@ -203,8 +208,8 @@ public class ServerAssetDataLoader
                         definition.Name,
                         definition.Priority,
                         definition.Area
-                            .Select(static area => new RegionAreaEntry(area.X1, area.Y1, area.X2, area.Y2))
-                            .ToArray(),
+                                  .Select(static area => new RegionAreaEntry(area.X1, area.Y1, area.X2, area.Y2))
+                                  .ToArray(),
                         definition.Music,
                         ToPoint3D(definition.Entrance),
                         ToPoint3D(definition.GoLocation)
@@ -216,7 +221,7 @@ public class ServerAssetDataLoader
         regionDataService.SetEntries(entries);
     }
 
-    private void LoadWeather(IWeatherDataService weatherDataService)
+    public void LoadWeather(IWeatherDataService weatherDataService)
     {
         var weatherDirectory = Path.Combine(_dataDirectory, "weather");
 
@@ -240,7 +245,7 @@ public class ServerAssetDataLoader
         weatherDataService.SetEntries(entries);
     }
 
-    private void LoadContainers(IContainerDataService containerDataService)
+    public void LoadContainers(IContainerDataService containerDataService)
     {
         var containersPath = Path.Combine(_dataDirectory, "containers", "default_containers.yaml");
         var layoutsPath = Path.Combine(_dataDirectory, "containers", "containers.yaml");
@@ -254,14 +259,16 @@ public class ServerAssetDataLoader
         {
             var table = YamlUtils.DeserializeFromFile<ServerAssetContainerTable>(containersPath);
             var entries = table.Container
-                .Select(static definition => new ContainerEntry(
-                    definition.Id,
-                    definition.ItemId,
-                    definition.Width,
-                    definition.Height,
-                    definition.Name
-                ))
-                .ToArray();
+                               .Select(
+                                   static definition => new ContainerEntry(
+                                       definition.Id,
+                                       definition.ItemId,
+                                       definition.Width,
+                                       definition.Height,
+                                       definition.Name
+                                   )
+                               )
+                               .ToArray();
 
             containerDataService.SetContainers(entries);
         }
@@ -275,25 +282,30 @@ public class ServerAssetDataLoader
         {
             var table = YamlUtils.DeserializeFromFile<ServerAssetContainerLayoutTable>(layoutsPath);
             var entries = table.ContainerLayout
-                .Select(static definition => new ContainerLayoutEntry(
-                    definition.GumpId,
-                    definition.Bounds,
-                    definition.DropSound,
-                    definition.ItemIds
-                ))
-                .ToArray();
+                               .Select(
+                                   static definition => new ContainerLayoutEntry(
+                                       definition.GumpId,
+                                       definition.Bounds,
+                                       definition.DropSound,
+                                       definition.ItemIds
+                                   )
+                               )
+                               .ToArray();
 
             containerDataService.SetLayouts(entries);
         }
     }
 
-    private void LoadLocations(ILocationCatalogService locationCatalogService)
+    public void LoadLocations(ILocationCatalogService locationCatalogService)
     {
         var locationsDirectory = Path.Combine(_dataDirectory, "locations");
 
         if (!Directory.Exists(locationsDirectory))
         {
-            _logger.Warning("Location asset directory {Path} was not found; clearing location catalog data", locationsDirectory);
+            _logger.Warning(
+                "Location asset directory {Path} was not found; clearing location catalog data",
+                locationsDirectory
+            );
             locationCatalogService.SetLocations([]);
 
             return;
@@ -332,7 +344,7 @@ public class ServerAssetDataLoader
         locationCatalogService.SetLocations(entries);
     }
 
-    private void LoadNames(INameDataService nameDataService)
+    public void LoadNames(INameDataService nameDataService)
     {
         var namesDirectory = Path.Combine(_dataDirectory, "names");
 
@@ -355,7 +367,7 @@ public class ServerAssetDataLoader
         nameDataService.SetGroups(groups);
     }
 
-    private void LoadProfessions(IProfessionDataService professionDataService)
+    public void LoadProfessions(IProfessionDataService professionDataService)
     {
         var professionsPath = Path.Combine(_dataDirectory, "Professions", "professions.yaml");
 
@@ -372,7 +384,7 @@ public class ServerAssetDataLoader
         professionDataService.SetProfessions(table.Profession.Select(MapProfession).ToArray());
     }
 
-    private void LoadSigns(ISignDataService signDataService)
+    public void LoadSigns(ISignDataService signDataService)
     {
         var signsDirectory = Path.Combine(_dataDirectory, "signs");
 
@@ -423,13 +435,16 @@ public class ServerAssetDataLoader
         signDataService.SetEntries(entries);
     }
 
-    private void LoadDecorations(IDecorationDataService decorationDataService)
+    public void LoadDecorations(IDecorationDataService decorationDataService)
     {
         var decorationDirectory = Path.Combine(_dataDirectory, "decoration");
 
         if (!Directory.Exists(decorationDirectory))
         {
-            _logger.Warning("Decoration asset directory {Path} was not found; clearing decoration data", decorationDirectory);
+            _logger.Warning(
+                "Decoration asset directory {Path} was not found; clearing decoration data",
+                decorationDirectory
+            );
             decorationDataService.SetEntries([]);
 
             return;
@@ -473,7 +488,9 @@ public class ServerAssetDataLoader
                         continue;
                     }
 
-                    var target = TryParsePoint3D(placement.Target, out var placementTarget) ? placementTarget : (Point3D?)null;
+                    var target = TryParsePoint3D(placement.Target, out var placementTarget)
+                                     ? placementTarget
+                                     : (Point3D?)null;
 
                     foreach (var mapId in mapIds)
                     {
@@ -499,7 +516,7 @@ public class ServerAssetDataLoader
         decorationDataService.SetEntries(entries);
     }
 
-    private void LoadMounts(IMountDataService mountDataService)
+    public void LoadMounts(IMountDataService mountDataService)
     {
         var conversionsPath = Path.Combine(_dataDirectory, "support", "uoconvert.yaml");
 
@@ -521,7 +538,10 @@ public class ServerAssetDataLoader
 
         if (tilesEntry is null)
         {
-            _logger.Warning("Conversion asset file {Path} did not contain a Mounts/Tiles entry; clearing mount data", conversionsPath);
+            _logger.Warning(
+                "Conversion asset file {Path} did not contain a Mounts/Tiles entry; clearing mount data",
+                conversionsPath
+            );
             mountDataService.SetEntries([]);
 
             return;
@@ -575,11 +595,11 @@ public class ServerAssetDataLoader
             profession.Gump,
             profession.Type,
             profession.Skills
-                .Select(static skill => new ProfessionSkillEntry(skill.Name, skill.Value))
-                .ToArray(),
+                      .Select(static skill => new ProfessionSkillEntry(skill.Name, skill.Value))
+                      .ToArray(),
             profession.Stats
-                .Select(static stat => new ProfessionStatEntry(stat.Type, stat.Value))
-                .ToArray()
+                      .Select(static stat => new ProfessionStatEntry(stat.Type, stat.Value))
+                      .ToArray()
         );
     }
 
@@ -720,12 +740,14 @@ public class ServerAssetDataLoader
             definition.HomeRange,
             definition.WalkingRange,
             definition.Entries
-                .Select(static spawnEntry => new SpawnEntryDefinition(
-                    spawnEntry.Name,
-                    spawnEntry.MaxCount,
-                    spawnEntry.Probability
-                ))
-                .ToArray()
+                      .Select(
+                          static spawnEntry => new SpawnEntryDefinition(
+                              spawnEntry.Name,
+                              spawnEntry.MaxCount,
+                              spawnEntry.Probability
+                          )
+                      )
+                      .ToArray()
         );
 
         return true;
@@ -848,8 +870,8 @@ public class ServerAssetDataLoader
     private static SpawnDefinitionKind ResolveKind(string type)
     {
         return type.Equals("ProximitySpawner", StringComparison.OrdinalIgnoreCase)
-            ? SpawnDefinitionKind.ProximitySpawner
-            : SpawnDefinitionKind.Spawner;
+                   ? SpawnDefinitionKind.ProximitySpawner
+                   : SpawnDefinitionKind.Spawner;
     }
 
     private void FlattenLocationCategory(
@@ -905,14 +927,16 @@ public class ServerAssetDataLoader
     )
     {
         return Directory
-            .EnumerateFiles(directory, "*.yaml", searchOption)
-            .Select(path => (
-                FullPath: path,
-                SourcePath: ToSourcePath(Path.GetRelativePath(directory, path))
-            ))
-            .OrderBy(file => file.SourcePath, StringComparer.OrdinalIgnoreCase)
-            .ThenBy(file => file.SourcePath, StringComparer.Ordinal)
-            .ToArray();
+               .EnumerateFiles(directory, "*.yaml", searchOption)
+               .Select(
+                   path => (
+                               FullPath: path,
+                               SourcePath: ToSourcePath(Path.GetRelativePath(directory, path))
+                           )
+               )
+               .OrderBy(file => file.SourcePath, StringComparer.OrdinalIgnoreCase)
+               .ThenBy(file => file.SourcePath, StringComparer.Ordinal)
+               .ToArray();
     }
 
     private static Point3D? ToPoint3D(ServerAssetWorldPoint? point)
@@ -1049,7 +1073,7 @@ public class ServerAssetDataLoader
     private static string ToSourcePath(string path)
     {
         return path
-            .Replace(Path.DirectorySeparatorChar, '/')
-            .Replace(Path.AltDirectorySeparatorChar, '/');
+               .Replace(Path.DirectorySeparatorChar, '/')
+               .Replace(Path.AltDirectorySeparatorChar, '/');
     }
 }

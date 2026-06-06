@@ -1,19 +1,35 @@
 using Moongate.Server.Data.World;
 using Moongate.Server.Interfaces.Services.World;
+using Moongate.Server.Services.World.Internal;
+using Moongate.Server.Services.WorldData;
 
 namespace Moongate.Server.Services.World;
 
 /// <summary>
-/// In-memory store for container defaults and layouts loaded at startup.
+/// Lazy in-memory store for container defaults and layouts.
 /// </summary>
-public class ContainerDataService : IContainerDataService
+public class ContainerDataService : LazyDataService, IContainerDataService
 {
-    private readonly object _sync = new();
+    private readonly ServerAssetDataLoader? _loader;
+    private readonly Lock _sync = new();
     private List<ContainerEntry> _containers = [];
     private List<ContainerLayoutEntry> _layouts = [];
 
+    public ContainerDataService()
+    {
+    }
+
+    public ContainerDataService(ServerAssetDataLoader loader)
+    {
+        ArgumentNullException.ThrowIfNull(loader);
+
+        _loader = loader;
+    }
+
     public IReadOnlyList<ContainerEntry> GetAllContainers()
     {
+        EnsureLoaded();
+
         lock (_sync)
         {
             return [.. _containers];
@@ -22,6 +38,8 @@ public class ContainerDataService : IContainerDataService
 
     public IReadOnlyList<ContainerLayoutEntry> GetAllLayouts()
     {
+        EnsureLoaded();
+
         lock (_sync)
         {
             return [.. _layouts];
@@ -38,6 +56,8 @@ public class ContainerDataService : IContainerDataService
         {
             _containers = snapshot;
         }
+
+        MarkLoaded();
     }
 
     public void SetLayouts(IReadOnlyList<ContainerLayoutEntry> entries)
@@ -50,5 +70,12 @@ public class ContainerDataService : IContainerDataService
         {
             _layouts = snapshot;
         }
+
+        MarkLoaded();
+    }
+
+    protected override void LoadCore()
+    {
+        _loader?.LoadContainers(this);
     }
 }

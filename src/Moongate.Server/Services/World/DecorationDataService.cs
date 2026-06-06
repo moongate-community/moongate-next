@@ -1,19 +1,35 @@
 using Moongate.Server.Data.World;
 using Moongate.Server.Interfaces.Services.World;
+using Moongate.Server.Services.World.Internal;
+using Moongate.Server.Services.WorldData;
 
 namespace Moongate.Server.Services.World;
 
 /// <summary>
-/// In-memory store for decoration entries loaded at startup.
+/// Lazy in-memory store for decoration entries.
 /// </summary>
-public class DecorationDataService : IDecorationDataService
+public class DecorationDataService : LazyDataService, IDecorationDataService
 {
-    private readonly object _sync = new();
+    private readonly ServerAssetDataLoader? _loader;
+    private readonly Lock _sync = new();
     private List<DecorationEntry> _entries = [];
     private Dictionary<int, List<DecorationEntry>> _entriesByMap = [];
 
+    public DecorationDataService()
+    {
+    }
+
+    public DecorationDataService(ServerAssetDataLoader loader)
+    {
+        ArgumentNullException.ThrowIfNull(loader);
+
+        _loader = loader;
+    }
+
     public IReadOnlyList<DecorationEntry> GetAllEntries()
     {
+        EnsureLoaded();
+
         lock (_sync)
         {
             return [.. _entries];
@@ -22,6 +38,8 @@ public class DecorationDataService : IDecorationDataService
 
     public IReadOnlyList<DecorationEntry> GetEntriesByMap(int mapId)
     {
+        EnsureLoaded();
+
         lock (_sync)
         {
             if (!_entriesByMap.TryGetValue(mapId, out var entries))
@@ -49,5 +67,12 @@ public class DecorationDataService : IDecorationDataService
                     static grouping => grouping.ToList()
                 );
         }
+
+        MarkLoaded();
+    }
+
+    protected override void LoadCore()
+    {
+        _loader?.LoadDecorations(this);
     }
 }

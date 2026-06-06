@@ -5,7 +5,7 @@ namespace Moongate.Server.Interfaces.Services.World;
 /// <summary>
 /// Provides access to sign entries loaded from server asset data.
 /// </summary>
-public interface ISignDataService
+public interface ISignDataService : IDataService
 {
     /// <summary>
     /// Returns all loaded sign entries.

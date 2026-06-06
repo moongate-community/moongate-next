@@ -1,13 +1,15 @@
 using Moongate.Core.Geometry;
 using Moongate.Server.Data.World;
 using Moongate.Server.Interfaces.Services.World;
+using Moongate.Server.Services.World.Internal;
+using Moongate.Server.Services.WorldData;
 
 namespace Moongate.Server.Services.World;
 
 /// <summary>
-/// In-memory storage for door component metadata and precomputed toggle definitions.
+/// Lazy in-memory storage for door component metadata and precomputed toggle definitions.
 /// </summary>
-public class DoorDataService : IDoorDataService
+public class DoorDataService : LazyDataService, IDoorDataService
 {
     private static readonly Point3D[] _offsetsByDoorFacing =
     [
@@ -33,12 +35,26 @@ public class DoorDataService : IDoorDataService
         7
     ];
 
-    private readonly object _sync = new();
+    private readonly ServerAssetDataLoader? _loader;
+    private readonly Lock _sync = new();
     private List<DoorComponentEntry> _entries = [];
     private Dictionary<int, DoorToggleDefinition> _toggleByItemId = [];
 
+    public DoorDataService()
+    {
+    }
+
+    public DoorDataService(ServerAssetDataLoader loader)
+    {
+        ArgumentNullException.ThrowIfNull(loader);
+
+        _loader = loader;
+    }
+
     public IReadOnlyList<DoorComponentEntry> GetAllEntries()
     {
+        EnsureLoaded();
+
         lock (_sync)
         {
             return [.. _entries];
@@ -56,14 +72,23 @@ public class DoorDataService : IDoorDataService
             _entries = snapshot;
             _toggleByItemId = BuildToggleMap(snapshot);
         }
+
+        MarkLoaded();
     }
 
     public bool TryGetToggleDefinition(int itemId, out DoorToggleDefinition definition)
     {
+        EnsureLoaded();
+
         lock (_sync)
         {
             return _toggleByItemId.TryGetValue(itemId, out definition);
         }
+    }
+
+    protected override void LoadCore()
+    {
+        _loader?.LoadDoors(this);
     }
 
     private static Dictionary<int, DoorToggleDefinition> BuildToggleMap(IReadOnlyList<DoorComponentEntry> entries)

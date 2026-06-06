@@ -1,18 +1,34 @@
 using Moongate.Server.Data.World;
 using Moongate.Server.Interfaces.Services.World;
+using Moongate.Server.Services.World.Internal;
+using Moongate.Server.Services.WorldData;
 
 namespace Moongate.Server.Services.World;
 
 /// <summary>
-/// In-memory store for profession definitions loaded at startup.
+/// Lazy in-memory store for profession definitions.
 /// </summary>
-public class ProfessionDataService : IProfessionDataService
+public class ProfessionDataService : LazyDataService, IProfessionDataService
 {
-    private readonly object _sync = new();
+    private readonly ServerAssetDataLoader? _loader;
+    private readonly Lock _sync = new();
     private List<ProfessionEntry> _professions = [];
+
+    public ProfessionDataService()
+    {
+    }
+
+    public ProfessionDataService(ServerAssetDataLoader loader)
+    {
+        ArgumentNullException.ThrowIfNull(loader);
+
+        _loader = loader;
+    }
 
     public IReadOnlyList<ProfessionEntry> GetAllProfessions()
     {
+        EnsureLoaded();
+
         lock (_sync)
         {
             return [.. _professions];
@@ -29,5 +45,12 @@ public class ProfessionDataService : IProfessionDataService
         {
             _professions = snapshot;
         }
+
+        MarkLoaded();
+    }
+
+    protected override void LoadCore()
+    {
+        _loader?.LoadProfessions(this);
     }
 }

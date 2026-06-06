@@ -1,18 +1,34 @@
 using Moongate.Server.Data.World;
 using Moongate.Server.Interfaces.Services.World;
+using Moongate.Server.Services.World.Internal;
+using Moongate.Server.Services.WorldData;
 
 namespace Moongate.Server.Services.World;
 
 /// <summary>
-/// In-memory store for region entries loaded at startup.
+/// Lazy in-memory store for region entries.
 /// </summary>
-public class RegionDataService : IRegionDataService
+public class RegionDataService : LazyDataService, IRegionDataService
 {
-    private readonly object _sync = new();
+    private readonly ServerAssetDataLoader? _loader;
+    private readonly Lock _sync = new();
     private List<RegionEntry> _entries = [];
+
+    public RegionDataService()
+    {
+    }
+
+    public RegionDataService(ServerAssetDataLoader loader)
+    {
+        ArgumentNullException.ThrowIfNull(loader);
+
+        _loader = loader;
+    }
 
     public IReadOnlyList<RegionEntry> GetAllEntries()
     {
+        EnsureLoaded();
+
         lock (_sync)
         {
             return [.. _entries];
@@ -29,5 +45,12 @@ public class RegionDataService : IRegionDataService
         {
             _entries = snapshot;
         }
+
+        MarkLoaded();
+    }
+
+    protected override void LoadCore()
+    {
+        _loader?.LoadRegions(this);
     }
 }

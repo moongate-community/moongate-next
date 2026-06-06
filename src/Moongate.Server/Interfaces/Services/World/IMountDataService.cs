@@ -3,7 +3,7 @@ namespace Moongate.Server.Interfaces.Services.World;
 /// <summary>
 /// Provides access to mount tile item ids loaded from server asset data.
 /// </summary>
-public interface IMountDataService
+public interface IMountDataService : IDataService
 {
     /// <summary>
     /// Returns all loaded mount tile item ids.

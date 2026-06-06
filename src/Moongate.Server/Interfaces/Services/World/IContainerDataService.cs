@@ -5,7 +5,7 @@ namespace Moongate.Server.Interfaces.Services.World;
 /// <summary>
 /// Provides access to container defaults and layouts loaded from server asset data.
 /// </summary>
-public interface IContainerDataService
+public interface IContainerDataService : IDataService
 {
     /// <summary>
     /// Returns all loaded default container definitions.

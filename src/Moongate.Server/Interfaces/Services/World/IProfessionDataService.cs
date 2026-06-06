@@ -5,7 +5,7 @@ namespace Moongate.Server.Interfaces.Services.World;
 /// <summary>
 /// Provides access to profession definitions loaded from server asset data.
 /// </summary>
-public interface IProfessionDataService
+public interface IProfessionDataService : IDataService
 {
     /// <summary>
     /// Returns all loaded professions.
