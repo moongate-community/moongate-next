@@ -1,0 +1,540 @@
+decoration:
+- type: Teleporter
+  arguments: (PointDest = (5690, 1352, -26))
+  description: 'Teleporters # teleporter'
+  item_id: 7107
+  placements:
+  - location:
+    - 5691
+    - 1348
+    - 0
+- type: Teleporter
+  arguments: (PointDest = (5691, 1348, 0))
+  description: teleporter
+  item_id: 7107
+  placements:
+  - location:
+    - 5690
+    - 1352
+    - -26
+- type: Static
+  arguments: (Light = Circle300)
+  description: 'Decorations # bellows'
+  item_id: 6534
+  placements:
+  - location:
+    - 5640
+    - 1410
+    - 0
+- type: Static
+  arguments: (Light = Circle300)
+  description: forge
+  item_id: 6538
+  placements:
+  - location:
+    - 5640
+    - 1411
+    - 0
+- type: Static
+  arguments: (Light = Circle300)
+  description: forge
+  item_id: 6550
+  placements:
+  - location:
+    - 5640
+    - 1412
+    - 0
+- type: Static
+  arguments: (Light = Circle300)
+  description: bellows
+  item_id: 6546
+  placements:
+  - location:
+    - 5640
+    - 1413
+    - 0
+- type: MetalGoldenChest
+  arguments: ''
+  description: metal chest
+  item_id: 3648
+  placements:
+  - location:
+    - 5675
+    - 1433
+    - 0
+  - location:
+    - 5647
+    - 1434
+    - 0
+  - location:
+    - 5640
+    - 1433
+    - 0
+  - location:
+    - 5640
+    - 1435
+    - 0
+  - location:
+    - 5640
+    - 1437
+    - 0
+  - location:
+    - 5650
+    - 1438
+    - 0
+- type: Static
+  arguments: ''
+  description: stalagmites
+  item_id: 2272
+  placements:
+  - location:
+    - 5690
+    - 1328
+    - -1
+  - location:
+    - 5717
+    - 1410
+    - 42
+  - location:
+    - 5718
+    - 1409
+    - 42
+  - location:
+    - 5718
+    - 1410
+    - 40
+- type: FlameSpurtTrap
+  arguments: ''
+  description: fire column
+  item_id: 1
+  placements:
+  - location:
+    - 5688
+    - 1353
+    - -26
+  - location:
+    - 5689
+    - 1354
+    - -26
+  - location:
+    - 5690
+    - 1354
+    - -26
+  - location:
+    - 5691
+    - 1354
+    - -26
+  - location:
+    - 5692
+    - 1353
+    - -26
+  - location:
+    - 5692
+    - 1352
+    - -26
+  - location:
+    - 5689
+    - 1350
+    - -26
+  - location:
+    - 5691
+    - 1350
+    - -26
+  - location:
+    - 5692
+    - 1351
+    - -26
+  - location:
+    - 5688
+    - 1351
+    - -26
+  - location:
+    - 5688
+    - 1352
+    - -26
+  - location:
+    - 5690
+    - 1350
+    - -26
+- type: PentagramAddon
+  arguments: ''
+  description: pentagram
+  item_id: 4074
+  placements:
+  - location:
+    - 5690
+    - 1352
+    - -26
+  - location:
+    - 5691
+    - 1348
+    - 0
+- type: Static
+  arguments: ''
+  description: glowing rune
+  item_id: 3688
+  placements:
+  - location:
+    - 5686
+    - 1432
+    - 22
+- type: Static
+  arguments: ''
+  description: boulder
+  item_id: 4962
+  placements:
+  - location:
+    - 5696
+    - 1388
+    - -1
+  - location:
+    - 5694
+    - 1388
+    - 4
+  - location:
+    - 5695
+    - 1388
+    - 4
+  - location:
+    - 5695
+    - 1387
+    - 0
+  - location:
+    - 5694
+    - 1387
+    - 2
+- type: Barrel
+  arguments: ''
+  description: barrel
+  item_id: 3703
+  placements:
+  - location:
+    - 5645
+    - 1400
+    - 22
+  - location:
+    - 5653
+    - 1400
+    - 22
+- type: Static
+  arguments: ''
+  description: empty tub
+  item_id: 3715
+  placements:
+  - location:
+    - 5648
+    - 1400
+    - 0
+- type: Keg
+  arguments: ''
+  description: keg
+  item_id: 3711
+  placements:
+  - location:
+    - 5720
+    - 1386
+    - 2
+- type: WoodenChest
+  arguments: ''
+  description: wooden chest
+  item_id: 3651
+  placements:
+  - location:
+    - 5675
+    - 1436
+    - 0
+  - location:
+    - 5728
+    - 1391
+    - -1
+  - location:
+    - 5673
+    - 1434
+    - 0
+- type: MetalDoor2
+  arguments: (Facing = WestCW)
+  description: metal door
+  item_id: 1733
+  placements:
+  - location:
+    - 5835
+    - 1487
+    - -1
+  - location:
+    - 5835
+    - 1431
+    - 0
+  - location:
+    - 5643
+    - 1408
+    - 0
+  - location:
+    - 5651
+    - 1412
+    - 0
+  - location:
+    - 5643
+    - 1416
+    - 22
+  - location:
+    - 5851
+    - 1431
+    - 0
+  - location:
+    - 5723
+    - 1295
+    - 0
+  - location:
+    - 5731
+    - 1383
+    - 0
+- type: Metalchest
+  arguments: ''
+  description: metal chest
+  item_id: 3708
+  placements:
+  - location:
+    - 5672
+    - 1434
+    - 0
+- type: MetalChest
+  arguments: ''
+  description: metal chest
+  item_id: 2475
+  placements:
+  - location:
+    - 5723
+    - 1384
+    - -2
+  - location:
+    - 5673
+    - 1433
+    - 0
+- type: Static
+  arguments: ''
+  description: stone stairs
+  item_id: 1958
+  placements:
+  - location:
+    - 5786
+    - 1337
+    - -5
+  - location:
+    - 5787
+    - 1337
+    - -5
+  - location:
+    - 5788
+    - 1337
+    - -5
+- type: Static
+  arguments: ''
+  description: stone
+  item_id: 1955
+  placements:
+  - location:
+    - 5786
+    - 1338
+    - -5
+  - location:
+    - 5787
+    - 1338
+    - -5
+  - location:
+    - 5788
+    - 1338
+    - -5
+- type: MetalDoor2
+  arguments: (Facing = SouthCW)
+  description: metal door
+  item_id: 1741
+  placements:
+  - location:
+    - 5647
+    - 1443
+    - 0
+  - location:
+    - 5642
+    - 1401
+    - 22
+  - location:
+    - 5655
+    - 1402
+    - 0
+  - location:
+    - 5647
+    - 1420
+    - 0
+  - location:
+    - 5644
+    - 1409
+    - 22
+  - location:
+    - 5655
+    - 1363
+    - -1
+  - location:
+    - 5679
+    - 1434
+    - 0
+  - location:
+    - 5679
+    - 1444
+    - 0
+  - location:
+    - 5687
+    - 1441
+    - -1
+  - location:
+    - 5855
+    - 1475
+    - 0
+  - location:
+    - 5855
+    - 1427
+    - 0
+  - location:
+    - 5671
+    - 1315
+    - 0
+- type: Static
+  arguments: ''
+  description: rock
+  item_id: 6003
+  placements:
+  - location:
+    - 5711
+    - 1337
+    - 1
+- type: MetalGoldenChest
+  arguments: ''
+  description: metal chest
+  item_id: 3649
+  placements:
+  - location:
+    - 5642
+    - 1432
+    - 0
+- type: Static
+  arguments: ''
+  description: vines
+  item_id: 3313
+  placements:
+  - location:
+    - 5854
+    - 1457
+    - 0
+- type: Static
+  arguments: ''
+  description: rock
+  item_id: 6002
+  placements:
+  - location:
+    - 5688
+    - 1328
+    - 1
+  - location:
+    - 5712
+    - 1337
+    - -3
+- type: Static
+  arguments: ''
+  description: rock
+  item_id: 6008
+  placements:
+  - location:
+    - 5710
+    - 1336
+    - 2
+- type: Static
+  arguments: ''
+  description: rock
+  item_id: 6005
+  placements:
+  - location:
+    - 5711
+    - 1336
+    - -1
+- type: MetalDoor2
+  arguments: (Facing = SouthCCW)
+  description: metal door
+  item_id: 1745
+  placements:
+  - location:
+    - 5647
+    - 1410
+    - 0
+  - location:
+    - 5647
+    - 1402
+    - 0
+- type: Static
+  arguments: ''
+  description: rock
+  item_id: 6004
+  placements:
+  - location:
+    - 5712
+    - 1338
+    - -2
+- type: MetalDoor2
+  arguments: (Facing = WestCCW)
+  description: metal door
+  item_id: 1737
+  placements:
+  - location:
+    - 5691
+    - 1343
+    - 0
+  - location:
+    - 5651
+    - 1439
+    - 0
+  - location:
+    - 5650
+    - 1416
+    - 22
+- type: Static
+  arguments: ''
+  description: barrel
+  item_id: 4014
+  placements:
+  - location:
+    - 5645
+    - 1413
+    - 22
+  - location:
+    - 5643
+    - 1415
+    - 0
+- type: WoodenChest
+  arguments: ''
+  description: wooden chest
+  item_id: 3650
+  placements:
+  - location:
+    - 5640
+    - 1403
+    - 0
+  - location:
+    - 5640
+    - 1404
+    - 0
+- type: MetalDoor2
+  arguments: (Facing = EastCW)
+  description: metal door
+  item_id: 1739
+  placements:
+  - location:
+    - 5651
+    - 1416
+    - 22
+- type: Static
+  arguments: (Light = Circle300)
+  description: forge
+  item_id: 6538
+  placements:
+  - location:
+    - 5640
+    - 1411
+    - 0

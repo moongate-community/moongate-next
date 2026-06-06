@@ -1,0 +1,19 @@
+decoration:
+- type: WaterVatSouth
+  arguments: ''
+  description: Water Vats
+  item_id: 0
+  placements:
+  - location:
+    - 5806
+    - 1919
+    - 5
+- type: WaterVatEast
+  arguments: ''
+  description: ''
+  item_id: 0
+  placements:
+  - location:
+    - 5797
+    - 1926
+    - 5

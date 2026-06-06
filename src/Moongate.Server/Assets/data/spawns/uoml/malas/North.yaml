@@ -1,0 +1,133 @@
+spawn:
+- type: Spawner
+  guid: 6f75ce3a-5afe-4d59-8cea-521a9cab1c9a
+  name: Spawner (2402)
+  location:
+  - 1674
+  - 659
+  - -84
+  map: Malas
+  count: 15
+  min_delay: 00:05:00
+  max_delay: 00:10:00
+  team: 0
+  home_range: 100
+  walking_range: 120
+  entries:
+  - name: CrystalElemental
+    max_count: 3
+    probability: 100
+  - name: SkitteringHopper
+    max_count: 3
+    probability: 100
+  - name: Bird
+    max_count: 3
+    probability: 100
+  - name: Hind
+    max_count: 2
+    probability: 100
+  - name: GreatHart
+    max_count: 1
+    probability: 100
+  - name: Rabbit
+    max_count: 3
+    probability: 100
+- type: Spawner
+  guid: b2985f08-8004-4d85-8b11-e98cd205b584
+  name: Spawner (2402)
+  location:
+  - 1434
+  - 607
+  - -89
+  map: Malas
+  count: 15
+  min_delay: 00:05:00
+  max_delay: 00:10:00
+  team: 0
+  home_range: 100
+  walking_range: 120
+  entries:
+  - name: CrystalElemental
+    max_count: 3
+    probability: 100
+  - name: SkitteringHopper
+    max_count: 3
+    probability: 100
+  - name: Bird
+    max_count: 3
+    probability: 100
+  - name: Hind
+    max_count: 2
+    probability: 100
+  - name: GreatHart
+    max_count: 1
+    probability: 100
+  - name: Rabbit
+    max_count: 3
+    probability: 100
+- type: Spawner
+  guid: 7ef09a35-9032-4c5c-8273-9cdeb13281f6
+  name: Spawner (2402)
+  location:
+  - 1194
+  - 638
+  - -84
+  map: Malas
+  count: 20
+  min_delay: 00:05:00
+  max_delay: 00:10:00
+  team: 0
+  home_range: 100
+  walking_range: 120
+  entries:
+  - name: CrystalElemental
+    max_count: 4
+    probability: 100
+  - name: SkitteringHopper
+    max_count: 4
+    probability: 100
+  - name: Bird
+    max_count: 4
+    probability: 100
+  - name: Hind
+    max_count: 3
+    probability: 100
+  - name: GreatHart
+    max_count: 1
+    probability: 100
+  - name: Rabbit
+    max_count: 4
+    probability: 100
+- type: Spawner
+  guid: 5a950bac-ad86-44ce-9c3f-b26ac67b1f63
+  name: Spawner (2402)
+  location:
+  - 920
+  - 356
+  - -85
+  map: Malas
+  count: 20
+  min_delay: 00:05:00
+  max_delay: 00:10:00
+  team: 0
+  home_range: 60
+  walking_range: 70
+  entries:
+  - name: CrystalElemental
+    max_count: 4
+    probability: 100
+  - name: SkitteringHopper
+    max_count: 4
+    probability: 100
+  - name: Bird
+    max_count: 4
+    probability: 100
+  - name: Hind
+    max_count: 3
+    probability: 100
+  - name: GreatHart
+    max_count: 1
+    probability: 100
+  - name: Rabbit
+    max_count: 4
+    probability: 100

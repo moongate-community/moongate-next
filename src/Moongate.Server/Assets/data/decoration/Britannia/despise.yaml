@@ -1,0 +1,52 @@
+decoration:
+- type: Static
+  arguments: ''
+  description: stone stairs
+  item_id: 1930
+  placements:
+  - location:
+    - 5572
+    - 628
+    - 45
+  - location:
+    - 5572
+    - 629
+    - 45
+  - location:
+    - 5572
+    - 630
+    - 45
+  - location:
+    - 5505
+    - 570
+    - 39
+- type: Static
+  arguments: ''
+  description: stone stairs
+  item_id: 1932
+  placements:
+  - location:
+    - 5571
+    - 633
+    - 10
+  - location:
+    - 5523
+    - 673
+    - 35
+  - location:
+    - 5385
+    - 756
+    - -15
+  - location:
+    - 5411
+    - 859
+    - 60
+- type: Static
+  arguments: ''
+  description: stone
+  item_id: 1928
+  placements:
+  - location:
+    - 5507
+    - 568
+    - 54

@@ -1,0 +1,160 @@
+spawn:
+- type: Spawner
+  guid: b37c3d38-2d53-4d2d-a8aa-a2e4926a29c6
+  name: Spawner (402)
+  location:
+  - 1119
+  - 530
+  - -90
+  map: Malas
+  count: 22
+  min_delay: 00:05:00
+  max_delay: 00:10:00
+  team: 0
+  home_range: 39
+  walking_range: 60
+  entries:
+  - name: Bird
+    max_count: 10
+    probability: 100
+  - name: GreatHart
+    max_count: 1
+    probability: 100
+  - name: JackRabbit
+    max_count: 10
+    probability: 100
+  - name: Hind
+    max_count: 1
+    probability: 100
+- type: Spawner
+  guid: e1ba3ada-d1fd-44fb-83b8-82e0e1fcf94f
+  name: Spawner (402)
+  location:
+  - 1674
+  - 659
+  - -84
+  map: Malas
+  count: 15
+  min_delay: 00:05:00
+  max_delay: 00:10:00
+  team: 0
+  home_range: 100
+  walking_range: 120
+  entries:
+  - name: CrystalElemental
+    max_count: 3
+    probability: 100
+  - name: SkitteringHopper
+    max_count: 3
+    probability: 100
+  - name: Bird
+    max_count: 3
+    probability: 100
+  - name: Hind
+    max_count: 2
+    probability: 100
+  - name: GreatHart
+    max_count: 1
+    probability: 100
+  - name: JackRabbit
+    max_count: 3
+    probability: 100
+- type: Spawner
+  guid: 099efd1a-520c-4e6b-bb39-552def69e2df
+  name: Spawner (402)
+  location:
+  - 1434
+  - 607
+  - -89
+  map: Malas
+  count: 15
+  min_delay: 00:05:00
+  max_delay: 00:10:00
+  team: 0
+  home_range: 100
+  walking_range: 120
+  entries:
+  - name: CrystalElemental
+    max_count: 3
+    probability: 100
+  - name: SkitteringHopper
+    max_count: 3
+    probability: 100
+  - name: Bird
+    max_count: 3
+    probability: 100
+  - name: Hind
+    max_count: 2
+    probability: 100
+  - name: GreatHart
+    max_count: 1
+    probability: 100
+  - name: JackRabbit
+    max_count: 3
+    probability: 100
+- type: Spawner
+  guid: c9c80a39-40db-4cb9-a3c7-243957ecdd39
+  name: Spawner (402)
+  location:
+  - 1194
+  - 638
+  - -84
+  map: Malas
+  count: 20
+  min_delay: 00:05:00
+  max_delay: 00:10:00
+  team: 0
+  home_range: 100
+  walking_range: 120
+  entries:
+  - name: CrystalElemental
+    max_count: 4
+    probability: 100
+  - name: SkitteringHopper
+    max_count: 4
+    probability: 100
+  - name: Bird
+    max_count: 4
+    probability: 100
+  - name: Hind
+    max_count: 3
+    probability: 100
+  - name: GreatHart
+    max_count: 1
+    probability: 100
+  - name: JackRabbit
+    max_count: 4
+    probability: 100
+- type: Spawner
+  guid: 0335054c-d38b-4c5a-9fc6-c04c42ba9de1
+  name: Spawner (402)
+  location:
+  - 920
+  - 356
+  - -85
+  map: Malas
+  count: 20
+  min_delay: 00:05:00
+  max_delay: 00:10:00
+  team: 0
+  home_range: 60
+  walking_range: 70
+  entries:
+  - name: CrystalElemental
+    max_count: 4
+    probability: 100
+  - name: SkitteringHopper
+    max_count: 4
+    probability: 100
+  - name: Bird
+    max_count: 4
+    probability: 100
+  - name: Hind
+    max_count: 3
+    probability: 100
+  - name: GreatHart
+    max_count: 1
+    probability: 100
+  - name: JackRabbit
+    max_count: 4
+    probability: 100

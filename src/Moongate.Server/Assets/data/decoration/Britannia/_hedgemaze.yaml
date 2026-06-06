@@ -1,0 +1,2207 @@
+decoration:
+- type: Teleporter
+  arguments: (PointDest = (1163, 2205, 0))
+  description: 'Teleporters # teleporter'
+  item_id: 7107
+  placements:
+  - location:
+    - 1166
+    - 2237
+    - 60
+- type: Teleporter
+  arguments: (PointDest = (1163, 2211, 60))
+  description: teleporter
+  item_id: 7107
+  placements:
+  - location:
+    - 1165
+    - 2204
+    - 40
+- type: Teleporter
+  arguments: (PointDest = (1165, 2214, 19))
+  description: teleporter
+  item_id: 7107
+  placements:
+  - location:
+    - 1163
+    - 2208
+    - 0
+- type: Teleporter
+  arguments: (PointDest = (1171, 2202, 0))
+  description: teleporter
+  item_id: 7107
+  placements:
+  - location:
+    - 1163
+    - 2204
+    - 60
+- type: Lantern
+  arguments: ''
+  description: 'Decorations # lantern'
+  item_id: 2594
+  placements:
+  - location:
+    - 1132
+    - 2227
+    - 46
+- type: Static
+  arguments: ''
+  description: grasses
+  item_id: 3244
+  placements:
+  - location:
+    - 1186
+    - 2216
+    - 0
+- type: Static
+  arguments: ''
+  description: century plant
+  item_id: 3376
+  placements:
+  - location:
+    - 1194
+    - 2217
+    - 0
+- type: Static
+  arguments: ''
+  description: peach tree
+  item_id: 3486
+  placements:
+  - location:
+    - 1195
+    - 2269
+    - 0
+- type: Static
+  arguments: ''
+  description: pear tree
+  item_id: 3498
+  placements:
+  - location:
+    - 1205
+    - 2269
+    - 0
+- type: Static
+  arguments: ''
+  description: pear tree
+  item_id: 3494
+  placements:
+  - location:
+    - 1206
+    - 2184
+    - 0
+- type: Static
+  arguments: ''
+  description: cactus
+  item_id: 3367
+  placements:
+  - location:
+    - 1206
+    - 2225
+    - 0
+- type: Static
+  arguments: ''
+  description: crystal ball
+  item_id: 3631
+  placements:
+  - location:
+    - 1213
+    - 2191
+    - 13
+- type: Static
+  arguments: ''
+  description: stone wall
+  item_id: 489
+  placements:
+  - location:
+    - 1214
+    - 2258
+    - 25
+- type: StoneFountainAddon
+  arguments: ''
+  description: fountain
+  item_id: 5946
+  placements:
+  - location:
+    - 1233
+    - 2219
+    - 0
+- type: Fork
+  arguments: ''
+  description: fork
+  item_id: 2548
+  placements:
+  - location:
+    - 1128
+    - 2218
+    - 43
+- type: Static
+  arguments: ''
+  description: pillow
+  item_id: 5036
+  placements:
+  - location:
+    - 1129
+    - 2217
+    - 62
+- type: Static
+  arguments: ''
+  description: cypress tree
+  item_id: 3326
+  placements:
+  - location:
+    - 1246
+    - 2200
+    - 0
+- type: Static
+  arguments: ''
+  description: vines
+  item_id: 3167
+  placements:
+  - location:
+    - 1249
+    - 2173
+    - 0
+- type: LocalizedSign
+  arguments: (LabelNumber = 1016380)
+  description: sign
+  item_id: 7976
+  placements:
+  - location:
+    - 1252
+    - 2145
+    - 9
+- type: LocalizedSign
+  arguments: (LabelNumber = 1016196)
+  description: sign
+  item_id: 7976
+  placements:
+  - location:
+    - 1260
+    - 2316
+    - 9
+- type: LocalizedSign
+  arguments: (LabelNumber = 1016385)
+  description: sign
+  item_id: 7976
+  placements:
+  - location:
+    - 1260
+    - 2313
+    - 11
+- type: LocalizedSign
+  arguments: (LabelNumber = 1016231)
+  description: sign
+  item_id: 7976
+  placements:
+  - location:
+    - 1268
+    - 2190
+    - 7
+- type: LocalizedSign
+  arguments: (LabelNumber = 1016412)
+  description: sign
+  item_id: 7976
+  placements:
+  - location:
+    - 1284
+    - 2256
+    - 6
+- type: LocalizedSign
+  arguments: (LabelNumber = 1016379)
+  description: sign
+  item_id: 7976
+  placements:
+  - location:
+    - 1072
+    - 2322
+    - 7
+- type: LocalizedSign
+  arguments: (LabelNumber = 1016382)
+  description: sign
+  item_id: 7976
+  placements:
+  - location:
+    - 1128
+    - 2313
+    - 6
+- type: LocalizedSign
+  arguments: (LabelNumber = 1016389)
+  description: sign
+  item_id: 7976
+  placements:
+  - location:
+    - 1184
+    - 2316
+    - 6
+- type: LocalizedSign
+  arguments: (LabelNumber = 1016378)
+  description: sign
+  item_id: 7976
+  placements:
+  - location:
+    - 1212
+    - 2133
+    - 6
+- type: LocalizedSign
+  arguments: (LabelNumber = 1016195)
+  description: sign
+  item_id: 7976
+  placements:
+  - location:
+    - 1132
+    - 2145
+    - 8
+- type: LocalizedSign
+  arguments: (LabelNumber = 1016125)
+  description: sign
+  item_id: 7976
+  placements:
+  - location:
+    - 1024
+    - 2157
+    - 5
+- type: LocalizedSign
+  arguments: (LabelNumber = 1016388)
+  description: sign
+  item_id: 7976
+  placements:
+  - location:
+    - 1028
+    - 2238
+    - 7
+- type: LocalizedSign
+  arguments: (LabelNumber = 1016109)
+  description: sign
+  item_id: 7976
+  placements:
+  - location:
+    - 1028
+    - 2307
+    - 2
+- type: DarkWoodGate
+  arguments: (Facing = WestCW)
+  description: wooden gate
+  item_id: 2150
+  placements:
+  - location:
+    - 1132
+    - 2237
+    - 40
+  - location:
+    - 1132
+    - 2237
+    - 50
+- type: DarkWoodGate
+  arguments: (Facing = EastCCW)
+  description: wooden gate
+  item_id: 2152
+  placements:
+  - location:
+    - 1133
+    - 2237
+    - 40
+  - location:
+    - 1133
+    - 2237
+    - 50
+- type: CandelabraStand
+  arguments: ''
+  description: candelabra
+  item_id: 2854
+  placements:
+  - location:
+    - 1132
+    - 2216
+    - 40
+  - location:
+    - 1138
+    - 2231
+    - 40
+  - location:
+    - 1166
+    - 2232
+    - 60
+  - location:
+    - 1160
+    - 2209
+    - 40
+- type: FancyArmoire
+  arguments: ''
+  description: armoire
+  item_id: 2641
+  placements:
+  - location:
+    - 1132
+    - 2231
+    - 40
+  - location:
+    - 1132
+    - 2230
+    - 40
+- type: Static
+  arguments: ''
+  description: book
+  item_id: 7712
+  placements:
+  - location:
+    - 1133
+    - 2235
+    - 24
+  - location:
+    - 1137
+    - 2221
+    - 64
+  - location:
+    - 1164
+    - 2206
+    - 62
+  - location:
+    - 1164
+    - 2236
+    - 60
+- type: Static
+  arguments: ''
+  description: books
+  item_id: 7713
+  placements:
+  - location:
+    - 1135
+    - 2235
+    - 24
+  - location:
+    - 1136
+    - 2230
+    - 44
+  - location:
+    - 1163
+    - 2234
+    - 60
+  - location:
+    - 1132
+    - 2227
+    - 46
+  - location:
+    - 1162
+    - 2206
+    - 62
+  - location:
+    - 1164
+    - 2208
+    - 41
+  - location:
+    - 1164
+    - 2243
+    - 46
+- type: Plate
+  arguments: ''
+  description: plate
+  item_id: 2519
+  placements:
+  - location:
+    - 1136
+    - 2219
+    - 44
+  - location:
+    - 1134
+    - 2219
+    - 44
+  - location:
+    - 1129
+    - 2218
+    - 43
+  - location:
+    - 1129
+    - 2218
+    - 44
+  - location:
+    - 1133
+    - 2220
+    - 44
+- type: FullBookcase
+  arguments: ''
+  description: bookcase
+  item_id: 2715
+  placements:
+  - location:
+    - 1135
+    - 2225
+    - 40
+- type: Static
+  arguments: ''
+  description: garbage
+  item_id: 4335
+  placements:
+  - location:
+    - 1136
+    - 2220
+    - 44
+  - location:
+    - 1163
+    - 2236
+    - 61
+  - location:
+    - 1161
+    - 2209
+    - 41
+  - location:
+    - 1129
+    - 2235
+    - 40
+  - location:
+    - 1130
+    - 2217
+    - 40
+  - location:
+    - 1165
+    - 2206
+    - 0
+  - location:
+    - 1166
+    - 2235
+    - 40
+- type: FancyWoodenChairCushion
+  arguments: ''
+  description: chair
+  item_id: 2896
+  placements:
+  - location:
+    - 1133
+    - 2221
+    - 40
+  - location:
+    - 1136
+    - 2221
+    - 40
+  - location:
+    - 1134
+    - 2221
+    - 40
+  - location:
+    - 1135
+    - 2221
+    - 40
+- type: Static
+  arguments: ''
+  description: books
+  item_id: 7714
+  placements:
+  - location:
+    - 1138
+    - 2222
+    - 64
+  - location:
+    - 1165
+    - 2243
+    - 46
+- type: Static
+  arguments: ''
+  description: glass
+  item_id: 8067
+  placements:
+  - location:
+    - 1132
+    - 2221
+    - 64
+- type: Static
+  arguments: ''
+  description: pitcher of wine
+  item_id: 8091
+  placements:
+  - location:
+    - 1133
+    - 2221
+    - 64
+- type: Static
+  arguments: ''
+  description: garbage
+  item_id: 4337
+  placements:
+  - location:
+    - 1134
+    - 2220
+    - 44
+  - location:
+    - 1137
+    - 2234
+    - 40
+  - location:
+    - 1163
+    - 2209
+    - 0
+  - location:
+    - 1164
+    - 2207
+    - 41
+- type: Static
+  arguments: ''
+  description: pile of garbage
+  item_id: 4338
+  placements:
+  - location:
+    - 1159
+    - 2234
+    - 21
+- type: Static
+  arguments: ''
+  description: wall torch
+  item_id: 2565
+  placements:
+  - location:
+    - 1160
+    - 2206
+    - 54
+- type: Static
+  arguments: ''
+  description: garbage
+  item_id: 4334
+  placements:
+  - location:
+    - 1161
+    - 2235
+    - 21
+  - location:
+    - 1138
+    - 2217
+    - 40
+  - location:
+    - 1166
+    - 2237
+    - 40
+- type: Static
+  arguments: ''
+  description: skull with candle
+  item_id: 6227
+  placements:
+  - location:
+    - 1163
+    - 2207
+    - 41
+- type: Static
+  arguments: ''
+  description: debris
+  item_id: 3118
+  placements:
+  - location:
+    - 1163
+    - 2236
+    - 61
+  - location:
+    - 1165
+    - 2245
+    - 40
+- type: Static
+  arguments: ''
+  description: dirt
+  item_id: 7677
+  placements:
+  - location:
+    - 1163
+    - 2240
+    - 40
+- type: Static
+  arguments: ''
+  description: garbage
+  item_id: 4336
+  placements:
+  - location:
+    - 1164
+    - 2234
+    - 61
+  - location:
+    - 1130
+    - 2217
+    - 40
+  - location:
+    - 1161
+    - 2205
+    - 0
+- type: Static
+  arguments: ''
+  description: sparkle
+  item_id: 14170
+  placements:
+  - location:
+    - 1165
+    - 2204
+    - 40
+  - location:
+    - 1166
+    - 2237
+    - 62
+  - location:
+    - 1163
+    - 2204
+    - 60
+- type: Static
+  arguments: ''
+  description: broken chair
+  item_id: 3099
+  placements:
+  - location:
+    - 1165
+    - 2241
+    - 40
+- type: Static
+  arguments: ''
+  description: Red Potion
+  item_id: 3851
+  placements:
+  - location:
+    - 1138
+    - 2223
+    - 64
+- type: Static
+  arguments: ''
+  description: lilypad
+  item_id: 3337
+  placements:
+  - location:
+    - 1248
+    - 2200
+    - 1
+- type: Static
+  arguments: ''
+  description: pear%s%
+  item_id: 5933
+  placements:
+  - location:
+    - 1207
+    - 2270
+    - 0
+  - location:
+    - 1207
+    - 2269
+    - 0
+  - location:
+    - 1205
+    - 2268
+    - 0
+  - location:
+    - 1206
+    - 2270
+    - 0
+- type: Static
+  arguments: ''
+  description: open sack of flour
+  item_id: 4166
+  placements:
+  - location:
+    - 1130
+    - 2219
+    - 40
+- type: Static
+  arguments: ''
+  description: dirt patch
+  item_id: 2324
+  placements:
+  - location:
+    - 1083
+    - 2266
+    - 0
+  - location:
+    - 1041
+    - 2248
+    - 0
+- type: Static
+  arguments: ''
+  description: grave
+  item_id: 3809
+  placements:
+  - location:
+    - 1083
+    - 2265
+    - 0
+  - location:
+    - 1041
+    - 2247
+    - 0
+- type: Static
+  arguments: (Hue = 0x970)
+  description: leaves
+  item_id: 6948
+  placements:
+  - location:
+    - 1084
+    - 2265
+    - 0
+  - location:
+    - 1042
+    - 2247
+    - 0
+- type: Static
+  arguments: ''
+  description: grave
+  item_id: 3808
+  placements:
+  - location:
+    - 1084
+    - 2266
+    - 0
+  - location:
+    - 1042
+    - 2248
+    - 0
+- type: Static
+  arguments: (Hue = 0x970)
+  description: leaves
+  item_id: 6947
+  placements:
+  - location:
+    - 1084
+    - 2267
+    - 0
+  - location:
+    - 1042
+    - 2249
+    - 0
+- type: Static
+  arguments: ''
+  description: grave
+  item_id: 3795
+  placements:
+  - location:
+    - 1083
+    - 2267
+    - 0
+  - location:
+    - 1041
+    - 2249
+    - 0
+- type: Static
+  arguments: (Hue = 0x970)
+  description: leaves
+  item_id: 6950
+  placements:
+  - location:
+    - 1082
+    - 2267
+    - 0
+  - location:
+    - 1040
+    - 2249
+    - 0
+- type: Static
+  arguments: ''
+  description: bucket
+  item_id: 5344
+  placements:
+  - location:
+    - 1129
+    - 2238
+    - 40
+  - location:
+    - 1138
+    - 2238
+    - 40
+- type: Static
+  arguments: ''
+  description: coconut%s%
+  item_id: 5926
+  placements:
+  - location:
+    - 1097
+    - 2193
+    - 0
+  - location:
+    - 1092
+    - 2188
+    - 0
+  - location:
+    - 1100
+    - 2191
+    - 0
+  - location:
+    - 1101
+    - 2193
+    - 0
+  - location:
+    - 1100
+    - 2193
+    - 0
+  - location:
+    - 1090
+    - 2192
+    - 0
+  - location:
+    - 1092
+    - 2192
+    - 0
+  - location:
+    - 1090
+    - 2189
+    - 0
+  - location:
+    - 1099
+    - 2191
+    - 0
+- type: Static
+  arguments: (Hue = 0x970)
+  description: leaves
+  item_id: 6949
+  placements:
+  - location:
+    - 1082
+    - 2265
+    - 0
+  - location:
+    - 1040
+    - 2247
+    - 0
+- type: BeverageBottle
+  arguments: (Content = Ale)
+  description: bottle of ale
+  item_id: 2463
+  placements:
+  - location:
+    - 1162
+    - 2233
+    - 40
+- type: Static
+  arguments: ''
+  description: apple%s%
+  item_id: 2512
+  placements:
+  - location:
+    - 1053
+    - 2228
+    - 0
+  - location:
+    - 1052
+    - 2231
+    - 0
+  - location:
+    - 1201
+    - 2263
+    - 0
+  - location:
+    - 1202
+    - 2265
+    - 0
+  - location:
+    - 1204
+    - 2265
+    - 0
+  - location:
+    - 1204
+    - 2266
+    - 0
+  - location:
+    - 1054
+    - 2228
+    - 0
+  - location:
+    - 1054
+    - 2227
+    - 0
+  - location:
+    - 1200
+    - 2265
+    - 0
+  - location:
+    - 1052
+    - 2228
+    - 0
+- type: MetalChest
+  arguments: ''
+  description: metal chest
+  item_id: 2475
+  placements:
+  - location:
+    - 1213
+    - 2259
+    - 5
+- type: Static
+  arguments: ''
+  description: book
+  item_id: 4029
+  placements:
+  - location:
+    - 1064
+    - 2202
+    - 10
+- type: StoneFireplaceEastAddon
+  arguments: ''
+  description: fireplace
+  item_id: 2393
+  placements:
+  - location:
+    - 1128
+    - 2216
+    - 40
+  - location:
+    - 1128
+    - 2216
+    - 60
+- type: Static
+  arguments: ''
+  description: blood
+  item_id: 4651
+  placements:
+  - location:
+    - 1115
+    - 2231
+    - 4
+- type: Static
+  arguments: (Hue = 0x1)
+  description: blood
+  item_id: 4650
+  placements:
+  - location:
+    - 1041
+    - 2248
+    - 0
+- type: Static
+  arguments: ''
+  description: grave
+  item_id: 3810
+  placements:
+  - location:
+    - 1040
+    - 2248
+    - 0
+  - location:
+    - 1082
+    - 2266
+    - 0
+- type: Static
+  arguments: ''
+  description: wedge%s% of cheese
+  item_id: 2428
+  placements:
+  - location:
+    - 1132
+    - 2221
+    - 64
+- type: Static
+  arguments: ''
+  description: banana%s%
+  item_id: 5920
+  placements:
+  - location:
+    - 1133
+    - 2222
+    - 64
+- type: Static
+  arguments: ''
+  description: bunch%es% of dates
+  item_id: 5927
+  placements:
+  - location:
+    - 1166
+    - 2280
+    - 0
+  - location:
+    - 1165
+    - 2279
+    - 0
+- type: WoodenChest
+  arguments: ''
+  description: wooden chest
+  item_id: 3650
+  placements:
+  - location:
+    - 1067
+    - 2268
+    - 5
+  - location:
+    - 1134
+    - 2226
+    - 40
+- type: WoodenChest
+  arguments: ''
+  description: wooden chest
+  item_id: 3651
+  placements:
+  - location:
+    - 1073
+    - 2195
+    - 5
+- type: Static
+  arguments: ''
+  description: peach%es%
+  item_id: 2514
+  placements:
+  - location:
+    - 1193
+    - 2271
+    - 0
+  - location:
+    - 1196
+    - 2271
+    - 0
+  - location:
+    - 1197
+    - 2268
+    - 0
+  - location:
+    - 1195
+    - 2269
+    - 0
+- type: Static
+  arguments: ''
+  description: pizza%s%
+  item_id: 4160
+  placements:
+  - location:
+    - 1136
+    - 2216
+    - 46
+- type: Barrel
+  arguments: ''
+  description: barrel
+  item_id: 3703
+  placements:
+  - location:
+    - 1160
+    - 2204
+    - 0
+- type: Static
+  arguments: ''
+  description: empty tub
+  item_id: 3715
+  placements:
+  - location:
+    - 1164
+    - 2205
+    - 0
+- type: Static
+  arguments: ''
+  description: glass of water
+  item_id: 8081
+  placements:
+  - location:
+    - 1133
+    - 2221
+    - 64
+- type: Static
+  arguments: ''
+  description: empty bottle%s%
+  item_id: 3854
+  placements:
+  - location:
+    - 1165
+    - 2234
+    - 63
+  - location:
+    - 1132
+    - 2235
+    - 26
+- type: Static
+  arguments: ''
+  description: heating stand
+  item_id: 6222
+  placements:
+  - location:
+    - 1161
+    - 2208
+    - 41
+- type: Static
+  arguments: ''
+  description: glass
+  item_id: 8065
+  placements:
+  - location:
+    - 1133
+    - 2221
+    - 64
+- type: Static
+  arguments: ''
+  description: dagger
+  item_id: 3922
+  placements:
+  - location:
+    - 1134
+    - 2235
+    - 23
+- type: Static
+  arguments: ''
+  description: dagger
+  item_id: 3921
+  placements:
+  - location:
+    - 1129
+    - 2232
+    - 20
+- type: DarkWoodDoor
+  arguments: (Facing = SouthCCW)
+  description: wooden door
+  item_id: 1713
+  placements:
+  - location:
+    - 1131
+    - 2228
+    - 40
+  - location:
+    - 1135
+    - 2219
+    - 60
+  - location:
+    - 1139
+    - 2236
+    - 40
+- type: Static
+  arguments: ''
+  description: glass of water
+  item_id: 8083
+  placements:
+  - location:
+    - 1132
+    - 2221
+    - 64
+  - location:
+    - 1133
+    - 2222
+    - 64
+- type: Static
+  arguments: ''
+  description: pitcher of water
+  item_id: 8093
+  placements:
+  - location:
+    - 1133
+    - 2221
+    - 64
+- type: Armoire
+  arguments: ''
+  description: armoire
+  item_id: 2639
+  placements:
+  - location:
+    - 1131
+    - 2216
+    - 60
+- type: Static
+  arguments: ''
+  description: iron ore
+  item_id: 6584
+  placements:
+  - location:
+    - 1129
+    - 2223
+    - 20
+- type: BulletinBoard
+  arguments: ''
+  description: bulletin board
+  item_id: 7774
+  placements:
+  - location:
+    - 1141
+    - 2234
+    - 40
+- type: DarkWoodDoor
+  arguments: (Facing = NorthCW)
+  description: wooden door
+  item_id: 1715
+  placements:
+  - location:
+    - 1139
+    - 2235
+    - 40
+- type: MetalDoor
+  arguments: (Facing = NorthCW)
+  description: metal door
+  item_id: 1667
+  placements:
+  - location:
+    - 1140
+    - 2228
+    - 20
+- type: Static
+  arguments: ''
+  description: wand
+  item_id: 3570
+  placements:
+  - location:
+    - 1137
+    - 2221
+    - 66
+- type: BeverageBottle
+  arguments: (Content = Wine)
+  description: bottle of wine
+  item_id: 2503
+  placements:
+  - location:
+    - 1135
+    - 2230
+    - 44
+- type: RedBook
+  arguments: ''
+  description: book
+  item_id: 4081
+  placements:
+  - location:
+    - 1161
+    - 2207
+    - 41
+  - location:
+    - 1164
+    - 2232
+    - 60
+- type: Static
+  arguments: ''
+  description: books
+  item_id: 7715
+  placements:
+  - location:
+    - 1136
+    - 2229
+    - 44
+- type: Static
+  arguments: ''
+  description: bucket of water
+  item_id: 4090
+  placements:
+  - location:
+    - 1129
+    - 2238
+    - 40
+  - location:
+    - 1138
+    - 2238
+    - 40
+- type: Static
+  arguments: ''
+  description: apple tree
+  item_id: 3478
+  placements:
+  - location:
+    - 1202
+    - 2265
+    - 0
+  - location:
+    - 1054
+    - 2229
+    - 0
+- type: FullBookcase
+  arguments: ''
+  description: bookcase
+  item_id: 2713
+  placements:
+  - location:
+    - 1064
+    - 2206
+    - 5
+  - location:
+    - 1064
+    - 2206
+    - 17
+  - location:
+    - 1064
+    - 2205
+    - 5
+  - location:
+    - 1064
+    - 2204
+    - 17
+  - location:
+    - 1064
+    - 2203
+    - 5
+- type: Static
+  arguments: ''
+  description: alchemical symbol
+  item_id: 6178
+  placements:
+  - location:
+    - 1163
+    - 2208
+    - 0
+- type: FullBookcase
+  arguments: ''
+  description: bookcase
+  item_id: 2714
+  placements:
+  - location:
+    - 1064
+    - 2205
+    - 17
+  - location:
+    - 1064
+    - 2204
+    - 5
+  - location:
+    - 1064
+    - 2203
+    - 17
+- type: BeverageBottle
+  arguments: (Content = Liquor)
+  description: bottle of liquor
+  item_id: 2459
+  placements:
+  - location:
+    - 1132
+    - 2222
+    - 64
+- type: Static
+  arguments: ''
+  description: cut%s% of raw ribs
+  item_id: 2545
+  placements:
+  - location:
+    - 1134
+    - 2216
+    - 46
+- type: Static
+  arguments: ''
+  description: Yellow Potion
+  item_id: 3852
+  placements:
+  - location:
+    - 1163
+    - 2210
+    - 3
+- type: Static
+  arguments: ''
+  description: Black Potion
+  item_id: 3846
+  placements:
+  - location:
+    - 1165
+    - 2233
+    - 63
+- type: Static
+  arguments: ''
+  description: Blue Potion
+  item_id: 3848
+  placements:
+  - location:
+    - 1165
+    - 2235
+    - 63
+- type: LargeBedSouthAddon
+  arguments: ''
+  description: bed
+  item_id: 2691
+  placements:
+  - location:
+    - 1133
+    - 2216
+    - 60
+- type: Static
+  arguments: ''
+  description: chair
+  item_id: 2895
+  placements:
+  - location:
+    - 1136
+    - 2218
+    - 40
+  - location:
+    - 1133
+    - 2218
+    - 40
+  - location:
+    - 1134
+    - 2218
+    - 40
+  - location:
+    - 1135
+    - 2218
+    - 40
+- type: Static
+  arguments: ''
+  description: ham%s%
+  item_id: 2515
+  placements:
+  - location:
+    - 1133
+    - 2216
+    - 46
+- type: PottedPlant
+  arguments: ''
+  description: flowerpot
+  item_id: 4554
+  placements:
+  - location:
+    - 1138
+    - 2233
+    - 40
+- type: Static
+  arguments: ''
+  description: pan of cookies
+  item_id: 5643
+  placements:
+  - location:
+    - 1135
+    - 2216
+    - 46
+- type: Static
+  arguments: ''
+  description: broken chair
+  item_id: 3098
+  placements:
+  - location:
+    - 1163
+    - 2243
+    - 40
+  - location:
+    - 1161
+    - 2240
+    - 40
+- type: PewterMug
+  arguments: ''
+  description: pewter mug
+  item_id: 4096
+  placements:
+  - location:
+    - 1164
+    - 2235
+    - 46
+- type: Static
+  arguments: ''
+  description: debris
+  item_id: 3119
+  placements:
+  - location:
+    - 1164
+    - 2235
+    - 60
+- type: PewterMug
+  arguments: ''
+  description: pewter mug
+  item_id: 4097
+  placements:
+  - location:
+    - 1164
+    - 2236
+    - 46
+- type: LocalizedStatic
+  arguments: (LabelNumber = 1016017)
+  description: A Daemon Summoning Scroll
+  item_id: 8041
+  placements:
+  - location:
+    - 1165
+    - 2204
+    - 60
+- type: Static
+  arguments: ''
+  description: pillow
+  item_id: 5691
+  placements:
+  - location:
+    - 1130
+    - 2216
+    - 62
+  - location:
+    - 1129
+    - 2217
+    - 62
+- type: Static
+  arguments: ''
+  description: wand
+  item_id: 3573
+  placements:
+  - location:
+    - 1134
+    - 2218
+    - 65
+- type: Static
+  arguments: ''
+  description: silverware
+  item_id: 2494
+  placements:
+  - location:
+    - 1136
+    - 2219
+    - 44
+  - location:
+    - 1134
+    - 2219
+    - 44
+- type: Static
+  arguments: ''
+  description: small palm
+  item_id: 3225
+  placements:
+  - location:
+    - 1061
+    - 2248
+    - 0
+- type: Static
+  arguments: ''
+  description: grasses
+  item_id: 3246
+  placements:
+  - location:
+    - 1063
+    - 2209
+    - 0
+- type: Static
+  arguments: ''
+  description: clock
+  item_id: 4171
+  placements:
+  - location:
+    - 1064
+    - 2202
+    - 19
+- type: WoodenChair
+  arguments: ''
+  description: chair
+  item_id: 2904
+  placements:
+  - location:
+    - 1065
+    - 2202
+    - 5
+  - location:
+    - 1065
+    - 2207
+    - 5
+- type: Static
+  arguments: ''
+  description: globe
+  item_id: 4167
+  placements:
+  - location:
+    - 1068
+    - 2199
+    - 16
+- type: Static
+  arguments: ''
+  description: tile roof
+  item_id: 1460
+  placements:
+  - location:
+    - 1070
+    - 2197
+    - 47
+- type: Static
+  arguments: ''
+  description: hedge
+  item_id: 3512
+  placements:
+  - location:
+    - 1082
+    - 2219
+    - 0
+- type: Static
+  arguments: ''
+  description: coconut palm
+  item_id: 3221
+  placements:
+  - location:
+    - 1091
+    - 2190
+    - 0
+  - location:
+    - 1099
+    - 2191
+    - 0
+- type: Static
+  arguments: ''
+  description: orfluer flowers
+  item_id: 3205
+  placements:
+  - location:
+    - 1123
+    - 2165
+    - 0
+- type: Static
+  arguments: ''
+  description: wedge%s% of cheese
+  item_id: 2429
+  placements:
+  - location:
+    - 1131
+    - 2216
+    - 46
+- type: Fork
+  arguments: ''
+  description: fork
+  item_id: 2467
+  placements:
+  - location:
+    - 1128
+    - 2218
+    - 43
+- type: PottedTree1
+  arguments: ''
+  description: potted tree
+  item_id: 4553
+  placements:
+  - location:
+    - 1128
+    - 2236
+    - 40
+- type: Static
+  arguments: ''
+  description: kettle
+  item_id: 2541
+  placements:
+  - location:
+    - 1129
+    - 2216
+    - 40
+- type: Static
+  arguments: (Hue = 0xE8)
+  description: pillow
+  item_id: 5038
+  placements:
+  - location:
+    - 1129
+    - 2216
+    - 61
+- type: Knife
+  arguments: ''
+  description: knife
+  item_id: 2550
+  placements:
+  - location:
+    - 1129
+    - 2218
+    - 44
+- type: Knife
+  arguments: ''
+  description: knife
+  item_id: 2551
+  placements:
+  - location:
+    - 1129
+    - 2218
+    - 44
+- type: Static
+  arguments: ''
+  description: stone pavers
+  item_id: 1309
+  placements:
+  - location:
+    - 1129
+    - 2230
+    - 20
+  - location:
+    - 1132
+    - 2228
+    - 20
+- type: Static
+  arguments: ''
+  description: pilllow
+  item_id: 5690
+  placements:
+  - location:
+    - 1130
+    - 2217
+    - 61
+- type: Static
+  arguments: ''
+  description: tray
+  item_id: 2449
+  placements:
+  - location:
+    - 1131
+    - 2216
+    - 46
+- type: Static
+  arguments: ''
+  description: frypan
+  item_id: 2530
+  placements:
+  - location:
+    - 1131
+    - 2217
+    - 46
+- type: Static
+  arguments: ''
+  description: spilled flour
+  item_id: 6273
+  placements:
+  - location:
+    - 1131
+    - 2219
+    - 40
+- type: Static
+  arguments: ''
+  description: candelabra
+  item_id: 2847
+  placements:
+  - location:
+    - 1132
+    - 2216
+    - 66
+- type: Static
+  arguments: ''
+  description: pitcher
+  item_id: 2518
+  placements:
+  - location:
+    - 1132
+    - 2219
+    - 44
+- type: Static
+  arguments: ''
+  description: glass of wine
+  item_id: 8079
+  placements:
+  - location:
+    - 1132
+    - 2221
+    - 64
+  - location:
+    - 1133
+    - 2222
+    - 64
+- type: Brazier
+  arguments: ''
+  description: brazier
+  item_id: 3633
+  placements:
+  - location:
+    - 1132
+    - 2223
+    - 23
+- type: Static
+  arguments: ''
+  description: bed
+  item_id: 2687
+  placements:
+  - location:
+    - 1133
+    - 2217
+    - 60
+- type: Static
+  arguments: ''
+  description: silverware
+  item_id: 2516
+  placements:
+  - location:
+    - 1133
+    - 2220
+    - 44
+- type: Static
+  arguments: ''
+  description: tray
+  item_id: 2450
+  placements:
+  - location:
+    - 1133
+    - 2220
+    - 64
+- type: Static
+  arguments: ''
+  description: glass pitcher
+  item_id: 4086
+  placements:
+  - location:
+    - 1133
+    - 2221
+    - 64
+- type: Static
+  arguments: ''
+  description: stone
+  item_id: 1822
+  placements:
+  - location:
+    - 1133
+    - 2223
+    - 18
+- type: Static
+  arguments: ''
+  description: bed
+  item_id: 2690
+  placements:
+  - location:
+    - 1134
+    - 2216
+    - 60
+- type: Static
+  arguments: ''
+  description: bed
+  item_id: 2686
+  placements:
+  - location:
+    - 1134
+    - 2217
+    - 60
+- type: Static
+  arguments: ''
+  description: folded sheet
+  item_id: 2707
+  placements:
+  - location:
+    - 1134
+    - 2218
+    - 64
+- type: Static
+  arguments: ''
+  description: folded blanket
+  item_id: 2671
+  placements:
+  - location:
+    - 1134
+    - 2225
+    - 40
+- type: WoodenChair
+  arguments: ''
+  description: chair
+  item_id: 2902
+  placements:
+  - location:
+    - 1134
+    - 2229
+    - 40
+  - location:
+    - 1134
+    - 2230
+    - 40
+  - location:
+    - 1136
+    - 2221
+    - 60
+  - location:
+    - 1136
+    - 2223
+    - 60
+- type: Static
+  arguments: ''
+  description: books
+  item_id: 7716
+  placements:
+  - location:
+    - 1135
+    - 2229
+    - 44
+- type: Static
+  arguments: ''
+  description: goblet
+  item_id: 2495
+  placements:
+  - location:
+    - 1135
+    - 2230
+    - 44
+- type: WoodenChair
+  arguments: ''
+  description: chair
+  item_id: 2903
+  placements:
+  - location:
+    - 1136
+    - 2228
+    - 40
+- type: Static
+  arguments: ''
+  description: goblet
+  item_id: 2483
+  placements:
+  - location:
+    - 1136
+    - 2229
+    - 44
+- type: Static
+  arguments: ''
+  description: lantern
+  item_id: 2597
+  placements:
+  - location:
+    - 1132
+    - 2227
+    - 46
+- type: Static
+  arguments: ''
+  description: candelabra
+  item_id: 2855
+  placements:
+  - location:
+    - 1137
+    - 2216
+    - 40
+  - location:
+    - 1138
+    - 2223
+    - 40
+- type: Static
+  arguments: ''
+  description: crystal ball
+  item_id: 3629
+  placements:
+  - location:
+    - 1137
+    - 2222
+    - 66
+- type: Static
+  arguments: ''
+  description: pile of garbage
+  item_id: 4339
+  placements:
+  - location:
+    - 1138
+    - 2216
+    - 40
+- type: WoodenChair
+  arguments: ''
+  description: chair
+  item_id: 2905
+  placements:
+  - location:
+    - 1138
+    - 2224
+    - 65
+- type: Static
+  arguments: ''
+  description: books
+  item_id: 7717
+  placements:
+  - location:
+    - 1138
+    - 2225
+    - 46
+- type: Static
+  arguments: ''
+  description: candelabra
+  item_id: 2856
+  placements:
+  - location:
+    - 1138
+    - 2226
+    - 40
+- type: WaterTroughSouthAddon
+  arguments: ''
+  description: water trough
+  item_id: 2883
+  placements:
+  - location:
+    - 1140
+    - 2238
+    - 40
+- type: Static
+  arguments: ''
+  description: swamp
+  item_id: 12911
+  placements:
+  - location:
+    - 1150
+    - 2276
+    - -1
+- type: Static
+  arguments: ''
+  description: empty vials
+  item_id: 6235
+  placements:
+  - location:
+    - 1160
+    - 2207
+    - 40
+  - location:
+    - 1164
+    - 2210
+    - 46
+- type: Static
+  arguments: ''
+  description: broken clock
+  item_id: 3103
+  placements:
+  - location:
+    - 1160
+    - 2240
+    - 48
+- type: Static
+  arguments: ''
+  description: ruined painting
+  item_id: 3116
+  placements:
+  - location:
+    - 1161
+    - 2232
+    - 60
+- type: Static
+  arguments: ''
+  description: dirt
+  item_id: 7678
+  placements:
+  - location:
+    - 1161
+    - 2239
+    - 40
+- type: Scales
+  arguments: ''
+  description: scales
+  item_id: 6225
+  placements:
+  - location:
+    - 1162
+    - 2210
+    - 46
+- type: Static
+  arguments: ''
+  description: broken chair
+  item_id: 3097
+  placements:
+  - location:
+    - 1162
+    - 2234
+    - 40
+- type: Static
+  arguments: ''
+  description: mud
+  item_id: 7682
+  placements:
+  - location:
+    - 1162
+    - 2239
+    - 40
+  - location:
+    - 1162
+    - 2240
+    - 40
+- type: BurningOfTrinsic
+  arguments: ''
+  description: book
+  item_id: 4084
+  placements:
+  - location:
+    - 1163
+    - 2206
+    - 62
+- type: Static
+  arguments: ''
+  description: mortar and pestle
+  item_id: 3739
+  placements:
+  - location:
+    - 1163
+    - 2208
+    - 41
+- type: Static
+  arguments: ''
+  description: full vials
+  item_id: 6237
+  placements:
+  - location:
+    - 1163
+    - 2210
+    - 46
+- type: Static
+  arguments: ''
+  description: ruined bookcase
+  item_id: 3092
+  placements:
+  - location:
+    - 1163
+    - 2232
+    - 40
+- type: Static
+  arguments: ''
+  description: switch
+  item_id: 4239
+  placements:
+  - location:
+    - 1129
+    - 2230
+    - 30
+- type: Static
+  arguments: ''
+  description: broken chair
+  item_id: 3100
+  placements:
+  - location:
+    - 1163
+    - 2236
+    - 40
+- type: Static
+  arguments: ''
+  description: dirt
+  item_id: 7679
+  placements:
+  - location:
+    - 1163
+    - 2239
+    - 40
+- type: Static
+  arguments: ''
+  description: goblet
+  item_id: 2507
+  placements:
+  - location:
+    - 1164
+    - 2234
+    - 46
+- type: Static
+  arguments: ''
+  description: broken chair
+  item_id: 3102
+  placements:
+  - location:
+    - 1164
+    - 2237
+    - 40
+- type: Static
+  arguments: ''
+  description: debris
+  item_id: 3117
+  placements:
+  - location:
+    - 1164
+    - 2241
+    - 40
+- type: Static
+  arguments: ''
+  description: flask stand
+  item_id: 6185
+  placements:
+  - location:
+    - 1165
+    - 2210
+    - 46
+- type: Static
+  arguments: ''
+  description: broken furniture
+  item_id: 3108
+  placements:
+  - location:
+    - 1165
+    - 2232
+    - 40
+- type: Static
+  arguments: ''
+  description: banner
+  item_id: 5546
+  placements:
+  - location:
+    - 1165
+    - 2232
+    - 60
+- type: Static
+  arguments: ''
+  description: damaged books
+  item_id: 3094
+  placements:
+  - location:
+    - 1165
+    - 2233
+    - 40
+  - location:
+    - 1165
+    - 2244
+    - 46
+- type: Static
+  arguments: ''
+  description: broken chair
+  item_id: 3101
+  placements:
+  - location:
+    - 1165
+    - 2234
+    - 40
+  - location:
+    - 1166
+    - 2243
+    - 40
+- type: Static
+  arguments: ''
+  description: banner
+  item_id: 5547
+  placements:
+  - location:
+    - 1166
+    - 2232
+    - 60
+- type: FullBookcase
+  arguments: ''
+  description: bookcase
+  item_id: 2716
+  placements:
+  - location:
+    - 1160
+    - 2208
+    - 40

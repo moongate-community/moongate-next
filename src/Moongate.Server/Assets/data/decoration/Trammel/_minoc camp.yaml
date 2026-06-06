@@ -1,0 +1,201 @@
+decoration:
+- type: Static
+  arguments: ''
+  description: gruesome standard
+  item_id: 1055
+  placements:
+  - location:
+    - 2635
+    - 701
+    - 0
+- type: Static
+  arguments: ''
+  description: garbage
+  item_id: 4334
+  placements:
+  - location:
+    - 2629
+    - 701
+    - 0
+  - location:
+    - 2622
+    - 703
+    - 0
+  - location:
+    - 2626
+    - 700
+    - 0
+  - location:
+    - 2625
+    - 706
+    - 0
+  - location:
+    - 2625
+    - 708
+    - 0
+  - location:
+    - 2629
+    - 703
+    - 0
+- type: Static
+  arguments: (Hue = 0x33)
+  description: tent wall
+  item_id: 747
+  placements:
+  - location:
+    - 2620
+    - 702
+    - 0
+  - location:
+    - 2622
+    - 707
+    - 0
+  - location:
+    - 2627
+    - 698
+    - 0
+  - location:
+    - 2627
+    - 708
+    - 0
+  - location:
+    - 2620
+    - 702
+    - 1
+- type: Static
+  arguments: (Hue = 0x33)
+  description: tent wall
+  item_id: 748
+  placements:
+  - location:
+    - 2621
+    - 701
+    - 0
+  - location:
+    - 2623
+    - 706
+    - 0
+  - location:
+    - 2628
+    - 697
+    - 0
+  - location:
+    - 2628
+    - 707
+    - 0
+  - location:
+    - 2621
+    - 701
+    - 1
+- type: Static
+  arguments: ''
+  description: skinned goat
+  item_id: 7816
+  placements:
+  - location:
+    - 2624
+    - 705
+    - 0
+- type: Static
+  arguments: ''
+  description: fire pit
+  item_id: 4012
+  placements:
+  - location:
+    - 2625
+    - 703
+    - 0
+- type: Static
+  arguments: ''
+  description: campfire
+  item_id: 3555
+  placements:
+  - location:
+    - 2625
+    - 703
+    - 0
+- type: Static
+  arguments: ''
+  description: cauldron
+  item_id: 2420
+  placements:
+  - location:
+    - 2625
+    - 703
+    - 0
+- type: Static
+  arguments: ''
+  description: stump
+  item_id: 3673
+  placements:
+  - location:
+    - 2624
+    - 709
+    - 0
+- type: Static
+  arguments: ''
+  description: executioner's axe
+  item_id: 3910
+  placements:
+  - location:
+    - 2625
+    - 708
+    - 0
+- type: Static
+  arguments: ''
+  description: gruesome standard
+  item_id: 1064
+  placements:
+  - location:
+    - 2626
+    - 711
+    - 0
+- type: Static
+  arguments: ''
+  description: gruesome standard
+  item_id: 1056
+  placements:
+  - location:
+    - 2627
+    - 694
+    - 0
+- type: Static
+  arguments: ''
+  description: skinned goat
+  item_id: 7817
+  placements:
+  - location:
+    - 2631
+    - 696
+    - 0
+- type: Static
+  arguments: ''
+  description: skinned deer
+  item_id: 7824
+  placements:
+  - location:
+    - 2627
+    - 701
+    - 0
+  - location:
+    - 2627
+    - 701
+    - 1
+- type: Static
+  arguments: ''
+  description: stump
+  item_id: 3672
+  placements:
+  - location:
+    - 2627
+    - 703
+    - 0
+- type: Static
+  arguments: ''
+  description: skinned deer
+  item_id: 7825
+  placements:
+  - location:
+    - 2627
+    - 705
+    - 0

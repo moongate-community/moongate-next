@@ -1,0 +1,81 @@
+container:
+- id: backpack
+  item_id: 3701
+  width: 7
+  height: 4
+  name: Backpack
+- id: leather_backpack
+  item_id: 3702
+  width: 7
+  height: 4
+  name: Leather Backpack
+- id: studded_backpack
+  item_id: 3703
+  width: 7
+  height: 4
+  name: Studded Backpack
+- id: small_box
+  item_id: 3650
+  width: 5
+  height: 3
+  name: Small Box
+- id: wooden_box
+  item_id: 3651
+  width: 6
+  height: 4
+  name: Wooden Box
+- id: small_crate
+  item_id: 3648
+  width: 5
+  height: 3
+  name: Small Crate
+- id: wooden_crate
+  item_id: 3644
+  width: 8
+  height: 6
+  name: Wooden Crate
+- id: medium_crate
+  item_id: 3645
+  width: 8
+  height: 6
+  name: Medium Crate
+- id: metal_chest
+  item_id: 3712
+  width: 9
+  height: 7
+  name: Metal Chest
+- id: large_crate
+  item_id: 3649
+  width: 12
+  height: 8
+  name: Large Crate
+- id: large_metal_chest
+  item_id: 3713
+  width: 10
+  height: 8
+  name: Large Metal Chest
+- id: bank_box
+  item_id: 2472
+  width: 15
+  height: 10
+  name: Bank Box
+- id: bag
+  item_id: 3708
+  width: 6
+  height: 6
+  name: Bag
+- id: pouch
+  item_id: 3709
+  width: 6
+  height: 6
+  name: Pouch
+- id: reagent_bag
+  item_id: 4005
+  width: 4
+  height: 4
+  name: Reagent Bag
+- id: ship_hold
+  item_id: 5441
+  width: 12
+  height: 8
+  name: Ship Hold

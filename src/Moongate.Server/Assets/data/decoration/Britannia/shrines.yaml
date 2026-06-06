@@ -1,0 +1,356 @@
+decoration:
+- type: AnkhWest
+  arguments: ''
+  description: Chaos
+  item_id: 3
+  placements:
+  - location:
+    - 1456
+    - 843
+    - 5
+- type: CandelabraStand
+  arguments: ''
+  description: ''
+  item_id: 2854
+  placements:
+  - location:
+    - 1457
+    - 841
+    - 0
+  - location:
+    - 1457
+    - 846
+    - 0
+- type: Static
+  arguments: ''
+  description: ''
+  item_id: 1928
+  placements:
+  - location:
+    - 1456
+    - 843
+    - 0
+  - location:
+    - 1456
+    - 844
+    - 0
+  - location:
+    - 1457
+    - 843
+    - 0
+  - location:
+    - 1457
+    - 844
+    - 0
+  - location:
+    - 1458
+    - 843
+    - 0
+  - location:
+    - 1458
+    - 844
+    - 0
+- type: Static
+  arguments: ''
+  description: ''
+  item_id: 1929
+  placements:
+  - location:
+    - 1456
+    - 845
+    - 0
+  - location:
+    - 1457
+    - 845
+    - 0
+  - location:
+    - 1458
+    - 845
+    - 0
+- type: Static
+  arguments: ''
+  description: ''
+  item_id: 1930
+  placements:
+  - location:
+    - 1459
+    - 843
+    - 0
+  - location:
+    - 1459
+    - 844
+    - 0
+- type: Static
+  arguments: ''
+  description: ''
+  item_id: 1931
+  placements:
+  - location:
+    - 1456
+    - 842
+    - 0
+  - location:
+    - 1457
+    - 842
+    - 0
+  - location:
+    - 1458
+    - 842
+    - 0
+- type: Static
+  arguments: ''
+  description: ''
+  item_id: 1934
+  placements:
+  - location:
+    - 1459
+    - 845
+    - 0
+- type: Static
+  arguments: ''
+  description: ''
+  item_id: 1935
+  placements:
+  - location:
+    - 1459
+    - 842
+    - 0
+- type: Static
+  arguments: ''
+  description: ''
+  item_id: 5347
+  placements:
+  - location:
+    - 1457
+    - 843
+    - 5
+- type: Static
+  arguments: ''
+  description: ''
+  item_id: 5348
+  placements:
+  - location:
+    - 1457
+    - 844
+    - 5
+- type: Static
+  arguments: ''
+  description: ''
+  item_id: 5349
+  placements:
+  - location:
+    - 1458
+    - 844
+    - 5
+- type: Static
+  arguments: ''
+  description: ''
+  item_id: 5350
+  placements:
+  - location:
+    - 1458
+    - 843
+    - 5
+- type: AnkhNorth
+  arguments: ''
+  description: Compassion
+  item_id: 4
+  placements:
+  - location:
+    - 1857
+    - 877
+    - -1
+- type: AnkhWest
+  arguments: ''
+  description: Honesty (locations unconfirmed)
+  item_id: 3
+  placements:
+  - location:
+    - 4208
+    - 561
+    - 42
+  - location:
+    - 4208
+    - 565
+    - 42
+- type: AnkhWest
+  arguments: ''
+  description: Humility (location unconfirmed)
+  item_id: 3
+  placements:
+  - location:
+    - 4272
+    - 3696
+    - 0
+- type: AnkhWest
+  arguments: ''
+  description: Honor
+  item_id: 3
+  placements:
+  - location:
+    - 1723
+    - 3527
+    - 8
+- type: AnkhNorth
+  arguments: ''
+  description: Justice
+  item_id: 4
+  placements:
+  - location:
+    - 1300
+    - 629
+    - 21
+- type: AnkhWest
+  arguments: ''
+  description: Valor (location unconfirmed)
+  item_id: 3
+  placements:
+  - location:
+    - 2489
+    - 3930
+    - 2
+- type: AnkhNorth
+  arguments: (Bloodied)
+  description: Sacrifice
+  item_id: 7773
+  placements:
+  - location:
+    - 3354
+    - 287
+    - 4
+- type: AnkhWest
+  arguments: ''
+  description: Spirituality
+  item_id: 3
+  placements:
+  - location:
+    - 1592
+    - 2489
+    - 20
+- type: Static
+  arguments: ''
+  description: ''
+  item_id: 219
+  placements:
+  - location:
+    - 1588
+    - 2488
+    - 5
+- type: Static
+  arguments: ''
+  description: ''
+  item_id: 1802
+  placements:
+  - location:
+    - 1594
+    - 2491
+    - 15
+  - location:
+    - 1595
+    - 2491
+    - 15
+- type: Static
+  arguments: ''
+  description: ''
+  item_id: 1803
+  placements:
+  - location:
+    - 1600
+    - 2489
+    - 10
+  - location:
+    - 1600
+    - 2490
+    - 10
+  - location:
+    - 1596
+    - 2489
+    - 15
+  - location:
+    - 1596
+    - 2490
+    - 15
+- type: Static
+  arguments: ''
+  description: ''
+  item_id: 1804
+  placements:
+  - location:
+    - 1594
+    - 2488
+    - 15
+  - location:
+    - 1595
+    - 2488
+    - 15
+- type: Static
+  arguments: ''
+  description: ''
+  item_id: 1806
+  placements:
+  - location:
+    - 1593
+    - 2488
+    - 15
+- type: Static
+  arguments: ''
+  description: ''
+  item_id: 1807
+  placements:
+  - location:
+    - 1596
+    - 2491
+    - 15
+- type: Static
+  arguments: ''
+  description: ''
+  item_id: 1808
+  placements:
+  - location:
+    - 1596
+    - 2488
+    - 15
+- type: Static
+  arguments: ''
+  description: ''
+  item_id: 1809
+  placements:
+  - location:
+    - 1593
+    - 2491
+    - 15
+- type: KeywordTeleporter
+  arguments: (Substring = om om om; Range=0; PointDest=(1595, 2489, 20); SourceEffect=true; DestEffect=true; SoundID=0x1FE; Delay=0:0:1)
+  description: ''
+  item_id: 7107
+  placements:
+  - location:
+    - 1600
+    - 2489
+    - 12
+- type: KeywordTeleporter
+  arguments: (Substring = om om om; Range=0; PointDest=(1595, 2490, 20); SourceEffect=true; DestEffect=true; SoundID=0x1FE; Delay=0:0:1)
+  description: ''
+  item_id: 7107
+  placements:
+  - location:
+    - 1600
+    - 2490
+    - 12
+- type: Teleporter
+  arguments: (PointDest = (1600, 2489, 12))
+  description: ''
+  item_id: 7107
+  placements:
+  - location:
+    - 1593
+    - 2488
+    - 17
+  - location:
+    - 1594
+    - 2488
+    - 17
+  - location:
+    - 1595
+    - 2488
+    - 17

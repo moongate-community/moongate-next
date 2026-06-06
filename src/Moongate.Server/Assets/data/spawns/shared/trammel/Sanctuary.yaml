@@ -1,0 +1,421 @@
+spawn:
+- type: Spawner
+  guid: 01891c2e-7b0f-4f3e-81a6-199eb062ec9c
+  name: Spawner (117)
+  location:
+  - 6168
+  - 117
+  - 0
+  map: Trammel
+  count: 34
+  min_delay: 00:05:00
+  max_delay: 00:10:00
+  team: 0
+  home_range: 30
+  walking_range: 30
+  entries:
+  - name: Ratman
+    max_count: 11
+    probability: 100
+  - name: RatmanArcher
+    max_count: 11
+    probability: 100
+  - name: RatmanMage
+    max_count: 11
+    probability: 100
+  - name: Changeling
+    max_count: 11
+    probability: 100
+  - name: Doppleganger
+    max_count: 11
+    probability: 100
+  - name: Dog
+    max_count: 9
+    probability: 100
+  - name: Chicken
+    max_count: 9
+    probability: 100
+  - name: Cat
+    max_count: 9
+    probability: 100
+  - name: Boar
+    max_count: 9
+    probability: 100
+  - name: Bird
+    max_count: 9
+    probability: 100
+  - name: Gargoyle
+    max_count: 3
+    probability: 100
+  - name: Titan
+    max_count: 3
+    probability: 100
+  - name: Cyclops
+    max_count: 3
+    probability: 100
+  - name: OrcishMage
+    max_count: 5
+    probability: 100
+  - name: orcscout
+    max_count: 5
+    probability: 100
+- type: Spawner
+  guid: 0983061e-4deb-4750-8f2b-ee10756735ec
+  name: Spawner (117)
+  location:
+  - 6184
+  - 29
+  - 0
+  map: Trammel
+  count: 9
+  min_delay: 00:05:00
+  max_delay: 00:10:00
+  team: 0
+  home_range: 10
+  walking_range: 10
+  entries:
+  - name: Bird
+    max_count: 6
+    probability: 100
+  - name: Chicken
+    max_count: 6
+    probability: 100
+  - name: Rat
+    max_count: 6
+    probability: 100
+  - name: Dog
+    max_count: 6
+    probability: 100
+  - name: Doppleganger
+    max_count: 3
+    probability: 100
+- type: Spawner
+  guid: 18850a42-5089-43d9-9f0c-1adca014ed3e
+  name: Spawner (117)
+  location:
+  - 6349
+  - 89
+  - -20
+  map: Trammel
+  count: 30
+  min_delay: 00:05:00
+  max_delay: 00:10:00
+  team: 0
+  home_range: 70
+  walking_range: 70
+  entries:
+  - name: Ratman
+    max_count: 18
+    probability: 100
+  - name: RatmanArcher
+    max_count: 18
+    probability: 100
+  - name: Chiikkaha
+    max_count: 18
+    probability: 100
+  - name: Titan
+    max_count: 18
+    probability: 100
+  - name: Cyclops
+    max_count: 18
+    probability: 100
+  - name: Rat
+    max_count: 18
+    probability: 100
+  - name: Ratman
+    max_count: 4
+    probability: 100
+  - name: RatmanArcher
+    max_count: 4
+    probability: 100
+  - name: Chiikkaha
+    max_count: 2
+    probability: 100
+  - name: Titan
+    max_count: 2
+    probability: 100
+  - name: Cyclops
+    max_count: 2
+    probability: 100
+  - name: Rat
+    max_count: 2
+    probability: 100
+- type: Spawner
+  guid: 2862d617-a6ad-449e-b063-3a11f39753d7
+  name: Spawner (117)
+  location:
+  - 6265
+  - 48
+  - -10
+  map: Trammel
+  count: 53
+  min_delay: 00:05:00
+  max_delay: 00:10:00
+  team: 0
+  home_range: 30
+  walking_range: 30
+  entries:
+  - name: Szavetra
+    max_count: 22
+    probability: 100
+  - name: Imp
+    max_count: 22
+    probability: 100
+  - name: Titan
+    max_count: 22
+    probability: 100
+  - name: Snake
+    max_count: 22
+    probability: 100
+  - name: Ratman
+    max_count: 22
+    probability: 100
+  - name: Doppleganger
+    max_count: 22
+    probability: 100
+  - name: Gargoyle
+    max_count: 22
+    probability: 100
+  - name: Cow
+    max_count: 18
+    probability: 100
+  - name: Bull
+    max_count: 18
+    probability: 100
+  - name: Chicken
+    max_count: 18
+    probability: 100
+  - name: Bird
+    max_count: 18
+    probability: 100
+  - name: Pig
+    max_count: 18
+    probability: 100
+  - name: Dog
+    max_count: 18
+    probability: 100
+  - name: Goat
+    max_count: 18
+    probability: 100
+  - name: Cat
+    max_count: 18
+    probability: 100
+  - name: Rat
+    max_count: 18
+    probability: 100
+  - name: Orc
+    max_count: 9
+    probability: 100
+  - name: OrcCaptain
+    max_count: 9
+    probability: 100
+  - name: OrcishMage
+    max_count: 9
+    probability: 100
+  - name: Ogre
+    max_count: 4
+    probability: 100
+  - name: Ogre
+    max_count: 4
+    probability: 100
+  - name: OgreLord
+    max_count: 4
+    probability: 100
+- type: Spawner
+  guid: 28f37a01-81c7-4090-a181-5cd3f670ef72
+  name: Spawner (117)
+  location:
+  - 6187
+  - 101
+  - 0
+  map: Trammel
+  count: 34
+  min_delay: 00:05:00
+  max_delay: 00:10:00
+  team: 0
+  home_range: 25
+  walking_range: 25
+  entries:
+  - name: Titan
+    max_count: 10
+    probability: 100
+  - name: Ettin
+    max_count: 10
+    probability: 100
+  - name: Doppleganger
+    max_count: 10
+    probability: 100
+  - name: MougGuur
+    max_count: 10
+    probability: 100
+  - name: Dog
+    max_count: 10
+    probability: 100
+  - name: Chicken
+    max_count: 10
+    probability: 100
+  - name: Rat
+    max_count: 10
+    probability: 100
+  - name: Cow
+    max_count: 10
+    probability: 100
+  - name: Bull
+    max_count: 10
+    probability: 100
+  - name: OrcBomber
+    max_count: 7
+    probability: 100
+  - name: OrcBrute
+    max_count: 7
+    probability: 100
+  - name: Orc
+    max_count: 7
+    probability: 100
+  - name: Snake
+    max_count: 7
+    probability: 100
+  - name: Gargoyle
+    max_count: 7
+    probability: 100
+  - name: Ogre
+    max_count: 7
+    probability: 100
+- type: Spawner
+  guid: 499d7a5c-d73c-4e43-889f-f88bc94cf40e
+  name: Spawner (117)
+  location:
+  - 6263
+  - 118
+  - -10
+  map: Trammel
+  count: 24
+  min_delay: 00:05:00
+  max_delay: 00:10:00
+  team: 0
+  home_range: 20
+  walking_range: 20
+  entries:
+  - name: Chicken
+    max_count: 6
+    probability: 100
+  - name: Bird
+    max_count: 6
+    probability: 100
+  - name: Dog
+    max_count: 3
+    probability: 100
+  - name: Cat
+    max_count: 3
+    probability: 100
+  - name: Cow
+    max_count: 6
+    probability: 100
+  - name: Bull
+    max_count: 6
+    probability: 100
+  - name: Pig
+    max_count: 3
+    probability: 100
+  - name: Boar
+    max_count: 3
+    probability: 100
+- type: Spawner
+  guid: 5f510865-94bd-49b7-90bf-c24131ef1151
+  name: Spawner (117)
+  location:
+  - 6191
+  - 155
+  - 0
+  map: Trammel
+  count: 42
+  min_delay: 00:05:00
+  max_delay: 00:10:00
+  team: 0
+  home_range: 25
+  walking_range: 25
+  entries:
+  - name: Changeling
+    max_count: 18
+    probability: 100
+  - name: Ratman
+    max_count: 18
+    probability: 100
+  - name: Ettin
+    max_count: 18
+    probability: 100
+  - name: Titan
+    max_count: 18
+    probability: 100
+  - name: RatmanArcher
+    max_count: 18
+    probability: 100
+  - name: RatmanMage
+    max_count: 18
+    probability: 100
+  - name: Goat
+    max_count: 12
+    probability: 100
+  - name: Pig
+    max_count: 12
+    probability: 100
+  - name: Cow
+    max_count: 12
+    probability: 100
+  - name: Bull
+    max_count: 12
+    probability: 100
+  - name: Rat
+    max_count: 12
+    probability: 100
+  - name: GargoyleEnforcer
+    max_count: 9
+    probability: 100
+  - name: GargoyleDestroyer
+    max_count: 9
+    probability: 100
+  - name: Gargoyle
+    max_count: 9
+    probability: 100
+  - name: Snake
+    max_count: 3
+    probability: 100
+- type: Spawner
+  guid: e35998b5-c9fa-4547-b793-3efeeca0253f
+  name: Spawner (117)
+  location:
+  - 6189
+  - 71
+  - 0
+  map: Trammel
+  count: 12
+  min_delay: 00:05:00
+  max_delay: 00:10:00
+  team: 0
+  home_range: 25
+  walking_range: 25
+  entries:
+  - name: OgreLord
+    max_count: 8
+    probability: 100
+  - name: OrcishLord
+    max_count: 8
+    probability: 100
+  - name: Ratman
+    max_count: 8
+    probability: 100
+  - name: Bird
+    max_count: 4
+    probability: 100
+  - name: Cow
+    max_count: 4
+    probability: 100
+  - name: Bull
+    max_count: 4
+    probability: 100
+  - name: Pig
+    max_count: 4
+    probability: 100
+  - name: Chicken
+    max_count: 4
+    probability: 100

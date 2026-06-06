@@ -1,0 +1,136 @@
+decoration:
+- type: TribalBerry
+  arguments: ''
+  description: tribal berry
+  item_id: 2512
+  placements:
+  - location:
+    - 1258
+    - 752
+    - -74
+  - location:
+    - 1259
+    - 752
+    - -72
+  - location:
+    - 1264
+    - 752
+    - -74
+  - location:
+    - 1267
+    - 752
+    - -73
+- type: TribalPaint
+  arguments: ''
+  description: tribal paint
+  item_id: 2540
+  placements:
+  - location:
+    - 1259
+    - 765
+    - -74
+- type: Static
+  arguments: ''
+  description: horse dung
+  item_id: 3899
+  placements:
+  - location:
+    - 1276
+    - 785
+    - -80
+- type: Static
+  arguments: ''
+  description: horse dung
+  item_id: 3900
+  placements:
+  - location:
+    - 1287
+    - 777
+    - -80
+- type: Static
+  arguments: ''
+  description: spear
+  item_id: 3938
+  placements:
+  - location:
+    - 1270
+    - 756
+    - -71
+  - location:
+    - 1270
+    - 756
+    - -70
+- type: OrcishKinMask
+  arguments: ''
+  description: mask of orcish kin
+  item_id: 5147
+  placements:
+  - location:
+    - 1255
+    - 755
+    - -74
+  - location:
+    - 1255
+    - 760
+    - -74
+  - location:
+    - 1255
+    - 761
+    - -74
+- type: SavageMask
+  arguments: (Hue = 0x84C)
+  description: tribal mask
+  item_id: 5451
+  placements:
+  - location:
+    - 1248
+    - 702
+    - -74
+  - location:
+    - 1258
+    - 765
+    - -74
+- type: SavageMask
+  arguments: (Hue = 0x84E)
+  description: tribal mask
+  item_id: 5451
+  placements:
+  - location:
+    - 1260
+    - 765
+    - -74
+- type: SavageMask
+  arguments: (Hue = 0x845)
+  description: tribal mask
+  item_id: 5452
+  placements:
+  - location:
+    - 1266
+    - 765
+    - -74
+- type: SavageMask
+  arguments: (Hue = 0x851)
+  description: tribal mask
+  item_id: 5452
+  placements:
+  - location:
+    - 1257
+    - 765
+    - -74
+- type: Bola
+  arguments: ''
+  description: bolas
+  item_id: 9900
+  placements:
+  - location:
+    - 1211
+    - 742
+    - -74
+  - location:
+    - 1217
+    - 740
+    - -74
+  - location:
+    - 1270
+    - 762
+    - -74

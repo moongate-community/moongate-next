@@ -101,6 +101,11 @@ public static class MoongateBootstrap
             directories[DirectoryType.Data],
             Log.Logger
         );
+        UoDataAssetsBootstrapper.EnsureDataAssets(
+            Path.Combine(AppContext.BaseDirectory, "Assets", "data"),
+            directories[DirectoryType.Data],
+            Log.Logger
+        );
         container.AddMoongateUoData(directories[DirectoryType.Data]);
 
         // Network: TCP game listeners + UDP ping server + packet parser (priority 20).

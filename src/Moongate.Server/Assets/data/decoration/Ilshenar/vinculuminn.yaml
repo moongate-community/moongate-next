@@ -1,0 +1,78 @@
+decoration:
+- type: Drawer
+  arguments: ''
+  description: chest of drawers
+  item_id: 2612
+  placements:
+  - location:
+    - 658
+    - 662
+    - -15
+- type: LocalizedSign
+  arguments: (LabelNumber = 1016297)
+  description: The Deuce's Vinculum Inn
+  item_id: 3012
+  placements:
+  - location:
+    - 667
+    - 680
+    - -24
+- type: CandleSkull
+  arguments: (Unlit)
+  description: skull with candle
+  item_id: 6227
+  placements:
+  - location:
+    - 658
+    - 675
+    - -29
+  - location:
+    - 663
+    - 672
+    - -30
+  - location:
+    - 664
+    - 670
+    - -29
+  - location:
+    - 666
+    - 676
+    - -29
+  - location:
+    - 668
+    - 672
+    - -30
+  - location:
+    - 670
+    - 675
+    - -29
+- type: CandleSkull
+  arguments: ''
+  description: skull with candle
+  item_id: 6228
+  placements:
+  - location:
+    - 660
+    - 661
+    - -29
+- type: CandleSkull
+  arguments: (Unlit)
+  description: skull with candle
+  item_id: 6231
+  placements:
+  - location:
+    - 659
+    - 670
+    - -29
+  - location:
+    - 662
+    - 676
+    - -29
+  - location:
+    - 666
+    - 661
+    - -29
+  - location:
+    - 669
+    - 670
+    - -29

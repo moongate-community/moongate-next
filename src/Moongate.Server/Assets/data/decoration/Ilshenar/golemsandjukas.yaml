@@ -1,0 +1,398 @@
+decoration:
+- type: MetalDoor
+  arguments: (Facing = SouthCW)
+  description: metal door
+  item_id: 1661
+  placements:
+  - location:
+    - 1089
+    - 707
+    - -80
+  - location:
+    - 1094
+    - 699
+    - -60
+  - location:
+    - 1094
+    - 708
+    - -60
+  - location:
+    - 1103
+    - 704
+    - -80
+- type: MetalDoor
+  arguments: (Facing = NorthCCW)
+  description: metal door
+  item_id: 1663
+  placements:
+  - location:
+    - 1089
+    - 706
+    - -80
+  - location:
+    - 1094
+    - 707
+    - -60
+  - location:
+    - 1094
+    - 698
+    - -60
+  - location:
+    - 1103
+    - 703
+    - -80
+- type: MetalDoor2
+  arguments: (Facing = SouthCW)
+  description: metal door
+  item_id: 1741
+  placements:
+  - location:
+    - 1103
+    - 652
+    - -80
+  - location:
+    - 1111
+    - 652
+    - -80
+- type: MetalDoor2
+  arguments: (Facing = NorthCCW)
+  description: metal door
+  item_id: 1743
+  placements:
+  - location:
+    - 1103
+    - 651
+    - -80
+  - location:
+    - 1111
+    - 651
+    - -80
+- type: StrongWoodDoor
+  arguments: (Facing = WestCW)
+  description: wooden door
+  item_id: 1765
+  placements:
+  - location:
+    - 1071
+    - 671
+    - -80
+  - location:
+    - 1083
+    - 632
+    - -60
+  - location:
+    - 1083
+    - 658
+    - -80
+  - location:
+    - 1083
+    - 671
+    - -80
+  - location:
+    - 1083
+    - 671
+    - -60
+  - location:
+    - 1096
+    - 671
+    - -80
+  - location:
+    - 1097
+    - 658
+    - -80
+  - location:
+    - 1098
+    - 632
+    - -60
+- type: StrongWoodDoor
+  arguments: (Facing = EastCCW)
+  description: wooden door
+  item_id: 1767
+  placements:
+  - location:
+    - 1062
+    - 635
+    - -80
+  - location:
+    - 1062
+    - 635
+    - -60
+  - location:
+    - 1062
+    - 635
+    - -40
+  - location:
+    - 1062
+    - 667
+    - -80
+  - location:
+    - 1062
+    - 667
+    - -60
+  - location:
+    - 1062
+    - 667
+    - -40
+  - location:
+    - 1083
+    - 632
+    - -80
+  - location:
+    - 1083
+    - 645
+    - -80
+  - location:
+    - 1096
+    - 632
+    - -80
+  - location:
+    - 1097
+    - 645
+    - -80
+  - location:
+    - 1105
+    - 635
+    - -60
+  - location:
+    - 1105
+    - 668
+    - -80
+  - location:
+    - 1105
+    - 668
+    - -60
+  - location:
+    - 1105
+    - 668
+    - -40
+  - location:
+    - 1105
+    - 635
+    - -80
+- type: StrongWoodDoor
+  arguments: (Facing = WestCCW)
+  description: wooden door
+  item_id: 1769
+  placements:
+  - location:
+    - 1071
+    - 634
+    - -40
+  - location:
+    - 1074
+    - 669
+    - -40
+  - location:
+    - 1090
+    - 634
+    - -40
+  - location:
+    - 1092
+    - 669
+    - -40
+  - location:
+    - 1092
+    - 679
+    - -40
+- type: StrongWoodDoor
+  arguments: (Facing = EastCW)
+  description: wooden door
+  item_id: 1771
+  placements:
+  - location:
+    - 1105
+    - 635
+    - -40
+- type: StrongWoodDoor
+  arguments: (Facing = SouthCW)
+  description: wooden door
+  item_id: 1773
+  placements:
+  - location:
+    - 1064
+    - 651
+    - -80
+- type: StrongWoodDoor
+  arguments: (Facing = SouthCCW)
+  description: wooden door
+  item_id: 1777
+  placements:
+  - location:
+    - 1067
+    - 630
+    - -80
+  - location:
+    - 1067
+    - 630
+    - -60
+  - location:
+    - 1067
+    - 673
+    - -80
+  - location:
+    - 1067
+    - 673
+    - -60
+  - location:
+    - 1100
+    - 630
+    - -80
+  - location:
+    - 1100
+    - 630
+    - -60
+  - location:
+    - 1100
+    - 673
+    - -80
+  - location:
+    - 1100
+    - 673
+    - -60
+  - location:
+    - 1100
+    - 673
+    - -40
+- type: StrongWoodDoor
+  arguments: (Facing = NorthCW)
+  description: wooden door
+  item_id: 1779
+  placements:
+  - location:
+    - 1103
+    - 643
+    - -60
+  - location:
+    - 1103
+    - 660
+    - -60
+- type: IronGate
+  arguments: (Facing = SouthCW)
+  description: iron gate
+  item_id: 2092
+  placements:
+  - location:
+    - 1064
+    - 644
+    - -40
+  - location:
+    - 1064
+    - 659
+    - -40
+  - location:
+    - 1081
+    - 644
+    - -40
+  - location:
+    - 1081
+    - 659
+    - -40
+  - location:
+    - 1086
+    - 644
+    - -40
+  - location:
+    - 1086
+    - 659
+    - -40
+  - location:
+    - 1103
+    - 644
+    - -40
+  - location:
+    - 1103
+    - 659
+    - -40
+- type: FullBookcase
+  arguments: ''
+  description: bookcase
+  item_id: 2711
+  placements:
+  - location:
+    - 1092
+    - 696
+    - -60
+- type: FullBookcase
+  arguments: ''
+  description: bookcase
+  item_id: 2712
+  placements:
+  - location:
+    - 1086
+    - 703
+    - -80
+- type: FullBookcase
+  arguments: ''
+  description: bookcase
+  item_id: 2713
+  placements:
+  - location:
+    - 1081
+    - 707
+    - -60
+  - location:
+    - 1081
+    - 708
+    - -80
+- type: FullBookcase
+  arguments: ''
+  description: bookcase
+  item_id: 2714
+  placements:
+  - location:
+    - 1081
+    - 699
+    - -60
+  - location:
+    - 1081
+    - 704
+    - -80
+- type: FullBookcase
+  arguments: ''
+  description: bookcase
+  item_id: 2715
+  placements:
+  - location:
+    - 1082
+    - 703
+    - -80
+  - location:
+    - 1088
+    - 696
+    - -60
+- type: FullBookcase
+  arguments: ''
+  description: bookcase
+  item_id: 2716
+  placements:
+  - location:
+    - 1081
+    - 706
+    - -60
+- type: KaburJournal
+  arguments: ''
+  description: khabur's journal
+  item_id: 4081
+  placements:
+  - location:
+    - 1073
+    - 633
+    - -74
+- type: FropozJournal
+  arguments: ''
+  description: fropoz's journal
+  item_id: 4081
+  placements:
+  - location:
+    - 1084
+    - 707
+    - -74
+- type: TranslatedGargoyleJournal
+  arguments: ''
+  description: translated gargoyle journal
+  item_id: 4082
+  placements:
+  - location:
+    - 1089
+    - 708
+    - -54

@@ -1,0 +1,111 @@
+decoration:
+- type: Spawner
+  arguments: (Spawn = Victoria; HomeRange=2; Count=1; MinDelay=00:01:00; MinDelay=00:01:00)
+  description: Victoria spawner
+  item_id: 7955
+  placements:
+  - location:
+    - 423
+    - 195
+    - -1
+- type: SummoningAltar
+  arguments: ''
+  description: Altar for summoning bone demons
+  item_id: 4630
+  placements:
+  - location:
+    - 441
+    - 205
+    - -1
+- type: BellOfTheDead
+  arguments: ''
+  description: Bell for summoning Chyloth
+  item_id: 2330
+  placements:
+  - location:
+    - 417
+    - 246
+    - 23
+- type: Blocker
+  arguments: ''
+  description: No teleporting on Chyloth's spot
+  item_id: 8612
+  placements:
+  - location:
+    - 417
+    - 246
+    - 7
+- type: Static
+  arguments: (Hue = 0x44E)
+  description: Teleporter (pad) from first boat to second
+  item_id: 6178
+  placements:
+  - location:
+    - 408
+    - 254
+    - 2
+- type: Teleporter
+  arguments: (PointDest = (428, 318, 2))
+  description: Teleporter (obj) from first boat to second
+  item_id: 7107
+  placements:
+  - location:
+    - 407
+    - 254
+    - 2
+  - location:
+    - 408
+    - 254
+    - 2
+  - location:
+    - 409
+    - 254
+    - 2
+- type: Static
+  arguments: (Hue = 0x44E)
+  description: Teleporter (pad) from second boat to land
+  item_id: 6178
+  placements:
+  - location:
+    - 428
+    - 321
+    - 2
+- type: Teleporter
+  arguments: (PointDest = (422, 327, -1); DestEffect=true; SoundID=0x1FE)
+  description: Teleporter (obj) from second boat to land
+  item_id: 7107
+  placements:
+  - location:
+    - 427
+    - 321
+    - 2
+  - location:
+    - 428
+    - 321
+    - 2
+  - location:
+    - 429
+    - 321
+    - 2
+- type: Static
+  arguments: ''
+  description: Daemon Bones
+  item_id: 3968
+  placements:
+  - location:
+    - 421
+    - 198
+    - -1
+  - location:
+    - 422
+    - 195
+    - -1
+- type: LocalizedStatic
+  arguments: (Hue = 0x482; LabelNumber=1060023)
+  description: book - The Akashic Records
+  item_id: 4030
+  placements:
+  - location:
+    - 420
+    - 192
+    - 8

@@ -1,0 +1,68 @@
+decoration:
+- type: Static
+  arguments: ''
+  description: lute
+  item_id: 3763
+  placements:
+  - location:
+    - 426
+    - 1557
+    - -23
+- type: Static
+  arguments: ''
+  description: lap harp
+  item_id: 3762
+  placements:
+  - location:
+    - 426
+    - 1558
+    - -23
+- type: Static
+  arguments: ''
+  description: tambourine
+  item_id: 3742
+  placements:
+  - location:
+    - 427
+    - 1560
+    - -23
+- type: Static
+  arguments: ''
+  description: standing harp
+  item_id: 3761
+  placements:
+  - location:
+    - 434
+    - 1557
+    - -22
+  - location:
+    - 436
+    - 1557
+    - -22
+- type: MetalDoor
+  arguments: (Hue = 0x8AB; Facing=WestCW)
+  description: metal door
+  item_id: 1653
+  placements:
+  - location:
+    - 478
+    - 1527
+    - -27
+- type: MetalDoor
+  arguments: (Hue = 0x8AB; Facing=EastCCW)
+  description: metal door
+  item_id: 1655
+  placements:
+  - location:
+    - 479
+    - 1527
+    - -27
+- type: Static
+  arguments: ''
+  description: drum
+  item_id: 3740
+  placements:
+  - location:
+    - 427
+    - 1557
+    - -23

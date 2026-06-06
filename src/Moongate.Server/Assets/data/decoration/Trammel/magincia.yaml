@@ -1,0 +1,27 @@
+decoration:
+- type: Static
+  arguments: ''
+  description: metal signpost
+  item_id: 2976
+  placements:
+  - location:
+    - 3778
+    - 2256
+    - 20
+- type: LampPost3
+  arguments: ''
+  description: lamp post
+  item_id: 2852
+  placements:
+  - location:
+    - 3758
+    - 2256
+    - 30
+  - location:
+    - 3773
+    - 2233
+    - 30
+  - location:
+    - 3793
+    - 2232
+    - 20

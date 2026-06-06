@@ -1,0 +1,26 @@
+decoration:
+- type: Spawner
+  arguments: (Spawn = Naturalist; Count=1; HomeRange=0)
+  description: Naturalists
+  item_id: 7955
+  placements:
+  - location:
+    - 1495
+    - 1721
+    - 7
+  - location:
+    - 1414
+    - 1594
+    - 30
+  - location:
+    - 1574
+    - 1697
+    - 35
+  - location:
+    - 1393
+    - 3769
+    - 0
+  - location:
+    - 5240
+    - 174
+    - 15

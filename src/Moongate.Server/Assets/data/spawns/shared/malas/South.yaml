@@ -1,0 +1,31 @@
+spawn:
+- type: Spawner
+  guid: 6bbb82e4-b0d1-4a23-a9da-5d35911ce762
+  name: Spawner (404)
+  location:
+  - 2231
+  - 1605
+  - -95
+  map: Malas
+  count: 33
+  min_delay: 00:05:00
+  max_delay: 00:10:00
+  team: 0
+  home_range: 160
+  walking_range: 160
+  entries:
+  - name: Mongbat
+    max_count: 7
+    probability: 100
+  - name: SandVortex
+    max_count: 6
+    probability: 100
+  - name: Scorpion
+    max_count: 7
+    probability: 100
+  - name: Snake
+    max_count: 6
+    probability: 100
+  - name: Spectre
+    max_count: 7
+    probability: 100

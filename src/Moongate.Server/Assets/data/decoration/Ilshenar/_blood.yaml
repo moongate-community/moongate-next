@@ -1,0 +1,188 @@
+decoration:
+- type: Static
+  arguments: (Hue = 0x1)
+  description: stone pavers
+  item_id: 1313
+  placements:
+  - location:
+    - 1745
+    - 1236
+    - -30
+  - location:
+    - 1746
+    - 1236
+    - -30
+  - location:
+    - 1747
+    - 1236
+    - -30
+  - location:
+    - 1748
+    - 1236
+    - -30
+- type: Static
+  arguments: ''
+  description: studded gloves
+  item_id: 5077
+  placements:
+  - location:
+    - 2057
+    - 937
+    - -28
+- type: MetalGoldenChest
+  arguments: ''
+  description: metal chest
+  item_id: 3648
+  placements:
+  - location:
+    - 2051
+    - 932
+    - -23
+  - location:
+    - 2051
+    - 933
+    - -23
+  - location:
+    - 2153
+    - 907
+    - -23
+  - location:
+    - 2153
+    - 917
+    - -23
+  - location:
+    - 2177
+    - 932
+    - -23
+  - location:
+    - 2051
+    - 931
+    - -23
+  - location:
+    - 2075
+    - 906
+    - -23
+  - location:
+    - 2075
+    - 907
+    - -23
+  - location:
+    - 2075
+    - 908
+    - -23
+  - location:
+    - 2075
+    - 917
+    - -23
+  - location:
+    - 2075
+    - 918
+    - -23
+  - location:
+    - 2075
+    - 919
+    - -23
+  - location:
+    - 2153
+    - 906
+    - -23
+  - location:
+    - 2153
+    - 908
+    - -23
+  - location:
+    - 2153
+    - 918
+    - -23
+  - location:
+    - 2153
+    - 919
+    - -23
+  - location:
+    - 2177
+    - 931
+    - -23
+  - location:
+    - 2177
+    - 933
+    - -23
+- type: Static
+  arguments: ''
+  description: bones
+  item_id: 3794
+  placements:
+  - location:
+    - 2110
+    - 903
+    - -28
+- type: BarredMetalDoor2
+  arguments: (Facing = NorthCCW)
+  description: barred metal door
+  item_id: 8183
+  placements:
+  - location:
+    - 2046
+    - 835
+    - -28
+  - location:
+    - 2046
+    - 841
+    - -28
+- type: BarredMetalDoor2
+  arguments: (Facing = EastCCW)
+  description: barred metal door
+  item_id: 8175
+  placements:
+  - location:
+    - 2048
+    - 832
+    - -28
+  - location:
+    - 2052
+    - 832
+    - -28
+  - location:
+    - 2056
+    - 832
+    - -28
+  - location:
+    - 2172
+    - 832
+    - -28
+  - location:
+    - 2176
+    - 832
+    - -28
+  - location:
+    - 2180
+    - 832
+    - -28
+  - location:
+    - 2184
+    - 832
+    - -28
+- type: Static
+  arguments: (Hue = 0x96C)
+  description: stone stairs
+  item_id: 1929
+  placements:
+  - location:
+    - 2112
+    - 829
+    - -13
+  - location:
+    - 2113
+    - 829
+    - -13
+  - location:
+    - 2114
+    - 829
+    - -13
+  - location:
+    - 2115
+    - 829
+    - -13
+  - location:
+    - 2116
+    - 829
+    - -13
