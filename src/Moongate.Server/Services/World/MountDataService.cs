@@ -13,25 +13,13 @@ public class MountDataService : LazyDataService, IMountDataService
     private readonly Lock _sync = new();
     private HashSet<int> _itemIds = [];
 
-    public MountDataService()
-    {
-    }
+    public MountDataService() { }
 
     public MountDataService(ServerAssetDataLoader loader)
     {
         ArgumentNullException.ThrowIfNull(loader);
 
         _loader = loader;
-    }
-
-    public IReadOnlySet<int> GetAllEntries()
-    {
-        EnsureLoaded();
-
-        lock (_sync)
-        {
-            return new HashSet<int>(_itemIds);
-        }
     }
 
     public bool Contains(int itemId)
@@ -41,6 +29,16 @@ public class MountDataService : LazyDataService, IMountDataService
         lock (_sync)
         {
             return _itemIds.Contains(itemId);
+        }
+    }
+
+    public IReadOnlySet<int> GetAllEntries()
+    {
+        EnsureLoaded();
+
+        lock (_sync)
+        {
+            return new HashSet<int>(_itemIds);
         }
     }
 
@@ -59,7 +57,5 @@ public class MountDataService : LazyDataService, IMountDataService
     }
 
     protected override void LoadCore()
-    {
-        _loader?.LoadMounts(this);
-    }
+        => _loader?.LoadMounts(this);
 }

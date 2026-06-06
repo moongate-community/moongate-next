@@ -1,55 +1,55 @@
 decoration:
-- type: LightWoodGate
-  arguments: (Facing = WestCW)
-  description: wooden gate
-  item_id: 2105
-  placements:
-  - location:
-    - 1400
-    - 433
-    - -6
-- type: LightWoodGate
-  arguments: (Facing = EastCCW)
-  description: wooden gate
-  item_id: 2107
-  placements:
-  - location:
-    - 1401
-    - 433
-    - -6
-- type: LightWoodGate
-  arguments: (Facing = SouthCW)
-  description: wooden gate
-  item_id: 2113
-  placements:
-  - location:
-    - 1395
-    - 441
-    - 13
-- type: LightWoodGate
-  arguments: (Facing = NorthCCW)
-  description: wooden gate
-  item_id: 2115
-  placements:
-  - location:
-    - 1395
-    - 440
-    - 13
-- type: DarkWoodGate
-  arguments: (Facing = WestCW)
-  description: wooden gate
-  item_id: 2150
-  placements:
-  - location:
-    - 1390
-    - 432
-    - -16
-- type: Bag
-  arguments: (Hue = 0x10)
-  description: bag
-  item_id: 3702
-  placements:
-  - location:
-    - 1391
-    - 439
-    - 19
+    -   type: LightWoodGate
+        arguments: (Facing = WestCW)
+        description: wooden gate
+        item_id: 2105
+        placements:
+            -   location:
+                    - 1400
+                    - 433
+                    - -6
+    -   type: LightWoodGate
+        arguments: (Facing = EastCCW)
+        description: wooden gate
+        item_id: 2107
+        placements:
+            -   location:
+                    - 1401
+                    - 433
+                    - -6
+    -   type: LightWoodGate
+        arguments: (Facing = SouthCW)
+        description: wooden gate
+        item_id: 2113
+        placements:
+            -   location:
+                    - 1395
+                    - 441
+                    - 13
+    -   type: LightWoodGate
+        arguments: (Facing = NorthCCW)
+        description: wooden gate
+        item_id: 2115
+        placements:
+            -   location:
+                    - 1395
+                    - 440
+                    - 13
+    -   type: DarkWoodGate
+        arguments: (Facing = WestCW)
+        description: wooden gate
+        item_id: 2150
+        placements:
+            -   location:
+                    - 1390
+                    - 432
+                    - -16
+    -   type: Bag
+        arguments: (Hue = 0x10)
+        description: bag
+        item_id: 3702
+        placements:
+            -   location:
+                    - 1391
+                    - 439
+                    - 19

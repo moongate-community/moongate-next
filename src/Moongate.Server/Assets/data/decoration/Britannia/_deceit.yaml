@@ -1,2585 +1,2585 @@
 decoration:
-- type: Static
-  arguments: ''
-  description: stone pavers
-  item_id: 1309
-  placements:
-  - location:
-    - 5194
-    - 579
-    - 5
-  - location:
-    - 5177
-    - 572
-    - 5
-  - location:
-    - 5178
-    - 572
-    - 5
-  - location:
-    - 5179
-    - 572
-    - 5
-  - location:
-    - 5180
-    - 572
-    - 5
-  - location:
-    - 5182
-    - 572
-    - 5
-  - location:
-    - 5198
-    - 579
-    - 5
-  - location:
-    - 5197
-    - 579
-    - 5
-  - location:
-    - 5196
-    - 579
-    - 5
-  - location:
-    - 5195
-    - 579
-    - 5
-  - location:
-    - 5193
-    - 579
-    - 5
-  - location:
-    - 5192
-    - 579
-    - 5
-  - location:
-    - 5181
-    - 572
-    - 5
-  - location:
-    - 5183
-    - 572
-    - 5
-  - location:
-    - 5183
-    - 579
-    - 5
-  - location:
-    - 5182
-    - 579
-    - 5
-  - location:
-    - 5181
-    - 579
-    - 5
-  - location:
-    - 5180
-    - 579
-    - 5
-  - location:
-    - 5179
-    - 579
-    - 5
-  - location:
-    - 5178
-    - 579
-    - 5
-  - location:
-    - 5177
-    - 579
-    - 5
-  - location:
-    - 5198
-    - 572
-    - 5
-  - location:
-    - 5197
-    - 572
-    - 5
-  - location:
-    - 5196
-    - 572
-    - 5
-  - location:
-    - 5194
-    - 572
-    - 5
-  - location:
-    - 5193
-    - 572
-    - 5
-  - location:
-    - 5192
-    - 572
-    - 5
-  - location:
-    - 5195
-    - 572
-    - 5
-- type: Static
-  arguments: ''
-  description: stone
-  item_id: 1955
-  placements:
-  - location:
-    - 5194
-    - 579
-    - 0
-  - location:
-    - 5195
-    - 579
-    - 0
-  - location:
-    - 5196
-    - 579
-    - 0
-  - location:
-    - 5310
-    - 740
-    - 0
-  - location:
-    - 5322
-    - 740
-    - 0
-  - location:
-    - 5183
-    - 579
-    - 0
-  - location:
-    - 5178
-    - 579
-    - 0
-  - location:
-    - 5179
-    - 579
-    - 0
-  - location:
-    - 5180
-    - 579
-    - 0
-  - location:
-    - 5181
-    - 579
-    - 0
-  - location:
-    - 5182
-    - 579
-    - 0
-  - location:
-    - 5177
-    - 579
-    - 0
-  - location:
-    - 5177
-    - 572
-    - 0
-  - location:
-    - 5178
-    - 572
-    - 0
-  - location:
-    - 5179
-    - 572
-    - 0
-  - location:
-    - 5180
-    - 572
-    - 0
-  - location:
-    - 5181
-    - 572
-    - 0
-  - location:
-    - 5182
-    - 572
-    - 0
-  - location:
-    - 5183
-    - 572
-    - 0
-  - location:
-    - 5193
-    - 579
-    - 0
-  - location:
-    - 5197
-    - 579
-    - 0
-  - location:
-    - 5198
-    - 579
-    - 0
-  - location:
-    - 5192
-    - 579
-    - 0
-  - location:
-    - 5198
-    - 572
-    - 0
-  - location:
-    - 5197
-    - 572
-    - 0
-  - location:
-    - 5196
-    - 572
-    - 0
-  - location:
-    - 5193
-    - 572
-    - 0
-  - location:
-    - 5194
-    - 572
-    - 0
-  - location:
-    - 5195
-    - 572
-    - 0
-  - location:
-    - 5192
-    - 572
-    - 0
-  - location:
-    - 5314
-    - 740
-    - 0
-  - location:
-    - 5318
-    - 740
-    - 0
-- type: Barrel
-  arguments: ''
-  description: barrel
-  item_id: 3703
-  placements:
-  - location:
-    - 5281
-    - 536
-    - 0
-  - location:
-    - 5281
-    - 536
-    - 10
-  - location:
-    - 5282
-    - 536
-    - 0
-  - location:
-    - 5336
-    - 613
-    - 0
-  - location:
-    - 5336
-    - 613
-    - 5
-  - location:
-    - 5280
-    - 536
-    - 0
-  - location:
-    - 5281
-    - 536
-    - 5
-  - location:
-    - 5296
-    - 592
-    - 5
-  - location:
-    - 5296
-    - 594
-    - 0
-  - location:
-    - 5300
-    - 593
-    - 0
-  - location:
-    - 5298
-    - 592
-    - 0
-  - location:
-    - 5296
-    - 592
-    - 0
-  - location:
-    - 5296
-    - 593
-    - 0
-  - location:
-    - 5296
-    - 593
-    - 5
-  - location:
-    - 5297
-    - 592
-    - 0
-  - location:
-    - 5297
-    - 592
-    - 5
-  - location:
-    - 5280
-    - 536
-    - 5
-  - location:
-    - 5280
-    - 537
-    - 0
-  - location:
-    - 5192
-    - 584
-    - 0
-  - location:
-    - 5197
-    - 584
-    - 0
-  - location:
-    - 5197
-    - 584
-    - 5
-  - location:
-    - 5197
-    - 585
-    - 0
-  - location:
-    - 5197
-    - 585
-    - 5
-  - location:
-    - 5198
-    - 584
-    - 0
-  - location:
-    - 5198
-    - 585
-    - 0
-- type: SpikeTrap
-  arguments: ''
-  description: floor spikes
-  item_id: 4512
-  placements:
-  - location:
-    - 5133
-    - 713
-    - 0
-  - location:
-    - 5322
-    - 747
-    - -20
-  - location:
-    - 5220
-    - 744
-    - -20
-  - location:
-    - 5187
-    - 690
-    - 0
-- type: MetalChest
-  arguments: ''
-  description: metal chest
-  item_id: 2475
-  placements:
-  - location:
-    - 5150
-    - 741
-    - 0
-  - location:
-    - 5312
-    - 750
-    - -20
-  - location:
-    - 5141
-    - 577
-    - -50
-- type: Static
-  arguments: ''
-  description: crystal ball
-  item_id: 3631
-  placements:
-  - location:
-    - 5211
-    - 733
-    - -15
-  - location:
-    - 5228
-    - 733
-    - -17
-- type: LargeCrate
-  arguments: ''
-  description: crate
-  item_id: 3645
-  placements:
-  - location:
-    - 5280
-    - 541
-    - 0
-  - location:
-    - 5280
-    - 541
-    - 3
-  - location:
-    - 5280
-    - 543
-    - 3
-  - location:
-    - 5280
-    - 701
-    - 0
-  - location:
-    - 5280
-    - 701
-    - 3
-  - location:
-    - 5284
-    - 688
-    - 0
-  - location:
-    - 5288
-    - 611
-    - 0
-  - location:
-    - 5288
-    - 611
-    - 3
-  - location:
-    - 5288
-    - 612
-    - 0
-  - location:
-    - 5280
-    - 700
-    - 0
-  - location:
-    - 5280
-    - 700
-    - 3
-  - location:
-    - 5285
-    - 688
-    - 0
-  - location:
-    - 5184
-    - 629
-    - 3
-  - location:
-    - 5280
-    - 542
-    - 0
-  - location:
-    - 5280
-    - 542
-    - 3
-  - location:
-    - 5280
-    - 542
-    - 6
-  - location:
-    - 5280
-    - 543
-    - 0
-  - location:
-    - 5280
-    - 543
-    - 6
-  - location:
-    - 5184
-    - 629
-    - 0
-  - location:
-    - 5184
-    - 629
-    - 6
-- type: Static
-  arguments: ''
-  description: scroll%s%
-  item_id: 3638
-  placements:
-  - location:
-    - 5270
-    - 664
-    - 5
-  - location:
-    - 5218
-    - 724
-    - -20
-- type: SpikeTrap
-  arguments: ''
-  description: floor spikes
-  item_id: 4506
-  placements:
-  - location:
-    - 5134
-    - 715
-    - 0
-  - location:
-    - 5193
-    - 689
-    - 0
-  - location:
-    - 5326
-    - 745
-    - -20
-  - location:
-    - 5228
-    - 701
-    - -20
-  - location:
-    - 5222
-    - 733
-    - -20
-- type: Static
-  arguments: ''
-  description: stone stairs
-  item_id: 1956
-  placements:
-  - location:
-    - 5305
-    - 531
-    - 10
-  - location:
-    - 5306
-    - 649
-    - 15
-  - location:
-    - 5183
-    - 573
-    - 1
-  - location:
-    - 5217
-    - 587
-    - -20
-  - location:
-    - 5218
-    - 762
-    - -35
-  - location:
-    - 5217
-    - 586
-    - -15
-  - location:
-    - 5183
-    - 580
-    - 0
-- type: LargeCrate
-  arguments: ''
-  description: crate
-  item_id: 3644
-  placements:
-  - location:
-    - 5280
-    - 573
-    - 0
-  - location:
-    - 5280
-    - 573
-    - 6
-  - location:
-    - 5283
-    - 648
-    - 0
-  - location:
-    - 5340
-    - 544
-    - 0
-  - location:
-    - 5341
-    - 544
-    - 0
-  - location:
-    - 5285
-    - 648
-    - 3
-  - location:
-    - 5339
-    - 544
-    - 0
-  - location:
-    - 5340
-    - 544
-    - 3
-  - location:
-    - 5341
-    - 544
-    - 3
-  - location:
-    - 5341
-    - 544
-    - 6
-  - location:
-    - 5342
-    - 544
-    - 0
-  - location:
-    - 5342
-    - 544
-    - 3
-  - location:
-    - 5342
-    - 544
-    - 6
-  - location:
-    - 5342
-    - 544
-    - 9
-  - location:
-    - 5284
-    - 648
-    - 0
-  - location:
-    - 5285
-    - 649
-    - 0
-  - location:
-    - 5285
-    - 648
-    - 0
-  - location:
-    - 5280
-    - 573
-    - 3
-- type: Metalchest
-  arguments: ''
-  description: metal chest
-  item_id: 3708
-  placements:
-  - location:
-    - 5147
-    - 611
-    - -50
-    note: spawning
-  - location:
-    - 5324
-    - 570
-    - 0
-    note: spawning
-  - location:
-    - 5327
-    - 751
-    - -20
-    note: spawning
-  - location:
-    - 5264
-    - 676
-    - 5
-    note: spawning
-- type: Brazier
-  arguments: ''
-  description: brazier
-  item_id: 3634
-  placements:
-  - location:
-    - 5294
-    - 625
-    - -5
-  - location:
-    - 5297
-    - 625
-    - -5
-  - location:
-    - 5294
-    - 622
-    - -5
-  - location:
-    - 5297
-    - 622
-    - -5
-  - location:
-    - 5309
-    - 737
-    - 0
-- type: Static
-  arguments: ''
-  description: scroll%s%
-  item_id: 3642
-  placements:
-  - location:
-    - 5315
-    - 585
-    - 0
-  - location:
-    - 5188
-    - 585
-    - 0
-  - location:
-    - 5161
-    - 693
-    - 0
-- type: StoneFaceTrap
-  arguments: ''
-  description: stone face
-  item_id: 4348
-  placements:
-  - location:
-    - 5319
-    - 581
-    - 0
-- type: Static
-  arguments: ''
-  description: lever
-  item_id: 4236
-  placements:
-  - location:
-    - 5320
-    - 568
-    - 0
-  - location:
-    - 5328
-    - 544
-    - 15
-  - location:
-    - 5280
-    - 552
-    - 0
-- type: SecretDungeonDoor
-  arguments: (Facing = NorthCCW)
-  description: dungeon wall
-  item_id: 798
-  placements:
-  - location:
-    - 5295
-    - 675
-    - 0
-  - location:
-    - 5279
-    - 649
-    - 0
-  - location:
-    - 5319
-    - 708
-    - 0
-  - location:
-    - 5322
-    - 583
-    - 0
-- type: MetalGoldenChest
-  arguments: ''
-  description: metal chest
-  item_id: 3648
-  placements:
-  - location:
-    - 5264
-    - 693
-    - 0
-    note: spawning
-  - location:
-    - 5325
-    - 570
-    - 0
-    note: spawning
-  - location:
-    - 5270
-    - 688
-    - 0
-    note: spawning
-  - location:
-    - 5256
-    - 677
-    - 0
-    note: spawning
-- type: SawTrap
-  arguments: ''
-  description: floor saw
-  item_id: 4529
-  placements:
-  - location:
-    - 5219
-    - 725
-    - -20
-  - location:
-    - 5222
-    - 734
-    - -20
-  - location:
-    - 5189
-    - 652
-    - 0
-  - location:
-    - 5178
-    - 661
-    - 0
-  - location:
-    - 5325
-    - 748
-    - -20
-  - location:
-    - 5303
-    - 736
-    - 0
-  - location:
-    - 5222
-    - 712
-    - -20
-  - location:
-    - 5220
-    - 685
-    - -20
-  - location:
-    - 5304
-    - 735
-    - 0
-- type: Static
-  arguments: ''
-  description: wand
-  item_id: 3572
-  placements:
-  - location:
-    - 5228
-    - 694
-    - -20
-  - location:
-    - 5228
-    - 730
-    - -14
-  - location:
-    - 5188
-    - 694
-    - 5
-  - location:
-    - 5230
-    - 562
-    - 0
-  - location:
-    - 5310
-    - 589
-    - 0
-- type: Static
-  arguments: ''
-  description: statue
-  item_id: 4647
-  placements:
-  - location:
-    - 5327
-    - 538
-    - 0
-- type: MetalGoldenChest
-  arguments: ''
-  description: metal chest
-  item_id: 3649
-  placements:
-  - location:
-    - 5153
-    - 739
-    - 0
-    note: spawning
-  - location:
-    - 5150
-    - 627
-    - -50
-    note: spawning
-  - location:
-    - 5144
-    - 627
-    - -50
-    note: spawning
-  - location:
-    - 5320
-    - 754
-    - -20
-    note: spawning
-  - location:
-    - 5203
-    - 584
-    - 0
-    note: spawning
-- type: Static
-  arguments: ''
-  description: studded gorget
-  item_id: 5078
-  placements:
-  - location:
-    - 5201
-    - 620
-    - 0
-  - location:
-    - 5334
-    - 680
-    - 0
-- type: Static
-  arguments: ''
-  description: scroll%s%
-  item_id: 3833
-  placements:
-  - location:
-    - 5292
-    - 621
-    - 0
-  - location:
-    - 5187
-    - 660
-    - 0
-- type: Static
-  arguments: ''
-  description: woven mat
-  item_id: 4584
-  placements:
-  - location:
-    - 5337
-    - 549
-    - 0
-- type: Static
-  arguments: ''
-  description: scroll%s%
-  item_id: 3828
-  placements:
-  - location:
-    - 5337
-    - 589
-    - 0
-- type: Static
-  arguments: ''
-  description: woven mat
-  item_id: 4585
-  placements:
-  - location:
-    - 5338
-    - 549
-    - 0
-- type: MetalDoor2
-  arguments: (Facing = NorthCCW)
-  description: metal door
-  item_id: 1743
-  placements:
-  - location:
-    - 5319
-    - 675
-    - 0
-  - location:
-    - 5295
-    - 579
-    - 0
-  - location:
-    - 5287
-    - 675
-    - 0
-  - location:
-    - 5311
-    - 603
-    - 0
-  - location:
-    - 5303
-    - 627
-    - 0
-  - location:
-    - 5311
-    - 579
-    - 0
-  - location:
-    - 5191
-    - 558
-    - 0
-- type: Static
-  arguments: ''
-  description: butcher knife
-  item_id: 5110
-  placements:
-  - location:
-    - 5153
-    - 613
-    - -50
-  - location:
-    - 5142
-    - 658
-    - 0
-  - location:
-    - 5311
-    - 722
-    - 0
-- type: Static
-  arguments: (Hue = 0x482)
-  description: alchemical symbol
-  item_id: 6178
-  placements:
-  - location:
-    - 5336
-    - 600
-    - 0
-  - location:
-    - 5336
-    - 585
-    - 0
-- type: Static
-  arguments: ''
-  description: bones
-  item_id: 3792
-  placements:
-  - location:
-    - 5341
-    - 548
-    - 0
-- type: GasTrap
-  arguments: ''
-  description: gas trap
-  item_id: 4412
-  placements:
-  - location:
-    - 5314
-    - 750
-    - -20
-  - location:
-    - 5305
-    - 757
-    - -20
-  - location:
-    - 5155
-    - 603
-    - -50
-  - location:
-    - 5158
-    - 716
-    - 0
-  - location:
-    - 5189
-    - 650
-    - 0
-- type: Static
-  arguments: ''
-  description: statue
-  item_id: 4648
-  placements:
-  - location:
-    - 5267
-    - 683
-    - 0
-  - location:
-    - 5128
-    - 700
-    - 0
-  - location:
-    - 5282
-    - 586
-    - 13
-  - location:
-    - 5282
-    - 582
-    - 13
-  - location:
-    - 5266
-    - 674
-    - 5
-  - location:
-    - 5266
-    - 677
-    - 5
-- type: Static
-  arguments: ''
-  description: Red Potion
-  item_id: 3851
-  placements:
-  - location:
-    - 5211
-    - 724
-    - -16
-  - location:
-    - 5227
-    - 723
-    - -17
-- type: Static
-  arguments: ''
-  description: straw pillow
-  item_id: 4587
-  placements:
-  - location:
-    - 5337
-    - 549
-    - 1
-- type: Static
-  arguments: ''
-  description: broadsword
-  item_id: 3934
-  placements:
-  - location:
-    - 5266
-    - 682
-    - 0
-- type: Static
-  arguments: ''
-  description: stone stairs
-  item_id: 1961
-  placements:
-  - location:
-    - 5184
-    - 580
-    - 0
-  - location:
-    - 5184
-    - 573
-    - 0
-- type: Static
-  arguments: ''
-  description: stone stairs
-  item_id: 1957
-  placements:
-  - location:
-    - 5184
-    - 579
-    - 0
-  - location:
-    - 5184
-    - 572
-    - 0
-  - location:
-    - 5190
-    - 569
-    - 0
-  - location:
-    - 5190
-    - 568
-    - 0
-  - location:
-    - 5186
-    - 568
-    - 0
-- type: Static
-  arguments: ''
-  description: stone stairs
-  item_id: 1962
-  placements:
-  - location:
-    - 5184
-    - 578
-    - 0
-  - location:
-    - 5184
-    - 571
-    - 0
-- type: Static
-  arguments: ''
-  description: stone stairs
-  item_id: 1960
-  placements:
-  - location:
-    - 5176
-    - 578
-    - 0
-  - location:
-    - 5176
-    - 571
-    - 0
-  - location:
-    - 5191
-    - 578
-    - 0
-  - location:
-    - 5191
-    - 571
-    - 0
-- type: Static
-  arguments: ''
-  description: stone stairs
-  item_id: 1959
-  placements:
-  - location:
-    - 5176
-    - 579
-    - 0
-  - location:
-    - 5191
-    - 579
-    - 0
-  - location:
-    - 5191
-    - 572
-    - 0
-  - location:
-    - 5176
-    - 572
-    - 0
-- type: Static
-  arguments: ''
-  description: stone stairs
-  item_id: 1963
-  placements:
-  - location:
-    - 5176
-    - 580
-    - 0
-  - location:
-    - 5176
-    - 573
-    - 0
-  - location:
-    - 5191
-    - 580
-    - 0
-  - location:
-    - 5191
-    - 573
-    - 0
-- type: Static
-  arguments: ''
-  description: stone stairs
-  item_id: 1967
-  placements:
-  - location:
-    - 5177
-    - 580
-    - 0
-  - location:
-    - 5177
-    - 573
-    - 0
-  - location:
-    - 5192
-    - 580
-    - 0
-  - location:
-    - 5192
-    - 573
-    - 0
-- type: Static
-  arguments: ''
-  description: stone stairs
-  item_id: 1964
-  placements:
-  - location:
-    - 5177
-    - 571
-    - 0
-  - location:
-    - 5192
-    - 578
-    - 0
-  - location:
-    - 5192
-    - 571
-    - 0
-  - location:
-    - 5177
-    - 578
-    - 0
-- type: Static
-  arguments: ''
-  description: dungeon wall
-  item_id: 577
-  placements:
-  - location:
-    - 5152
-    - 687
-    - 0
-  - location:
-    - 5153
-    - 687
-    - 0
-  - location:
-    - 5154
-    - 687
-    - 0
-  - location:
-    - 5156
-    - 687
-    - 0
-  - location:
-    - 5157
-    - 687
-    - 0
-  - location:
-    - 5158
-    - 687
-    - 0
-  - location:
-    - 5159
-    - 687
-    - 0
-- type: WoodenChest
-  arguments: ''
-  description: wooden chest
-  item_id: 3650
-  placements:
-  - location:
-    - 5317
-    - 582
-    - 0
-    note: spawning
-  - location:
-    - 5169
-    - 599
-    - 0
-    note: spawning
-  - location:
-    - 5224
-    - 571
-    - 0
-    note: spawning
-  - location:
-    - 5256
-    - 675
-    - 0
-    note: spawning
-- type: Static
-  arguments: ''
-  description: statue
-  item_id: 4645
-  placements:
-  - location:
-    - 5320
-    - 758
-    - -20
-  - location:
-    - 5137
-    - 579
-    - -50
-- type: SawTrap
-  arguments: ''
-  description: floor saw
-  item_id: 4524
-  placements:
-  - location:
-    - 5315
-    - 735
-    - 0
-  - location:
-    - 5153
-    - 611
-    - -50
-  - location:
-    - 5204
-    - 655
-    - 0
-  - location:
-    - 5133
-    - 714
-    - 0
-- type: WoodenChest
-  arguments: ''
-  description: wooden chest
-  item_id: 3651
-  placements:
-  - location:
-    - 5318
-    - 581
-    - 0
-    note: spawning
-  - location:
-    - 5264
-    - 688
-    - 0
-    note: spawning
-  - location:
-    - 5201
-    - 584
-    - 0
-    note: spawning
-  - location:
-    - 5229
-    - 570
-    - 0
-    note: spawning
-- type: MetalDoor2
-  arguments: (Facing = EastCW)
-  description: metal door
-  item_id: 1739
-  placements:
-  - location:
-    - 5283
-    - 663
-    - 0
-  - location:
-    - 5307
-    - 687
-    - 0
-  - location:
-    - 5323
-    - 591
-    - 0
-  - location:
-    - 5321
-    - 575
-    - 0
-  - location:
-    - 5283
-    - 695
-    - 0
-  - location:
-    - 5283
-    - 687
-    - 0
-  - location:
-    - 5284
-    - 575
-    - 0
-  - location:
-    - 5331
-    - 695
-    - 0
-  - location:
-    - 5307
-    - 695
-    - 0
-  - location:
-    - 5188
-    - 567
-    - 0
-  - location:
-    - 5284
-    - 551
-    - 0
-  - location:
-    - 5156
-    - 735
-    - 0
-- type: MetalDoor2
-  arguments: (Facing = SouthCW)
-  description: metal door
-  item_id: 1741
-  placements:
-  - location:
-    - 5311
-    - 580
-    - 0
-  - location:
-    - 5287
-    - 699
-    - 0
-  - location:
-    - 5319
-    - 676
-    - 0
-  - location:
-    - 5295
-    - 580
-    - 0
-  - location:
-    - 5303
-    - 699
-    - 0
-  - location:
-    - 5303
-    - 628
-    - 0
-  - location:
-    - 5191
-    - 559
-    - 0
-  - location:
-    - 5311
-    - 604
-    - 0
-  - location:
-    - 5287
-    - 676
-    - 0
-- type: Static
-  arguments: ''
-  description: kite shield
-  item_id: 7028
-  placements:
-  - location:
-    - 5298
-    - 608
-    - 0
-  - location:
-    - 5230
-    - 562
-    - 0
-- type: Static
-  arguments: ''
-  description: empty tub
-  item_id: 3715
-  placements:
-  - location:
-    - 5338
-    - 544
-    - 0
-- type: Static
-  arguments: ''
-  description: earrings
-  item_id: 4231
-  placements:
-  - location:
-    - 5325
-    - 603
-    - -20
-  - location:
-    - 5230
-    - 691
-    - -20
-  - location:
-    - 5226
-    - 563
-    - 0
-- type: Static
-  arguments: ''
-  description: feathered hat
-  item_id: 5914
-  placements:
-  - location:
-    - 5174
-    - 570
-    - 0
-- type: MushroomTrap
-  arguments: ''
-  description: mushroom
-  item_id: 4389
-  placements:
-  - location:
-    - 5304
-    - 757
-    - -20
-  - location:
-    - 5327
-    - 743
-    - -20
-  - location:
-    - 5319
-    - 747
-    - -20
-  - location:
-    - 5310
-    - 750
-    - -20
-- type: HeatingStand
-  arguments: ''
-  description: heating stand
-  item_id: 6218
-  placements:
-  - location:
-    - 5205
-    - 611
-    - 4
-- type: SecretDungeonDoor
-  arguments: (Facing = EastCCW)
-  description: dungeon wall
-  item_id: 790
-  placements:
-  - location:
-    - 5266
-    - 687
-    - 0
-- type: SecretDungeonDoor
-  arguments: (Facing = EastCW)
-  description: dungeon wall
-  item_id: 794
-  placements:
-  - location:
-    - 5178
-    - 583
-    - 0
-- type: Keg
-  arguments: ''
-  description: keg
-  item_id: 3711
-  placements:
-  - location:
-    - 5196
-    - 584
-    - 0
-  - location:
-    - 5195
-    - 584
-    - 0
-  - location:
-    - 5296
-    - 596
-    - 0
-- type: SmallCrate
-  arguments: ''
-  description: small crate
-  item_id: 2473
-  placements:
-  - location:
-    - 5320
-    - 569
-    - 0
-  - location:
-    - 5150
-    - 746
-    - 0
-- type: MediumCrate
-  arguments: ''
-  description: crate
-  item_id: 3646
-  placements:
-  - location:
-    - 5296
-    - 595
-    - 0
-  - location:
-    - 5296
-    - 595
-    - 3
-  - location:
-    - 5280
-    - 654
-    - 0
-  - location:
-    - 5280
-    - 658
-    - 0
-  - location:
-    - 5280
-    - 653
-    - 0
-- type: Static
-  arguments: ''
-  description: cleaver
-  item_id: 3779
-  placements:
-  - location:
-    - 5319
-    - 744
-    - -20
-  - location:
-    - 5334
-    - 550
-    - 0
-  - location:
-    - 5281
-    - 688
-    - 0
-  - location:
-    - 5313
-    - 549
-    - 0
-- type: Static
-  arguments: ''
-  description: kite shield
-  item_id: 7032
-  placements:
-  - location:
-    - 5333
-    - 614
-    - 0
-- type: Static
-  arguments: ''
-  description: empty vial%s%
-  item_id: 3620
-  placements:
-  - location:
-    - 5212
-    - 723
-    - -14
-- type: Static
-  arguments: ''
-  description: dried onions
-  item_id: 3135
-  placements:
-  - location:
-    - 5224
-    - 573
-    - 0
-- type: Static
-  arguments: ''
-  description: switch
-  item_id: 4242
-  placements:
-  - location:
-    - 5293
-    - 672
-    - 11
-- type: Static
-  arguments: ''
-  description: viking sword
-  item_id: 5049
-  placements:
-  - location:
-    - 5324
-    - 624
-    - 0
-- type: MetalDoor2
-  arguments: (Facing = WestCCW)
-  description: metal door
-  item_id: 1737
-  placements:
-  - location:
-    - 5283
-    - 575
-    - 0
-  - location:
-    - 5330
-    - 695
-    - 0
-  - location:
-    - 5322
-    - 591
-    - 0
-  - location:
-    - 5187
-    - 567
-    - 0
-  - location:
-    - 5283
-    - 551
-    - 0
-  - location:
-    - 5320
-    - 575
-    - 0
-  - location:
-    - 5139
-    - 688
-    - 0
-  - location:
-    - 5155
-    - 735
-    - 0
-- type: Static
-  arguments: ''
-  description: ring
-  item_id: 4234
-  placements:
-  - location:
-    - 5294
-    - 587
-    - 0
-- type: Static
-  arguments: ''
-  description: blank scroll%s%
-  item_id: 3827
-  placements:
-  - location:
-    - 5211
-    - 730
-    - -17
-  - location:
-    - 5211
-    - 732
-    - -16
-  - location:
-    - 5202
-    - 608
-    - 0
-- type: Static
-  arguments: ''
-  description: deer mask
-  item_id: 5448
-  placements:
-  - location:
-    - 5141
-    - 680
-    - 0
-- type: Static
-  arguments: ''
-  description: dagger
-  item_id: 3921
-  placements:
-  - location:
-    - 5286
-    - 573
-    - 0
-- type: Static
-  arguments: ''
-  description: shoes
-  item_id: 5903
-  placements:
-  - location:
-    - 5286
-    - 566
-    - 0
-- type: MetalDoor2
-  arguments: (Facing = WestCW)
-  description: metal door
-  item_id: 1733
-  placements:
-  - location:
-    - 5309
-    - 734
-    - 0
-- type: MetalDoor2
-  arguments: (Facing = EastCCW)
-  description: metal door
-  item_id: 1735
-  placements:
-  - location:
-    - 5310
-    - 734
-    - 0
-- type: Static
-  arguments: (Hue = 0x25)
-  description: long pants
-  item_id: 5433
-  placements:
-  - location:
-    - 5286
-    - 566
-    - 0
-- type: Static
-  arguments: ''
-  description: stone chair
-  item_id: 4633
-  placements:
-  - location:
-    - 5137
-    - 578
-    - -50
-  - location:
-    - 5165
-    - 565
-    - 0
-  - location:
-    - 5165
-    - 567
-    - 0
-  - location:
-    - 5165
-    - 569
-    - 0
-- type: Static
-  arguments: ''
-  description: shackles
-  item_id: 4706
-  placements:
-  - location:
-    - 5137
-    - 587
-    - -37
-  - location:
-    - 5137
-    - 594
-    - -37
-  - location:
-    - 5137
-    - 597
-    - -37
-- type: CandleSkull
-  arguments: ''
-  description: skull with candle
-  item_id: 6232
-  placements:
-  - location:
-    - 5138
-    - 577
-    - -45
-  - location:
-    - 5167
-    - 566
-    - 6
-- type: CeramicMug
-  arguments: ''
-  description: ceramic mug
-  item_id: 2455
-  placements:
-  - location:
-    - 5138
-    - 593
-    - -50
-  - location:
-    - 5139
-    - 587
-    - -50
-  - location:
-    - 5142
-    - 586
-    - -50
-  - location:
-    - 5153
-    - 584
-    - -50
-  - location:
-    - 5153
-    - 590
-    - -50
-- type: Static
-  arguments: ''
-  description: iron maiden
-  item_id: 4683
-  placements:
-  - location:
-    - 5138
-    - 611
-    - -50
-- type: Static
-  arguments: ''
-  description: guillotine
-  item_id: 4702
-  placements:
-  - location:
-    - 5141
-    - 611
-    - -50
-- type: Static
-  arguments: ''
-  description: shackles
-  item_id: 4707
-  placements:
-  - location:
-    - 5142
-    - 584
-    - -37
-  - location:
-    - 5138
-    - 584
-    - -37
-  - location:
-    - 5152
-    - 577
-    - -37
-  - location:
-    - 5154
-    - 577
-    - -37
-- type: Static
-  arguments: (Hue = 0x25)
-  description: shirt
-  item_id: 5399
-  placements:
-  - location:
-    - 5286
-    - 566
-    - 0
-- type: Static
-  arguments: ''
-  description: wooden shield
-  item_id: 7034
-  placements:
-  - location:
-    - 5282
-    - 548
-    - 0
-- type: Static
-  arguments: ''
-  description: White Potion
-  item_id: 3849
-  placements:
-  - location:
-    - 5210
-    - 724
-    - -16
-- type: Static
-  arguments: ''
-  description: statue
-  item_id: 4646
-  placements:
-  - location:
-    - 5321
-    - 747
-    - -8
-  - location:
-    - 5313
-    - 747
-    - -8
-- type: Static
-  arguments: ''
-  description: dirty pot
-  item_id: 2525
-  placements:
-  - location:
-    - 5151
-    - 584
-    - -50
-- type: Static
-  arguments: ''
-  description: dirty pan
-  item_id: 2536
-  placements:
-  - location:
-    - 5153
-    - 595
-    - -50
-- type: SecretDungeonDoor
-  arguments: (Facing = SouthCW)
-  description: dungeon wall
-  item_id: 796
-  placements:
-  - location:
-    - 5263
-    - 672
-    - 0
-- type: Static
-  arguments: ''
-  description: Black Potion
-  item_id: 3846
-  placements:
-  - location:
-    - 5226
-    - 722
-    - -15
-- type: Static
-  arguments: ''
-  description: Blue Potion
-  item_id: 3848
-  placements:
-  - location:
-    - 5228
-    - 722
-    - -18
-- type: BarredMetalDoor
-  arguments: (Facing = NorthCW)
-  description: barred metal door
-  item_id: 1683
-  placements:
-  - location:
-    - 5150
-    - 579
-    - -50
-  - location:
-    - 5150
-    - 586
-    - -50
-  - location:
-    - 5150
-    - 597
-    - -50
-  - location:
-    - 5150
-    - 605
-    - -50
-- type: BarredMetalDoor
-  arguments: (Facing = NorthCCW)
-  description: barred metal door
-  item_id: 1679
-  placements:
-  - location:
-    - 5144
-    - 588
-    - -50
-  - location:
-    - 5144
-    - 595
-    - -50
-  - location:
-    - 5144
-    - 604
-    - -50
-- type: Static
-  arguments: ''
-  description: goblet
-  item_id: 2495
-  placements:
-  - location:
-    - 5166
-    - 565
-    - 0
-  - location:
-    - 5166
-    - 570
-    - 0
-  - location:
-    - 5167
-    - 567
-    - 0
-  - location:
-    - 5167
-    - 569
-    - 0
-  - location:
-    - 5168
-    - 564
-    - 0
-  - location:
-    - 5168
-    - 570
-    - 0
-  - location:
-    - 5166
-    - 567
-    - 0
-  - location:
-    - 5167
-    - 564
-    - 0
-  - location:
-    - 5168
-    - 566
-    - 0
-  - location:
-    - 5168
-    - 568
-    - 0
-  - location:
-    - 5167
-    - 565
-    - 0
-- type: Static
-  arguments: ''
-  description: stone chair
-  item_id: 4632
-  placements:
-  - location:
-    - 5167
-    - 563
-    - 0
-- type: CandleSkull
-  arguments: ''
-  description: skull with candle
-  item_id: 6228
-  placements:
-  - location:
-    - 5167
-    - 568
-    - 7
-- type: Static
-  arguments: ''
-  description: stone chair
-  item_id: 4634
-  placements:
-  - location:
-    - 5167
-    - 571
-    - 0
-- type: StoneFaceTrap
-  arguments: ''
-  description: stone face
-  item_id: 4341
-  placements:
-  - location:
-    - 5168
-    - 584
-    - 0
-- type: StoneFaceTrap
-  arguments: ''
-  description: stone face
-  item_id: 4367
-  placements:
-  - location:
-    - 5168
-    - 599
-    - 0
-- type: Static
-  arguments: ''
-  description: stone chair
-  item_id: 4635
-  placements:
-  - location:
-    - 5169
-    - 567
-    - 0
-  - location:
-    - 5169
-    - 569
-    - 0
-  - location:
-    - 5169
-    - 565
-    - 0
-  - location:
-    - 5202
-    - 597
-    - 0
-  - location:
-    - 5202
-    - 599
-    - 0
-  - location:
-    - 5202
-    - 601
-    - 0
-- type: Static
-  arguments: ''
-  description: scroll%s%
-  item_id: 3640
-  placements:
-  - location:
-    - 5169
-    - 573
-    - 0
-  - location:
-    - 5186
-    - 548
-    - 0
-- type: Static
-  arguments: ''
-  description: scroll%s%
-  item_id: 3832
-  placements:
-  - location:
-    - 5173
-    - 692
-    - 0
-  - location:
-    - 5174
-    - 665
-    - 0
-- type: Static
-  arguments: ''
-  description: bone
-  item_id: 6930
-  placements:
-  - location:
-    - 5184
-    - 605
-    - 0
-- type: Static
-  arguments: ''
-  description: close helm
-  item_id: 5129
-  placements:
-  - location:
-    - 5129
-    - 690
-    - 0
-- type: Brazier
-  arguments: ''
-  description: brazier
-  item_id: 3633
-  placements:
-  - location:
-    - 5175
-    - 615
-    - 0
-  - location:
-    - 5186
-    - 573
-    - 10
-  - location:
-    - 5224
-    - 560
-    - 0
-  - location:
-    - 5188
-    - 573
-    - 11
-- type: SpikeTrap
-  arguments: ''
-  description: spike trap
-  item_id: 4379
-  placements:
-  - location:
-    - 5173
-    - 592
-    - 4
-  - location:
-    - 5172
-    - 592
-    - 4
-- type: Static
-  arguments: ''
-  description: dungeon wall
-  item_id: 768
-  placements:
-  - location:
-    - 5189
-    - 574
-    - 20
-- type: Static
-  arguments: ''
-  description: tricorne hat
-  item_id: 5915
-  placements:
-  - location:
-    - 5190
-    - 727
-    - 0
-- type: Static
-  arguments: ''
-  description: scroll%s%
-  item_id: 3831
-  placements:
-  - location:
-    - 5195
-    - 589
-    - 0
-- type: Static
-  arguments: ''
-  description: kettle
-  item_id: 2541
-  placements:
-  - location:
-    - 5196
-    - 609
-    - 5
-  - location:
-    - 5202
-    - 621
-    - 5
-- type: Static
-  arguments: ''
-  description: goblet
-  item_id: 2458
-  placements:
-  - location:
-    - 5197
-    - 621
-    - 3
-  - location:
-    - 5198
-    - 621
-    - 3
-  - location:
-    - 5205
-    - 615
-    - 9
-  - location:
-    - 5205
-    - 616
-    - 9
-- type: Static
-  arguments: ''
-  description: scroll%s%
-  item_id: 3829
-  placements:
-  - location:
-    - 5197
-    - 655
-    - 0
-- type: Static
-  arguments: ''
-  description: crystal ball
-  item_id: 3630
-  placements:
-  - location:
-    - 5201
-    - 609
-    - 8
-  - location:
-    - 5225
-    - 553
-    - 5
-  - location:
-    - 5199
-    - 609
-    - 7
-- type: Static
-  arguments: ''
-  description: Batwing%s%
-  item_id: 3960
-  placements:
-  - location:
-    - 5205
-    - 620
-    - 5
-- type: Static
-  arguments: ''
-  description: statue
-  item_id: 5019
-  placements:
-  - location:
-    - 5317
-    - 751
-    - -8
-  - location:
-    - 5309
-    - 751
-    - -8
-- type: Static
-  arguments: ''
-  description: ''
-  item_id: 5401
-  placements:
-  - location:
-    - 5211
-    - 554
-    - -20
-- type: Static
-  arguments: ''
-  description: crystal ball
-  item_id: 3629
-  placements:
-  - location:
-    - 5212
-    - 736
-    - -20
-  - location:
-    - 5221
-    - 532
-    - 0
-  - location:
-    - 5227
-    - 735
-    - -20
-- type: Static
-  arguments: ''
-  description: ankh
-  item_id: 5
-  placements:
-  - location:
-    - 5205
-    - 774
-    - 0
-- type: Static
-  arguments: ''
-  description: Yellow Potion
-  item_id: 3852
-  placements:
-  - location:
-    - 5211
-    - 723
-    - -20
-- type: Static
-  arguments: ''
-  description: dried flowers
-  item_id: 3131
-  placements:
-  - location:
-    - 5224
-    - 572
-    - 0
-- type: Static
-  arguments: ''
-  description: dried flowers
-  item_id: 3134
-  placements:
-  - location:
-    - 5224
-    - 573
-    - 0
-- type: Static
-  arguments: ''
-  description: dried herbs
-  item_id: 3137
-  placements:
-  - location:
-    - 5224
-    - 574
-    - 0
-- type: Static
-  arguments: ''
-  description: Orange Potion
-  item_id: 3847
-  placements:
-  - location:
-    - 5228
-    - 723
-    - -17
-- type: Static
-  arguments: ''
-  description: platemail gloves
-  item_id: 5140
-  placements:
-  - location:
-    - 5181
-    - 587
-    - 0
-- type: CandleLarge
-  arguments: ''
-  description: candle
-  item_id: 2842
-  placements:
-  - location:
-    - 5174
-    - 614
-    - 0
-  - location:
-    - 5174
-    - 616
-    - 2
-  - location:
-    - 5176
-    - 614
-    - 2
-  - location:
-    - 5176
-    - 616
-    - 3
-  - location:
-    - 5226
-    - 562
-    - 0
-- type: Static
-  arguments: ''
-  description: chainmail leggings
-  item_id: 5054
-  placements:
-  - location:
-    - 5306
-    - 609
-    - 0
-- type: Static
-  arguments: ''
-  description: bow
-  item_id: 5042
-  placements:
-  - location:
-    - 5221
-    - 735
-    - -20
-- type: Static
-  arguments: ''
-  description: goblet
-  item_id: 2483
-  placements:
-  - location:
-    - 5201
-    - 597
-    - 8
-  - location:
-    - 5201
-    - 600
-    - 7
-- type: Static
-  arguments: ''
-  description: pen and ink
-  item_id: 4032
-  placements:
-  - location:
-    - 5201
-    - 598
-    - 6
-- type: CandleLarge
-  arguments: ''
-  description: candle
-  item_id: 2598
-  placements:
-  - location:
-    - 5226
-    - 564
-    - 2
-  - location:
-    - 5228
-    - 562
-    - 2
-  - location:
-    - 5228
-    - 564
-    - 3
-- type: Static
-  arguments: ''
-  description: switch
-  item_id: 4239
-  placements:
-  - location:
-    - 5305
-    - 676
-    - -12
-- type: Static
-  arguments: ''
-  description: stone stairs
-  item_id: 1958
-  placements:
-  - location:
-    - 5183
-    - 578
-    - 0
-  - location:
-    - 5183
-    - 571
-    - 0
-- type: MetalDoor
-  arguments: (Facing = WestCCW)
-  description: metal door
-  item_id: 1657
-  placements:
-  - location:
-    - 5155
-    - 687
-    - 1
-- type: Static
-  arguments: ''
-  description: heavy crossbow
-  item_id: 5117
-  placements:
-  - location:
-    - 5339
-    - 605
-    - 0
-  - location:
-    - 5192
-    - 655
-    - 0
-- type: Static
-  arguments: ''
-  description: chainmail  coif
-  item_id: 5051
-  placements:
-  - location:
-    - 5193
-    - 575
-    - 0
-- type: Static
-  arguments: (Hue = 0x151)
-  description: wizard's hat
-  item_id: 5912
-  placements:
-  - location:
-    - 5307
-    - 545
-    - 0
-- type: Static
-  arguments: ''
-  description: bone armor
-  item_id: 5199
-  placements:
-  - location:
-    - 5289
-    - 542
-    - 0
+    -   type: Static
+        arguments: ''
+        description: stone pavers
+        item_id: 1309
+        placements:
+            -   location:
+                    - 5194
+                    - 579
+                    - 5
+            -   location:
+                    - 5177
+                    - 572
+                    - 5
+            -   location:
+                    - 5178
+                    - 572
+                    - 5
+            -   location:
+                    - 5179
+                    - 572
+                    - 5
+            -   location:
+                    - 5180
+                    - 572
+                    - 5
+            -   location:
+                    - 5182
+                    - 572
+                    - 5
+            -   location:
+                    - 5198
+                    - 579
+                    - 5
+            -   location:
+                    - 5197
+                    - 579
+                    - 5
+            -   location:
+                    - 5196
+                    - 579
+                    - 5
+            -   location:
+                    - 5195
+                    - 579
+                    - 5
+            -   location:
+                    - 5193
+                    - 579
+                    - 5
+            -   location:
+                    - 5192
+                    - 579
+                    - 5
+            -   location:
+                    - 5181
+                    - 572
+                    - 5
+            -   location:
+                    - 5183
+                    - 572
+                    - 5
+            -   location:
+                    - 5183
+                    - 579
+                    - 5
+            -   location:
+                    - 5182
+                    - 579
+                    - 5
+            -   location:
+                    - 5181
+                    - 579
+                    - 5
+            -   location:
+                    - 5180
+                    - 579
+                    - 5
+            -   location:
+                    - 5179
+                    - 579
+                    - 5
+            -   location:
+                    - 5178
+                    - 579
+                    - 5
+            -   location:
+                    - 5177
+                    - 579
+                    - 5
+            -   location:
+                    - 5198
+                    - 572
+                    - 5
+            -   location:
+                    - 5197
+                    - 572
+                    - 5
+            -   location:
+                    - 5196
+                    - 572
+                    - 5
+            -   location:
+                    - 5194
+                    - 572
+                    - 5
+            -   location:
+                    - 5193
+                    - 572
+                    - 5
+            -   location:
+                    - 5192
+                    - 572
+                    - 5
+            -   location:
+                    - 5195
+                    - 572
+                    - 5
+    -   type: Static
+        arguments: ''
+        description: stone
+        item_id: 1955
+        placements:
+            -   location:
+                    - 5194
+                    - 579
+                    - 0
+            -   location:
+                    - 5195
+                    - 579
+                    - 0
+            -   location:
+                    - 5196
+                    - 579
+                    - 0
+            -   location:
+                    - 5310
+                    - 740
+                    - 0
+            -   location:
+                    - 5322
+                    - 740
+                    - 0
+            -   location:
+                    - 5183
+                    - 579
+                    - 0
+            -   location:
+                    - 5178
+                    - 579
+                    - 0
+            -   location:
+                    - 5179
+                    - 579
+                    - 0
+            -   location:
+                    - 5180
+                    - 579
+                    - 0
+            -   location:
+                    - 5181
+                    - 579
+                    - 0
+            -   location:
+                    - 5182
+                    - 579
+                    - 0
+            -   location:
+                    - 5177
+                    - 579
+                    - 0
+            -   location:
+                    - 5177
+                    - 572
+                    - 0
+            -   location:
+                    - 5178
+                    - 572
+                    - 0
+            -   location:
+                    - 5179
+                    - 572
+                    - 0
+            -   location:
+                    - 5180
+                    - 572
+                    - 0
+            -   location:
+                    - 5181
+                    - 572
+                    - 0
+            -   location:
+                    - 5182
+                    - 572
+                    - 0
+            -   location:
+                    - 5183
+                    - 572
+                    - 0
+            -   location:
+                    - 5193
+                    - 579
+                    - 0
+            -   location:
+                    - 5197
+                    - 579
+                    - 0
+            -   location:
+                    - 5198
+                    - 579
+                    - 0
+            -   location:
+                    - 5192
+                    - 579
+                    - 0
+            -   location:
+                    - 5198
+                    - 572
+                    - 0
+            -   location:
+                    - 5197
+                    - 572
+                    - 0
+            -   location:
+                    - 5196
+                    - 572
+                    - 0
+            -   location:
+                    - 5193
+                    - 572
+                    - 0
+            -   location:
+                    - 5194
+                    - 572
+                    - 0
+            -   location:
+                    - 5195
+                    - 572
+                    - 0
+            -   location:
+                    - 5192
+                    - 572
+                    - 0
+            -   location:
+                    - 5314
+                    - 740
+                    - 0
+            -   location:
+                    - 5318
+                    - 740
+                    - 0
+    -   type: Barrel
+        arguments: ''
+        description: barrel
+        item_id: 3703
+        placements:
+            -   location:
+                    - 5281
+                    - 536
+                    - 0
+            -   location:
+                    - 5281
+                    - 536
+                    - 10
+            -   location:
+                    - 5282
+                    - 536
+                    - 0
+            -   location:
+                    - 5336
+                    - 613
+                    - 0
+            -   location:
+                    - 5336
+                    - 613
+                    - 5
+            -   location:
+                    - 5280
+                    - 536
+                    - 0
+            -   location:
+                    - 5281
+                    - 536
+                    - 5
+            -   location:
+                    - 5296
+                    - 592
+                    - 5
+            -   location:
+                    - 5296
+                    - 594
+                    - 0
+            -   location:
+                    - 5300
+                    - 593
+                    - 0
+            -   location:
+                    - 5298
+                    - 592
+                    - 0
+            -   location:
+                    - 5296
+                    - 592
+                    - 0
+            -   location:
+                    - 5296
+                    - 593
+                    - 0
+            -   location:
+                    - 5296
+                    - 593
+                    - 5
+            -   location:
+                    - 5297
+                    - 592
+                    - 0
+            -   location:
+                    - 5297
+                    - 592
+                    - 5
+            -   location:
+                    - 5280
+                    - 536
+                    - 5
+            -   location:
+                    - 5280
+                    - 537
+                    - 0
+            -   location:
+                    - 5192
+                    - 584
+                    - 0
+            -   location:
+                    - 5197
+                    - 584
+                    - 0
+            -   location:
+                    - 5197
+                    - 584
+                    - 5
+            -   location:
+                    - 5197
+                    - 585
+                    - 0
+            -   location:
+                    - 5197
+                    - 585
+                    - 5
+            -   location:
+                    - 5198
+                    - 584
+                    - 0
+            -   location:
+                    - 5198
+                    - 585
+                    - 0
+    -   type: SpikeTrap
+        arguments: ''
+        description: floor spikes
+        item_id: 4512
+        placements:
+            -   location:
+                    - 5133
+                    - 713
+                    - 0
+            -   location:
+                    - 5322
+                    - 747
+                    - -20
+            -   location:
+                    - 5220
+                    - 744
+                    - -20
+            -   location:
+                    - 5187
+                    - 690
+                    - 0
+    -   type: MetalChest
+        arguments: ''
+        description: metal chest
+        item_id: 2475
+        placements:
+            -   location:
+                    - 5150
+                    - 741
+                    - 0
+            -   location:
+                    - 5312
+                    - 750
+                    - -20
+            -   location:
+                    - 5141
+                    - 577
+                    - -50
+    -   type: Static
+        arguments: ''
+        description: crystal ball
+        item_id: 3631
+        placements:
+            -   location:
+                    - 5211
+                    - 733
+                    - -15
+            -   location:
+                    - 5228
+                    - 733
+                    - -17
+    -   type: LargeCrate
+        arguments: ''
+        description: crate
+        item_id: 3645
+        placements:
+            -   location:
+                    - 5280
+                    - 541
+                    - 0
+            -   location:
+                    - 5280
+                    - 541
+                    - 3
+            -   location:
+                    - 5280
+                    - 543
+                    - 3
+            -   location:
+                    - 5280
+                    - 701
+                    - 0
+            -   location:
+                    - 5280
+                    - 701
+                    - 3
+            -   location:
+                    - 5284
+                    - 688
+                    - 0
+            -   location:
+                    - 5288
+                    - 611
+                    - 0
+            -   location:
+                    - 5288
+                    - 611
+                    - 3
+            -   location:
+                    - 5288
+                    - 612
+                    - 0
+            -   location:
+                    - 5280
+                    - 700
+                    - 0
+            -   location:
+                    - 5280
+                    - 700
+                    - 3
+            -   location:
+                    - 5285
+                    - 688
+                    - 0
+            -   location:
+                    - 5184
+                    - 629
+                    - 3
+            -   location:
+                    - 5280
+                    - 542
+                    - 0
+            -   location:
+                    - 5280
+                    - 542
+                    - 3
+            -   location:
+                    - 5280
+                    - 542
+                    - 6
+            -   location:
+                    - 5280
+                    - 543
+                    - 0
+            -   location:
+                    - 5280
+                    - 543
+                    - 6
+            -   location:
+                    - 5184
+                    - 629
+                    - 0
+            -   location:
+                    - 5184
+                    - 629
+                    - 6
+    -   type: Static
+        arguments: ''
+        description: scroll%s%
+        item_id: 3638
+        placements:
+            -   location:
+                    - 5270
+                    - 664
+                    - 5
+            -   location:
+                    - 5218
+                    - 724
+                    - -20
+    -   type: SpikeTrap
+        arguments: ''
+        description: floor spikes
+        item_id: 4506
+        placements:
+            -   location:
+                    - 5134
+                    - 715
+                    - 0
+            -   location:
+                    - 5193
+                    - 689
+                    - 0
+            -   location:
+                    - 5326
+                    - 745
+                    - -20
+            -   location:
+                    - 5228
+                    - 701
+                    - -20
+            -   location:
+                    - 5222
+                    - 733
+                    - -20
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 1956
+        placements:
+            -   location:
+                    - 5305
+                    - 531
+                    - 10
+            -   location:
+                    - 5306
+                    - 649
+                    - 15
+            -   location:
+                    - 5183
+                    - 573
+                    - 1
+            -   location:
+                    - 5217
+                    - 587
+                    - -20
+            -   location:
+                    - 5218
+                    - 762
+                    - -35
+            -   location:
+                    - 5217
+                    - 586
+                    - -15
+            -   location:
+                    - 5183
+                    - 580
+                    - 0
+    -   type: LargeCrate
+        arguments: ''
+        description: crate
+        item_id: 3644
+        placements:
+            -   location:
+                    - 5280
+                    - 573
+                    - 0
+            -   location:
+                    - 5280
+                    - 573
+                    - 6
+            -   location:
+                    - 5283
+                    - 648
+                    - 0
+            -   location:
+                    - 5340
+                    - 544
+                    - 0
+            -   location:
+                    - 5341
+                    - 544
+                    - 0
+            -   location:
+                    - 5285
+                    - 648
+                    - 3
+            -   location:
+                    - 5339
+                    - 544
+                    - 0
+            -   location:
+                    - 5340
+                    - 544
+                    - 3
+            -   location:
+                    - 5341
+                    - 544
+                    - 3
+            -   location:
+                    - 5341
+                    - 544
+                    - 6
+            -   location:
+                    - 5342
+                    - 544
+                    - 0
+            -   location:
+                    - 5342
+                    - 544
+                    - 3
+            -   location:
+                    - 5342
+                    - 544
+                    - 6
+            -   location:
+                    - 5342
+                    - 544
+                    - 9
+            -   location:
+                    - 5284
+                    - 648
+                    - 0
+            -   location:
+                    - 5285
+                    - 649
+                    - 0
+            -   location:
+                    - 5285
+                    - 648
+                    - 0
+            -   location:
+                    - 5280
+                    - 573
+                    - 3
+    -   type: Metalchest
+        arguments: ''
+        description: metal chest
+        item_id: 3708
+        placements:
+            -   location:
+                    - 5147
+                    - 611
+                    - -50
+                note: spawning
+            -   location:
+                    - 5324
+                    - 570
+                    - 0
+                note: spawning
+            -   location:
+                    - 5327
+                    - 751
+                    - -20
+                note: spawning
+            -   location:
+                    - 5264
+                    - 676
+                    - 5
+                note: spawning
+    -   type: Brazier
+        arguments: ''
+        description: brazier
+        item_id: 3634
+        placements:
+            -   location:
+                    - 5294
+                    - 625
+                    - -5
+            -   location:
+                    - 5297
+                    - 625
+                    - -5
+            -   location:
+                    - 5294
+                    - 622
+                    - -5
+            -   location:
+                    - 5297
+                    - 622
+                    - -5
+            -   location:
+                    - 5309
+                    - 737
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: scroll%s%
+        item_id: 3642
+        placements:
+            -   location:
+                    - 5315
+                    - 585
+                    - 0
+            -   location:
+                    - 5188
+                    - 585
+                    - 0
+            -   location:
+                    - 5161
+                    - 693
+                    - 0
+    -   type: StoneFaceTrap
+        arguments: ''
+        description: stone face
+        item_id: 4348
+        placements:
+            -   location:
+                    - 5319
+                    - 581
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: lever
+        item_id: 4236
+        placements:
+            -   location:
+                    - 5320
+                    - 568
+                    - 0
+            -   location:
+                    - 5328
+                    - 544
+                    - 15
+            -   location:
+                    - 5280
+                    - 552
+                    - 0
+    -   type: SecretDungeonDoor
+        arguments: (Facing = NorthCCW)
+        description: dungeon wall
+        item_id: 798
+        placements:
+            -   location:
+                    - 5295
+                    - 675
+                    - 0
+            -   location:
+                    - 5279
+                    - 649
+                    - 0
+            -   location:
+                    - 5319
+                    - 708
+                    - 0
+            -   location:
+                    - 5322
+                    - 583
+                    - 0
+    -   type: MetalGoldenChest
+        arguments: ''
+        description: metal chest
+        item_id: 3648
+        placements:
+            -   location:
+                    - 5264
+                    - 693
+                    - 0
+                note: spawning
+            -   location:
+                    - 5325
+                    - 570
+                    - 0
+                note: spawning
+            -   location:
+                    - 5270
+                    - 688
+                    - 0
+                note: spawning
+            -   location:
+                    - 5256
+                    - 677
+                    - 0
+                note: spawning
+    -   type: SawTrap
+        arguments: ''
+        description: floor saw
+        item_id: 4529
+        placements:
+            -   location:
+                    - 5219
+                    - 725
+                    - -20
+            -   location:
+                    - 5222
+                    - 734
+                    - -20
+            -   location:
+                    - 5189
+                    - 652
+                    - 0
+            -   location:
+                    - 5178
+                    - 661
+                    - 0
+            -   location:
+                    - 5325
+                    - 748
+                    - -20
+            -   location:
+                    - 5303
+                    - 736
+                    - 0
+            -   location:
+                    - 5222
+                    - 712
+                    - -20
+            -   location:
+                    - 5220
+                    - 685
+                    - -20
+            -   location:
+                    - 5304
+                    - 735
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: wand
+        item_id: 3572
+        placements:
+            -   location:
+                    - 5228
+                    - 694
+                    - -20
+            -   location:
+                    - 5228
+                    - 730
+                    - -14
+            -   location:
+                    - 5188
+                    - 694
+                    - 5
+            -   location:
+                    - 5230
+                    - 562
+                    - 0
+            -   location:
+                    - 5310
+                    - 589
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: statue
+        item_id: 4647
+        placements:
+            -   location:
+                    - 5327
+                    - 538
+                    - 0
+    -   type: MetalGoldenChest
+        arguments: ''
+        description: metal chest
+        item_id: 3649
+        placements:
+            -   location:
+                    - 5153
+                    - 739
+                    - 0
+                note: spawning
+            -   location:
+                    - 5150
+                    - 627
+                    - -50
+                note: spawning
+            -   location:
+                    - 5144
+                    - 627
+                    - -50
+                note: spawning
+            -   location:
+                    - 5320
+                    - 754
+                    - -20
+                note: spawning
+            -   location:
+                    - 5203
+                    - 584
+                    - 0
+                note: spawning
+    -   type: Static
+        arguments: ''
+        description: studded gorget
+        item_id: 5078
+        placements:
+            -   location:
+                    - 5201
+                    - 620
+                    - 0
+            -   location:
+                    - 5334
+                    - 680
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: scroll%s%
+        item_id: 3833
+        placements:
+            -   location:
+                    - 5292
+                    - 621
+                    - 0
+            -   location:
+                    - 5187
+                    - 660
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: woven mat
+        item_id: 4584
+        placements:
+            -   location:
+                    - 5337
+                    - 549
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: scroll%s%
+        item_id: 3828
+        placements:
+            -   location:
+                    - 5337
+                    - 589
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: woven mat
+        item_id: 4585
+        placements:
+            -   location:
+                    - 5338
+                    - 549
+                    - 0
+    -   type: MetalDoor2
+        arguments: (Facing = NorthCCW)
+        description: metal door
+        item_id: 1743
+        placements:
+            -   location:
+                    - 5319
+                    - 675
+                    - 0
+            -   location:
+                    - 5295
+                    - 579
+                    - 0
+            -   location:
+                    - 5287
+                    - 675
+                    - 0
+            -   location:
+                    - 5311
+                    - 603
+                    - 0
+            -   location:
+                    - 5303
+                    - 627
+                    - 0
+            -   location:
+                    - 5311
+                    - 579
+                    - 0
+            -   location:
+                    - 5191
+                    - 558
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: butcher knife
+        item_id: 5110
+        placements:
+            -   location:
+                    - 5153
+                    - 613
+                    - -50
+            -   location:
+                    - 5142
+                    - 658
+                    - 0
+            -   location:
+                    - 5311
+                    - 722
+                    - 0
+    -   type: Static
+        arguments: (Hue = 0x482)
+        description: alchemical symbol
+        item_id: 6178
+        placements:
+            -   location:
+                    - 5336
+                    - 600
+                    - 0
+            -   location:
+                    - 5336
+                    - 585
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: bones
+        item_id: 3792
+        placements:
+            -   location:
+                    - 5341
+                    - 548
+                    - 0
+    -   type: GasTrap
+        arguments: ''
+        description: gas trap
+        item_id: 4412
+        placements:
+            -   location:
+                    - 5314
+                    - 750
+                    - -20
+            -   location:
+                    - 5305
+                    - 757
+                    - -20
+            -   location:
+                    - 5155
+                    - 603
+                    - -50
+            -   location:
+                    - 5158
+                    - 716
+                    - 0
+            -   location:
+                    - 5189
+                    - 650
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: statue
+        item_id: 4648
+        placements:
+            -   location:
+                    - 5267
+                    - 683
+                    - 0
+            -   location:
+                    - 5128
+                    - 700
+                    - 0
+            -   location:
+                    - 5282
+                    - 586
+                    - 13
+            -   location:
+                    - 5282
+                    - 582
+                    - 13
+            -   location:
+                    - 5266
+                    - 674
+                    - 5
+            -   location:
+                    - 5266
+                    - 677
+                    - 5
+    -   type: Static
+        arguments: ''
+        description: Red Potion
+        item_id: 3851
+        placements:
+            -   location:
+                    - 5211
+                    - 724
+                    - -16
+            -   location:
+                    - 5227
+                    - 723
+                    - -17
+    -   type: Static
+        arguments: ''
+        description: straw pillow
+        item_id: 4587
+        placements:
+            -   location:
+                    - 5337
+                    - 549
+                    - 1
+    -   type: Static
+        arguments: ''
+        description: broadsword
+        item_id: 3934
+        placements:
+            -   location:
+                    - 5266
+                    - 682
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 1961
+        placements:
+            -   location:
+                    - 5184
+                    - 580
+                    - 0
+            -   location:
+                    - 5184
+                    - 573
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 1957
+        placements:
+            -   location:
+                    - 5184
+                    - 579
+                    - 0
+            -   location:
+                    - 5184
+                    - 572
+                    - 0
+            -   location:
+                    - 5190
+                    - 569
+                    - 0
+            -   location:
+                    - 5190
+                    - 568
+                    - 0
+            -   location:
+                    - 5186
+                    - 568
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 1962
+        placements:
+            -   location:
+                    - 5184
+                    - 578
+                    - 0
+            -   location:
+                    - 5184
+                    - 571
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 1960
+        placements:
+            -   location:
+                    - 5176
+                    - 578
+                    - 0
+            -   location:
+                    - 5176
+                    - 571
+                    - 0
+            -   location:
+                    - 5191
+                    - 578
+                    - 0
+            -   location:
+                    - 5191
+                    - 571
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 1959
+        placements:
+            -   location:
+                    - 5176
+                    - 579
+                    - 0
+            -   location:
+                    - 5191
+                    - 579
+                    - 0
+            -   location:
+                    - 5191
+                    - 572
+                    - 0
+            -   location:
+                    - 5176
+                    - 572
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 1963
+        placements:
+            -   location:
+                    - 5176
+                    - 580
+                    - 0
+            -   location:
+                    - 5176
+                    - 573
+                    - 0
+            -   location:
+                    - 5191
+                    - 580
+                    - 0
+            -   location:
+                    - 5191
+                    - 573
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 1967
+        placements:
+            -   location:
+                    - 5177
+                    - 580
+                    - 0
+            -   location:
+                    - 5177
+                    - 573
+                    - 0
+            -   location:
+                    - 5192
+                    - 580
+                    - 0
+            -   location:
+                    - 5192
+                    - 573
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 1964
+        placements:
+            -   location:
+                    - 5177
+                    - 571
+                    - 0
+            -   location:
+                    - 5192
+                    - 578
+                    - 0
+            -   location:
+                    - 5192
+                    - 571
+                    - 0
+            -   location:
+                    - 5177
+                    - 578
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: dungeon wall
+        item_id: 577
+        placements:
+            -   location:
+                    - 5152
+                    - 687
+                    - 0
+            -   location:
+                    - 5153
+                    - 687
+                    - 0
+            -   location:
+                    - 5154
+                    - 687
+                    - 0
+            -   location:
+                    - 5156
+                    - 687
+                    - 0
+            -   location:
+                    - 5157
+                    - 687
+                    - 0
+            -   location:
+                    - 5158
+                    - 687
+                    - 0
+            -   location:
+                    - 5159
+                    - 687
+                    - 0
+    -   type: WoodenChest
+        arguments: ''
+        description: wooden chest
+        item_id: 3650
+        placements:
+            -   location:
+                    - 5317
+                    - 582
+                    - 0
+                note: spawning
+            -   location:
+                    - 5169
+                    - 599
+                    - 0
+                note: spawning
+            -   location:
+                    - 5224
+                    - 571
+                    - 0
+                note: spawning
+            -   location:
+                    - 5256
+                    - 675
+                    - 0
+                note: spawning
+    -   type: Static
+        arguments: ''
+        description: statue
+        item_id: 4645
+        placements:
+            -   location:
+                    - 5320
+                    - 758
+                    - -20
+            -   location:
+                    - 5137
+                    - 579
+                    - -50
+    -   type: SawTrap
+        arguments: ''
+        description: floor saw
+        item_id: 4524
+        placements:
+            -   location:
+                    - 5315
+                    - 735
+                    - 0
+            -   location:
+                    - 5153
+                    - 611
+                    - -50
+            -   location:
+                    - 5204
+                    - 655
+                    - 0
+            -   location:
+                    - 5133
+                    - 714
+                    - 0
+    -   type: WoodenChest
+        arguments: ''
+        description: wooden chest
+        item_id: 3651
+        placements:
+            -   location:
+                    - 5318
+                    - 581
+                    - 0
+                note: spawning
+            -   location:
+                    - 5264
+                    - 688
+                    - 0
+                note: spawning
+            -   location:
+                    - 5201
+                    - 584
+                    - 0
+                note: spawning
+            -   location:
+                    - 5229
+                    - 570
+                    - 0
+                note: spawning
+    -   type: MetalDoor2
+        arguments: (Facing = EastCW)
+        description: metal door
+        item_id: 1739
+        placements:
+            -   location:
+                    - 5283
+                    - 663
+                    - 0
+            -   location:
+                    - 5307
+                    - 687
+                    - 0
+            -   location:
+                    - 5323
+                    - 591
+                    - 0
+            -   location:
+                    - 5321
+                    - 575
+                    - 0
+            -   location:
+                    - 5283
+                    - 695
+                    - 0
+            -   location:
+                    - 5283
+                    - 687
+                    - 0
+            -   location:
+                    - 5284
+                    - 575
+                    - 0
+            -   location:
+                    - 5331
+                    - 695
+                    - 0
+            -   location:
+                    - 5307
+                    - 695
+                    - 0
+            -   location:
+                    - 5188
+                    - 567
+                    - 0
+            -   location:
+                    - 5284
+                    - 551
+                    - 0
+            -   location:
+                    - 5156
+                    - 735
+                    - 0
+    -   type: MetalDoor2
+        arguments: (Facing = SouthCW)
+        description: metal door
+        item_id: 1741
+        placements:
+            -   location:
+                    - 5311
+                    - 580
+                    - 0
+            -   location:
+                    - 5287
+                    - 699
+                    - 0
+            -   location:
+                    - 5319
+                    - 676
+                    - 0
+            -   location:
+                    - 5295
+                    - 580
+                    - 0
+            -   location:
+                    - 5303
+                    - 699
+                    - 0
+            -   location:
+                    - 5303
+                    - 628
+                    - 0
+            -   location:
+                    - 5191
+                    - 559
+                    - 0
+            -   location:
+                    - 5311
+                    - 604
+                    - 0
+            -   location:
+                    - 5287
+                    - 676
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: kite shield
+        item_id: 7028
+        placements:
+            -   location:
+                    - 5298
+                    - 608
+                    - 0
+            -   location:
+                    - 5230
+                    - 562
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: empty tub
+        item_id: 3715
+        placements:
+            -   location:
+                    - 5338
+                    - 544
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: earrings
+        item_id: 4231
+        placements:
+            -   location:
+                    - 5325
+                    - 603
+                    - -20
+            -   location:
+                    - 5230
+                    - 691
+                    - -20
+            -   location:
+                    - 5226
+                    - 563
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: feathered hat
+        item_id: 5914
+        placements:
+            -   location:
+                    - 5174
+                    - 570
+                    - 0
+    -   type: MushroomTrap
+        arguments: ''
+        description: mushroom
+        item_id: 4389
+        placements:
+            -   location:
+                    - 5304
+                    - 757
+                    - -20
+            -   location:
+                    - 5327
+                    - 743
+                    - -20
+            -   location:
+                    - 5319
+                    - 747
+                    - -20
+            -   location:
+                    - 5310
+                    - 750
+                    - -20
+    -   type: HeatingStand
+        arguments: ''
+        description: heating stand
+        item_id: 6218
+        placements:
+            -   location:
+                    - 5205
+                    - 611
+                    - 4
+    -   type: SecretDungeonDoor
+        arguments: (Facing = EastCCW)
+        description: dungeon wall
+        item_id: 790
+        placements:
+            -   location:
+                    - 5266
+                    - 687
+                    - 0
+    -   type: SecretDungeonDoor
+        arguments: (Facing = EastCW)
+        description: dungeon wall
+        item_id: 794
+        placements:
+            -   location:
+                    - 5178
+                    - 583
+                    - 0
+    -   type: Keg
+        arguments: ''
+        description: keg
+        item_id: 3711
+        placements:
+            -   location:
+                    - 5196
+                    - 584
+                    - 0
+            -   location:
+                    - 5195
+                    - 584
+                    - 0
+            -   location:
+                    - 5296
+                    - 596
+                    - 0
+    -   type: SmallCrate
+        arguments: ''
+        description: small crate
+        item_id: 2473
+        placements:
+            -   location:
+                    - 5320
+                    - 569
+                    - 0
+            -   location:
+                    - 5150
+                    - 746
+                    - 0
+    -   type: MediumCrate
+        arguments: ''
+        description: crate
+        item_id: 3646
+        placements:
+            -   location:
+                    - 5296
+                    - 595
+                    - 0
+            -   location:
+                    - 5296
+                    - 595
+                    - 3
+            -   location:
+                    - 5280
+                    - 654
+                    - 0
+            -   location:
+                    - 5280
+                    - 658
+                    - 0
+            -   location:
+                    - 5280
+                    - 653
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: cleaver
+        item_id: 3779
+        placements:
+            -   location:
+                    - 5319
+                    - 744
+                    - -20
+            -   location:
+                    - 5334
+                    - 550
+                    - 0
+            -   location:
+                    - 5281
+                    - 688
+                    - 0
+            -   location:
+                    - 5313
+                    - 549
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: kite shield
+        item_id: 7032
+        placements:
+            -   location:
+                    - 5333
+                    - 614
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: empty vial%s%
+        item_id: 3620
+        placements:
+            -   location:
+                    - 5212
+                    - 723
+                    - -14
+    -   type: Static
+        arguments: ''
+        description: dried onions
+        item_id: 3135
+        placements:
+            -   location:
+                    - 5224
+                    - 573
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: switch
+        item_id: 4242
+        placements:
+            -   location:
+                    - 5293
+                    - 672
+                    - 11
+    -   type: Static
+        arguments: ''
+        description: viking sword
+        item_id: 5049
+        placements:
+            -   location:
+                    - 5324
+                    - 624
+                    - 0
+    -   type: MetalDoor2
+        arguments: (Facing = WestCCW)
+        description: metal door
+        item_id: 1737
+        placements:
+            -   location:
+                    - 5283
+                    - 575
+                    - 0
+            -   location:
+                    - 5330
+                    - 695
+                    - 0
+            -   location:
+                    - 5322
+                    - 591
+                    - 0
+            -   location:
+                    - 5187
+                    - 567
+                    - 0
+            -   location:
+                    - 5283
+                    - 551
+                    - 0
+            -   location:
+                    - 5320
+                    - 575
+                    - 0
+            -   location:
+                    - 5139
+                    - 688
+                    - 0
+            -   location:
+                    - 5155
+                    - 735
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: ring
+        item_id: 4234
+        placements:
+            -   location:
+                    - 5294
+                    - 587
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: blank scroll%s%
+        item_id: 3827
+        placements:
+            -   location:
+                    - 5211
+                    - 730
+                    - -17
+            -   location:
+                    - 5211
+                    - 732
+                    - -16
+            -   location:
+                    - 5202
+                    - 608
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: deer mask
+        item_id: 5448
+        placements:
+            -   location:
+                    - 5141
+                    - 680
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: dagger
+        item_id: 3921
+        placements:
+            -   location:
+                    - 5286
+                    - 573
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: shoes
+        item_id: 5903
+        placements:
+            -   location:
+                    - 5286
+                    - 566
+                    - 0
+    -   type: MetalDoor2
+        arguments: (Facing = WestCW)
+        description: metal door
+        item_id: 1733
+        placements:
+            -   location:
+                    - 5309
+                    - 734
+                    - 0
+    -   type: MetalDoor2
+        arguments: (Facing = EastCCW)
+        description: metal door
+        item_id: 1735
+        placements:
+            -   location:
+                    - 5310
+                    - 734
+                    - 0
+    -   type: Static
+        arguments: (Hue = 0x25)
+        description: long pants
+        item_id: 5433
+        placements:
+            -   location:
+                    - 5286
+                    - 566
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: stone chair
+        item_id: 4633
+        placements:
+            -   location:
+                    - 5137
+                    - 578
+                    - -50
+            -   location:
+                    - 5165
+                    - 565
+                    - 0
+            -   location:
+                    - 5165
+                    - 567
+                    - 0
+            -   location:
+                    - 5165
+                    - 569
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: shackles
+        item_id: 4706
+        placements:
+            -   location:
+                    - 5137
+                    - 587
+                    - -37
+            -   location:
+                    - 5137
+                    - 594
+                    - -37
+            -   location:
+                    - 5137
+                    - 597
+                    - -37
+    -   type: CandleSkull
+        arguments: ''
+        description: skull with candle
+        item_id: 6232
+        placements:
+            -   location:
+                    - 5138
+                    - 577
+                    - -45
+            -   location:
+                    - 5167
+                    - 566
+                    - 6
+    -   type: CeramicMug
+        arguments: ''
+        description: ceramic mug
+        item_id: 2455
+        placements:
+            -   location:
+                    - 5138
+                    - 593
+                    - -50
+            -   location:
+                    - 5139
+                    - 587
+                    - -50
+            -   location:
+                    - 5142
+                    - 586
+                    - -50
+            -   location:
+                    - 5153
+                    - 584
+                    - -50
+            -   location:
+                    - 5153
+                    - 590
+                    - -50
+    -   type: Static
+        arguments: ''
+        description: iron maiden
+        item_id: 4683
+        placements:
+            -   location:
+                    - 5138
+                    - 611
+                    - -50
+    -   type: Static
+        arguments: ''
+        description: guillotine
+        item_id: 4702
+        placements:
+            -   location:
+                    - 5141
+                    - 611
+                    - -50
+    -   type: Static
+        arguments: ''
+        description: shackles
+        item_id: 4707
+        placements:
+            -   location:
+                    - 5142
+                    - 584
+                    - -37
+            -   location:
+                    - 5138
+                    - 584
+                    - -37
+            -   location:
+                    - 5152
+                    - 577
+                    - -37
+            -   location:
+                    - 5154
+                    - 577
+                    - -37
+    -   type: Static
+        arguments: (Hue = 0x25)
+        description: shirt
+        item_id: 5399
+        placements:
+            -   location:
+                    - 5286
+                    - 566
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: wooden shield
+        item_id: 7034
+        placements:
+            -   location:
+                    - 5282
+                    - 548
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: White Potion
+        item_id: 3849
+        placements:
+            -   location:
+                    - 5210
+                    - 724
+                    - -16
+    -   type: Static
+        arguments: ''
+        description: statue
+        item_id: 4646
+        placements:
+            -   location:
+                    - 5321
+                    - 747
+                    - -8
+            -   location:
+                    - 5313
+                    - 747
+                    - -8
+    -   type: Static
+        arguments: ''
+        description: dirty pot
+        item_id: 2525
+        placements:
+            -   location:
+                    - 5151
+                    - 584
+                    - -50
+    -   type: Static
+        arguments: ''
+        description: dirty pan
+        item_id: 2536
+        placements:
+            -   location:
+                    - 5153
+                    - 595
+                    - -50
+    -   type: SecretDungeonDoor
+        arguments: (Facing = SouthCW)
+        description: dungeon wall
+        item_id: 796
+        placements:
+            -   location:
+                    - 5263
+                    - 672
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: Black Potion
+        item_id: 3846
+        placements:
+            -   location:
+                    - 5226
+                    - 722
+                    - -15
+    -   type: Static
+        arguments: ''
+        description: Blue Potion
+        item_id: 3848
+        placements:
+            -   location:
+                    - 5228
+                    - 722
+                    - -18
+    -   type: BarredMetalDoor
+        arguments: (Facing = NorthCW)
+        description: barred metal door
+        item_id: 1683
+        placements:
+            -   location:
+                    - 5150
+                    - 579
+                    - -50
+            -   location:
+                    - 5150
+                    - 586
+                    - -50
+            -   location:
+                    - 5150
+                    - 597
+                    - -50
+            -   location:
+                    - 5150
+                    - 605
+                    - -50
+    -   type: BarredMetalDoor
+        arguments: (Facing = NorthCCW)
+        description: barred metal door
+        item_id: 1679
+        placements:
+            -   location:
+                    - 5144
+                    - 588
+                    - -50
+            -   location:
+                    - 5144
+                    - 595
+                    - -50
+            -   location:
+                    - 5144
+                    - 604
+                    - -50
+    -   type: Static
+        arguments: ''
+        description: goblet
+        item_id: 2495
+        placements:
+            -   location:
+                    - 5166
+                    - 565
+                    - 0
+            -   location:
+                    - 5166
+                    - 570
+                    - 0
+            -   location:
+                    - 5167
+                    - 567
+                    - 0
+            -   location:
+                    - 5167
+                    - 569
+                    - 0
+            -   location:
+                    - 5168
+                    - 564
+                    - 0
+            -   location:
+                    - 5168
+                    - 570
+                    - 0
+            -   location:
+                    - 5166
+                    - 567
+                    - 0
+            -   location:
+                    - 5167
+                    - 564
+                    - 0
+            -   location:
+                    - 5168
+                    - 566
+                    - 0
+            -   location:
+                    - 5168
+                    - 568
+                    - 0
+            -   location:
+                    - 5167
+                    - 565
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: stone chair
+        item_id: 4632
+        placements:
+            -   location:
+                    - 5167
+                    - 563
+                    - 0
+    -   type: CandleSkull
+        arguments: ''
+        description: skull with candle
+        item_id: 6228
+        placements:
+            -   location:
+                    - 5167
+                    - 568
+                    - 7
+    -   type: Static
+        arguments: ''
+        description: stone chair
+        item_id: 4634
+        placements:
+            -   location:
+                    - 5167
+                    - 571
+                    - 0
+    -   type: StoneFaceTrap
+        arguments: ''
+        description: stone face
+        item_id: 4341
+        placements:
+            -   location:
+                    - 5168
+                    - 584
+                    - 0
+    -   type: StoneFaceTrap
+        arguments: ''
+        description: stone face
+        item_id: 4367
+        placements:
+            -   location:
+                    - 5168
+                    - 599
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: stone chair
+        item_id: 4635
+        placements:
+            -   location:
+                    - 5169
+                    - 567
+                    - 0
+            -   location:
+                    - 5169
+                    - 569
+                    - 0
+            -   location:
+                    - 5169
+                    - 565
+                    - 0
+            -   location:
+                    - 5202
+                    - 597
+                    - 0
+            -   location:
+                    - 5202
+                    - 599
+                    - 0
+            -   location:
+                    - 5202
+                    - 601
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: scroll%s%
+        item_id: 3640
+        placements:
+            -   location:
+                    - 5169
+                    - 573
+                    - 0
+            -   location:
+                    - 5186
+                    - 548
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: scroll%s%
+        item_id: 3832
+        placements:
+            -   location:
+                    - 5173
+                    - 692
+                    - 0
+            -   location:
+                    - 5174
+                    - 665
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: bone
+        item_id: 6930
+        placements:
+            -   location:
+                    - 5184
+                    - 605
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: close helm
+        item_id: 5129
+        placements:
+            -   location:
+                    - 5129
+                    - 690
+                    - 0
+    -   type: Brazier
+        arguments: ''
+        description: brazier
+        item_id: 3633
+        placements:
+            -   location:
+                    - 5175
+                    - 615
+                    - 0
+            -   location:
+                    - 5186
+                    - 573
+                    - 10
+            -   location:
+                    - 5224
+                    - 560
+                    - 0
+            -   location:
+                    - 5188
+                    - 573
+                    - 11
+    -   type: SpikeTrap
+        arguments: ''
+        description: spike trap
+        item_id: 4379
+        placements:
+            -   location:
+                    - 5173
+                    - 592
+                    - 4
+            -   location:
+                    - 5172
+                    - 592
+                    - 4
+    -   type: Static
+        arguments: ''
+        description: dungeon wall
+        item_id: 768
+        placements:
+            -   location:
+                    - 5189
+                    - 574
+                    - 20
+    -   type: Static
+        arguments: ''
+        description: tricorne hat
+        item_id: 5915
+        placements:
+            -   location:
+                    - 5190
+                    - 727
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: scroll%s%
+        item_id: 3831
+        placements:
+            -   location:
+                    - 5195
+                    - 589
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: kettle
+        item_id: 2541
+        placements:
+            -   location:
+                    - 5196
+                    - 609
+                    - 5
+            -   location:
+                    - 5202
+                    - 621
+                    - 5
+    -   type: Static
+        arguments: ''
+        description: goblet
+        item_id: 2458
+        placements:
+            -   location:
+                    - 5197
+                    - 621
+                    - 3
+            -   location:
+                    - 5198
+                    - 621
+                    - 3
+            -   location:
+                    - 5205
+                    - 615
+                    - 9
+            -   location:
+                    - 5205
+                    - 616
+                    - 9
+    -   type: Static
+        arguments: ''
+        description: scroll%s%
+        item_id: 3829
+        placements:
+            -   location:
+                    - 5197
+                    - 655
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: crystal ball
+        item_id: 3630
+        placements:
+            -   location:
+                    - 5201
+                    - 609
+                    - 8
+            -   location:
+                    - 5225
+                    - 553
+                    - 5
+            -   location:
+                    - 5199
+                    - 609
+                    - 7
+    -   type: Static
+        arguments: ''
+        description: Batwing%s%
+        item_id: 3960
+        placements:
+            -   location:
+                    - 5205
+                    - 620
+                    - 5
+    -   type: Static
+        arguments: ''
+        description: statue
+        item_id: 5019
+        placements:
+            -   location:
+                    - 5317
+                    - 751
+                    - -8
+            -   location:
+                    - 5309
+                    - 751
+                    - -8
+    -   type: Static
+        arguments: ''
+        description: ''
+        item_id: 5401
+        placements:
+            -   location:
+                    - 5211
+                    - 554
+                    - -20
+    -   type: Static
+        arguments: ''
+        description: crystal ball
+        item_id: 3629
+        placements:
+            -   location:
+                    - 5212
+                    - 736
+                    - -20
+            -   location:
+                    - 5221
+                    - 532
+                    - 0
+            -   location:
+                    - 5227
+                    - 735
+                    - -20
+    -   type: Static
+        arguments: ''
+        description: ankh
+        item_id: 5
+        placements:
+            -   location:
+                    - 5205
+                    - 774
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: Yellow Potion
+        item_id: 3852
+        placements:
+            -   location:
+                    - 5211
+                    - 723
+                    - -20
+    -   type: Static
+        arguments: ''
+        description: dried flowers
+        item_id: 3131
+        placements:
+            -   location:
+                    - 5224
+                    - 572
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: dried flowers
+        item_id: 3134
+        placements:
+            -   location:
+                    - 5224
+                    - 573
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: dried herbs
+        item_id: 3137
+        placements:
+            -   location:
+                    - 5224
+                    - 574
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: Orange Potion
+        item_id: 3847
+        placements:
+            -   location:
+                    - 5228
+                    - 723
+                    - -17
+    -   type: Static
+        arguments: ''
+        description: platemail gloves
+        item_id: 5140
+        placements:
+            -   location:
+                    - 5181
+                    - 587
+                    - 0
+    -   type: CandleLarge
+        arguments: ''
+        description: candle
+        item_id: 2842
+        placements:
+            -   location:
+                    - 5174
+                    - 614
+                    - 0
+            -   location:
+                    - 5174
+                    - 616
+                    - 2
+            -   location:
+                    - 5176
+                    - 614
+                    - 2
+            -   location:
+                    - 5176
+                    - 616
+                    - 3
+            -   location:
+                    - 5226
+                    - 562
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: chainmail leggings
+        item_id: 5054
+        placements:
+            -   location:
+                    - 5306
+                    - 609
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: bow
+        item_id: 5042
+        placements:
+            -   location:
+                    - 5221
+                    - 735
+                    - -20
+    -   type: Static
+        arguments: ''
+        description: goblet
+        item_id: 2483
+        placements:
+            -   location:
+                    - 5201
+                    - 597
+                    - 8
+            -   location:
+                    - 5201
+                    - 600
+                    - 7
+    -   type: Static
+        arguments: ''
+        description: pen and ink
+        item_id: 4032
+        placements:
+            -   location:
+                    - 5201
+                    - 598
+                    - 6
+    -   type: CandleLarge
+        arguments: ''
+        description: candle
+        item_id: 2598
+        placements:
+            -   location:
+                    - 5226
+                    - 564
+                    - 2
+            -   location:
+                    - 5228
+                    - 562
+                    - 2
+            -   location:
+                    - 5228
+                    - 564
+                    - 3
+    -   type: Static
+        arguments: ''
+        description: switch
+        item_id: 4239
+        placements:
+            -   location:
+                    - 5305
+                    - 676
+                    - -12
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 1958
+        placements:
+            -   location:
+                    - 5183
+                    - 578
+                    - 0
+            -   location:
+                    - 5183
+                    - 571
+                    - 0
+    -   type: MetalDoor
+        arguments: (Facing = WestCCW)
+        description: metal door
+        item_id: 1657
+        placements:
+            -   location:
+                    - 5155
+                    - 687
+                    - 1
+    -   type: Static
+        arguments: ''
+        description: heavy crossbow
+        item_id: 5117
+        placements:
+            -   location:
+                    - 5339
+                    - 605
+                    - 0
+            -   location:
+                    - 5192
+                    - 655
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: chainmail  coif
+        item_id: 5051
+        placements:
+            -   location:
+                    - 5193
+                    - 575
+                    - 0
+    -   type: Static
+        arguments: (Hue = 0x151)
+        description: wizard's hat
+        item_id: 5912
+        placements:
+            -   location:
+                    - 5307
+                    - 545
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: bone armor
+        item_id: 5199
+        placements:
+            -   location:
+                    - 5289
+                    - 542
+                    - 0

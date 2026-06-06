@@ -1,1496 +1,1496 @@
 decoration:
-- type: AnkhWest
-  arguments: ''
-  description: 'Friendly Entrance # ankh'
-  item_id: 3
-  placements:
-  - location:
-    - 286
-    - 1013
-    - 5
-- type: MetalDoor
-  arguments: (Facing = WestCW; Hue=0x451)
-  description: metal door
-  item_id: 1653
-  placements:
-  - location:
-    - 659
-    - 1535
-    - -28
-- type: MetalDoor
-  arguments: (Facing = EastCCW; Hue=0x451)
-  description: metal door
-  item_id: 1655
-  placements:
-  - location:
-    - 660
-    - 1535
-    - -28
-- type: MetalDoor
-  arguments: (Facing = WestCCW; Hue=0x482)
-  description: metal door
-  item_id: 1657
-  placements:
-  - location:
-    - 699
-    - 1527
-    - -28
-- type: MetalDoor
-  arguments: (Facing = EastCW; Hue=0x482)
-  description: metal door
-  item_id: 1659
-  placements:
-  - location:
-    - 700
-    - 1527
-    - -28
-- type: MetalDoor
-  arguments: (Facing = SouthCCW; Hue=0x482)
-  description: metal door
-  item_id: 1665
-  placements:
-  - location:
-    - 703
-    - 1572
-    - -28
-- type: MetalDoor
-  arguments: (Facing = NorthCW; Hue=0x482)
-  description: metal door
-  item_id: 1667
-  placements:
-  - location:
-    - 703
-    - 1571
-    - -28
-- type: FullBookcase
-  arguments: ''
-  description: bookcase
-  item_id: 2711
-  placements:
-  - location:
-    - 659
-    - 1521
-    - -28
-  - location:
-    - 661
-    - 1521
-    - -28
-- type: FullBookcase
-  arguments: ''
-  description: bookcase
-  item_id: 2712
-  placements:
-  - location:
-    - 660
-    - 1521
-    - -28
-- type: FullBookcase
-  arguments: ''
-  description: bookcase
-  item_id: 2713
-  placements:
-  - location:
-    - 657
-    - 1525
-    - -28
-  - location:
-    - 657
-    - 1527
-    - -28
-- type: FullBookcase
-  arguments: ''
-  description: bookcase
-  item_id: 2714
-  placements:
-  - location:
-    - 657
-    - 1524
-    - -28
-- type: FullBookcase
-  arguments: ''
-  description: bookcase
-  item_id: 2715
-  placements:
-  - location:
-    - 658
-    - 1521
-    - -28
-  - location:
-    - 662
-    - 1521
-    - -28
-- type: FullBookcase
-  arguments: ''
-  description: bookcase
-  item_id: 2716
-  placements:
-  - location:
-    - 657
-    - 1523
-    - -28
-  - location:
-    - 657
-    - 1526
-    - -28
-- type: LocalizedStatic
-  arguments: (LabelNumber = 1016453)
-  description: wisp
-  item_id: 8448
-  placements:
-  - location:
-    - 689
-    - 1566
-    - -15
-  - location:
-    - 689
-    - 1570
-    - -15
-  - location:
-    - 691
-    - 1513
-    - -15
-  - location:
-    - 694
-    - 1513
-    - -15
-  - location:
-    - 697
-    - 1513
-    - -15
-  - location:
-    - 700
-    - 1513
-    - -15
-  - location:
-    - 657
-    - 1501
-    - -15
-  - location:
-    - 657
-    - 1506
-    - -15
-  - location:
-    - 661
-    - 1497
-    - -15
-  - location:
-    - 649
-    - 1297
-    - -14
-  - location:
-    - 649
-    - 1300
-    - -19
-  - location:
-    - 654
-    - 1297
-    - -14
-  - location:
-    - 654
-    - 1300
-    - -21
-- type: LocalizedStatic
-  arguments: (LabelNumber = 1016454)
-  description: wisp
-  item_id: 8448
-  placements:
-  - location:
-    - 718
-    - 1553
-    - -18
-  - location:
-    - 719
-    - 1553
-    - -10
-  - location:
-    - 720
-    - 1553
-    - -18
-- type: LocalizedStatic
-  arguments: (Hue = 0x8AB; LabelNumber=1016453)
-  description: wisp
-  item_id: 8448
-  placements:
-  - location:
-    - 641
-    - 1531
-    - -16
-  - location:
-    - 666
-    - 1497
-    - -15
-- type: Static
-  arguments: (Hue = 0x964)
-  description: 'Evil Bowels # stone wall'
-  item_id: 200
-  placements:
-  - location:
-    - 836
-    - 1471
-    - -28
-- type: SecretStoneDoor1
-  arguments: (Facing = NorthCW; Hue=0x96F)
-  description: stone wall
-  item_id: 246
-  placements:
-  - location:
-    - 752
-    - 1549
-    - -28
-- type: MetalDoor
-  arguments: (Facing = WestCW; Hue=0x89D)
-  description: metal door
-  item_id: 1653
-  placements:
-  - location:
-    - 851
-    - 1559
-    - -28
-  - location:
-    - 907
-    - 1464
-    - -28
-- type: MetalDoor
-  arguments: (Facing = EastCCW; Hue=0x89D)
-  description: metal door
-  item_id: 1655
-  placements:
-  - location:
-    - 908
-    - 1464
-    - -28
-  - location:
-    - 852
-    - 1559
-    - -28
-- type: MetalDoor
-  arguments: (Facing = SouthCW; Hue=0x89D)
-  description: metal door
-  item_id: 1661
-  placements:
-  - location:
-    - 824
-    - 1475
-    - -28
-  - location:
-    - 872
-    - 1476
-    - -28
-- type: MetalDoor
-  arguments: (Facing = SouthCW; Hue=0x901)
-  description: metal door
-  item_id: 1661
-  placements:
-  - location:
-    - 872
-    - 1508
-    - 2
-  - location:
-    - 879
-    - 1532
-    - -28
-- type: MetalDoor
-  arguments: (Facing = SouthCW; Hue=0x89E)
-  description: metal door
-  item_id: 1661
-  placements:
-  - location:
-    - 848
-    - 1476
-    - -28
-- type: MetalDoor
-  arguments: (Facing = NorthCCW; Hue=0x89D)
-  description: metal door
-  item_id: 1663
-  placements:
-  - location:
-    - 872
-    - 1475
-    - -28
-  - location:
-    - 824
-    - 1474
-    - -28
-- type: MetalDoor
-  arguments: (Facing = NorthCCW; Hue=0x901)
-  description: metal door
-  item_id: 1663
-  placements:
-  - location:
-    - 872
-    - 1507
-    - 2
-  - location:
-    - 879
-    - 1531
-    - -28
-- type: MetalDoor
-  arguments: (Facing = NorthCCW; Hue=0x89E)
-  description: metal door
-  item_id: 1663
-  placements:
-  - location:
-    - 848
-    - 1475
-    - -28
-- type: SmallCrate
-  arguments: ''
-  description: small crate
-  item_id: 2473
-  placements:
-  - location:
-    - 817
-    - 1467
-    - -28
-  - location:
-    - 818
-    - 1468
-    - -25
-- type: MetalChest
-  arguments: ''
-  description: metal chest
-  item_id: 2475
-  placements:
-  - location:
-    - 858
-    - 1561
-    - -28
-  - location:
-    - 859
-    - 1561
-    - -28
-  - location:
-    - 893
-    - 1497
-    - 2
-  - location:
-    - 898
-    - 1553
-    - -28
-  - location:
-    - 899
-    - 1465
-    - -28
-  - location:
-    - 901
-    - 1553
-    - -28
-  - location:
-    - 905
-    - 1497
-    - 2
-- type: MetalChest
-  arguments: (Hue = 0x454)
-  description: metal chest
-  item_id: 2475
-  placements:
-  - location:
-    - 776
-    - 1476
-    - -28
-- type: MetalChest
-  arguments: (Hue = 0x455)
-  description: metal chest
-  item_id: 2475
-  placements:
-  - location:
-    - 837
-    - 1465
-    - -28
-- type: MetalChest
-  arguments: (Hue = 0x4E4)
-  description: metal chest
-  item_id: 2475
-  placements:
-  - location:
-    - 761
-    - 1537
-    - -28
-- type: MetalChest
-  arguments: (Hue = 0x66D)
-  description: metal chest
-  item_id: 2475
-  placements:
-  - location:
-    - 760
-    - 1537
-    - -28
-  - location:
-    - 762
-    - 1537
-    - -28
-  - location:
-    - 776
-    - 1483
-    - -28
-  - location:
-    - 836
-    - 1465
-    - -28
-- type: EasterEggs
-  arguments: ''
-  description: eggs
-  item_id: 2485
-  placements:
-  - location:
-    - 964
-    - 1547
-    - -29
-- type: Static
-  arguments: ''
-  description: wall torch
-  item_id: 2565
-  placements:
-  - location:
-    - 817
-    - 1478
-    - -14
-  - location:
-    - 834
-    - 1467
-    - -14
-- type: EmptyBookcase
-  arguments: (Hue = 0x717)
-  description: wooden shelf
-  item_id: 2717
-  placements:
-  - location:
-    - 958
-    - 1496
-    - -28
-- type: EmptyBookcase
-  arguments: (Hue = 0x718)
-  description: wooden shelf
-  item_id: 2717
-  placements:
-  - location:
-    - 923
-    - 1553
-    - -28
-- type: EmptyBookcase
-  arguments: (Hue = 0x717)
-  description: wooden shelf
-  item_id: 2718
-  placements:
-  - location:
-    - 953
-    - 1502
-    - -28
-- type: EmptyBookcase
-  arguments: (Hue = 0x718)
-  description: wooden shelf
-  item_id: 2718
-  placements:
-  - location:
-    - 920
-    - 1558
-    - -28
-  - location:
-    - 920
-    - 1562
-    - -28
-- type: LargeCrate
-  arguments: ''
-  description: crate
-  item_id: 3644
-  placements:
-  - location:
-    - 817
-    - 1470
-    - -25
-  - location:
-    - 817
-    - 1473
-    - -25
-  - location:
-    - 817
-    - 1474
-    - -22
-  - location:
-    - 817
-    - 1475
-    - -25
-- type: MediumCrate
-  arguments: ''
-  description: crate
-  item_id: 3646
-  placements:
-  - location:
-    - 873
-    - 1521
-    - -30
-- type: MetalGoldenChest
-  arguments: (Hue = 0x4E4)
-  description: metal chest
-  item_id: 3648
-  placements:
-  - location:
-    - 777
-    - 1575
-    - -28
-  - location:
-    - 784
-    - 1517
-    - -28
-  - location:
-    - 784
-    - 1578
-    - -28
-- type: MetalGoldenChest
-  arguments: (Hue = 0x66D)
-  description: metal chest
-  item_id: 3648
-  placements:
-  - location:
-    - 777
-    - 1574
-    - -28
-  - location:
-    - 777
-    - 1576
-    - -28
-  - location:
-    - 784
-    - 1521
-    - -28
-  - location:
-    - 784
-    - 1574
-    - -28
-- type: MetalGoldenChest
-  arguments: ''
-  description: metal chest
-  item_id: 3649
-  placements:
-  - location:
-    - 827
-    - 1465
-    - -28
-  - location:
-    - 828
-    - 1465
-    - -28
-  - location:
-    - 829
-    - 1465
-    - -28
-- type: WoodenChest
-  arguments: ''
-  description: wooden chest
-  item_id: 3650
-  placements:
-  - location:
-    - 817
-    - 1476
-    - -28
-  - location:
-    - 817
-    - 1477
-    - -28
-  - location:
-    - 920
-    - 1565
-    - -28
-  - location:
-    - 929
-    - 1571
-    - -28
-  - location:
-    - 953
-    - 1478
-    - -28
-  - location:
-    - 953
-    - 1508
-    - -28
-  - location:
-    - 953
-    - 1532
-    - -28
-  - location:
-    - 953
-    - 1539
-    - -28
-  - location:
-    - 961
-    - 1549
-    - -29
-  - location:
-    - 961
-    - 1558
-    - -28
-- type: WoodenChest
-  arguments: ''
-  description: wooden chest
-  item_id: 3651
-  placements:
-  - location:
-    - 926
-    - 1553
-    - -27
-  - location:
-    - 955
-    - 1496
-    - -28
-  - location:
-    - 955
-    - 1527
-    - -27
-  - location:
-    - 958
-    - 1552
-    - -28
-  - location:
-    - 961
-    - 1464
-    - -28
-  - location:
-    - 972
-    - 1480
-    - -30
-- type: MetalChest
-  arguments: ''
-  description: metal chest
-  item_id: 3708
-  placements:
-  - location:
-    - 865
-    - 1539
-    - -28
-  - location:
-    - 873
-    - 1469
-    - -28
-  - location:
-    - 873
-    - 1577
-    - -28
-  - location:
-    - 873
-    - 1579
-    - -28
-  - location:
-    - 889
-    - 1500
-    - 2
-  - location:
-    - 889
-    - 1517
-    - 2
-- type: MetalChest
-  arguments: (Hue = 0x454)
-  description: metal chest
-  item_id: 3708
-  placements:
-  - location:
-    - 772
-    - 1482
-    - -28
-  - location:
-    - 779
-    - 1482
-    - -28
-- type: MetalChest
-  arguments: (Hue = 0x466)
-  description: metal chest
-  item_id: 3708
-  placements:
-  - location:
-    - 834
-    - 1468
-    - -28
-- type: MetalChest
-  arguments: (Hue = 0x4E4)
-  description: metal chest
-  item_id: 3708
-  placements:
-  - location:
-    - 753
-    - 1544
-    - -28
-  - location:
-    - 777
-    - 1520
-    - -28
-  - location:
-    - 777
-    - 1522
-    - -28
-- type: MetalChest
-  arguments: (Hue = 0x66D)
-  description: metal chest
-  item_id: 3708
-  placements:
-  - location:
-    - 753
-    - 1545
-    - -28
-  - location:
-    - 772
-    - 1478
-    - -28
-  - location:
-    - 777
-    - 1519
-    - -28
-  - location:
-    - 777
-    - 1521
-    - -28
-  - location:
-    - 777
-    - 1523
-    - -28
-  - location:
-    - 779
-    - 1478
-    - -28
-- type: MetalChest
-  arguments: (Hue = 0x89F)
-  description: metal chest
-  item_id: 3708
-  placements:
-  - location:
-    - 834
-    - 1467
-    - -28
-- type: MetalChest
-  arguments: (Hue = 0x8AB)
-  description: metal chest
-  item_id: 3708
-  placements:
-  - location:
-    - 834
-    - 1469
-    - -28
-- type: Static
-  arguments: ''
-  description: keg
-  item_id: 3711
-  placements:
-  - location:
-    - 974
-    - 1484
-    - -28
-- type: Static
-  arguments: ''
-  description: cleaver
-  item_id: 3779
-  placements:
-  - location:
-    - 874
-    - 1524
-    - -22
-- type: LocalizedStatic
-  arguments: (LabelNumber = 1016086; Hue=0x835)
-  description: gravestone
-  item_id: 3796
-  placements:
-  - location:
-    - 877
-    - 1561
-    - -23
-- type: LocalizedStatic
-  arguments: (LabelNumber = 1016423; Hue=0x835)
-  description: gravestone
-  item_id: 3796
-  placements:
-  - location:
-    - 883
-    - 1555
-    - -23
-- type: LocalizedStatic
-  arguments: (LabelNumber = 1016150; Hue=0x835)
-  description: gravestone
-  item_id: 3797
-  placements:
-  - location:
-    - 875
-    - 1563
-    - -23
-- type: LocalizedStatic
-  arguments: (LabelNumber = 1016381; Hue=0x835)
-  description: gravestone
-  item_id: 3797
-  placements:
-  - location:
-    - 879
-    - 1559
-    - -23
-- type: LocalizedStatic
-  arguments: (LabelNumber = 1016210; Hue=0x835)
-  description: gravestone
-  item_id: 3797
-  placements:
-  - location:
-    - 881
-    - 1557
-    - -23
-- type: Static
-  arguments: ''
-  description: barrel
-  item_id: 4014
-  placements:
-  - location:
-    - 821
-    - 1475
-    - -28
-  - location:
-    - 821
-    - 1475
-    - -22
-  - location:
-    - 821
-    - 1475
-    - -16
-  - location:
-    - 821
-    - 1476
-    - -22
-  - location:
-    - 822
-    - 1475
-    - -22
-  - location:
-    - 822
-    - 1475
-    - -16
-  - location:
-    - 822
-    - 1476
-    - -22
-  - location:
-    - 968
-    - 1484
-    - -28
-- type: Static
-  arguments: ''
-  description: tapestry
-  item_id: 4067
-  placements:
-  - location:
-    - 825
-    - 1488
-    - -28
-- type: Static
-  arguments: ''
-  description: tapestry
-  item_id: 4068
-  placements:
-  - location:
-    - 825
-    - 1486
-    - -28
-- type: LocalizedStatic
-  arguments: (LabelNumber = 1016508;Hue=0x963)
-  description: gravestone
-  item_id: 4468
-  placements:
-  - location:
-    - 898
-    - 1508
-    - 2
-  - location:
-    - 901
-    - 1508
-    - 2
-- type: LocalizedStatic
-  arguments: (LabelNumber = 1016466)
-  description: statue
-  item_id: 4647
-  placements:
-  - location:
-    - 874
-    - 1558
-    - -8
-- type: LocalizedStatic
-  arguments: (LabelNumber = 1016467)
-  description: statue
-  item_id: 4647
-  placements:
-  - location:
-    - 878
-    - 1554
-    - -8
-- type: MeltedWax
-  arguments: ''
-  description: melted wax
-  item_id: 4650
-  placements:
-  - location:
-    - 873
-    - 1570
-    - -17
-  - location:
-    - 879
-    - 1570
-    - -23
-  - location:
-    - 890
-    - 1570
-    - -28
-- type: MeltedWax
-  arguments: ''
-  description: melted wax
-  item_id: 4651
-  placements:
-  - location:
-    - 893
-    - 1573
-    - -28
-- type: MeltedWax
-  arguments: ''
-  description: melted wax
-  item_id: 4652
-  placements:
-  - location:
-    - 875
-    - 1570
-    - -24
-  - location:
-    - 879
-    - 1573
-    - -26
-  - location:
-    - 880
-    - 1572
-    - -23
-  - location:
-    - 893
-    - 1570
-    - -28
-- type: MeltedWax
-  arguments: ''
-  description: melted wax
-  item_id: 4653
-  placements:
-  - location:
-    - 878
-    - 1572
-    - -23
-- type: MeltedWax
-  arguments: ''
-  description: melted wax
-  item_id: 4654
-  placements:
-  - location:
-    - 873
-    - 1572
-    - -17
-  - location:
-    - 874
-    - 1570
-    - -24
-  - location:
-    - 878
-    - 1570
-    - -24
-  - location:
-    - 880
-    - 1571
-    - -24
-  - location:
-    - 890
-    - 1573
-    - -28
-- type: Static
-  arguments: ''
-  description: bust
-  item_id: 4810
-  placements:
-  - location:
-    - 874
-    - 1554
-    - -2
-- type: LocalizedStatic
-  arguments: (LabelNumber = 1016468)
-  description: statue
-  item_id: 5018
-  placements:
-  - location:
-    - 876
-    - 1556
-    - -6
-- type: Static
-  arguments: ''
-  description: earrings
-  item_id: 7943
-  placements:
-  - location:
-    - 858
-    - 1572
-    - -22
-- type: Static
-  arguments: ''
-  description: necklace
-  item_id: 7944
-  placements:
-  - location:
-    - 849
-    - 1566
-    - -22
-  - location:
-    - 849
-    - 1566
-    - -21
-  - location:
-    - 849
-    - 1567
-    - -22
-  - location:
-    - 849
-    - 1568
-    - -22
-- type: Static
-  arguments: (Hue = 0x455)
-  description: necklace
-  item_id: 7944
-  placements:
-  - location:
-    - 850
-    - 1570
-    - -22
-  - location:
-    - 860
-    - 1570
-    - -28
-- type: Static
-  arguments: ''
-  description: silver necklace
-  item_id: 7946
-  placements:
-  - location:
-    - 850
-    - 1565
-    - -21
-  - location:
-    - 855
-    - 1572
-    - -22
-  - location:
-    - 858
-    - 1573
-    - -22
-- type: LocalizedStatic
-  arguments: (LabelNumber = 1016452; Hue=0x964)
-  description: wisp
-  item_id: 8448
-  placements:
-  - location:
-    - 890
-    - 1498
-    - 14
-  - location:
-    - 890
-    - 1515
-    - 14
-  - location:
-    - 896
-    - 1504
-    - 14
-  - location:
-    - 896
-    - 1511
-    - 14
-  - location:
-    - 903
-    - 1504
-    - 14
-  - location:
-    - 903
-    - 1511
-    - 14
-  - location:
-    - 907
-    - 1498
-    - 14
-  - location:
-    - 907
-    - 1515
-    - 14
-- type: LocalizedStatic
-  arguments: (LabelNumber = 1016452; Hue=0x966)
-  description: wisp
-  item_id: 8448
-  placements:
-  - location:
-    - 849
-    - 1562
-    - -16
-  - location:
-    - 849
-    - 1572
-    - -16
-  - location:
-    - 861
-    - 1562
-    - -16
-  - location:
-    - 861
-    - 1572
-    - -16
-  - location:
-    - 873
-    - 1567
-    - -16
-  - location:
-    - 873
-    - 1575
-    - -16
-  - location:
-    - 873
-    - 1582
-    - -16
-  - location:
-    - 880
-    - 1582
-    - -16
-  - location:
-    - 888
-    - 1553
-    - -16
-  - location:
-    - 888
-    - 1582
-    - -16
-  - location:
-    - 889
-    - 1555
-    - -16
-  - location:
-    - 889
-    - 1557
-    - -16
-  - location:
-    - 889
-    - 1559
-    - -16
-  - location:
-    - 894
-    - 1554
-    - -16
-  - location:
-    - 894
-    - 1556
-    - -16
-  - location:
-    - 894
-    - 1558
-    - -16
-  - location:
-    - 895
-    - 1553
-    - -16
-  - location:
-    - 896
-    - 1582
-    - -16
-  - location:
-    - 902
-    - 1559
-    - -16
-  - location:
-    - 902
-    - 1567
-    - -16
-  - location:
-    - 902
-    - 1575
-    - -16
-- type: Blocker
-  arguments: ''
-  description: no draw
-  item_id: 8612
-  placements:
-  - location:
-    - 777
-    - 1546
-    - -28
-  - location:
-    - 777
-    - 1549
-    - -28
-  - location:
-    - 778
-    - 1540
-    - -28
-  - location:
-    - 778
-    - 1542
-    - -28
-  - location:
-    - 778
-    - 1553
-    - -28
-  - location:
-    - 778
-    - 1555
-    - -28
-  - location:
-    - 780
-    - 1540
-    - -28
-  - location:
-    - 780
-    - 1542
-    - -28
-  - location:
-    - 780
-    - 1545
-    - -28
-  - location:
-    - 780
-    - 1547
-    - -28
-  - location:
-    - 780
-    - 1549
-    - -28
-  - location:
-    - 780
-    - 1551
-    - -28
-  - location:
-    - 780
-    - 1553
-    - -28
-  - location:
-    - 780
-    - 1555
-    - -28
-  - location:
-    - 782
-    - 1537
-    - -28
-  - location:
-    - 782
-    - 1539
-    - -28
-  - location:
-    - 782
-    - 1541
-    - -28
-  - location:
-    - 782
-    - 1543
-    - -28
-  - location:
-    - 782
-    - 1545
-    - -28
-  - location:
-    - 782
-    - 1547
-    - -28
-  - location:
-    - 782
-    - 1549
-    - -28
-  - location:
-    - 782
-    - 1551
-    - -28
-  - location:
-    - 782
-    - 1553
-    - -28
-  - location:
-    - 782
-    - 1555
-    - -28
-  - location:
-    - 784
-    - 1537
-    - -28
-  - location:
-    - 784
-    - 1539
-    - -28
-  - location:
-    - 784
-    - 1541
-    - -28
-  - location:
-    - 784
-    - 1543
-    - -28
-  - location:
-    - 784
-    - 1545
-    - -28
-  - location:
-    - 784
-    - 1547
-    - -28
-  - location:
-    - 784
-    - 1549
-    - -28
-  - location:
-    - 784
-    - 1551
-    - -28
-  - location:
-    - 784
-    - 1553
-    - -28
-  - location:
-    - 784
-    - 1555
-    - -28
-  - location:
-    - 786
-    - 1537
-    - -28
-  - location:
-    - 786
-    - 1539
-    - -28
-  - location:
-    - 786
-    - 1541
-    - -28
-  - location:
-    - 786
-    - 1543
-    - -28
-  - location:
-    - 786
-    - 1545
-    - -28
-  - location:
-    - 786
-    - 1547
-    - -28
-  - location:
-    - 786
-    - 1549
-    - -28
-  - location:
-    - 786
-    - 1551
-    - -28
-  - location:
-    - 786
-    - 1553
-    - -28
-  - location:
-    - 786
-    - 1555
-    - -28
-  - location:
-    - 788
-    - 1537
-    - -28
-  - location:
-    - 788
-    - 1539
-    - -28
-  - location:
-    - 788
-    - 1541
-    - -28
-  - location:
-    - 788
-    - 1543
-    - -28
-  - location:
-    - 788
-    - 1545
-    - -28
-  - location:
-    - 788
-    - 1547
-    - -28
-  - location:
-    - 788
-    - 1551
-    - -28
-  - location:
-    - 788
-    - 1553
-    - -28
-  - location:
-    - 788
-    - 1555
-    - -28
-  - location:
-    - 788
-    - 1557
-    - -28
-  - location:
-    - 790
-    - 1545
-    - -28
-  - location:
-    - 790
-    - 1547
-    - -28
-  - location:
-    - 790
-    - 1551
-    - -28
-  - location:
-    - 790
-    - 1553
-    - -28
-  - location:
-    - 790
-    - 1555
-    - -28
-  - location:
-    - 790
-    - 1557
-    - -28
-  - location:
-    - 791
-    - 1551
-    - -28
-  - location:
-    - 844
-    - 1433
-    - -28
-  - location:
-    - 844
-    - 1438
-    - -28
-  - location:
-    - 845
-    - 1433
-    - -28
-  - location:
-    - 845
-    - 1438
-    - -28
-  - location:
-    - 846
-    - 1433
-    - -28
-  - location:
-    - 846
-    - 1438
-    - -28
-  - location:
-    - 847
-    - 1433
-    - -28
-  - location:
-    - 847
-    - 1438
-    - -28
-  - location:
-    - 848
-    - 1432
-    - -28
-  - location:
-    - 848
-    - 1433
-    - -28
-  - location:
-    - 848
-    - 1438
-    - -28
-  - location:
-    - 848
-    - 1439
-    - -28
+    -   type: AnkhWest
+        arguments: ''
+        description: 'Friendly Entrance # ankh'
+        item_id: 3
+        placements:
+            -   location:
+                    - 286
+                    - 1013
+                    - 5
+    -   type: MetalDoor
+        arguments: (Facing = WestCW; Hue=0x451)
+        description: metal door
+        item_id: 1653
+        placements:
+            -   location:
+                    - 659
+                    - 1535
+                    - -28
+    -   type: MetalDoor
+        arguments: (Facing = EastCCW; Hue=0x451)
+        description: metal door
+        item_id: 1655
+        placements:
+            -   location:
+                    - 660
+                    - 1535
+                    - -28
+    -   type: MetalDoor
+        arguments: (Facing = WestCCW; Hue=0x482)
+        description: metal door
+        item_id: 1657
+        placements:
+            -   location:
+                    - 699
+                    - 1527
+                    - -28
+    -   type: MetalDoor
+        arguments: (Facing = EastCW; Hue=0x482)
+        description: metal door
+        item_id: 1659
+        placements:
+            -   location:
+                    - 700
+                    - 1527
+                    - -28
+    -   type: MetalDoor
+        arguments: (Facing = SouthCCW; Hue=0x482)
+        description: metal door
+        item_id: 1665
+        placements:
+            -   location:
+                    - 703
+                    - 1572
+                    - -28
+    -   type: MetalDoor
+        arguments: (Facing = NorthCW; Hue=0x482)
+        description: metal door
+        item_id: 1667
+        placements:
+            -   location:
+                    - 703
+                    - 1571
+                    - -28
+    -   type: FullBookcase
+        arguments: ''
+        description: bookcase
+        item_id: 2711
+        placements:
+            -   location:
+                    - 659
+                    - 1521
+                    - -28
+            -   location:
+                    - 661
+                    - 1521
+                    - -28
+    -   type: FullBookcase
+        arguments: ''
+        description: bookcase
+        item_id: 2712
+        placements:
+            -   location:
+                    - 660
+                    - 1521
+                    - -28
+    -   type: FullBookcase
+        arguments: ''
+        description: bookcase
+        item_id: 2713
+        placements:
+            -   location:
+                    - 657
+                    - 1525
+                    - -28
+            -   location:
+                    - 657
+                    - 1527
+                    - -28
+    -   type: FullBookcase
+        arguments: ''
+        description: bookcase
+        item_id: 2714
+        placements:
+            -   location:
+                    - 657
+                    - 1524
+                    - -28
+    -   type: FullBookcase
+        arguments: ''
+        description: bookcase
+        item_id: 2715
+        placements:
+            -   location:
+                    - 658
+                    - 1521
+                    - -28
+            -   location:
+                    - 662
+                    - 1521
+                    - -28
+    -   type: FullBookcase
+        arguments: ''
+        description: bookcase
+        item_id: 2716
+        placements:
+            -   location:
+                    - 657
+                    - 1523
+                    - -28
+            -   location:
+                    - 657
+                    - 1526
+                    - -28
+    -   type: LocalizedStatic
+        arguments: (LabelNumber = 1016453)
+        description: wisp
+        item_id: 8448
+        placements:
+            -   location:
+                    - 689
+                    - 1566
+                    - -15
+            -   location:
+                    - 689
+                    - 1570
+                    - -15
+            -   location:
+                    - 691
+                    - 1513
+                    - -15
+            -   location:
+                    - 694
+                    - 1513
+                    - -15
+            -   location:
+                    - 697
+                    - 1513
+                    - -15
+            -   location:
+                    - 700
+                    - 1513
+                    - -15
+            -   location:
+                    - 657
+                    - 1501
+                    - -15
+            -   location:
+                    - 657
+                    - 1506
+                    - -15
+            -   location:
+                    - 661
+                    - 1497
+                    - -15
+            -   location:
+                    - 649
+                    - 1297
+                    - -14
+            -   location:
+                    - 649
+                    - 1300
+                    - -19
+            -   location:
+                    - 654
+                    - 1297
+                    - -14
+            -   location:
+                    - 654
+                    - 1300
+                    - -21
+    -   type: LocalizedStatic
+        arguments: (LabelNumber = 1016454)
+        description: wisp
+        item_id: 8448
+        placements:
+            -   location:
+                    - 718
+                    - 1553
+                    - -18
+            -   location:
+                    - 719
+                    - 1553
+                    - -10
+            -   location:
+                    - 720
+                    - 1553
+                    - -18
+    -   type: LocalizedStatic
+        arguments: (Hue = 0x8AB; LabelNumber=1016453)
+        description: wisp
+        item_id: 8448
+        placements:
+            -   location:
+                    - 641
+                    - 1531
+                    - -16
+            -   location:
+                    - 666
+                    - 1497
+                    - -15
+    -   type: Static
+        arguments: (Hue = 0x964)
+        description: 'Evil Bowels # stone wall'
+        item_id: 200
+        placements:
+            -   location:
+                    - 836
+                    - 1471
+                    - -28
+    -   type: SecretStoneDoor1
+        arguments: (Facing = NorthCW; Hue=0x96F)
+        description: stone wall
+        item_id: 246
+        placements:
+            -   location:
+                    - 752
+                    - 1549
+                    - -28
+    -   type: MetalDoor
+        arguments: (Facing = WestCW; Hue=0x89D)
+        description: metal door
+        item_id: 1653
+        placements:
+            -   location:
+                    - 851
+                    - 1559
+                    - -28
+            -   location:
+                    - 907
+                    - 1464
+                    - -28
+    -   type: MetalDoor
+        arguments: (Facing = EastCCW; Hue=0x89D)
+        description: metal door
+        item_id: 1655
+        placements:
+            -   location:
+                    - 908
+                    - 1464
+                    - -28
+            -   location:
+                    - 852
+                    - 1559
+                    - -28
+    -   type: MetalDoor
+        arguments: (Facing = SouthCW; Hue=0x89D)
+        description: metal door
+        item_id: 1661
+        placements:
+            -   location:
+                    - 824
+                    - 1475
+                    - -28
+            -   location:
+                    - 872
+                    - 1476
+                    - -28
+    -   type: MetalDoor
+        arguments: (Facing = SouthCW; Hue=0x901)
+        description: metal door
+        item_id: 1661
+        placements:
+            -   location:
+                    - 872
+                    - 1508
+                    - 2
+            -   location:
+                    - 879
+                    - 1532
+                    - -28
+    -   type: MetalDoor
+        arguments: (Facing = SouthCW; Hue=0x89E)
+        description: metal door
+        item_id: 1661
+        placements:
+            -   location:
+                    - 848
+                    - 1476
+                    - -28
+    -   type: MetalDoor
+        arguments: (Facing = NorthCCW; Hue=0x89D)
+        description: metal door
+        item_id: 1663
+        placements:
+            -   location:
+                    - 872
+                    - 1475
+                    - -28
+            -   location:
+                    - 824
+                    - 1474
+                    - -28
+    -   type: MetalDoor
+        arguments: (Facing = NorthCCW; Hue=0x901)
+        description: metal door
+        item_id: 1663
+        placements:
+            -   location:
+                    - 872
+                    - 1507
+                    - 2
+            -   location:
+                    - 879
+                    - 1531
+                    - -28
+    -   type: MetalDoor
+        arguments: (Facing = NorthCCW; Hue=0x89E)
+        description: metal door
+        item_id: 1663
+        placements:
+            -   location:
+                    - 848
+                    - 1475
+                    - -28
+    -   type: SmallCrate
+        arguments: ''
+        description: small crate
+        item_id: 2473
+        placements:
+            -   location:
+                    - 817
+                    - 1467
+                    - -28
+            -   location:
+                    - 818
+                    - 1468
+                    - -25
+    -   type: MetalChest
+        arguments: ''
+        description: metal chest
+        item_id: 2475
+        placements:
+            -   location:
+                    - 858
+                    - 1561
+                    - -28
+            -   location:
+                    - 859
+                    - 1561
+                    - -28
+            -   location:
+                    - 893
+                    - 1497
+                    - 2
+            -   location:
+                    - 898
+                    - 1553
+                    - -28
+            -   location:
+                    - 899
+                    - 1465
+                    - -28
+            -   location:
+                    - 901
+                    - 1553
+                    - -28
+            -   location:
+                    - 905
+                    - 1497
+                    - 2
+    -   type: MetalChest
+        arguments: (Hue = 0x454)
+        description: metal chest
+        item_id: 2475
+        placements:
+            -   location:
+                    - 776
+                    - 1476
+                    - -28
+    -   type: MetalChest
+        arguments: (Hue = 0x455)
+        description: metal chest
+        item_id: 2475
+        placements:
+            -   location:
+                    - 837
+                    - 1465
+                    - -28
+    -   type: MetalChest
+        arguments: (Hue = 0x4E4)
+        description: metal chest
+        item_id: 2475
+        placements:
+            -   location:
+                    - 761
+                    - 1537
+                    - -28
+    -   type: MetalChest
+        arguments: (Hue = 0x66D)
+        description: metal chest
+        item_id: 2475
+        placements:
+            -   location:
+                    - 760
+                    - 1537
+                    - -28
+            -   location:
+                    - 762
+                    - 1537
+                    - -28
+            -   location:
+                    - 776
+                    - 1483
+                    - -28
+            -   location:
+                    - 836
+                    - 1465
+                    - -28
+    -   type: EasterEggs
+        arguments: ''
+        description: eggs
+        item_id: 2485
+        placements:
+            -   location:
+                    - 964
+                    - 1547
+                    - -29
+    -   type: Static
+        arguments: ''
+        description: wall torch
+        item_id: 2565
+        placements:
+            -   location:
+                    - 817
+                    - 1478
+                    - -14
+            -   location:
+                    - 834
+                    - 1467
+                    - -14
+    -   type: EmptyBookcase
+        arguments: (Hue = 0x717)
+        description: wooden shelf
+        item_id: 2717
+        placements:
+            -   location:
+                    - 958
+                    - 1496
+                    - -28
+    -   type: EmptyBookcase
+        arguments: (Hue = 0x718)
+        description: wooden shelf
+        item_id: 2717
+        placements:
+            -   location:
+                    - 923
+                    - 1553
+                    - -28
+    -   type: EmptyBookcase
+        arguments: (Hue = 0x717)
+        description: wooden shelf
+        item_id: 2718
+        placements:
+            -   location:
+                    - 953
+                    - 1502
+                    - -28
+    -   type: EmptyBookcase
+        arguments: (Hue = 0x718)
+        description: wooden shelf
+        item_id: 2718
+        placements:
+            -   location:
+                    - 920
+                    - 1558
+                    - -28
+            -   location:
+                    - 920
+                    - 1562
+                    - -28
+    -   type: LargeCrate
+        arguments: ''
+        description: crate
+        item_id: 3644
+        placements:
+            -   location:
+                    - 817
+                    - 1470
+                    - -25
+            -   location:
+                    - 817
+                    - 1473
+                    - -25
+            -   location:
+                    - 817
+                    - 1474
+                    - -22
+            -   location:
+                    - 817
+                    - 1475
+                    - -25
+    -   type: MediumCrate
+        arguments: ''
+        description: crate
+        item_id: 3646
+        placements:
+            -   location:
+                    - 873
+                    - 1521
+                    - -30
+    -   type: MetalGoldenChest
+        arguments: (Hue = 0x4E4)
+        description: metal chest
+        item_id: 3648
+        placements:
+            -   location:
+                    - 777
+                    - 1575
+                    - -28
+            -   location:
+                    - 784
+                    - 1517
+                    - -28
+            -   location:
+                    - 784
+                    - 1578
+                    - -28
+    -   type: MetalGoldenChest
+        arguments: (Hue = 0x66D)
+        description: metal chest
+        item_id: 3648
+        placements:
+            -   location:
+                    - 777
+                    - 1574
+                    - -28
+            -   location:
+                    - 777
+                    - 1576
+                    - -28
+            -   location:
+                    - 784
+                    - 1521
+                    - -28
+            -   location:
+                    - 784
+                    - 1574
+                    - -28
+    -   type: MetalGoldenChest
+        arguments: ''
+        description: metal chest
+        item_id: 3649
+        placements:
+            -   location:
+                    - 827
+                    - 1465
+                    - -28
+            -   location:
+                    - 828
+                    - 1465
+                    - -28
+            -   location:
+                    - 829
+                    - 1465
+                    - -28
+    -   type: WoodenChest
+        arguments: ''
+        description: wooden chest
+        item_id: 3650
+        placements:
+            -   location:
+                    - 817
+                    - 1476
+                    - -28
+            -   location:
+                    - 817
+                    - 1477
+                    - -28
+            -   location:
+                    - 920
+                    - 1565
+                    - -28
+            -   location:
+                    - 929
+                    - 1571
+                    - -28
+            -   location:
+                    - 953
+                    - 1478
+                    - -28
+            -   location:
+                    - 953
+                    - 1508
+                    - -28
+            -   location:
+                    - 953
+                    - 1532
+                    - -28
+            -   location:
+                    - 953
+                    - 1539
+                    - -28
+            -   location:
+                    - 961
+                    - 1549
+                    - -29
+            -   location:
+                    - 961
+                    - 1558
+                    - -28
+    -   type: WoodenChest
+        arguments: ''
+        description: wooden chest
+        item_id: 3651
+        placements:
+            -   location:
+                    - 926
+                    - 1553
+                    - -27
+            -   location:
+                    - 955
+                    - 1496
+                    - -28
+            -   location:
+                    - 955
+                    - 1527
+                    - -27
+            -   location:
+                    - 958
+                    - 1552
+                    - -28
+            -   location:
+                    - 961
+                    - 1464
+                    - -28
+            -   location:
+                    - 972
+                    - 1480
+                    - -30
+    -   type: MetalChest
+        arguments: ''
+        description: metal chest
+        item_id: 3708
+        placements:
+            -   location:
+                    - 865
+                    - 1539
+                    - -28
+            -   location:
+                    - 873
+                    - 1469
+                    - -28
+            -   location:
+                    - 873
+                    - 1577
+                    - -28
+            -   location:
+                    - 873
+                    - 1579
+                    - -28
+            -   location:
+                    - 889
+                    - 1500
+                    - 2
+            -   location:
+                    - 889
+                    - 1517
+                    - 2
+    -   type: MetalChest
+        arguments: (Hue = 0x454)
+        description: metal chest
+        item_id: 3708
+        placements:
+            -   location:
+                    - 772
+                    - 1482
+                    - -28
+            -   location:
+                    - 779
+                    - 1482
+                    - -28
+    -   type: MetalChest
+        arguments: (Hue = 0x466)
+        description: metal chest
+        item_id: 3708
+        placements:
+            -   location:
+                    - 834
+                    - 1468
+                    - -28
+    -   type: MetalChest
+        arguments: (Hue = 0x4E4)
+        description: metal chest
+        item_id: 3708
+        placements:
+            -   location:
+                    - 753
+                    - 1544
+                    - -28
+            -   location:
+                    - 777
+                    - 1520
+                    - -28
+            -   location:
+                    - 777
+                    - 1522
+                    - -28
+    -   type: MetalChest
+        arguments: (Hue = 0x66D)
+        description: metal chest
+        item_id: 3708
+        placements:
+            -   location:
+                    - 753
+                    - 1545
+                    - -28
+            -   location:
+                    - 772
+                    - 1478
+                    - -28
+            -   location:
+                    - 777
+                    - 1519
+                    - -28
+            -   location:
+                    - 777
+                    - 1521
+                    - -28
+            -   location:
+                    - 777
+                    - 1523
+                    - -28
+            -   location:
+                    - 779
+                    - 1478
+                    - -28
+    -   type: MetalChest
+        arguments: (Hue = 0x89F)
+        description: metal chest
+        item_id: 3708
+        placements:
+            -   location:
+                    - 834
+                    - 1467
+                    - -28
+    -   type: MetalChest
+        arguments: (Hue = 0x8AB)
+        description: metal chest
+        item_id: 3708
+        placements:
+            -   location:
+                    - 834
+                    - 1469
+                    - -28
+    -   type: Static
+        arguments: ''
+        description: keg
+        item_id: 3711
+        placements:
+            -   location:
+                    - 974
+                    - 1484
+                    - -28
+    -   type: Static
+        arguments: ''
+        description: cleaver
+        item_id: 3779
+        placements:
+            -   location:
+                    - 874
+                    - 1524
+                    - -22
+    -   type: LocalizedStatic
+        arguments: (LabelNumber = 1016086; Hue=0x835)
+        description: gravestone
+        item_id: 3796
+        placements:
+            -   location:
+                    - 877
+                    - 1561
+                    - -23
+    -   type: LocalizedStatic
+        arguments: (LabelNumber = 1016423; Hue=0x835)
+        description: gravestone
+        item_id: 3796
+        placements:
+            -   location:
+                    - 883
+                    - 1555
+                    - -23
+    -   type: LocalizedStatic
+        arguments: (LabelNumber = 1016150; Hue=0x835)
+        description: gravestone
+        item_id: 3797
+        placements:
+            -   location:
+                    - 875
+                    - 1563
+                    - -23
+    -   type: LocalizedStatic
+        arguments: (LabelNumber = 1016381; Hue=0x835)
+        description: gravestone
+        item_id: 3797
+        placements:
+            -   location:
+                    - 879
+                    - 1559
+                    - -23
+    -   type: LocalizedStatic
+        arguments: (LabelNumber = 1016210; Hue=0x835)
+        description: gravestone
+        item_id: 3797
+        placements:
+            -   location:
+                    - 881
+                    - 1557
+                    - -23
+    -   type: Static
+        arguments: ''
+        description: barrel
+        item_id: 4014
+        placements:
+            -   location:
+                    - 821
+                    - 1475
+                    - -28
+            -   location:
+                    - 821
+                    - 1475
+                    - -22
+            -   location:
+                    - 821
+                    - 1475
+                    - -16
+            -   location:
+                    - 821
+                    - 1476
+                    - -22
+            -   location:
+                    - 822
+                    - 1475
+                    - -22
+            -   location:
+                    - 822
+                    - 1475
+                    - -16
+            -   location:
+                    - 822
+                    - 1476
+                    - -22
+            -   location:
+                    - 968
+                    - 1484
+                    - -28
+    -   type: Static
+        arguments: ''
+        description: tapestry
+        item_id: 4067
+        placements:
+            -   location:
+                    - 825
+                    - 1488
+                    - -28
+    -   type: Static
+        arguments: ''
+        description: tapestry
+        item_id: 4068
+        placements:
+            -   location:
+                    - 825
+                    - 1486
+                    - -28
+    -   type: LocalizedStatic
+        arguments: (LabelNumber = 1016508;Hue=0x963)
+        description: gravestone
+        item_id: 4468
+        placements:
+            -   location:
+                    - 898
+                    - 1508
+                    - 2
+            -   location:
+                    - 901
+                    - 1508
+                    - 2
+    -   type: LocalizedStatic
+        arguments: (LabelNumber = 1016466)
+        description: statue
+        item_id: 4647
+        placements:
+            -   location:
+                    - 874
+                    - 1558
+                    - -8
+    -   type: LocalizedStatic
+        arguments: (LabelNumber = 1016467)
+        description: statue
+        item_id: 4647
+        placements:
+            -   location:
+                    - 878
+                    - 1554
+                    - -8
+    -   type: MeltedWax
+        arguments: ''
+        description: melted wax
+        item_id: 4650
+        placements:
+            -   location:
+                    - 873
+                    - 1570
+                    - -17
+            -   location:
+                    - 879
+                    - 1570
+                    - -23
+            -   location:
+                    - 890
+                    - 1570
+                    - -28
+    -   type: MeltedWax
+        arguments: ''
+        description: melted wax
+        item_id: 4651
+        placements:
+            -   location:
+                    - 893
+                    - 1573
+                    - -28
+    -   type: MeltedWax
+        arguments: ''
+        description: melted wax
+        item_id: 4652
+        placements:
+            -   location:
+                    - 875
+                    - 1570
+                    - -24
+            -   location:
+                    - 879
+                    - 1573
+                    - -26
+            -   location:
+                    - 880
+                    - 1572
+                    - -23
+            -   location:
+                    - 893
+                    - 1570
+                    - -28
+    -   type: MeltedWax
+        arguments: ''
+        description: melted wax
+        item_id: 4653
+        placements:
+            -   location:
+                    - 878
+                    - 1572
+                    - -23
+    -   type: MeltedWax
+        arguments: ''
+        description: melted wax
+        item_id: 4654
+        placements:
+            -   location:
+                    - 873
+                    - 1572
+                    - -17
+            -   location:
+                    - 874
+                    - 1570
+                    - -24
+            -   location:
+                    - 878
+                    - 1570
+                    - -24
+            -   location:
+                    - 880
+                    - 1571
+                    - -24
+            -   location:
+                    - 890
+                    - 1573
+                    - -28
+    -   type: Static
+        arguments: ''
+        description: bust
+        item_id: 4810
+        placements:
+            -   location:
+                    - 874
+                    - 1554
+                    - -2
+    -   type: LocalizedStatic
+        arguments: (LabelNumber = 1016468)
+        description: statue
+        item_id: 5018
+        placements:
+            -   location:
+                    - 876
+                    - 1556
+                    - -6
+    -   type: Static
+        arguments: ''
+        description: earrings
+        item_id: 7943
+        placements:
+            -   location:
+                    - 858
+                    - 1572
+                    - -22
+    -   type: Static
+        arguments: ''
+        description: necklace
+        item_id: 7944
+        placements:
+            -   location:
+                    - 849
+                    - 1566
+                    - -22
+            -   location:
+                    - 849
+                    - 1566
+                    - -21
+            -   location:
+                    - 849
+                    - 1567
+                    - -22
+            -   location:
+                    - 849
+                    - 1568
+                    - -22
+    -   type: Static
+        arguments: (Hue = 0x455)
+        description: necklace
+        item_id: 7944
+        placements:
+            -   location:
+                    - 850
+                    - 1570
+                    - -22
+            -   location:
+                    - 860
+                    - 1570
+                    - -28
+    -   type: Static
+        arguments: ''
+        description: silver necklace
+        item_id: 7946
+        placements:
+            -   location:
+                    - 850
+                    - 1565
+                    - -21
+            -   location:
+                    - 855
+                    - 1572
+                    - -22
+            -   location:
+                    - 858
+                    - 1573
+                    - -22
+    -   type: LocalizedStatic
+        arguments: (LabelNumber = 1016452; Hue=0x964)
+        description: wisp
+        item_id: 8448
+        placements:
+            -   location:
+                    - 890
+                    - 1498
+                    - 14
+            -   location:
+                    - 890
+                    - 1515
+                    - 14
+            -   location:
+                    - 896
+                    - 1504
+                    - 14
+            -   location:
+                    - 896
+                    - 1511
+                    - 14
+            -   location:
+                    - 903
+                    - 1504
+                    - 14
+            -   location:
+                    - 903
+                    - 1511
+                    - 14
+            -   location:
+                    - 907
+                    - 1498
+                    - 14
+            -   location:
+                    - 907
+                    - 1515
+                    - 14
+    -   type: LocalizedStatic
+        arguments: (LabelNumber = 1016452; Hue=0x966)
+        description: wisp
+        item_id: 8448
+        placements:
+            -   location:
+                    - 849
+                    - 1562
+                    - -16
+            -   location:
+                    - 849
+                    - 1572
+                    - -16
+            -   location:
+                    - 861
+                    - 1562
+                    - -16
+            -   location:
+                    - 861
+                    - 1572
+                    - -16
+            -   location:
+                    - 873
+                    - 1567
+                    - -16
+            -   location:
+                    - 873
+                    - 1575
+                    - -16
+            -   location:
+                    - 873
+                    - 1582
+                    - -16
+            -   location:
+                    - 880
+                    - 1582
+                    - -16
+            -   location:
+                    - 888
+                    - 1553
+                    - -16
+            -   location:
+                    - 888
+                    - 1582
+                    - -16
+            -   location:
+                    - 889
+                    - 1555
+                    - -16
+            -   location:
+                    - 889
+                    - 1557
+                    - -16
+            -   location:
+                    - 889
+                    - 1559
+                    - -16
+            -   location:
+                    - 894
+                    - 1554
+                    - -16
+            -   location:
+                    - 894
+                    - 1556
+                    - -16
+            -   location:
+                    - 894
+                    - 1558
+                    - -16
+            -   location:
+                    - 895
+                    - 1553
+                    - -16
+            -   location:
+                    - 896
+                    - 1582
+                    - -16
+            -   location:
+                    - 902
+                    - 1559
+                    - -16
+            -   location:
+                    - 902
+                    - 1567
+                    - -16
+            -   location:
+                    - 902
+                    - 1575
+                    - -16
+    -   type: Blocker
+        arguments: ''
+        description: no draw
+        item_id: 8612
+        placements:
+            -   location:
+                    - 777
+                    - 1546
+                    - -28
+            -   location:
+                    - 777
+                    - 1549
+                    - -28
+            -   location:
+                    - 778
+                    - 1540
+                    - -28
+            -   location:
+                    - 778
+                    - 1542
+                    - -28
+            -   location:
+                    - 778
+                    - 1553
+                    - -28
+            -   location:
+                    - 778
+                    - 1555
+                    - -28
+            -   location:
+                    - 780
+                    - 1540
+                    - -28
+            -   location:
+                    - 780
+                    - 1542
+                    - -28
+            -   location:
+                    - 780
+                    - 1545
+                    - -28
+            -   location:
+                    - 780
+                    - 1547
+                    - -28
+            -   location:
+                    - 780
+                    - 1549
+                    - -28
+            -   location:
+                    - 780
+                    - 1551
+                    - -28
+            -   location:
+                    - 780
+                    - 1553
+                    - -28
+            -   location:
+                    - 780
+                    - 1555
+                    - -28
+            -   location:
+                    - 782
+                    - 1537
+                    - -28
+            -   location:
+                    - 782
+                    - 1539
+                    - -28
+            -   location:
+                    - 782
+                    - 1541
+                    - -28
+            -   location:
+                    - 782
+                    - 1543
+                    - -28
+            -   location:
+                    - 782
+                    - 1545
+                    - -28
+            -   location:
+                    - 782
+                    - 1547
+                    - -28
+            -   location:
+                    - 782
+                    - 1549
+                    - -28
+            -   location:
+                    - 782
+                    - 1551
+                    - -28
+            -   location:
+                    - 782
+                    - 1553
+                    - -28
+            -   location:
+                    - 782
+                    - 1555
+                    - -28
+            -   location:
+                    - 784
+                    - 1537
+                    - -28
+            -   location:
+                    - 784
+                    - 1539
+                    - -28
+            -   location:
+                    - 784
+                    - 1541
+                    - -28
+            -   location:
+                    - 784
+                    - 1543
+                    - -28
+            -   location:
+                    - 784
+                    - 1545
+                    - -28
+            -   location:
+                    - 784
+                    - 1547
+                    - -28
+            -   location:
+                    - 784
+                    - 1549
+                    - -28
+            -   location:
+                    - 784
+                    - 1551
+                    - -28
+            -   location:
+                    - 784
+                    - 1553
+                    - -28
+            -   location:
+                    - 784
+                    - 1555
+                    - -28
+            -   location:
+                    - 786
+                    - 1537
+                    - -28
+            -   location:
+                    - 786
+                    - 1539
+                    - -28
+            -   location:
+                    - 786
+                    - 1541
+                    - -28
+            -   location:
+                    - 786
+                    - 1543
+                    - -28
+            -   location:
+                    - 786
+                    - 1545
+                    - -28
+            -   location:
+                    - 786
+                    - 1547
+                    - -28
+            -   location:
+                    - 786
+                    - 1549
+                    - -28
+            -   location:
+                    - 786
+                    - 1551
+                    - -28
+            -   location:
+                    - 786
+                    - 1553
+                    - -28
+            -   location:
+                    - 786
+                    - 1555
+                    - -28
+            -   location:
+                    - 788
+                    - 1537
+                    - -28
+            -   location:
+                    - 788
+                    - 1539
+                    - -28
+            -   location:
+                    - 788
+                    - 1541
+                    - -28
+            -   location:
+                    - 788
+                    - 1543
+                    - -28
+            -   location:
+                    - 788
+                    - 1545
+                    - -28
+            -   location:
+                    - 788
+                    - 1547
+                    - -28
+            -   location:
+                    - 788
+                    - 1551
+                    - -28
+            -   location:
+                    - 788
+                    - 1553
+                    - -28
+            -   location:
+                    - 788
+                    - 1555
+                    - -28
+            -   location:
+                    - 788
+                    - 1557
+                    - -28
+            -   location:
+                    - 790
+                    - 1545
+                    - -28
+            -   location:
+                    - 790
+                    - 1547
+                    - -28
+            -   location:
+                    - 790
+                    - 1551
+                    - -28
+            -   location:
+                    - 790
+                    - 1553
+                    - -28
+            -   location:
+                    - 790
+                    - 1555
+                    - -28
+            -   location:
+                    - 790
+                    - 1557
+                    - -28
+            -   location:
+                    - 791
+                    - 1551
+                    - -28
+            -   location:
+                    - 844
+                    - 1433
+                    - -28
+            -   location:
+                    - 844
+                    - 1438
+                    - -28
+            -   location:
+                    - 845
+                    - 1433
+                    - -28
+            -   location:
+                    - 845
+                    - 1438
+                    - -28
+            -   location:
+                    - 846
+                    - 1433
+                    - -28
+            -   location:
+                    - 846
+                    - 1438
+                    - -28
+            -   location:
+                    - 847
+                    - 1433
+                    - -28
+            -   location:
+                    - 847
+                    - 1438
+                    - -28
+            -   location:
+                    - 848
+                    - 1432
+                    - -28
+            -   location:
+                    - 848
+                    - 1433
+                    - -28
+            -   location:
+                    - 848
+                    - 1438
+                    - -28
+            -   location:
+                    - 848
+                    - 1439
+                    - -28

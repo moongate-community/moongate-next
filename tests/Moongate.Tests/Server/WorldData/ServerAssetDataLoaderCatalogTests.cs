@@ -1,4 +1,3 @@
-using Moongate.Core.Geometry;
 using Moongate.Server.Data.World;
 using Moongate.Server.Services.World;
 using Moongate.Server.Services.WorldData;
@@ -8,6 +7,14 @@ namespace Moongate.Tests.Server.WorldData;
 public sealed class ServerAssetDataLoaderCatalogTests : IDisposable
 {
     private readonly string _dataDirectory = Path.Combine(Path.GetTempPath(), $"mg-catalog-loader-{Guid.NewGuid():N}");
+
+    public void Dispose()
+    {
+        if (Directory.Exists(_dataDirectory))
+        {
+            Directory.Delete(_dataDirectory, true);
+        }
+    }
 
     [Fact]
     public void LoadCatalogs_WithCatalogYaml_LoadsAllCatalogFamilies()
@@ -41,7 +48,7 @@ public sealed class ServerAssetDataLoaderCatalogTests : IDisposable
         var teleporter = Assert.Single(teleporters.GetAllEntries());
         Assert.Equal(0, teleporter.SourceMapId);
         Assert.Equal(1, teleporter.DestinationMapId);
-        Assert.True(teleporters.TryGetEntryAtLocation(0, new Point3D(10, 20, 0), out _));
+        Assert.True(teleporters.TryGetEntryAtLocation(0, new(10, 20, 0), out _));
 
         var region = Assert.Single(regions.GetAllEntries());
         Assert.Equal("TownRegion", region.Type);
@@ -57,13 +64,13 @@ public sealed class ServerAssetDataLoaderCatalogTests : IDisposable
         Assert.Equal(1, weatherEntry.Id);
         Assert.Equal("Desert", weatherEntry.Name);
         Assert.Equal(7, weatherEntry.RainChance);
-        Assert.Equal(new WeatherRange(11, 22), weatherEntry.RainIntensity);
+        Assert.Equal(new(11, 22), weatherEntry.RainIntensity);
         Assert.Equal(3, weatherEntry.RainTemperatureDrop);
         Assert.Equal(4, weatherEntry.SnowChance);
-        Assert.Equal(new WeatherRange(5, 6), weatherEntry.SnowIntensity);
+        Assert.Equal(new(5, 6), weatherEntry.SnowIntensity);
         Assert.Equal(2, weatherEntry.SnowThreshold);
         Assert.Equal(8, weatherEntry.StormChance);
-        Assert.Equal(new WeatherRange(9, 10), weatherEntry.StormIntensity);
+        Assert.Equal(new(9, 10), weatherEntry.StormIntensity);
         Assert.Equal(12, weatherEntry.StormTemperatureDrop);
         Assert.Equal(31, weatherEntry.MaxTemperature);
         Assert.Equal(13, weatherEntry.MinTemperature);
@@ -123,7 +130,7 @@ public sealed class ServerAssetDataLoaderCatalogTests : IDisposable
         Assert.Equal(99, decoration.ItemId);
         Assert.Equal("Hue=0x482", decoration.Parameters["arguments"]);
         Assert.True(decoration.Target.HasValue);
-        Assert.Equal(new Point3D(1518, 1671, 21), decoration.Target.Value);
+        Assert.Equal(new(1518, 1671, 21), decoration.Target.Value);
         Assert.Equal("sample note", decoration.Extra);
 
         Assert.Equal(2, mounts.GetAllEntries().Count);
@@ -360,13 +367,5 @@ public sealed class ServerAssetDataLoaderCatalogTests : IDisposable
         Assert.False(string.IsNullOrWhiteSpace(directory));
         Directory.CreateDirectory(directory);
         File.WriteAllText(path, contents);
-    }
-
-    public void Dispose()
-    {
-        if (Directory.Exists(_dataDirectory))
-        {
-            Directory.Delete(_dataDirectory, true);
-        }
     }
 }

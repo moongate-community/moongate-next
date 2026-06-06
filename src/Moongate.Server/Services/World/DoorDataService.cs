@@ -40,9 +40,7 @@ public class DoorDataService : LazyDataService, IDoorDataService
     private List<DoorComponentEntry> _entries = [];
     private Dictionary<int, DoorToggleDefinition> _toggleByItemId = [];
 
-    public DoorDataService()
-    {
-    }
+    public DoorDataService() { }
 
     public DoorDataService(ServerAssetDataLoader loader)
     {
@@ -87,9 +85,7 @@ public class DoorDataService : LazyDataService, IDoorDataService
     }
 
     protected override void LoadCore()
-    {
-        _loader?.LoadDoors(this);
-    }
+        => _loader?.LoadDoors(this);
 
     private static Dictionary<int, DoorToggleDefinition> BuildToggleMap(IReadOnlyList<DoorComponentEntry> entries)
     {
@@ -138,7 +134,5 @@ public class DoorDataService : LazyDataService, IDoorDataService
     }
 
     private static Point3D InvertOffset(Point3D offset)
-    {
-        return new(-offset.X, -offset.Y, -offset.Z);
-    }
+        => new(-offset.X, -offset.Y, -offset.Z);
 }

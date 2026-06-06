@@ -7,6 +7,14 @@ public sealed class ServerAssetDataBootServiceTests : IDisposable
 {
     private readonly string _dataDirectory = Path.Combine(Path.GetTempPath(), $"mg-world-data-boot-{Guid.NewGuid():N}");
 
+    public void Dispose()
+    {
+        if (Directory.Exists(_dataDirectory))
+        {
+            Directory.Delete(_dataDirectory, true);
+        }
+    }
+
     [Fact]
     public async Task StartAsync_DoesNotForceWorldDataLoading()
     {
@@ -22,7 +30,7 @@ public sealed class ServerAssetDataBootServiceTests : IDisposable
             """
         );
 
-        var doors = new DoorDataService(new ServerAssetDataLoader(_dataDirectory));
+        var doors = new DoorDataService(new(_dataDirectory));
         var service = new ServerAssetDataBootService();
 
         await service.StartAsync(CancellationToken.None);
@@ -35,13 +43,5 @@ public sealed class ServerAssetDataBootServiceTests : IDisposable
         Assert.True(doors.IsLoaded);
 
         await service.StopAsync(CancellationToken.None);
-    }
-
-    public void Dispose()
-    {
-        if (Directory.Exists(_dataDirectory))
-        {
-            Directory.Delete(_dataDirectory, true);
-        }
     }
 }

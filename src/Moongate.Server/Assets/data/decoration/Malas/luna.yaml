@@ -1,19 +1,19 @@
 decoration:
-- type: AnkhNorth
-  arguments: (Hue = 0x47E)
-  description: Shrine of Wisdom
-  item_id: 4
-  placements:
-  - location:
-    - 975
-    - 508
-    - -30
-- type: ShrineOfWisdomAddon
-  arguments: ''
-  description: ''
-  item_id: 5315
-  placements:
-  - location:
-    - 975
-    - 509
-    - -30
+    -   type: AnkhNorth
+        arguments: (Hue = 0x47E)
+        description: Shrine of Wisdom
+        item_id: 4
+        placements:
+            -   location:
+                    - 975
+                    - 508
+                    - -30
+    -   type: ShrineOfWisdomAddon
+        arguments: ''
+        description: ''
+        item_id: 5315
+        placements:
+            -   location:
+                    - 975
+                    - 509
+                    - -30

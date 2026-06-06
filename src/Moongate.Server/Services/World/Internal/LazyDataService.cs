@@ -45,6 +45,8 @@ public abstract class LazyDataService : IDataService
         }
     }
 
+    protected abstract void LoadCore();
+
     protected void MarkLoaded()
     {
         lock (_loadSync)
@@ -55,8 +57,6 @@ public abstract class LazyDataService : IDataService
             }
         }
     }
-
-    protected abstract void LoadCore();
 
     private void LoadUnderLock()
     {

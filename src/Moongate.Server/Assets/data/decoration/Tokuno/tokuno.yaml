@@ -1,320 +1,320 @@
 decoration:
-- type: Static
-  arguments: ''
-  description: ankh
-  item_id: 2
-  placements:
-  - location:
-    - 296
-    - 712
-    - 55
-  - location:
-    - 780
-    - 1219
-    - 46
-  - location:
-    - 1042
-    - 508
-    - 15
-  - location:
-    - 1051
-    - 508
-    - 15
-- type: Static
-  arguments: ''
-  description: ankh
-  item_id: 3
-  placements:
-  - location:
-    - 296
-    - 711
-    - 55
-  - location:
-    - 780
-    - 1218
-    - 46
-  - location:
-    - 1042
-    - 507
-    - 15
-  - location:
-    - 1051
-    - 507
-    - 15
-- type: Static
-  arguments: ''
-  description: ankh
-  item_id: 4
-  placements:
-  - location:
-    - 717
-    - 1158
-    - 27
-- type: Static
-  arguments: ''
-  description: ankh
-  item_id: 5
-  placements:
-  - location:
-    - 718
-    - 1158
-    - 27
-- type: Backgammon
-  arguments: ''
-  description: backgammon board
-  item_id: 3612
-  placements:
-  - location:
-    - 691
-    - 1255
-    - 48
-- type: Backgammon
-  arguments: ''
-  description: backgammon game
-  item_id: 4013
-  placements:
-  - location:
-    - 668
-    - 1258
-    - 47
-- type: ArcheryButte
-  arguments: ''
-  description: archery butte
-  item_id: 4107
-  placements:
-  - location:
-    - 660
-    - 1193
-    - 25
-  - location:
-    - 663
-    - 1193
-    - 25
-- type: SpinningWheelEastAddon
-  arguments: ''
-  description: spinning wheel
-  item_id: 4121
-  placements:
-  - location:
-    - 742
-    - 1205
-    - 25
-  - location:
-    - 749
-    - 1203
-    - 25
-- type: LoomEastAddon
-  arguments: ''
-  description: upright loom
-  item_id: 4192
-  placements:
-  - location:
-    - 742
-    - 1208
-    - 25
-  - location:
-    - 742
-    - 1219
-    - 25
-  - location:
-    - 750
-    - 1208
-    - 25
-- type: LoomSouthAddon
-  arguments: ''
-  description: upright loom
-  item_id: 4193
-  placements:
-  - location:
-    - 746
-    - 1218
-    - 25
-  - location:
-    - 746
-    - 1213
-    - 25
-- type: TrainingDummy
-  arguments: ''
-  description: training dummy
-  item_id: 4212
-  placements:
-  - location:
-    - 662
-    - 1206
-    - 25
-  - location:
-    - 662
-    - 1212
-    - 25
-- type: LocalizedStatic
-  arguments: (LabelNumber = 1070790)
-  description: Valor -> Shrine of Isamu
-  item_id: 5303
-  placements:
-  - location:
-    - 1050
-    - 517
-    - 15
-- type: LocalizedStatic
-  arguments: (LabelNumber = 1070790)
-  description: Valor -> Shrine of Isamu
-  item_id: 5304
-  placements:
-  - location:
-    - 1050
-    - 518
-    - 15
-- type: LocalizedStatic
-  arguments: (LabelNumber = 1070790)
-  description: Valor -> Shrine of Isamu
-  item_id: 5305
-  placements:
-  - location:
-    - 1051
-    - 518
-    - 15
-- type: LocalizedStatic
-  arguments: (LabelNumber = 1070790)
-  description: Valor -> Shrine of Isamu
-  item_id: 5306
-  placements:
-  - location:
-    - 1051
-    - 517
-    - 15
-- type: Static
-  arguments: ''
-  description: bellows
-  item_id: 6522
-  placements:
-  - location:
-    - 767
-    - 1257
-    - 25
-  - location:
-    - 767
-    - 1262
-    - 25
-- type: Static
-  arguments: ''
-  description: bellows
-  item_id: 6525
-  placements:
-  - location:
-    - 767
-    - 1257
-    - 25
-- type: Static
-  arguments: (Light = Circle300)
-  description: forge
-  item_id: 6526
-  placements:
-  - location:
-    - 768
-    - 1257
-    - 25
-  - location:
-    - 768
-    - 1262
-    - 25
-- type: Static
-  arguments: (Light = Circle300)
-  description: forge
-  item_id: 6530
-  placements:
-  - location:
-    - 769
-    - 1257
-    - 25
-  - location:
-    - 769
-    - 1262
-    - 25
-- type: Static
-  arguments: ''
-  description: bellows
-  item_id: 6534
-  placements:
-  - location:
-    - 638
-    - 1204
-    - 52
-  - location:
-    - 638
-    - 1208
-    - 32
-- type: Static
-  arguments: (Light = Circle300)
-  description: forge
-  item_id: 6538
-  placements:
-  - location:
-    - 638
-    - 1205
-    - 52
-  - location:
-    - 638
-    - 1209
-    - 32
-- type: Static
-  arguments: (Light = Circle300)
-  description: forge
-  item_id: 6542
-  placements:
-  - location:
-    - 764
-    - 1258
-    - 25
-- type: Static
-  arguments: (Light = Circle300)
-  description: forge
-  item_id: 6545
-  placements:
-  - location:
-    - 764
-    - 1258
-    - 25
-- type: Static
-  arguments: ''
-  description: bellows
-  item_id: 6546
-  placements:
-  - location:
-    - 638
-    - 1207
-    - 52
-  - location:
-    - 638
-    - 1211
-    - 32
-- type: Static
-  arguments: (Light = Circle300)
-  description: forge
-  item_id: 6550
-  placements:
-  - location:
-    - 638
-    - 1206
-    - 52
-  - location:
-    - 638
-    - 1210
-    - 32
-- type: Static
-  arguments: (Light = Circle300)
-  description: forge
-  item_id: 6557
-  placements:
-  - location:
-    - 764
-    - 1257
-    - 25
-- type: LocalizedStatic
-  arguments: (LabelNumber = 1063344)
-  description: tower sculpture May the town of Zento prosper.  Memorial tree planted by Dept and maha.
-  item_id: 9242
-  placements:
-  - location:
-    - 748
-    - 1231
-    - 25
+    -   type: Static
+        arguments: ''
+        description: ankh
+        item_id: 2
+        placements:
+            -   location:
+                    - 296
+                    - 712
+                    - 55
+            -   location:
+                    - 780
+                    - 1219
+                    - 46
+            -   location:
+                    - 1042
+                    - 508
+                    - 15
+            -   location:
+                    - 1051
+                    - 508
+                    - 15
+    -   type: Static
+        arguments: ''
+        description: ankh
+        item_id: 3
+        placements:
+            -   location:
+                    - 296
+                    - 711
+                    - 55
+            -   location:
+                    - 780
+                    - 1218
+                    - 46
+            -   location:
+                    - 1042
+                    - 507
+                    - 15
+            -   location:
+                    - 1051
+                    - 507
+                    - 15
+    -   type: Static
+        arguments: ''
+        description: ankh
+        item_id: 4
+        placements:
+            -   location:
+                    - 717
+                    - 1158
+                    - 27
+    -   type: Static
+        arguments: ''
+        description: ankh
+        item_id: 5
+        placements:
+            -   location:
+                    - 718
+                    - 1158
+                    - 27
+    -   type: Backgammon
+        arguments: ''
+        description: backgammon board
+        item_id: 3612
+        placements:
+            -   location:
+                    - 691
+                    - 1255
+                    - 48
+    -   type: Backgammon
+        arguments: ''
+        description: backgammon game
+        item_id: 4013
+        placements:
+            -   location:
+                    - 668
+                    - 1258
+                    - 47
+    -   type: ArcheryButte
+        arguments: ''
+        description: archery butte
+        item_id: 4107
+        placements:
+            -   location:
+                    - 660
+                    - 1193
+                    - 25
+            -   location:
+                    - 663
+                    - 1193
+                    - 25
+    -   type: SpinningWheelEastAddon
+        arguments: ''
+        description: spinning wheel
+        item_id: 4121
+        placements:
+            -   location:
+                    - 742
+                    - 1205
+                    - 25
+            -   location:
+                    - 749
+                    - 1203
+                    - 25
+    -   type: LoomEastAddon
+        arguments: ''
+        description: upright loom
+        item_id: 4192
+        placements:
+            -   location:
+                    - 742
+                    - 1208
+                    - 25
+            -   location:
+                    - 742
+                    - 1219
+                    - 25
+            -   location:
+                    - 750
+                    - 1208
+                    - 25
+    -   type: LoomSouthAddon
+        arguments: ''
+        description: upright loom
+        item_id: 4193
+        placements:
+            -   location:
+                    - 746
+                    - 1218
+                    - 25
+            -   location:
+                    - 746
+                    - 1213
+                    - 25
+    -   type: TrainingDummy
+        arguments: ''
+        description: training dummy
+        item_id: 4212
+        placements:
+            -   location:
+                    - 662
+                    - 1206
+                    - 25
+            -   location:
+                    - 662
+                    - 1212
+                    - 25
+    -   type: LocalizedStatic
+        arguments: (LabelNumber = 1070790)
+        description: Valor -> Shrine of Isamu
+        item_id: 5303
+        placements:
+            -   location:
+                    - 1050
+                    - 517
+                    - 15
+    -   type: LocalizedStatic
+        arguments: (LabelNumber = 1070790)
+        description: Valor -> Shrine of Isamu
+        item_id: 5304
+        placements:
+            -   location:
+                    - 1050
+                    - 518
+                    - 15
+    -   type: LocalizedStatic
+        arguments: (LabelNumber = 1070790)
+        description: Valor -> Shrine of Isamu
+        item_id: 5305
+        placements:
+            -   location:
+                    - 1051
+                    - 518
+                    - 15
+    -   type: LocalizedStatic
+        arguments: (LabelNumber = 1070790)
+        description: Valor -> Shrine of Isamu
+        item_id: 5306
+        placements:
+            -   location:
+                    - 1051
+                    - 517
+                    - 15
+    -   type: Static
+        arguments: ''
+        description: bellows
+        item_id: 6522
+        placements:
+            -   location:
+                    - 767
+                    - 1257
+                    - 25
+            -   location:
+                    - 767
+                    - 1262
+                    - 25
+    -   type: Static
+        arguments: ''
+        description: bellows
+        item_id: 6525
+        placements:
+            -   location:
+                    - 767
+                    - 1257
+                    - 25
+    -   type: Static
+        arguments: (Light = Circle300)
+        description: forge
+        item_id: 6526
+        placements:
+            -   location:
+                    - 768
+                    - 1257
+                    - 25
+            -   location:
+                    - 768
+                    - 1262
+                    - 25
+    -   type: Static
+        arguments: (Light = Circle300)
+        description: forge
+        item_id: 6530
+        placements:
+            -   location:
+                    - 769
+                    - 1257
+                    - 25
+            -   location:
+                    - 769
+                    - 1262
+                    - 25
+    -   type: Static
+        arguments: ''
+        description: bellows
+        item_id: 6534
+        placements:
+            -   location:
+                    - 638
+                    - 1204
+                    - 52
+            -   location:
+                    - 638
+                    - 1208
+                    - 32
+    -   type: Static
+        arguments: (Light = Circle300)
+        description: forge
+        item_id: 6538
+        placements:
+            -   location:
+                    - 638
+                    - 1205
+                    - 52
+            -   location:
+                    - 638
+                    - 1209
+                    - 32
+    -   type: Static
+        arguments: (Light = Circle300)
+        description: forge
+        item_id: 6542
+        placements:
+            -   location:
+                    - 764
+                    - 1258
+                    - 25
+    -   type: Static
+        arguments: (Light = Circle300)
+        description: forge
+        item_id: 6545
+        placements:
+            -   location:
+                    - 764
+                    - 1258
+                    - 25
+    -   type: Static
+        arguments: ''
+        description: bellows
+        item_id: 6546
+        placements:
+            -   location:
+                    - 638
+                    - 1207
+                    - 52
+            -   location:
+                    - 638
+                    - 1211
+                    - 32
+    -   type: Static
+        arguments: (Light = Circle300)
+        description: forge
+        item_id: 6550
+        placements:
+            -   location:
+                    - 638
+                    - 1206
+                    - 52
+            -   location:
+                    - 638
+                    - 1210
+                    - 32
+    -   type: Static
+        arguments: (Light = Circle300)
+        description: forge
+        item_id: 6557
+        placements:
+            -   location:
+                    - 764
+                    - 1257
+                    - 25
+    -   type: LocalizedStatic
+        arguments: (LabelNumber = 1063344)
+        description: tower sculpture May the town of Zento prosper.  Memorial tree planted by Dept and maha.
+        item_id: 9242
+        placements:
+            -   location:
+                    - 748
+                    - 1231
+                    - 25

@@ -11,9 +11,9 @@ namespace Moongate.AssetDataConverter;
 internal static class Program
 {
     private static readonly ISerializer _serializer = new SerializerBuilder()
-        .WithNamingConvention(UnderscoredNamingConvention.Instance)
-        .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitNull)
-        .Build();
+                                                      .WithNamingConvention(UnderscoredNamingConvention.Instance)
+                                                      .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitNull)
+                                                      .Build();
 
     public static int Main(string[] args)
     {
@@ -71,6 +71,33 @@ internal static class Program
         return new() { ["body"] = body };
     }
 
+    private static void ConvertCfgFiles(string root)
+    {
+        foreach (var path in Directory.EnumerateFiles(root, "*.cfg", SearchOption.AllDirectories)
+                                      .Order(StringComparer.Ordinal))
+        {
+            var relativePath = NormalizeRelativePath(root, path);
+            var converted = relativePath switch
+            {
+                "bodyTable.cfg" => ConvertBodyTable(path),
+                "containers/containers.cfg" => ConvertContainerLayouts(path),
+                "signs/signs.cfg" => ConvertSigns(path),
+                "support/uoconvert.cfg" => ConvertConversionSections(path),
+                _ when relativePath.StartsWith("decoration/", StringComparison.Ordinal) => ConvertDecoration(path),
+                _ => throw new InvalidOperationException($"Unsupported CFG asset: {relativePath}")
+            };
+
+            WriteYaml(Path.ChangeExtension(path, ".yaml"), converted);
+        }
+
+        var doorsPath = Path.Combine(root, "components", "doors.txt");
+
+        if (File.Exists(doorsPath))
+        {
+            WriteYaml(Path.ChangeExtension(doorsPath, ".yaml"), ConvertDoors(doorsPath));
+        }
+    }
+
     private static Dictionary<string, object?> ConvertContainerLayouts(string path)
     {
         var layouts = new List<Dictionary<string, object?>>();
@@ -85,10 +112,11 @@ internal static class Program
             }
 
             var itemIds = fields.Length > 3
-                ? fields[3].Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                           .Select(ParseInt)
-                           .ToList()
-                : [];
+                              ? fields[3]
+                                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                                .Select(ParseInt)
+                                .ToList()
+                              : [];
 
             layouts.Add(
                 new()
@@ -231,7 +259,8 @@ internal static class Program
         {
             var parts = line.Split('\t', StringSplitOptions.TrimEntries);
 
-            if (parts.Length < 10 || !int.TryParse(parts[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out var category))
+            if (parts.Length < 10 ||
+                !int.TryParse(parts[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out var category))
             {
                 continue;
             }
@@ -250,35 +279,10 @@ internal static class Program
         return new() { ["door"] = doors };
     }
 
-    private static void ConvertCfgFiles(string root)
-    {
-        foreach (var path in Directory.EnumerateFiles(root, "*.cfg", SearchOption.AllDirectories).Order(StringComparer.Ordinal))
-        {
-            var relativePath = NormalizeRelativePath(root, path);
-            var converted = relativePath switch
-            {
-                "bodyTable.cfg" => ConvertBodyTable(path),
-                "containers/containers.cfg" => ConvertContainerLayouts(path),
-                "signs/signs.cfg" => ConvertSigns(path),
-                "support/uoconvert.cfg" => ConvertConversionSections(path),
-                _ when relativePath.StartsWith("decoration/", StringComparison.Ordinal) => ConvertDecoration(path),
-                _ => throw new InvalidOperationException($"Unsupported CFG asset: {relativePath}")
-            };
-
-            WriteYaml(Path.ChangeExtension(path, ".yaml"), converted);
-        }
-
-        var doorsPath = Path.Combine(root, "components", "doors.txt");
-
-        if (File.Exists(doorsPath))
-        {
-            WriteYaml(Path.ChangeExtension(doorsPath, ".yaml"), ConvertDoors(doorsPath));
-        }
-    }
-
     private static void ConvertJsonFiles(string root)
     {
-        foreach (var path in Directory.EnumerateFiles(root, "*.json", SearchOption.AllDirectories).Order(StringComparer.Ordinal))
+        foreach (var path in Directory.EnumerateFiles(root, "*.json", SearchOption.AllDirectories)
+                                      .Order(StringComparer.Ordinal))
         {
             var relativePath = NormalizeRelativePath(root, path);
             var node = JsonNode.Parse(File.ReadAllText(path)) ??
@@ -388,15 +392,23 @@ internal static class Program
         throw new ArgumentException($"Missing required option {name}.");
     }
 
-    private static string NormalizeKey(string key)
+    private static bool IsIntegerToken(string value)
     {
-        return key == "$type" ? "type" : ToSnakeCase(key);
+        var normalized = value.Trim();
+
+        if (normalized.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+        {
+            return normalized.Length > 2 && normalized[2..].All(Uri.IsHexDigit);
+        }
+
+        return int.TryParse(normalized, NumberStyles.Integer, CultureInfo.InvariantCulture, out _);
     }
 
+    private static string NormalizeKey(string key)
+        => key == "$type" ? "type" : ToSnakeCase(key);
+
     private static string NormalizeRelativePath(string root, string path)
-    {
-        return Path.GetRelativePath(root, path).Replace('\\', '/');
-    }
+        => Path.GetRelativePath(root, path).Replace('\\', '/');
 
     private static Dictionary<string, object?> ParseDecorationHeader(
         string line,
@@ -460,10 +472,30 @@ internal static class Program
         }
     }
 
-    private static string[] SplitWhitespace(string line)
+    private static bool ShouldInsertUnderscore(string key, int index)
     {
-        return Regex.Split(line.Trim(), @"\s+").Where(part => part.Length > 0).ToArray();
+        if (index == 0)
+        {
+            return false;
+        }
+
+        var previous = key[index - 1];
+
+        if (!char.IsLetterOrDigit(previous) || previous == '_')
+        {
+            return false;
+        }
+
+        if (char.IsLower(previous) || char.IsDigit(previous))
+        {
+            return true;
+        }
+
+        return index + 1 < key.Length && char.IsLower(key[index + 1]);
     }
+
+    private static string[] SplitWhitespace(string line)
+        => Regex.Split(line.Trim(), @"\s+").Where(part => part.Length > 0).ToArray();
 
     private static string ToSnakeCase(string key)
     {
@@ -527,49 +559,15 @@ internal static class Program
 
         return element.ValueKind switch
         {
-            JsonValueKind.String => element.GetString(),
+            JsonValueKind.String                                         => element.GetString(),
             JsonValueKind.Number when element.TryGetInt32(out var value) => value,
             JsonValueKind.Number when element.TryGetInt64(out var value) => value,
-            JsonValueKind.Number => element.GetDouble(),
-            JsonValueKind.True => true,
-            JsonValueKind.False => false,
-            JsonValueKind.Null => null,
-            _ => element.ToString()
+            JsonValueKind.Number                                         => element.GetDouble(),
+            JsonValueKind.True                                           => true,
+            JsonValueKind.False                                          => false,
+            JsonValueKind.Null                                           => null,
+            _                                                            => element.ToString()
         };
-    }
-
-    private static bool IsIntegerToken(string value)
-    {
-        var normalized = value.Trim();
-
-        if (normalized.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
-        {
-            return normalized.Length > 2 && normalized[2..].All(Uri.IsHexDigit);
-        }
-
-        return int.TryParse(normalized, NumberStyles.Integer, CultureInfo.InvariantCulture, out _);
-    }
-
-    private static bool ShouldInsertUnderscore(string key, int index)
-    {
-        if (index == 0)
-        {
-            return false;
-        }
-
-        var previous = key[index - 1];
-
-        if (!char.IsLetterOrDigit(previous) || previous == '_')
-        {
-            return false;
-        }
-
-        if (char.IsLower(previous) || char.IsDigit(previous))
-        {
-            return true;
-        }
-
-        return index + 1 < key.Length && char.IsLower(key[index + 1]);
     }
 
     private static bool TryParsePlacement(string line, out Dictionary<string, object?> placement)

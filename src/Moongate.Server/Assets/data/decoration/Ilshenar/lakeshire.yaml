@@ -1,1255 +1,1255 @@
 decoration:
-- type: DarkWoodGate
-  arguments: (Facing = WestCW)
-  description: wooden gate
-  item_id: 2150
-  placements:
-  - location:
-    - 1219
-    - 1158
-    - -26
-  - location:
-    - 1221
-    - 1158
-    - -26
-  - location:
-    - 1223
-    - 1158
-    - -26
-- type: DarkWoodGate
-  arguments: (Facing = WestCCW)
-  description: wooden gate
-  item_id: 2154
-  placements:
-  - location:
-    - 1219
-    - 1161
-    - -26
-  - location:
-    - 1222
-    - 1161
-    - -26
-- type: Static
-  arguments: ''
-  description: bed
-  item_id: 2665
-  placements:
-  - location:
-    - 1199
-    - 1179
-    - -25
-  - location:
-    - 1224
-    - 1136
-    - -5
-- type: Static
-  arguments: (Hue = 0x541)
-  description: bed
-  item_id: 2667
-  placements:
-  - location:
-    - 1200
-    - 1179
-    - -25
-- type: Static
-  arguments: (Hue = 0x59B)
-  description: bed
-  item_id: 2667
-  placements:
-  - location:
-    - 1225
-    - 1136
-    - -5
-- type: Static
-  arguments: ''
-  description: table
-  item_id: 2933
-  placements:
-  - location:
-    - 1222
-    - 1130
-    - -25
-  - location:
-    - 1222
-    - 1134
-    - -25
-  - location:
-    - 1226
-    - 1130
-    - -25
-  - location:
-    - 1226
-    - 1134
-    - -25
-- type: Static
-  arguments: ''
-  description: table
-  item_id: 2934
-  placements:
-  - location:
-    - 1222
-    - 1129
-    - -25
-  - location:
-    - 1222
-    - 1133
-    - -25
-  - location:
-    - 1226
-    - 1129
-    - -25
-  - location:
-    - 1226
-    - 1133
-    - -25
-- type: Static
-  arguments: ''
-  description: broken chair
-  item_id: 3088
-  placements:
-  - location:
-    - 1220
-    - 1123
-    - -25
-  - location:
-    - 1223
-    - 1130
-    - -25
-- type: Static
-  arguments: ''
-  description: broken chair
-  item_id: 3089
-  placements:
-  - location:
-    - 1203
-    - 1174
-    - -25
-- type: Static
-  arguments: ''
-  description: broken armoire
-  item_id: 3090
-  placements:
-  - location:
-    - 1167
-    - 1166
-    - -25
-  - location:
-    - 1218
-    - 1150
-    - -25
-- type: Static
-  arguments: ''
-  description: broken armoire
-  item_id: 3091
-  placements:
-  - location:
-    - 1224
-    - 1123
-    - -25
-  - location:
-    - 1228
-    - 1123
-    - -5
-  - location:
-    - 1230
-    - 1133
-    - -5
-- type: Static
-  arguments: ''
-  description: ruined bookcase
-  item_id: 3092
-  placements:
-  - location:
-    - 1222
-    - 1123
-    - -25
-  - location:
-    - 1228
-    - 1123
-    - -25
-- type: Static
-  arguments: ''
-  description: ruined bookcase
-  item_id: 3093
-  placements:
-  - location:
-    - 1167
-    - 1162
-    - -25
-  - location:
-    - 1167
-    - 1164
-    - -25
-  - location:
-    - 1199
-    - 1176
-    - -25
-  - location:
-    - 1218
-    - 1154
-    - -25
-  - location:
-    - 1224
-    - 1134
-    - -5
-- type: Static
-  arguments: ''
-  description: damaged books
-  item_id: 3094
-  placements:
-  - location:
-    - 1167
-    - 1163
-    - -25
-  - location:
-    - 1221
-    - 1178
-    - -25
-  - location:
-    - 1223
-    - 1124
-    - -25
-  - location:
-    - 1225
-    - 1134
-    - -5
-- type: Static
-  arguments: ''
-  description: covered chair
-  item_id: 3095
-  placements:
-  - location:
-    - 1205
-    - 1173
-    - -25
-- type: Static
-  arguments: ''
-  description: broken chair
-  item_id: 3097
-  placements:
-  - location:
-    - 1167
-    - 1160
-    - -25
-  - location:
-    - 1218
-    - 1153
-    - -25
-- type: Static
-  arguments: ''
-  description: broken chair
-  item_id: 3098
-  placements:
-  - location:
-    - 1226
-    - 1131
-    - -25
-- type: Static
-  arguments: ''
-  description: broken chair
-  item_id: 3099
-  placements:
-  - location:
-    - 1199
-    - 1173
-    - -25
-- type: Static
-  arguments: ''
-  description: broken chair
-  item_id: 3100
-  placements:
-  - location:
-    - 1221
-    - 1175
-    - -25
-- type: Static
-  arguments: ''
-  description: broken clock
-  item_id: 3103
-  placements:
-  - location:
-    - 1199
-    - 1177
-    - -25
-- type: Static
-  arguments: ''
-  description: broken dresser
-  item_id: 3104
-  placements:
-  - location:
-    - 1224
-    - 1127
-    - -5
-- type: Static
-  arguments: ''
-  description: broken dresser
-  item_id: 3105
-  placements:
-  - location:
-    - 1224
-    - 1126
-    - -5
-- type: Static
-  arguments: ''
-  description: broken dresser
-  item_id: 3106
-  placements:
-  - location:
-    - 1203
-    - 1173
-    - -25
-- type: Static
-  arguments: ''
-  description: broken dresser
-  item_id: 3107
-  placements:
-  - location:
-    - 1202
-    - 1173
-    - -25
-- type: Static
-  arguments: ''
-  description: broken furniture
-  item_id: 3108
-  placements:
-  - location:
-    - 1201
-    - 1173
-    - -25
-  - location:
-    - 1229
-    - 1123
-    - -5
-- type: Static
-  arguments: ''
-  description: broken furniture
-  item_id: 3109
-  placements:
-  - location:
-    - 1218
-    - 1174
-    - -25
-- type: Static
-  arguments: ''
-  description: ruined bed
-  item_id: 3113
-  placements:
-  - location:
-    - 1226
-    - 1123
-    - -5
-- type: Static
-  arguments: ''
-  description: ruined bed
-  item_id: 3114
-  placements:
-  - location:
-    - 1225
-    - 1124
-    - -5
-- type: Static
-  arguments: ''
-  description: ruined bed
-  item_id: 3115
-  placements:
-  - location:
-    - 1224
-    - 1125
-    - -5
-- type: Static
-  arguments: ''
-  description: debris
-  item_id: 3118
-  placements:
-  - location:
-    - 1179
-    - 1156
-    - -25
-  - location:
-    - 1221
-    - 1182
-    - -22
-  - location:
-    - 1226
-    - 1123
-    - -25
-  - location:
-    - 1226
-    - 1133
-    - -5
-- type: Static
-  arguments: ''
-  description: debris
-  item_id: 3119
-  placements:
-  - location:
-    - 1177
-    - 1151
-    - -25
-  - location:
-    - 1177
-    - 1163
-    - -25
-  - location:
-    - 1181
-    - 1156
-    - -25
-  - location:
-    - 1205
-    - 1175
-    - -25
-  - location:
-    - 1207
-    - 1177
-    - -25
-  - location:
-    - 1226
-    - 1126
-    - -5
-  - location:
-    - 1229
-    - 1136
-    - -5
-- type: Static
-  arguments: ''
-  description: debris
-  item_id: 3120
-  placements:
-  - location:
-    - 1167
-    - 1167
-    - -25
-  - location:
-    - 1199
-    - 1178
-    - -25
-  - location:
-    - 1232
-    - 1129
-    - -25
-- type: Static
-  arguments: ''
-  description: sheets
-  item_id: 3123
-  placements:
-  - location:
-    - 1223
-    - 1176
-    - -25
-- type: Static
-  arguments: ''
-  description: sheets
-  item_id: 3124
-  placements:
-  - location:
-    - 1222
-    - 1176
-    - -25
-- type: Static
-  arguments: ''
-  description: sheets
-  item_id: 3125
-  placements:
-  - location:
-    - 1223
-    - 1174
-    - -25
-  - location:
-    - 1223
-    - 1175
-    - -25
-- type: Static
-  arguments: ''
-  description: sheets
-  item_id: 3126
-  placements:
-  - location:
-    - 1222
-    - 1174
-    - -25
-  - location:
-    - 1222
-    - 1175
-    - -25
-- type: Static
-  arguments: ''
-  description: grasses
-  item_id: 3244
-  placements:
-  - location:
-    - 1208
-    - 1159
-    - -25
-- type: Static
-  arguments: ''
-  description: grasses
-  item_id: 3245
-  placements:
-  - location:
-    - 1196
-    - 1163
-    - -25
-- type: Static
-  arguments: ''
-  description: grasses
-  item_id: 3247
-  placements:
-  - location:
-    - 1208
-    - 1174
-    - -25
-- type: Static
-  arguments: ''
-  description: grasses
-  item_id: 3248
-  placements:
-  - location:
-    - 1204
-    - 1164
-    - -25
-  - location:
-    - 1228
-    - 1157
-    - -25
-- type: Static
-  arguments: ''
-  description: grasses
-  item_id: 3249
-  placements:
-  - location:
-    - 1218
-    - 1182
-    - -25
-  - location:
-    - 1220
-    - 1139
-    - -25
-  - location:
-    - 1225
-    - 1182
-    - -25
-  - location:
-    - 1226
-    - 1139
-    - -25
-- type: Static
-  arguments: ''
-  description: grasses
-  item_id: 3251
-  placements:
-  - location:
-    - 1230
-    - 1150
-    - -25
-- type: Static
-  arguments: ''
-  description: grasses
-  item_id: 3253
-  placements:
-  - location:
-    - 1214
-    - 1185
-    - -25
-  - location:
-    - 1229
-    - 1139
-    - -25
-- type: Static
-  arguments: ''
-  description: grasses
-  item_id: 3254
-  placements:
-  - location:
-    - 1212
-    - 1169
-    - -25
-  - location:
-    - 1219
-    - 1135
-    - -25
-  - location:
-    - 1227
-    - 1183
-    - -25
-- type: Static
-  arguments: ''
-  description: vines
-  item_id: 3307
-  placements:
-  - location:
-    - 1223
-    - 1182
-    - -25
-- type: Static
-  arguments: ''
-  description: vines
-  item_id: 3308
-  placements:
-  - location:
-    - 1220
-    - 1182
-    - -25
-  - location:
-    - 1221
-    - 1182
-    - -25
-  - location:
-    - 1226
-    - 1182
-    - -25
-- type: Static
-  arguments: ''
-  description: vines
-  item_id: 3309
-  placements:
-  - location:
-    - 1218
-    - 1182
-    - -25
-  - location:
-    - 1221
-    - 1173
-    - -25
-  - location:
-    - 1224
-    - 1182
-    - -25
-- type: Static
-  arguments: ''
-  description: vines
-  item_id: 3311
-  placements:
-  - location:
-    - 1227
-    - 1175
-    - -25
-- type: Static
-  arguments: ''
-  description: vines
-  item_id: 3312
-  placements:
-  - location:
-    - 1227
-    - 1176
-    - -25
-- type: Static
-  arguments: ''
-  description: vines
-  item_id: 3313
-  placements:
-  - location:
-    - 1227
-    - 1177
-    - -25
-- type: Static
-  arguments: ''
-  description: apple tree
-  item_id: 3476
-  placements:
-  - location:
-    - 1175
-    - 1173
-    - -25
-  - location:
-    - 1180
-    - 1177
-    - -25
-  - location:
-    - 1182
-    - 1186
-    - -25
-- type: Static
-  arguments: ''
-  description: apple tree
-  item_id: 3478
-  placements:
-  - location:
-    - 1175
-    - 1173
-    - -25
-  - location:
-    - 1180
-    - 1177
-    - -25
-  - location:
-    - 1182
-    - 1186
-    - -25
-- type: Static
-  arguments: ''
-  description: apple tree
-  item_id: 3480
-  placements:
-  - location:
-    - 1172
-    - 1179
-    - -25
-  - location:
-    - 1175
-    - 1187
-    - -25
-  - location:
-    - 1185
-    - 1182
-    - -25
-- type: Static
-  arguments: ''
-  description: apple tree
-  item_id: 3482
-  placements:
-  - location:
-    - 1172
-    - 1179
-    - -25
-  - location:
-    - 1175
-    - 1187
-    - -25
-  - location:
-    - 1185
-    - 1182
-    - -25
-- type: Static
-  arguments: ''
-  description: peach tree
-  item_id: 3484
-  placements:
-  - location:
-    - 1174
-    - 1200
-    - -25
-  - location:
-    - 1175
-    - 1192
-    - -25
-- type: Static
-  arguments: ''
-  description: peach tree
-  item_id: 3486
-  placements:
-  - location:
-    - 1174
-    - 1200
-    - -25
-  - location:
-    - 1175
-    - 1192
-    - -25
-- type: Static
-  arguments: ''
-  description: pear tree
-  item_id: 3492
-  placements:
-  - location:
-    - 1184
-    - 1195
-    - -25
-  - location:
-    - 1186
-    - 1197
-    - -25
-  - location:
-    - 1194
-    - 1185
-    - -25
-  - location:
-    - 1194
-    - 1198
-    - -25
-- type: Static
-  arguments: ''
-  description: pear tree
-  item_id: 3494
-  placements:
-  - location:
-    - 1184
-    - 1195
-    - -25
-  - location:
-    - 1186
-    - 1197
-    - -25
-  - location:
-    - 1194
-    - 1185
-    - -25
-  - location:
-    - 1194
-    - 1198
-    - -25
-- type: Static
-  arguments: ''
-  description: pear tree
-  item_id: 3496
-  placements:
-  - location:
-    - 1188
-    - 1189
-    - -25
-  - location:
-    - 1194
-    - 1189
-    - -25
-- type: Static
-  arguments: ''
-  description: pear tree
-  item_id: 3498
-  placements:
-  - location:
-    - 1188
-    - 1189
-    - -25
-  - location:
-    - 1194
-    - 1189
-    - -25
-- type: Static
-  arguments: ''
-  description: spiderweb
-  item_id: 3812
-  placements:
-  - location:
-    - 1218
-    - 1157
-    - -25
-- type: Static
-  arguments: ''
-  description: spiderweb
-  item_id: 3814
-  placements:
-  - location:
-    - 1224
-    - 1133
-    - -5
-- type: Static
-  arguments: ''
-  description: hay
-  item_id: 3892
-  placements:
-  - location:
-    - 1219
-    - 1160
-    - -25
-  - location:
-    - 1225
-    - 1160
-    - -25
-- type: Static
-  arguments: ''
-  description: garbage
-  item_id: 4334
-  placements:
-  - location:
-    - 1202
-    - 1179
-    - -25
-  - location:
-    - 1220
-    - 1133
-    - -25
-  - location:
-    - 1221
-    - 1140
-    - -25
-  - location:
-    - 1221
-    - 1177
-    - -25
-  - location:
-    - 1222
-    - 1151
-    - -25
-  - location:
-    - 1222
-    - 1160
-    - -25
-  - location:
-    - 1228
-    - 1125
-    - -25
-  - location:
-    - 1229
-    - 1152
-    - -25
-- type: Static
-  arguments: ''
-  description: garbage
-  item_id: 4335
-  placements:
-  - location:
-    - 1201
-    - 1174
-    - -25
-  - location:
-    - 1220
-    - 1154
-    - -25
-  - location:
-    - 1227
-    - 1145
-    - -25
-  - location:
-    - 1228
-    - 1135
-    - -25
-- type: Static
-  arguments: ''
-  description: garbage
-  item_id: 4336
-  placements:
-  - location:
-    - 1223
-    - 1153
-    - -25
-  - location:
-    - 1224
-    - 1179
-    - -25
-  - location:
-    - 1229
-    - 1160
-    - -25
-- type: Static
-  arguments: ''
-  description: garbage
-  item_id: 4337
-  placements:
-  - location:
-    - 1220
-    - 1178
-    - -25
-  - location:
-    - 1221
-    - 1174
-    - -25
-- type: Static
-  arguments: ''
-  description: bellows
-  item_id: 6534
-  placements:
-  - location:
-    - 1228
-    - 1097
-    - -25
-  - location:
-    - 1228
-    - 1106
-    - -25
-- type: Static
-  arguments: ''
-  description: forge
-  item_id: 6538
-  placements:
-  - location:
-    - 1228
-    - 1098
-    - -25
-  - location:
-    - 1228
-    - 1107
-    - -25
-- type: Static
-  arguments: ''
-  description: forge
-  item_id: 6542
-  placements:
-  - location:
-    - 1228
-    - 1099
-    - -25
-  - location:
-    - 1228
-    - 1108
-    - -25
-- type: Static
-  arguments: ''
-  description: bellows
-  item_id: 6546
-  placements:
-  - location:
-    - 1229
-    - 1099
-    - -25
-  - location:
-    - 1229
-    - 1108
-    - -25
-- type: Static
-  arguments: ''
-  description: forge
-  item_id: 6550
-  placements:
-  - location:
-    - 1229
-    - 1098
-    - -25
-  - location:
-    - 1229
-    - 1107
-    - -25
-- type: Static
-  arguments: ''
-  description: forge
-  item_id: 6554
-  placements:
-  - location:
-    - 1229
-    - 1097
-    - -25
-  - location:
-    - 1229
-    - 1106
-    - -25
-- type: Static
-  arguments: ''
-  description: leaves
-  item_id: 6943
-  placements:
-  - location:
-    - 1222
-    - 1125
-    - -25
-  - location:
-    - 1228
-    - 1132
-    - -25
-- type: Static
-  arguments: ''
-  description: leaves
-  item_id: 6947
-  placements:
-  - location:
-    - 1218
-    - 1175
-    - -25
-  - location:
-    - 1232
-    - 1124
-    - -25
-- type: Static
-  arguments: ''
-  description: leaves
-  item_id: 6948
-  placements:
-  - location:
-    - 1218
-    - 1173
-    - -25
-  - location:
-    - 1232
-    - 1123
-    - -25
-- type: Static
-  arguments: ''
-  description: wall cracks
-  item_id: 7020
-  placements:
-  - location:
-    - 1195
-    - 1160
-    - -25
-  - location:
-    - 1227
-    - 1179
-    - -25
-- type: Static
-  arguments: ''
-  description: wall cracks
-  item_id: 7021
-  placements:
-  - location:
-    - 1195
-    - 1163
-    - -25
-- type: Static
-  arguments: ''
-  description: wall cracks
-  item_id: 7022
-  placements:
-  - location:
-    - 1205
-    - 1163
-    - -25
-- type: Static
-  arguments: ''
-  description: wall cracks
-  item_id: 7023
-  placements:
-  - location:
-    - 1202
-    - 1149
-    - -25
-  - location:
-    - 1204
-    - 1163
-    - -25
-  - location:
-    - 1208
-    - 1151
-    - -25
-  - location:
-    - 1218
-    - 1176
-    - -25
-- type: Static
-  arguments: ''
-  description: refuse
-  item_id: 7088
-  placements:
-  - location:
-    - 1196
-    - 1149
-    - -25
-- type: Static
-  arguments: ''
-  description: refuse
-  item_id: 7089
-  placements:
-  - location:
-    - 1196
-    - 1150
-    - -25
-- type: Static
-  arguments: ''
-  description: refuse
-  item_id: 7093
-  placements:
-  - location:
-    - 1195
-    - 1150
-    - -25
-- type: Static
-  arguments: ''
-  description: refuse
-  item_id: 7094
-  placements:
-  - location:
-    - 1195
-    - 1149
-    - -25
-- type: Static
-  arguments: ''
-  description: broken barrel
-  item_id: 7603
-  placements:
-  - location:
-    - 1196
-    - 1154
-    - -25
-- type: Static
-  arguments: ''
-  description: broken barrel
-  item_id: 7604
-  placements:
-  - location:
-    - 1196
-    - 1153
-    - -25
-- type: Static
-  arguments: ''
-  description: broken barrel
-  item_id: 7605
-  placements:
-  - location:
-    - 1195
-    - 1153
-    - -25
-- type: Static
-  arguments: ''
-  description: broken barrel
-  item_id: 7606
-  placements:
-  - location:
-    - 1195
-    - 1154
-    - -25
-- type: Static
-  arguments: ''
-  description: mud
-  item_id: 7681
-  placements:
-  - location:
-    - 1197
-    - 1157
-    - -25
-  - location:
-    - 1207
-    - 1155
-    - -25
-- type: Static
-  arguments: ''
-  description: mud
-  item_id: 7682
-  placements:
-  - location:
-    - 1200
-    - 1162
-    - -25
-  - location:
-    - 1201
-    - 1149
-    - -25
-  - location:
-    - 1204
-    - 1179
-    - -25
-  - location:
-    - 1205
-    - 1159
-    - -25
-  - location:
-    - 1220
-    - 1150
-    - -25
-  - location:
-    - 1228
-    - 1127
-    - -25
-- type: Static
-  arguments: ''
-  description: book
-  item_id: 7712
-  placements:
-  - location:
-    - 1168
-    - 1165
-    - -25
-  - location:
-    - 1200
-    - 1177
-    - -25
-- type: Static
-  arguments: ''
-  description: books
-  item_id: 7713
-  placements:
-  - location:
-    - 1168
-    - 1162
-    - -25
-  - location:
-    - 1202
-    - 1176
-    - -25
-- type: Static
-  arguments: ''
-  description: barrel staves
-  item_id: 7858
-  placements:
-  - location:
-    - 1195
-    - 1154
-    - -25
-- type: Static
-  arguments: ''
-  description: unfinished barrel
-  item_id: 7861
-  placements:
-  - location:
-    - 1195
-    - 1152
-    - -24
-  - location:
-    - 1225
-    - 1157
-    - -25
+    -   type: DarkWoodGate
+        arguments: (Facing = WestCW)
+        description: wooden gate
+        item_id: 2150
+        placements:
+            -   location:
+                    - 1219
+                    - 1158
+                    - -26
+            -   location:
+                    - 1221
+                    - 1158
+                    - -26
+            -   location:
+                    - 1223
+                    - 1158
+                    - -26
+    -   type: DarkWoodGate
+        arguments: (Facing = WestCCW)
+        description: wooden gate
+        item_id: 2154
+        placements:
+            -   location:
+                    - 1219
+                    - 1161
+                    - -26
+            -   location:
+                    - 1222
+                    - 1161
+                    - -26
+    -   type: Static
+        arguments: ''
+        description: bed
+        item_id: 2665
+        placements:
+            -   location:
+                    - 1199
+                    - 1179
+                    - -25
+            -   location:
+                    - 1224
+                    - 1136
+                    - -5
+    -   type: Static
+        arguments: (Hue = 0x541)
+        description: bed
+        item_id: 2667
+        placements:
+            -   location:
+                    - 1200
+                    - 1179
+                    - -25
+    -   type: Static
+        arguments: (Hue = 0x59B)
+        description: bed
+        item_id: 2667
+        placements:
+            -   location:
+                    - 1225
+                    - 1136
+                    - -5
+    -   type: Static
+        arguments: ''
+        description: table
+        item_id: 2933
+        placements:
+            -   location:
+                    - 1222
+                    - 1130
+                    - -25
+            -   location:
+                    - 1222
+                    - 1134
+                    - -25
+            -   location:
+                    - 1226
+                    - 1130
+                    - -25
+            -   location:
+                    - 1226
+                    - 1134
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: table
+        item_id: 2934
+        placements:
+            -   location:
+                    - 1222
+                    - 1129
+                    - -25
+            -   location:
+                    - 1222
+                    - 1133
+                    - -25
+            -   location:
+                    - 1226
+                    - 1129
+                    - -25
+            -   location:
+                    - 1226
+                    - 1133
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: broken chair
+        item_id: 3088
+        placements:
+            -   location:
+                    - 1220
+                    - 1123
+                    - -25
+            -   location:
+                    - 1223
+                    - 1130
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: broken chair
+        item_id: 3089
+        placements:
+            -   location:
+                    - 1203
+                    - 1174
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: broken armoire
+        item_id: 3090
+        placements:
+            -   location:
+                    - 1167
+                    - 1166
+                    - -25
+            -   location:
+                    - 1218
+                    - 1150
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: broken armoire
+        item_id: 3091
+        placements:
+            -   location:
+                    - 1224
+                    - 1123
+                    - -25
+            -   location:
+                    - 1228
+                    - 1123
+                    - -5
+            -   location:
+                    - 1230
+                    - 1133
+                    - -5
+    -   type: Static
+        arguments: ''
+        description: ruined bookcase
+        item_id: 3092
+        placements:
+            -   location:
+                    - 1222
+                    - 1123
+                    - -25
+            -   location:
+                    - 1228
+                    - 1123
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: ruined bookcase
+        item_id: 3093
+        placements:
+            -   location:
+                    - 1167
+                    - 1162
+                    - -25
+            -   location:
+                    - 1167
+                    - 1164
+                    - -25
+            -   location:
+                    - 1199
+                    - 1176
+                    - -25
+            -   location:
+                    - 1218
+                    - 1154
+                    - -25
+            -   location:
+                    - 1224
+                    - 1134
+                    - -5
+    -   type: Static
+        arguments: ''
+        description: damaged books
+        item_id: 3094
+        placements:
+            -   location:
+                    - 1167
+                    - 1163
+                    - -25
+            -   location:
+                    - 1221
+                    - 1178
+                    - -25
+            -   location:
+                    - 1223
+                    - 1124
+                    - -25
+            -   location:
+                    - 1225
+                    - 1134
+                    - -5
+    -   type: Static
+        arguments: ''
+        description: covered chair
+        item_id: 3095
+        placements:
+            -   location:
+                    - 1205
+                    - 1173
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: broken chair
+        item_id: 3097
+        placements:
+            -   location:
+                    - 1167
+                    - 1160
+                    - -25
+            -   location:
+                    - 1218
+                    - 1153
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: broken chair
+        item_id: 3098
+        placements:
+            -   location:
+                    - 1226
+                    - 1131
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: broken chair
+        item_id: 3099
+        placements:
+            -   location:
+                    - 1199
+                    - 1173
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: broken chair
+        item_id: 3100
+        placements:
+            -   location:
+                    - 1221
+                    - 1175
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: broken clock
+        item_id: 3103
+        placements:
+            -   location:
+                    - 1199
+                    - 1177
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: broken dresser
+        item_id: 3104
+        placements:
+            -   location:
+                    - 1224
+                    - 1127
+                    - -5
+    -   type: Static
+        arguments: ''
+        description: broken dresser
+        item_id: 3105
+        placements:
+            -   location:
+                    - 1224
+                    - 1126
+                    - -5
+    -   type: Static
+        arguments: ''
+        description: broken dresser
+        item_id: 3106
+        placements:
+            -   location:
+                    - 1203
+                    - 1173
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: broken dresser
+        item_id: 3107
+        placements:
+            -   location:
+                    - 1202
+                    - 1173
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: broken furniture
+        item_id: 3108
+        placements:
+            -   location:
+                    - 1201
+                    - 1173
+                    - -25
+            -   location:
+                    - 1229
+                    - 1123
+                    - -5
+    -   type: Static
+        arguments: ''
+        description: broken furniture
+        item_id: 3109
+        placements:
+            -   location:
+                    - 1218
+                    - 1174
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: ruined bed
+        item_id: 3113
+        placements:
+            -   location:
+                    - 1226
+                    - 1123
+                    - -5
+    -   type: Static
+        arguments: ''
+        description: ruined bed
+        item_id: 3114
+        placements:
+            -   location:
+                    - 1225
+                    - 1124
+                    - -5
+    -   type: Static
+        arguments: ''
+        description: ruined bed
+        item_id: 3115
+        placements:
+            -   location:
+                    - 1224
+                    - 1125
+                    - -5
+    -   type: Static
+        arguments: ''
+        description: debris
+        item_id: 3118
+        placements:
+            -   location:
+                    - 1179
+                    - 1156
+                    - -25
+            -   location:
+                    - 1221
+                    - 1182
+                    - -22
+            -   location:
+                    - 1226
+                    - 1123
+                    - -25
+            -   location:
+                    - 1226
+                    - 1133
+                    - -5
+    -   type: Static
+        arguments: ''
+        description: debris
+        item_id: 3119
+        placements:
+            -   location:
+                    - 1177
+                    - 1151
+                    - -25
+            -   location:
+                    - 1177
+                    - 1163
+                    - -25
+            -   location:
+                    - 1181
+                    - 1156
+                    - -25
+            -   location:
+                    - 1205
+                    - 1175
+                    - -25
+            -   location:
+                    - 1207
+                    - 1177
+                    - -25
+            -   location:
+                    - 1226
+                    - 1126
+                    - -5
+            -   location:
+                    - 1229
+                    - 1136
+                    - -5
+    -   type: Static
+        arguments: ''
+        description: debris
+        item_id: 3120
+        placements:
+            -   location:
+                    - 1167
+                    - 1167
+                    - -25
+            -   location:
+                    - 1199
+                    - 1178
+                    - -25
+            -   location:
+                    - 1232
+                    - 1129
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: sheets
+        item_id: 3123
+        placements:
+            -   location:
+                    - 1223
+                    - 1176
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: sheets
+        item_id: 3124
+        placements:
+            -   location:
+                    - 1222
+                    - 1176
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: sheets
+        item_id: 3125
+        placements:
+            -   location:
+                    - 1223
+                    - 1174
+                    - -25
+            -   location:
+                    - 1223
+                    - 1175
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: sheets
+        item_id: 3126
+        placements:
+            -   location:
+                    - 1222
+                    - 1174
+                    - -25
+            -   location:
+                    - 1222
+                    - 1175
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: grasses
+        item_id: 3244
+        placements:
+            -   location:
+                    - 1208
+                    - 1159
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: grasses
+        item_id: 3245
+        placements:
+            -   location:
+                    - 1196
+                    - 1163
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: grasses
+        item_id: 3247
+        placements:
+            -   location:
+                    - 1208
+                    - 1174
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: grasses
+        item_id: 3248
+        placements:
+            -   location:
+                    - 1204
+                    - 1164
+                    - -25
+            -   location:
+                    - 1228
+                    - 1157
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: grasses
+        item_id: 3249
+        placements:
+            -   location:
+                    - 1218
+                    - 1182
+                    - -25
+            -   location:
+                    - 1220
+                    - 1139
+                    - -25
+            -   location:
+                    - 1225
+                    - 1182
+                    - -25
+            -   location:
+                    - 1226
+                    - 1139
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: grasses
+        item_id: 3251
+        placements:
+            -   location:
+                    - 1230
+                    - 1150
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: grasses
+        item_id: 3253
+        placements:
+            -   location:
+                    - 1214
+                    - 1185
+                    - -25
+            -   location:
+                    - 1229
+                    - 1139
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: grasses
+        item_id: 3254
+        placements:
+            -   location:
+                    - 1212
+                    - 1169
+                    - -25
+            -   location:
+                    - 1219
+                    - 1135
+                    - -25
+            -   location:
+                    - 1227
+                    - 1183
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: vines
+        item_id: 3307
+        placements:
+            -   location:
+                    - 1223
+                    - 1182
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: vines
+        item_id: 3308
+        placements:
+            -   location:
+                    - 1220
+                    - 1182
+                    - -25
+            -   location:
+                    - 1221
+                    - 1182
+                    - -25
+            -   location:
+                    - 1226
+                    - 1182
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: vines
+        item_id: 3309
+        placements:
+            -   location:
+                    - 1218
+                    - 1182
+                    - -25
+            -   location:
+                    - 1221
+                    - 1173
+                    - -25
+            -   location:
+                    - 1224
+                    - 1182
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: vines
+        item_id: 3311
+        placements:
+            -   location:
+                    - 1227
+                    - 1175
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: vines
+        item_id: 3312
+        placements:
+            -   location:
+                    - 1227
+                    - 1176
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: vines
+        item_id: 3313
+        placements:
+            -   location:
+                    - 1227
+                    - 1177
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: apple tree
+        item_id: 3476
+        placements:
+            -   location:
+                    - 1175
+                    - 1173
+                    - -25
+            -   location:
+                    - 1180
+                    - 1177
+                    - -25
+            -   location:
+                    - 1182
+                    - 1186
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: apple tree
+        item_id: 3478
+        placements:
+            -   location:
+                    - 1175
+                    - 1173
+                    - -25
+            -   location:
+                    - 1180
+                    - 1177
+                    - -25
+            -   location:
+                    - 1182
+                    - 1186
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: apple tree
+        item_id: 3480
+        placements:
+            -   location:
+                    - 1172
+                    - 1179
+                    - -25
+            -   location:
+                    - 1175
+                    - 1187
+                    - -25
+            -   location:
+                    - 1185
+                    - 1182
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: apple tree
+        item_id: 3482
+        placements:
+            -   location:
+                    - 1172
+                    - 1179
+                    - -25
+            -   location:
+                    - 1175
+                    - 1187
+                    - -25
+            -   location:
+                    - 1185
+                    - 1182
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: peach tree
+        item_id: 3484
+        placements:
+            -   location:
+                    - 1174
+                    - 1200
+                    - -25
+            -   location:
+                    - 1175
+                    - 1192
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: peach tree
+        item_id: 3486
+        placements:
+            -   location:
+                    - 1174
+                    - 1200
+                    - -25
+            -   location:
+                    - 1175
+                    - 1192
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: pear tree
+        item_id: 3492
+        placements:
+            -   location:
+                    - 1184
+                    - 1195
+                    - -25
+            -   location:
+                    - 1186
+                    - 1197
+                    - -25
+            -   location:
+                    - 1194
+                    - 1185
+                    - -25
+            -   location:
+                    - 1194
+                    - 1198
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: pear tree
+        item_id: 3494
+        placements:
+            -   location:
+                    - 1184
+                    - 1195
+                    - -25
+            -   location:
+                    - 1186
+                    - 1197
+                    - -25
+            -   location:
+                    - 1194
+                    - 1185
+                    - -25
+            -   location:
+                    - 1194
+                    - 1198
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: pear tree
+        item_id: 3496
+        placements:
+            -   location:
+                    - 1188
+                    - 1189
+                    - -25
+            -   location:
+                    - 1194
+                    - 1189
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: pear tree
+        item_id: 3498
+        placements:
+            -   location:
+                    - 1188
+                    - 1189
+                    - -25
+            -   location:
+                    - 1194
+                    - 1189
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: spiderweb
+        item_id: 3812
+        placements:
+            -   location:
+                    - 1218
+                    - 1157
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: spiderweb
+        item_id: 3814
+        placements:
+            -   location:
+                    - 1224
+                    - 1133
+                    - -5
+    -   type: Static
+        arguments: ''
+        description: hay
+        item_id: 3892
+        placements:
+            -   location:
+                    - 1219
+                    - 1160
+                    - -25
+            -   location:
+                    - 1225
+                    - 1160
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: garbage
+        item_id: 4334
+        placements:
+            -   location:
+                    - 1202
+                    - 1179
+                    - -25
+            -   location:
+                    - 1220
+                    - 1133
+                    - -25
+            -   location:
+                    - 1221
+                    - 1140
+                    - -25
+            -   location:
+                    - 1221
+                    - 1177
+                    - -25
+            -   location:
+                    - 1222
+                    - 1151
+                    - -25
+            -   location:
+                    - 1222
+                    - 1160
+                    - -25
+            -   location:
+                    - 1228
+                    - 1125
+                    - -25
+            -   location:
+                    - 1229
+                    - 1152
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: garbage
+        item_id: 4335
+        placements:
+            -   location:
+                    - 1201
+                    - 1174
+                    - -25
+            -   location:
+                    - 1220
+                    - 1154
+                    - -25
+            -   location:
+                    - 1227
+                    - 1145
+                    - -25
+            -   location:
+                    - 1228
+                    - 1135
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: garbage
+        item_id: 4336
+        placements:
+            -   location:
+                    - 1223
+                    - 1153
+                    - -25
+            -   location:
+                    - 1224
+                    - 1179
+                    - -25
+            -   location:
+                    - 1229
+                    - 1160
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: garbage
+        item_id: 4337
+        placements:
+            -   location:
+                    - 1220
+                    - 1178
+                    - -25
+            -   location:
+                    - 1221
+                    - 1174
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: bellows
+        item_id: 6534
+        placements:
+            -   location:
+                    - 1228
+                    - 1097
+                    - -25
+            -   location:
+                    - 1228
+                    - 1106
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: forge
+        item_id: 6538
+        placements:
+            -   location:
+                    - 1228
+                    - 1098
+                    - -25
+            -   location:
+                    - 1228
+                    - 1107
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: forge
+        item_id: 6542
+        placements:
+            -   location:
+                    - 1228
+                    - 1099
+                    - -25
+            -   location:
+                    - 1228
+                    - 1108
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: bellows
+        item_id: 6546
+        placements:
+            -   location:
+                    - 1229
+                    - 1099
+                    - -25
+            -   location:
+                    - 1229
+                    - 1108
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: forge
+        item_id: 6550
+        placements:
+            -   location:
+                    - 1229
+                    - 1098
+                    - -25
+            -   location:
+                    - 1229
+                    - 1107
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: forge
+        item_id: 6554
+        placements:
+            -   location:
+                    - 1229
+                    - 1097
+                    - -25
+            -   location:
+                    - 1229
+                    - 1106
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: leaves
+        item_id: 6943
+        placements:
+            -   location:
+                    - 1222
+                    - 1125
+                    - -25
+            -   location:
+                    - 1228
+                    - 1132
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: leaves
+        item_id: 6947
+        placements:
+            -   location:
+                    - 1218
+                    - 1175
+                    - -25
+            -   location:
+                    - 1232
+                    - 1124
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: leaves
+        item_id: 6948
+        placements:
+            -   location:
+                    - 1218
+                    - 1173
+                    - -25
+            -   location:
+                    - 1232
+                    - 1123
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: wall cracks
+        item_id: 7020
+        placements:
+            -   location:
+                    - 1195
+                    - 1160
+                    - -25
+            -   location:
+                    - 1227
+                    - 1179
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: wall cracks
+        item_id: 7021
+        placements:
+            -   location:
+                    - 1195
+                    - 1163
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: wall cracks
+        item_id: 7022
+        placements:
+            -   location:
+                    - 1205
+                    - 1163
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: wall cracks
+        item_id: 7023
+        placements:
+            -   location:
+                    - 1202
+                    - 1149
+                    - -25
+            -   location:
+                    - 1204
+                    - 1163
+                    - -25
+            -   location:
+                    - 1208
+                    - 1151
+                    - -25
+            -   location:
+                    - 1218
+                    - 1176
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: refuse
+        item_id: 7088
+        placements:
+            -   location:
+                    - 1196
+                    - 1149
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: refuse
+        item_id: 7089
+        placements:
+            -   location:
+                    - 1196
+                    - 1150
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: refuse
+        item_id: 7093
+        placements:
+            -   location:
+                    - 1195
+                    - 1150
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: refuse
+        item_id: 7094
+        placements:
+            -   location:
+                    - 1195
+                    - 1149
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: broken barrel
+        item_id: 7603
+        placements:
+            -   location:
+                    - 1196
+                    - 1154
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: broken barrel
+        item_id: 7604
+        placements:
+            -   location:
+                    - 1196
+                    - 1153
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: broken barrel
+        item_id: 7605
+        placements:
+            -   location:
+                    - 1195
+                    - 1153
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: broken barrel
+        item_id: 7606
+        placements:
+            -   location:
+                    - 1195
+                    - 1154
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: mud
+        item_id: 7681
+        placements:
+            -   location:
+                    - 1197
+                    - 1157
+                    - -25
+            -   location:
+                    - 1207
+                    - 1155
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: mud
+        item_id: 7682
+        placements:
+            -   location:
+                    - 1200
+                    - 1162
+                    - -25
+            -   location:
+                    - 1201
+                    - 1149
+                    - -25
+            -   location:
+                    - 1204
+                    - 1179
+                    - -25
+            -   location:
+                    - 1205
+                    - 1159
+                    - -25
+            -   location:
+                    - 1220
+                    - 1150
+                    - -25
+            -   location:
+                    - 1228
+                    - 1127
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: book
+        item_id: 7712
+        placements:
+            -   location:
+                    - 1168
+                    - 1165
+                    - -25
+            -   location:
+                    - 1200
+                    - 1177
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: books
+        item_id: 7713
+        placements:
+            -   location:
+                    - 1168
+                    - 1162
+                    - -25
+            -   location:
+                    - 1202
+                    - 1176
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: barrel staves
+        item_id: 7858
+        placements:
+            -   location:
+                    - 1195
+                    - 1154
+                    - -25
+    -   type: Static
+        arguments: ''
+        description: unfinished barrel
+        item_id: 7861
+        placements:
+            -   location:
+                    - 1195
+                    - 1152
+                    - -24
+            -   location:
+                    - 1225
+                    - 1157
+                    - -25

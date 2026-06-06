@@ -1,43 +1,43 @@
 spawn:
-- type: Spawner
-  guid: 076e8845-e42b-434d-8df6-380aaf7a3383
-  name: Spawner (122)
-  location:
-  - 3444
-  - 2556
-  - 30
-  map: Trammel
-  count: 3
-  min_delay: 00:05:00
-  max_delay: 00:10:00
-  team: 0
-  home_range: 3
-  walking_range: 3
-  entries:
-  - name: Cat
-    max_count: 3
-    probability: 100
-- type: Spawner
-  guid: af813f31-3e6a-4657-bd6d-640e0d74c328
-  name: Spawner (122)
-  location:
-  - 3487
-  - 2549
-  - 16
-  map: Trammel
-  count: 30
-  min_delay: 00:05:00
-  max_delay: 00:10:00
-  team: 0
-  home_range: 100
-  walking_range: 100
-  entries:
-  - name: Dog
-    max_count: 5
-    probability: 100
-  - name: Cat
-    max_count: 5
-    probability: 100
-  - name: Bird
-    max_count: 20
-    probability: 100
+    -   type: Spawner
+        guid: 076e8845-e42b-434d-8df6-380aaf7a3383
+        name: Spawner (122)
+        location:
+            - 3444
+            - 2556
+            - 30
+        map: Trammel
+        count: 3
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 3
+        walking_range: 3
+        entries:
+            -   name: Cat
+                max_count: 3
+                probability: 100
+    -   type: Spawner
+        guid: af813f31-3e6a-4657-bd6d-640e0d74c328
+        name: Spawner (122)
+        location:
+            - 3487
+            - 2549
+            - 16
+        map: Trammel
+        count: 30
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 100
+        walking_range: 100
+        entries:
+            -   name: Dog
+                max_count: 5
+                probability: 100
+            -   name: Cat
+                max_count: 5
+                probability: 100
+            -   name: Bird
+                max_count: 20
+                probability: 100

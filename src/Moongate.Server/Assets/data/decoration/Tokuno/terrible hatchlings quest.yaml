@@ -1,10 +1,10 @@
 decoration:
-- type: Spawner
-  arguments: (Spawn = AnsellaGryen; Count=1; HomeRange=0)
-  description: Ansella Gryen
-  item_id: 7955
-  placements:
-  - location:
-    - 760
-    - 1200
-    - 25
+    -   type: Spawner
+        arguments: (Spawn = AnsellaGryen; Count=1; HomeRange=0)
+        description: Ansella Gryen
+        item_id: 7955
+        placements:
+            -   location:
+                    - 760
+                    - 1200
+                    - 25

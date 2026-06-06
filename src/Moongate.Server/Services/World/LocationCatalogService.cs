@@ -14,9 +14,7 @@ public class LocationCatalogService : LazyDataService, ILocationCatalogService
     private readonly Lock _sync = new();
     private List<WorldLocationEntry> _locations = [];
 
-    public LocationCatalogService()
-    {
-    }
+    public LocationCatalogService() { }
 
     public LocationCatalogService(ServerAssetDataLoader loader)
     {
@@ -50,7 +48,5 @@ public class LocationCatalogService : LazyDataService, ILocationCatalogService
     }
 
     protected override void LoadCore()
-    {
-        _loader?.LoadLocations(this);
-    }
+        => _loader?.LoadLocations(this);
 }

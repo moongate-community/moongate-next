@@ -14,9 +14,7 @@ public class WeatherDataService : LazyDataService, IWeatherDataService
     private readonly Lock _sync = new();
     private List<WeatherEntry> _entries = [];
 
-    public WeatherDataService()
-    {
-    }
+    public WeatherDataService() { }
 
     public WeatherDataService(ServerAssetDataLoader loader)
     {
@@ -50,7 +48,5 @@ public class WeatherDataService : LazyDataService, IWeatherDataService
     }
 
     protected override void LoadCore()
-    {
-        _loader?.LoadWeather(this);
-    }
+        => _loader?.LoadWeather(this);
 }

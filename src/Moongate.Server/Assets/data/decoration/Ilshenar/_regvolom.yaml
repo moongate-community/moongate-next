@@ -1,61 +1,61 @@
 decoration:
-- type: MetalBox
-  arguments: (Hue = 0x96E)
-  description: metal box
-  item_id: 2472
-  placements:
-  - location:
-    - 1349
-    - 1030
-    - -5
-- type: Static
-  arguments: (Hue = 0x1)
-  description: marble floor
-  item_id: 1297
-  placements:
-  - location:
-    - 1362
-    - 1031
-    - -13
-  - location:
-    - 1363
-    - 1031
-    - -13
-  - location:
-    - 1364
-    - 1031
-    - -13
-- type: Static
-  arguments: ''
-  description: bottle
-  item_id: 3840
-  placements:
-  - location:
-    - 1378
-    - 1049
-    - -12
-- type: Static
-  arguments: (Hue = 0x961)
-  description: sandstone stairs
-  item_id: 1903
-  placements:
-  - location:
-    - 1980
-    - 1107
-    - -18
-  - location:
-    - 1981
-    - 1107
-    - -18
-  - location:
-    - 1982
-    - 1107
-    - -18
-  - location:
-    - 1983
-    - 1107
-    - -18
-  - location:
-    - 1984
-    - 1107
-    - -18
+    -   type: MetalBox
+        arguments: (Hue = 0x96E)
+        description: metal box
+        item_id: 2472
+        placements:
+            -   location:
+                    - 1349
+                    - 1030
+                    - -5
+    -   type: Static
+        arguments: (Hue = 0x1)
+        description: marble floor
+        item_id: 1297
+        placements:
+            -   location:
+                    - 1362
+                    - 1031
+                    - -13
+            -   location:
+                    - 1363
+                    - 1031
+                    - -13
+            -   location:
+                    - 1364
+                    - 1031
+                    - -13
+    -   type: Static
+        arguments: ''
+        description: bottle
+        item_id: 3840
+        placements:
+            -   location:
+                    - 1378
+                    - 1049
+                    - -12
+    -   type: Static
+        arguments: (Hue = 0x961)
+        description: sandstone stairs
+        item_id: 1903
+        placements:
+            -   location:
+                    - 1980
+                    - 1107
+                    - -18
+            -   location:
+                    - 1981
+                    - 1107
+                    - -18
+            -   location:
+                    - 1982
+                    - 1107
+                    - -18
+            -   location:
+                    - 1983
+                    - 1107
+                    - -18
+            -   location:
+                    - 1984
+                    - 1107
+                    - -18

@@ -1,197 +1,197 @@
 decoration:
-- type: Static
-  arguments: ''
-  description: no draw
-  item_id: 8612
-  placements:
-  - location:
-    - 752
-    - 492
-    - -64
-  - location:
-    - 757
-    - 493
-    - -64
-  - location:
-    - 753
-    - 492
-    - -64
-  - location:
-    - 755
-    - 492
-    - -64
-  - location:
-    - 756
-    - 492
-    - -64
-  - location:
-    - 757
-    - 492
-    - -64
-  - location:
-    - 752
-    - 493
-    - -64
-  - location:
-    - 757
-    - 490
-    - -64
-  - location:
-    - 753
-    - 493
-    - -64
-  - location:
-    - 754
-    - 493
-    - -64
-  - location:
-    - 755
-    - 493
-    - -64
-  - location:
-    - 752
-    - 491
-    - -64
-  - location:
-    - 754
-    - 491
-    - -64
-  - location:
-    - 755
-    - 490
-    - -64
-  - location:
-    - 753
-    - 491
-    - -64
-  - location:
-    - 756
-    - 490
-    - -64
-  - location:
-    - 752
-    - 489
-    - -64
-  - location:
-    - 753
-    - 489
-    - -64
-  - location:
-    - 756
-    - 493
-    - -64
-  - location:
-    - 755
-    - 489
-    - -64
-  - location:
-    - 756
-    - 489
-    - -64
-  - location:
-    - 757
-    - 489
-    - -64
-  - location:
-    - 754
-    - 489
-    - -64
-  - location:
-    - 755
-    - 491
-    - -64
-  - location:
-    - 752
-    - 490
-    - -64
-  - location:
-    - 754
-    - 490
-    - -64
-  - location:
-    - 756
-    - 491
-    - -64
-  - location:
-    - 753
-    - 490
-    - -64
-  - location:
-    - 757
-    - 491
-    - -64
-  - location:
-    - 754
-    - 492
-    - -64
-- type: Static
-  arguments: '(Name = In loving memory of Gwenno - You were my muse: I am your legacy.)'
-  description: memorial to Gwenno
-  item_id: 4485
-  placements:
-  - location:
-    - 753
-    - 493
-    - -64
-- type: Static
-  arguments: '(Name = In loving memory of Gwenno - You were my muse: I am your legacy.)'
-  description: memorial to Gwenno
-  item_id: 4486
-  placements:
-  - location:
-    - 755
-    - 493
-    - -64
-- type: Static
-  arguments: '(Name = In loving memory of Gwenno - You were my muse: I am your legacy.)'
-  description: memorial to Gwenno
-  item_id: 4487
-  placements:
-  - location:
-    - 756
-    - 492
-    - -64
-- type: Static
-  arguments: ''
-  description: rock
-  item_id: 6002
-  placements:
-  - location:
-    - 745
-    - 488
-    - -66
-  - location:
-    - 746
-    - 488
-    - -66
-- type: Static
-  arguments: ''
-  description: rock
-  item_id: 6001
-  placements:
-  - location:
-    - 745
-    - 489
-    - -66
-  - location:
-    - 746
-    - 489
-    - -66
-- type: Static
-  arguments: '(Name = In loving memory of Gwenno - You were my muse: I am your legacy.)'
-  description: memorial to Gwenno
-  item_id: 4489
-  placements:
-  - location:
-    - 757
-    - 489
-    - -64
-- type: Static
-  arguments: '(Name = In loving memory of Gwenno - You were my muse: I am your legacy.)'
-  description: memorial to Gwenno
-  item_id: 4488
-  placements:
-  - location:
-    - 757
-    - 491
-    - -64
+    -   type: Static
+        arguments: ''
+        description: no draw
+        item_id: 8612
+        placements:
+            -   location:
+                    - 752
+                    - 492
+                    - -64
+            -   location:
+                    - 757
+                    - 493
+                    - -64
+            -   location:
+                    - 753
+                    - 492
+                    - -64
+            -   location:
+                    - 755
+                    - 492
+                    - -64
+            -   location:
+                    - 756
+                    - 492
+                    - -64
+            -   location:
+                    - 757
+                    - 492
+                    - -64
+            -   location:
+                    - 752
+                    - 493
+                    - -64
+            -   location:
+                    - 757
+                    - 490
+                    - -64
+            -   location:
+                    - 753
+                    - 493
+                    - -64
+            -   location:
+                    - 754
+                    - 493
+                    - -64
+            -   location:
+                    - 755
+                    - 493
+                    - -64
+            -   location:
+                    - 752
+                    - 491
+                    - -64
+            -   location:
+                    - 754
+                    - 491
+                    - -64
+            -   location:
+                    - 755
+                    - 490
+                    - -64
+            -   location:
+                    - 753
+                    - 491
+                    - -64
+            -   location:
+                    - 756
+                    - 490
+                    - -64
+            -   location:
+                    - 752
+                    - 489
+                    - -64
+            -   location:
+                    - 753
+                    - 489
+                    - -64
+            -   location:
+                    - 756
+                    - 493
+                    - -64
+            -   location:
+                    - 755
+                    - 489
+                    - -64
+            -   location:
+                    - 756
+                    - 489
+                    - -64
+            -   location:
+                    - 757
+                    - 489
+                    - -64
+            -   location:
+                    - 754
+                    - 489
+                    - -64
+            -   location:
+                    - 755
+                    - 491
+                    - -64
+            -   location:
+                    - 752
+                    - 490
+                    - -64
+            -   location:
+                    - 754
+                    - 490
+                    - -64
+            -   location:
+                    - 756
+                    - 491
+                    - -64
+            -   location:
+                    - 753
+                    - 490
+                    - -64
+            -   location:
+                    - 757
+                    - 491
+                    - -64
+            -   location:
+                    - 754
+                    - 492
+                    - -64
+    -   type: Static
+        arguments: '(Name = In loving memory of Gwenno - You were my muse: I am your legacy.)'
+        description: memorial to Gwenno
+        item_id: 4485
+        placements:
+            -   location:
+                    - 753
+                    - 493
+                    - -64
+    -   type: Static
+        arguments: '(Name = In loving memory of Gwenno - You were my muse: I am your legacy.)'
+        description: memorial to Gwenno
+        item_id: 4486
+        placements:
+            -   location:
+                    - 755
+                    - 493
+                    - -64
+    -   type: Static
+        arguments: '(Name = In loving memory of Gwenno - You were my muse: I am your legacy.)'
+        description: memorial to Gwenno
+        item_id: 4487
+        placements:
+            -   location:
+                    - 756
+                    - 492
+                    - -64
+    -   type: Static
+        arguments: ''
+        description: rock
+        item_id: 6002
+        placements:
+            -   location:
+                    - 745
+                    - 488
+                    - -66
+            -   location:
+                    - 746
+                    - 488
+                    - -66
+    -   type: Static
+        arguments: ''
+        description: rock
+        item_id: 6001
+        placements:
+            -   location:
+                    - 745
+                    - 489
+                    - -66
+            -   location:
+                    - 746
+                    - 489
+                    - -66
+    -   type: Static
+        arguments: '(Name = In loving memory of Gwenno - You were my muse: I am your legacy.)'
+        description: memorial to Gwenno
+        item_id: 4489
+        placements:
+            -   location:
+                    - 757
+                    - 489
+                    - -64
+    -   type: Static
+        arguments: '(Name = In loving memory of Gwenno - You were my muse: I am your legacy.)'
+        description: memorial to Gwenno
+        item_id: 4488
+        placements:
+            -   location:
+                    - 757
+                    - 491
+                    - -64

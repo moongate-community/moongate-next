@@ -15,9 +15,7 @@ public class SignDataService : LazyDataService, ISignDataService
     private List<SignEntry> _entries = [];
     private Dictionary<int, List<SignEntry>> _entriesByMap = [];
 
-    public SignDataService()
-    {
-    }
+    public SignDataService() { }
 
     public SignDataService(ServerAssetDataLoader loader)
     {
@@ -61,18 +59,16 @@ public class SignDataService : LazyDataService, ISignDataService
         {
             _entries = snapshot;
             _entriesByMap = snapshot
-                .GroupBy(static entry => entry.MapId)
-                .ToDictionary(
-                    static grouping => grouping.Key,
-                    static grouping => grouping.ToList()
-                );
+                            .GroupBy(static entry => entry.MapId)
+                            .ToDictionary(
+                                static grouping => grouping.Key,
+                                static grouping => grouping.ToList()
+                            );
         }
 
         MarkLoaded();
     }
 
     protected override void LoadCore()
-    {
-        _loader?.LoadSigns(this);
-    }
+        => _loader?.LoadSigns(this);
 }

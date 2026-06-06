@@ -1,10 +1,10 @@
 decoration:
-- type: Teleporter
-  arguments: (PointDest = (5977, 169, 0))
-  description: teleporter
-  item_id: 7107
-  placements:
-  - location:
-    - 5905
-    - 97
-    - 0
+    -   type: Teleporter
+        arguments: (PointDest = (5977, 169, 0))
+        description: teleporter
+        item_id: 7107
+        placements:
+            -   location:
+                    - 5905
+                    - 97
+                    - 0

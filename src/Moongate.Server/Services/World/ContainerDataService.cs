@@ -15,9 +15,7 @@ public class ContainerDataService : LazyDataService, IContainerDataService
     private List<ContainerEntry> _containers = [];
     private List<ContainerLayoutEntry> _layouts = [];
 
-    public ContainerDataService()
-    {
-    }
+    public ContainerDataService() { }
 
     public ContainerDataService(ServerAssetDataLoader loader)
     {
@@ -75,7 +73,5 @@ public class ContainerDataService : LazyDataService, IContainerDataService
     }
 
     protected override void LoadCore()
-    {
-        _loader?.LoadContainers(this);
-    }
+        => _loader?.LoadContainers(this);
 }

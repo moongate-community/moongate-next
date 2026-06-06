@@ -1,5 +1,3 @@
-using Moongate.Core.Geometry;
-using Moongate.Server.Data.World;
 using Moongate.Server.Services.World;
 
 namespace Moongate.Tests.Server.WorldData;
@@ -16,7 +14,7 @@ public class DoorDataServiceTests
 
         service.SetEntries(
             [
-                new DoorComponentEntry(
+                new(
                     0,
                     0x06A5,
                     0x06A7,
@@ -35,16 +33,16 @@ public class DoorDataServiceTests
         Assert.True(service.TryGetToggleDefinition(closedItemId, out var closedDefinition));
         Assert.Equal(openedItemId, closedDefinition.NextItemId);
         Assert.True(closedDefinition.IsClosed);
-        Assert.Equal(new Point3D(-1, 0, 0), closedDefinition.Offset);
+        Assert.Equal(new(-1, 0, 0), closedDefinition.Offset);
 
         Assert.True(service.TryGetToggleDefinition(openedItemId, out var openedDefinition));
         Assert.Equal(closedItemId, openedDefinition.NextItemId);
         Assert.False(openedDefinition.IsClosed);
-        Assert.Equal(new Point3D(1, 0, 0), openedDefinition.Offset);
+        Assert.Equal(new(1, 0, 0), openedDefinition.Offset);
 
         Assert.True(service.TryGetToggleDefinition(0x06A4, out var legacyDefinition));
         Assert.Equal(openedItemId, legacyDefinition.NextItemId);
         Assert.True(legacyDefinition.IsClosed);
-        Assert.Equal(new Point3D(-1, 0, 0), legacyDefinition.Offset);
+        Assert.Equal(new(-1, 0, 0), legacyDefinition.Offset);
     }
 }

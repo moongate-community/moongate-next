@@ -1,627 +1,627 @@
 decoration:
-- type: Static
-  arguments: ''
-  description: oven
-  item_id: 1121
-  placements:
-  - location:
-    - 5195
-    - 4058
-    - 37
-- type: Static
-  arguments: (Light = WestBig)
-  description: oven
-  item_id: 1122
-  placements:
-  - location:
-    - 5195
-    - 4057
-    - 37
-- type: SandstoneFireplaceSouthAddon
-  arguments: ''
-  description: fireplace
-  item_id: 1147
-  placements:
-  - location:
-    - 5198
-    - 4054
-    - 37
-  - location:
-    - 5234
-    - 4014
-    - 37
-  - location:
-    - 5265
-    - 3977
-    - 41
-- type: StrongWoodDoor
-  arguments: (Facing = WestCW)
-  description: wooden door
-  item_id: 1765
-  placements:
-  - location:
-    - 5233
-    - 4027
-    - 37
-  - location:
-    - 5293
-    - 4003
-    - 40
-  - location:
-    - 5272
-    - 3987
-    - 37
-- type: StrongWoodDoor
-  arguments: (Facing = EastCCW)
-  description: wooden door
-  item_id: 1767
-  placements:
-  - location:
-    - 5273
-    - 3987
-    - 37
-- type: StrongWoodDoor
-  arguments: (Facing = SouthCW)
-  description: wooden door
-  item_id: 1773
-  placements:
-  - location:
-    - 5295
-    - 3998
-    - 40
-- type: StrongWoodDoor
-  arguments: (Facing = NorthCCW)
-  description: wooden door
-  item_id: 1775
-  placements:
-  - location:
-    - 5295
-    - 3997
-    - 40
-- type: StrongWoodDoor
-  arguments: (Facing = SouthCCW)
-  description: wooden door
-  item_id: 1777
-  placements:
-  - location:
-    - 5290
-    - 4008
-    - 40
-- type: StrongWoodDoor
-  arguments: (Facing = NorthCW)
-  description: wooden door
-  item_id: 1779
-  placements:
-  - location:
-    - 5290
-    - 4007
-    - 40
-- type: Static
-  arguments: ''
-  description: wooden fence
-  item_id: 2147
-  placements:
-  - location:
-    - 5251
-    - 4021
-    - 39
-  - location:
-    - 5252
-    - 4021
-    - 40
-  - location:
-    - 5253
-    - 4002
-    - 46
-  - location:
-    - 5253
-    - 4021
-    - 40
-  - location:
-    - 5254
-    - 4002
-    - 46
-  - location:
-    - 5254
-    - 4021
-    - 40
-  - location:
-    - 5255
-    - 4021
-    - 38
-- type: Static
-  arguments: ''
-  description: wooden fence
-  item_id: 2148
-  placements:
-  - location:
-    - 5250
-    - 4015
-    - 40
-  - location:
-    - 5250
-    - 4016
-    - 39
-  - location:
-    - 5250
-    - 4017
-    - 40
-  - location:
-    - 5250
-    - 4018
-    - 41
-  - location:
-    - 5250
-    - 4019
-    - 39
-  - location:
-    - 5250
-    - 4020
-    - 39
-  - location:
-    - 5250
-    - 4021
-    - 39
-- type: DarkWoodGate
-  arguments: (Facing = WestCW)
-  description: wooden gate
-  item_id: 2150
-  placements:
-  - location:
-    - 5287
-    - 4015
-    - 40
-  - location:
-    - 5297
-    - 4003
-    - 40
-  - location:
-    - 5301
-    - 4003
-    - 40
-- type: DarkWoodGate
-  arguments: (Facing = EastCCW)
-  description: wooden gate
-  item_id: 2152
-  placements:
-  - location:
-    - 5288
-    - 4015
-    - 40
-  - location:
-    - 5298
-    - 4003
-    - 40
-  - location:
-    - 5302
-    - 4003
-    - 40
-- type: DarkWoodGate
-  arguments: (Facing = WestCCW)
-  description: wooden gate
-  item_id: 2154
-  placements:
-  - location:
-    - 5292
-    - 4012
-    - 40
-  - location:
-    - 5297
-    - 4006
-    - 40
-  - location:
-    - 5297
-    - 4012
-    - 40
-  - location:
-    - 5301
-    - 4006
-    - 40
-  - location:
-    - 5301
-    - 4012
-    - 40
-- type: DarkWoodGate
-  arguments: (Facing = EastCW)
-  description: wooden gate
-  item_id: 2156
-  placements:
-  - location:
-    - 5293
-    - 4012
-    - 40
-  - location:
-    - 5298
-    - 4006
-    - 40
-  - location:
-    - 5298
-    - 4012
-    - 40
-  - location:
-    - 5302
-    - 4006
-    - 40
-  - location:
-    - 5302
-    - 4012
-    - 40
-- type: Static
-  arguments: ''
-  description: wooden fence
-  item_id: 2186
-  placements:
-  - location:
-    - 5251
-    - 4014
-    - 39
-  - location:
-    - 5256
-    - 4021
-    - 38
-  - location:
-    - 5257
-    - 4021
-    - 38
-- type: Static
-  arguments: ''
-  description: wooden fence
-  item_id: 2187
-  placements:
-  - location:
-    - 5251
-    - 4006
-    - 45
-  - location:
-    - 5251
-    - 4007
-    - 45
-  - location:
-    - 5279
-    - 4009
-    - 38
-  - location:
-    - 5279
-    - 4010
-    - 39
-- type: Static
-  arguments: ''
-  description: cauldron
-  item_id: 2421
-  placements:
-  - location:
-    - 5195
-    - 3996
-    - 37
-  - location:
-    - 5293
-    - 3986
-    - 37
-- type: HangingLantern
-  arguments: ''
-  description: hanging lantern
-  item_id: 2586
-  placements:
-  - location:
-    - 5179
-    - 4070
-    - 40
-- type: FancyDrawer
-  arguments: ''
-  description: chest of drawers
-  item_id: 2608
-  placements:
-  - location:
-    - 5199
-    - 4061
-    - 57
-- type: Drawer
-  arguments: ''
-  description: chest of drawers
-  item_id: 2612
-  placements:
-  - location:
-    - 5195
-    - 4066
-    - 57
-- type: FancyArmoire
-  arguments: ''
-  description: armoire
-  item_id: 2637
-  placements:
-  - location:
-    - 5202
-    - 4061
-    - 57
-- type: Armoire
-  arguments: ''
-  description: armoire
-  item_id: 2643
-  placements:
-  - location:
-    - 5195
-    - 4067
-    - 57
-- type: LibraryBookcase
-  arguments: ''
-  description: bookcase
-  item_id: 2715
-  placements:
-  - location:
-    - 5215
-    - 4007
-    - 37
-- type: FillableLargeCrate
-  arguments: ''
-  description: crate
-  item_id: 3645
-  placements:
-  - location:
-    - 5236
-    - 4021
-    - 37
-  - location:
-    - 5236
-    - 4021
-    - 40
-  - location:
-    - 5236
-    - 4022
-    - 37
-  - location:
-    - 5236
-    - 4022
-    - 40
-  - location:
-    - 5236
-    - 4023
-    - 37
-  - location:
-    - 5237
-    - 4020
-    - 57
-  - location:
-    - 5237
-    - 4021
-    - 57
-  - location:
-    - 5237
-    - 4022
-    - 57
-  - location:
-    - 5237
-    - 4023
-    - 57
-- type: WoodenChest
-  arguments: ''
-  description: wooden chest
-  item_id: 3650
-  placements:
-  - location:
-    - 5262
-    - 3980
-    - 38
-  - location:
-    - 5262
-    - 3982
-    - 38
-  - location:
-    - 5269
-    - 3977
-    - 37
-  - location:
-    - 5269
-    - 3986
-    - 36
-- type: WoodenChest
-  arguments: ''
-  description: wooden chest
-  item_id: 3651
-  placements:
-  - location:
-    - 5270
-    - 3971
-    - 37
-  - location:
-    - 5276
-    - 3971
-    - 37
-- type: Static
-  arguments: ''
-  description: pouch
-  item_id: 3705
-  placements:
-  - location:
-    - 5262
-    - 3984
-    - 42
-- type: Static
-  arguments: ''
-  description: water tub
-  item_id: 3707
-  placements:
-  - location:
-    - 5296
-    - 4013
-    - 40
-- type: Static
-  arguments: ''
-  description: empty tub
-  item_id: 3715
-  placements:
-  - location:
-    - 5291
-    - 4009
-    - 40
-  - location:
-    - 5291
-    - 4010
-    - 40
-  - location:
-    - 5296
-    - 4007
-    - 40
-- type: Static
-  arguments: ''
-  description: pickaxe
-  item_id: 3717
-  placements:
-  - location:
-    - 5230
-    - 4021
-    - 43
-  - location:
-    - 5288
-    - 3979
-    - 37
-- type: Static
-  arguments: ''
-  description: pitchfork
-  item_id: 3719
-  placements:
-  - location:
-    - 5287
-    - 3979
-    - 37
-- type: Static
-  arguments: (Light = Circle225)
-  description: fire pit
-  item_id: 4012
-  placements:
-  - location:
-    - 5195
-    - 3996
-    - 37
-  - location:
-    - 5285
-    - 3980
-    - 37
-  - location:
-    - 5293
-    - 3986
-    - 37
-  - location:
-    - 5295
-    - 3977
-    - 37
-- type: Static
-  arguments: ''
-  description: barrel
-  item_id: 4014
-  placements:
-  - location:
-    - 5230
-    - 4024
-    - 37
-  - location:
-    - 5230
-    - 4025
-    - 37
-  - location:
-    - 5291
-    - 4004
-    - 40
-  - location:
-    - 5291
-    - 4005
-    - 40
-  - location:
-    - 5291
-    - 4006
-    - 40
-- type: AnvilSouthAddon
-  arguments: ''
-  description: anvil
-  item_id: 4016
-  placements:
-  - location:
-    - 5228
-    - 4003
-    - 37
-  - location:
-    - 5228
-    - 4005
-    - 37
-  - location:
-    - 5235
-    - 4004
-    - 38
-  - location:
-    - 5235
-    - 4006
-    - 37
-- type: SpinningWheelSouthAddon
-  arguments: ''
-  description: spinning wheel
-  item_id: 4117
-  placements:
-  - location:
-    - 5235
-    - 4016
-    - 37
-- type: LoomEastAddon
-  arguments: ''
-  description: upright loom
-  item_id: 4192
-  placements:
-  - location:
-    - 5231
-    - 4015
-    - 37
-- type: Static
-  arguments: ''
-  description: bellows
-  item_id: 6523
-  placements:
-  - location:
-    - 5226
-    - 4004
-    - 37
-  - location:
-    - 5234
-    - 4005
-    - 37
-- type: Static
-  arguments: (Light = Circle300)
-  description: forge
-  item_id: 6526
-  placements:
-  - location:
-    - 5227
-    - 4004
-    - 37
-  - location:
-    - 5235
-    - 4005
-    - 37
-- type: Static
-  arguments: ''
-  description: bellows
-  item_id: 6558
-  placements:
-  - location:
-    - 5229
-    - 4004
-    - 37
-  - location:
-    - 5237
-    - 4005
-    - 37
-- type: Static
-  arguments: ''
-  description: forge
-  item_id: 6563
-  placements:
-  - location:
-    - 5236
-    - 4005
-    - 37
-- type: Static
-  arguments: ''
-  description: forge
-  item_id: 6564
-  placements:
-  - location:
-    - 5228
-    - 4004
-    - 37
+    -   type: Static
+        arguments: ''
+        description: oven
+        item_id: 1121
+        placements:
+            -   location:
+                    - 5195
+                    - 4058
+                    - 37
+    -   type: Static
+        arguments: (Light = WestBig)
+        description: oven
+        item_id: 1122
+        placements:
+            -   location:
+                    - 5195
+                    - 4057
+                    - 37
+    -   type: SandstoneFireplaceSouthAddon
+        arguments: ''
+        description: fireplace
+        item_id: 1147
+        placements:
+            -   location:
+                    - 5198
+                    - 4054
+                    - 37
+            -   location:
+                    - 5234
+                    - 4014
+                    - 37
+            -   location:
+                    - 5265
+                    - 3977
+                    - 41
+    -   type: StrongWoodDoor
+        arguments: (Facing = WestCW)
+        description: wooden door
+        item_id: 1765
+        placements:
+            -   location:
+                    - 5233
+                    - 4027
+                    - 37
+            -   location:
+                    - 5293
+                    - 4003
+                    - 40
+            -   location:
+                    - 5272
+                    - 3987
+                    - 37
+    -   type: StrongWoodDoor
+        arguments: (Facing = EastCCW)
+        description: wooden door
+        item_id: 1767
+        placements:
+            -   location:
+                    - 5273
+                    - 3987
+                    - 37
+    -   type: StrongWoodDoor
+        arguments: (Facing = SouthCW)
+        description: wooden door
+        item_id: 1773
+        placements:
+            -   location:
+                    - 5295
+                    - 3998
+                    - 40
+    -   type: StrongWoodDoor
+        arguments: (Facing = NorthCCW)
+        description: wooden door
+        item_id: 1775
+        placements:
+            -   location:
+                    - 5295
+                    - 3997
+                    - 40
+    -   type: StrongWoodDoor
+        arguments: (Facing = SouthCCW)
+        description: wooden door
+        item_id: 1777
+        placements:
+            -   location:
+                    - 5290
+                    - 4008
+                    - 40
+    -   type: StrongWoodDoor
+        arguments: (Facing = NorthCW)
+        description: wooden door
+        item_id: 1779
+        placements:
+            -   location:
+                    - 5290
+                    - 4007
+                    - 40
+    -   type: Static
+        arguments: ''
+        description: wooden fence
+        item_id: 2147
+        placements:
+            -   location:
+                    - 5251
+                    - 4021
+                    - 39
+            -   location:
+                    - 5252
+                    - 4021
+                    - 40
+            -   location:
+                    - 5253
+                    - 4002
+                    - 46
+            -   location:
+                    - 5253
+                    - 4021
+                    - 40
+            -   location:
+                    - 5254
+                    - 4002
+                    - 46
+            -   location:
+                    - 5254
+                    - 4021
+                    - 40
+            -   location:
+                    - 5255
+                    - 4021
+                    - 38
+    -   type: Static
+        arguments: ''
+        description: wooden fence
+        item_id: 2148
+        placements:
+            -   location:
+                    - 5250
+                    - 4015
+                    - 40
+            -   location:
+                    - 5250
+                    - 4016
+                    - 39
+            -   location:
+                    - 5250
+                    - 4017
+                    - 40
+            -   location:
+                    - 5250
+                    - 4018
+                    - 41
+            -   location:
+                    - 5250
+                    - 4019
+                    - 39
+            -   location:
+                    - 5250
+                    - 4020
+                    - 39
+            -   location:
+                    - 5250
+                    - 4021
+                    - 39
+    -   type: DarkWoodGate
+        arguments: (Facing = WestCW)
+        description: wooden gate
+        item_id: 2150
+        placements:
+            -   location:
+                    - 5287
+                    - 4015
+                    - 40
+            -   location:
+                    - 5297
+                    - 4003
+                    - 40
+            -   location:
+                    - 5301
+                    - 4003
+                    - 40
+    -   type: DarkWoodGate
+        arguments: (Facing = EastCCW)
+        description: wooden gate
+        item_id: 2152
+        placements:
+            -   location:
+                    - 5288
+                    - 4015
+                    - 40
+            -   location:
+                    - 5298
+                    - 4003
+                    - 40
+            -   location:
+                    - 5302
+                    - 4003
+                    - 40
+    -   type: DarkWoodGate
+        arguments: (Facing = WestCCW)
+        description: wooden gate
+        item_id: 2154
+        placements:
+            -   location:
+                    - 5292
+                    - 4012
+                    - 40
+            -   location:
+                    - 5297
+                    - 4006
+                    - 40
+            -   location:
+                    - 5297
+                    - 4012
+                    - 40
+            -   location:
+                    - 5301
+                    - 4006
+                    - 40
+            -   location:
+                    - 5301
+                    - 4012
+                    - 40
+    -   type: DarkWoodGate
+        arguments: (Facing = EastCW)
+        description: wooden gate
+        item_id: 2156
+        placements:
+            -   location:
+                    - 5293
+                    - 4012
+                    - 40
+            -   location:
+                    - 5298
+                    - 4006
+                    - 40
+            -   location:
+                    - 5298
+                    - 4012
+                    - 40
+            -   location:
+                    - 5302
+                    - 4006
+                    - 40
+            -   location:
+                    - 5302
+                    - 4012
+                    - 40
+    -   type: Static
+        arguments: ''
+        description: wooden fence
+        item_id: 2186
+        placements:
+            -   location:
+                    - 5251
+                    - 4014
+                    - 39
+            -   location:
+                    - 5256
+                    - 4021
+                    - 38
+            -   location:
+                    - 5257
+                    - 4021
+                    - 38
+    -   type: Static
+        arguments: ''
+        description: wooden fence
+        item_id: 2187
+        placements:
+            -   location:
+                    - 5251
+                    - 4006
+                    - 45
+            -   location:
+                    - 5251
+                    - 4007
+                    - 45
+            -   location:
+                    - 5279
+                    - 4009
+                    - 38
+            -   location:
+                    - 5279
+                    - 4010
+                    - 39
+    -   type: Static
+        arguments: ''
+        description: cauldron
+        item_id: 2421
+        placements:
+            -   location:
+                    - 5195
+                    - 3996
+                    - 37
+            -   location:
+                    - 5293
+                    - 3986
+                    - 37
+    -   type: HangingLantern
+        arguments: ''
+        description: hanging lantern
+        item_id: 2586
+        placements:
+            -   location:
+                    - 5179
+                    - 4070
+                    - 40
+    -   type: FancyDrawer
+        arguments: ''
+        description: chest of drawers
+        item_id: 2608
+        placements:
+            -   location:
+                    - 5199
+                    - 4061
+                    - 57
+    -   type: Drawer
+        arguments: ''
+        description: chest of drawers
+        item_id: 2612
+        placements:
+            -   location:
+                    - 5195
+                    - 4066
+                    - 57
+    -   type: FancyArmoire
+        arguments: ''
+        description: armoire
+        item_id: 2637
+        placements:
+            -   location:
+                    - 5202
+                    - 4061
+                    - 57
+    -   type: Armoire
+        arguments: ''
+        description: armoire
+        item_id: 2643
+        placements:
+            -   location:
+                    - 5195
+                    - 4067
+                    - 57
+    -   type: LibraryBookcase
+        arguments: ''
+        description: bookcase
+        item_id: 2715
+        placements:
+            -   location:
+                    - 5215
+                    - 4007
+                    - 37
+    -   type: FillableLargeCrate
+        arguments: ''
+        description: crate
+        item_id: 3645
+        placements:
+            -   location:
+                    - 5236
+                    - 4021
+                    - 37
+            -   location:
+                    - 5236
+                    - 4021
+                    - 40
+            -   location:
+                    - 5236
+                    - 4022
+                    - 37
+            -   location:
+                    - 5236
+                    - 4022
+                    - 40
+            -   location:
+                    - 5236
+                    - 4023
+                    - 37
+            -   location:
+                    - 5237
+                    - 4020
+                    - 57
+            -   location:
+                    - 5237
+                    - 4021
+                    - 57
+            -   location:
+                    - 5237
+                    - 4022
+                    - 57
+            -   location:
+                    - 5237
+                    - 4023
+                    - 57
+    -   type: WoodenChest
+        arguments: ''
+        description: wooden chest
+        item_id: 3650
+        placements:
+            -   location:
+                    - 5262
+                    - 3980
+                    - 38
+            -   location:
+                    - 5262
+                    - 3982
+                    - 38
+            -   location:
+                    - 5269
+                    - 3977
+                    - 37
+            -   location:
+                    - 5269
+                    - 3986
+                    - 36
+    -   type: WoodenChest
+        arguments: ''
+        description: wooden chest
+        item_id: 3651
+        placements:
+            -   location:
+                    - 5270
+                    - 3971
+                    - 37
+            -   location:
+                    - 5276
+                    - 3971
+                    - 37
+    -   type: Static
+        arguments: ''
+        description: pouch
+        item_id: 3705
+        placements:
+            -   location:
+                    - 5262
+                    - 3984
+                    - 42
+    -   type: Static
+        arguments: ''
+        description: water tub
+        item_id: 3707
+        placements:
+            -   location:
+                    - 5296
+                    - 4013
+                    - 40
+    -   type: Static
+        arguments: ''
+        description: empty tub
+        item_id: 3715
+        placements:
+            -   location:
+                    - 5291
+                    - 4009
+                    - 40
+            -   location:
+                    - 5291
+                    - 4010
+                    - 40
+            -   location:
+                    - 5296
+                    - 4007
+                    - 40
+    -   type: Static
+        arguments: ''
+        description: pickaxe
+        item_id: 3717
+        placements:
+            -   location:
+                    - 5230
+                    - 4021
+                    - 43
+            -   location:
+                    - 5288
+                    - 3979
+                    - 37
+    -   type: Static
+        arguments: ''
+        description: pitchfork
+        item_id: 3719
+        placements:
+            -   location:
+                    - 5287
+                    - 3979
+                    - 37
+    -   type: Static
+        arguments: (Light = Circle225)
+        description: fire pit
+        item_id: 4012
+        placements:
+            -   location:
+                    - 5195
+                    - 3996
+                    - 37
+            -   location:
+                    - 5285
+                    - 3980
+                    - 37
+            -   location:
+                    - 5293
+                    - 3986
+                    - 37
+            -   location:
+                    - 5295
+                    - 3977
+                    - 37
+    -   type: Static
+        arguments: ''
+        description: barrel
+        item_id: 4014
+        placements:
+            -   location:
+                    - 5230
+                    - 4024
+                    - 37
+            -   location:
+                    - 5230
+                    - 4025
+                    - 37
+            -   location:
+                    - 5291
+                    - 4004
+                    - 40
+            -   location:
+                    - 5291
+                    - 4005
+                    - 40
+            -   location:
+                    - 5291
+                    - 4006
+                    - 40
+    -   type: AnvilSouthAddon
+        arguments: ''
+        description: anvil
+        item_id: 4016
+        placements:
+            -   location:
+                    - 5228
+                    - 4003
+                    - 37
+            -   location:
+                    - 5228
+                    - 4005
+                    - 37
+            -   location:
+                    - 5235
+                    - 4004
+                    - 38
+            -   location:
+                    - 5235
+                    - 4006
+                    - 37
+    -   type: SpinningWheelSouthAddon
+        arguments: ''
+        description: spinning wheel
+        item_id: 4117
+        placements:
+            -   location:
+                    - 5235
+                    - 4016
+                    - 37
+    -   type: LoomEastAddon
+        arguments: ''
+        description: upright loom
+        item_id: 4192
+        placements:
+            -   location:
+                    - 5231
+                    - 4015
+                    - 37
+    -   type: Static
+        arguments: ''
+        description: bellows
+        item_id: 6523
+        placements:
+            -   location:
+                    - 5226
+                    - 4004
+                    - 37
+            -   location:
+                    - 5234
+                    - 4005
+                    - 37
+    -   type: Static
+        arguments: (Light = Circle300)
+        description: forge
+        item_id: 6526
+        placements:
+            -   location:
+                    - 5227
+                    - 4004
+                    - 37
+            -   location:
+                    - 5235
+                    - 4005
+                    - 37
+    -   type: Static
+        arguments: ''
+        description: bellows
+        item_id: 6558
+        placements:
+            -   location:
+                    - 5229
+                    - 4004
+                    - 37
+            -   location:
+                    - 5237
+                    - 4005
+                    - 37
+    -   type: Static
+        arguments: ''
+        description: forge
+        item_id: 6563
+        placements:
+            -   location:
+                    - 5236
+                    - 4005
+                    - 37
+    -   type: Static
+        arguments: ''
+        description: forge
+        item_id: 6564
+        placements:
+            -   location:
+                    - 5228
+                    - 4004
+                    - 37

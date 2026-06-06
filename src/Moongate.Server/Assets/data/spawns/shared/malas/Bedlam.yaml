@@ -1,61 +1,61 @@
 spawn:
-- type: Spawner
-  guid: 8c2124f4-e175-4198-8cf8-9cf64804fc22
-  name: Spawner (408)
-  location:
-  - 98
-  - 1656
-  - 0
-  map: Malas
-  count: 16
-  min_delay: 00:05:00
-  max_delay: 00:10:00
-  team: 0
-  home_range: 40
-  walking_range: 40
-  entries:
-  - name: GoreFiend
-    max_count: 4
-    probability: 100
-  - name: PatchworkSkeleton
-    max_count: 4
-    probability: 100
-  - name: BoneKnight
-    max_count: 6
-    probability: 100
-  - name: BoneMagi
-    max_count: 6
-    probability: 100
-  - name: BoneKnight
-    max_count: 6
-    probability: 100
-  - name: SkeletalMage
-    max_count: 6
-    probability: 100
-  - name: Zombie
-    max_count: 4
-    probability: 100
-  - name: Skeleton
-    max_count: 4
-    probability: 100
-  - name: RottingCorpse
-    max_count: 2
-    probability: 100
-- type: Spawner
-  guid: eaa69fa3-4076-4fc5-950a-fe175713bbd3
-  name: Spawner (408)
-  location:
-  - 104
-  - 1655
-  - 0
-  map: Malas
-  count: 1
-  min_delay: 00:15:00
-  max_delay: 00:30:00
-  team: 0
-  home_range: 15
-  walking_range: 15
-  entries:
-  - name: RedDeath
-    max_count: 1
-    probability: 100
+    -   type: Spawner
+        guid: 8c2124f4-e175-4198-8cf8-9cf64804fc22
+        name: Spawner (408)
+        location:
+            - 98
+            - 1656
+            - 0
+        map: Malas
+        count: 16
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 40
+        walking_range: 40
+        entries:
+            -   name: GoreFiend
+                max_count: 4
+                probability: 100
+            -   name: PatchworkSkeleton
+                max_count: 4
+                probability: 100
+            -   name: BoneKnight
+                max_count: 6
+                probability: 100
+            -   name: BoneMagi
+                max_count: 6
+                probability: 100
+            -   name: BoneKnight
+                max_count: 6
+                probability: 100
+            -   name: SkeletalMage
+                max_count: 6
+                probability: 100
+            -   name: Zombie
+                max_count: 4
+                probability: 100
+            -   name: Skeleton
+                max_count: 4
+                probability: 100
+            -   name: RottingCorpse
+                max_count: 2
+                probability: 100
+    -   type: Spawner
+        guid: eaa69fa3-4076-4fc5-950a-fe175713bbd3
+        name: Spawner (408)
+        location:
+            - 104
+            - 1655
+            - 0
+        map: Malas
+        count: 1
+        min_delay: 00:15:00
+        max_delay: 00:30:00
+        team: 0
+        home_range: 15
+        walking_range: 15
+        entries:
+            -   name: RedDeath
+                max_count: 1
+                probability: 100

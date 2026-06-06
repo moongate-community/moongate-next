@@ -1,4 +1,3 @@
-using Moongate.Server.Data.World;
 using Moongate.Server.Services.World;
 using Moongate.Server.Services.WorldData;
 
@@ -7,6 +6,43 @@ namespace Moongate.Tests.Server.WorldData;
 public sealed class DoorDataLoaderTests : IDisposable
 {
     private readonly string _dataDirectory = Path.Combine(Path.GetTempPath(), $"mg-door-loader-{Guid.NewGuid():N}");
+
+    public void Dispose()
+    {
+        if (Directory.Exists(_dataDirectory))
+        {
+            Directory.Delete(_dataDirectory, true);
+        }
+    }
+
+    [Fact]
+    public void LoadDoors_MissingDoorYaml_ClearsEntries()
+    {
+        var service = new DoorDataService();
+        service.SetEntries(
+            [
+                new(
+                    0,
+                    1701,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    "Existing Door"
+                )
+            ]
+        );
+        var loader = new ServerAssetDataLoader(_dataDirectory);
+
+        loader.LoadDoors(service);
+
+        Assert.Empty(service.GetAllEntries());
+        Assert.False(service.TryGetToggleDefinition(1701, out _));
+    }
 
     [Fact]
     public void LoadDoors_WithDoorYaml_LoadsEntriesAndToggleDefinitions()
@@ -31,42 +67,5 @@ public sealed class DoorDataLoaderTests : IDisposable
         Assert.True(service.TryGetToggleDefinition(1701, out var definition));
         Assert.Equal(1702, definition.NextItemId);
         Assert.True(definition.IsClosed);
-    }
-
-    [Fact]
-    public void LoadDoors_MissingDoorYaml_ClearsEntries()
-    {
-        var service = new DoorDataService();
-        service.SetEntries(
-            [
-                new DoorComponentEntry(
-                    0,
-                    1701,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    "Existing Door"
-                )
-            ]
-        );
-        var loader = new ServerAssetDataLoader(_dataDirectory);
-
-        loader.LoadDoors(service);
-
-        Assert.Empty(service.GetAllEntries());
-        Assert.False(service.TryGetToggleDefinition(1701, out _));
-    }
-
-    public void Dispose()
-    {
-        if (Directory.Exists(_dataDirectory))
-        {
-            Directory.Delete(_dataDirectory, true);
-        }
     }
 }

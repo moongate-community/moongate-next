@@ -1,34 +1,34 @@
 spawn:
-- type: Spawner
-  guid: 70e1e800-e6dc-4f5c-a610-269930e6c327
-  name: Spawner (310)
-  location:
-  - 1981
-  - 1059
-  - -28
-  map: Ilshenar
-  count: 13
-  min_delay: 00:05:00
-  max_delay: 00:10:00
-  team: 0
-  home_range: 40
-  walking_range: 40
-  entries:
-  - name: Skeleton
-    max_count: 3
-    probability: 100
-  - name: Shade
-    max_count: 2
-    probability: 100
-  - name: Spectre
-    max_count: 2
-    probability: 100
-  - name: Wraith
-    max_count: 2
-    probability: 100
-  - name: Ghoul
-    max_count: 2
-    probability: 100
-  - name: Zombie
-    max_count: 2
-    probability: 100
+    -   type: Spawner
+        guid: 70e1e800-e6dc-4f5c-a610-269930e6c327
+        name: Spawner (310)
+        location:
+            - 1981
+            - 1059
+            - -28
+        map: Ilshenar
+        count: 13
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 40
+        walking_range: 40
+        entries:
+            -   name: Skeleton
+                max_count: 3
+                probability: 100
+            -   name: Shade
+                max_count: 2
+                probability: 100
+            -   name: Spectre
+                max_count: 2
+                probability: 100
+            -   name: Wraith
+                max_count: 2
+                probability: 100
+            -   name: Ghoul
+                max_count: 2
+                probability: 100
+            -   name: Zombie
+                max_count: 2
+                probability: 100

@@ -15,9 +15,7 @@ public class YamlUtilsTests : IDisposable
 
     [Fact]
     public void Deserialize_InvalidYaml_Throws()
-    {
-        Assert.ThrowsAny<YamlException>(() => YamlUtils.Deserialize<YamlPerson>("name: ["));
-    }
+        => Assert.ThrowsAny<YamlException>(() => YamlUtils.Deserialize<YamlPerson>("name: ["));
 
     [Fact]
     public void Deserialize_NullOrWhitespaceYaml_Throws()
@@ -25,6 +23,24 @@ public class YamlUtilsTests : IDisposable
         Assert.Throws<ArgumentNullException>(() => YamlUtils.Deserialize<YamlPerson>(null!));
         Assert.ThrowsAny<ArgumentException>(() => YamlUtils.Deserialize<YamlPerson>(""));
         Assert.ThrowsAny<ArgumentException>(() => YamlUtils.Deserialize<YamlPerson>("   "));
+    }
+
+    [Fact]
+    public void DeserializeFromFile_MissingFile_Throws()
+    {
+        var missing = Path.Combine(_tempDir, "missing.yaml");
+
+        Assert.Throws<FileNotFoundException>(() => YamlUtils.DeserializeFromFile<YamlPerson>(missing));
+    }
+
+    public void Dispose()
+    {
+        if (Directory.Exists(_tempDir))
+        {
+            Directory.Delete(_tempDir, true);
+        }
+
+        GC.SuppressFinalize(this);
     }
 
     [Fact]
@@ -52,23 +68,5 @@ public class YamlUtilsTests : IDisposable
 
         Assert.Equal(original.Name, deserialized.Name);
         Assert.Equal(original.Delay, deserialized.Delay);
-    }
-
-    [Fact]
-    public void DeserializeFromFile_MissingFile_Throws()
-    {
-        var missing = Path.Combine(_tempDir, "missing.yaml");
-
-        Assert.Throws<FileNotFoundException>(() => YamlUtils.DeserializeFromFile<YamlPerson>(missing));
-    }
-
-    public void Dispose()
-    {
-        if (Directory.Exists(_tempDir))
-        {
-            Directory.Delete(_tempDir, true);
-        }
-
-        GC.SuppressFinalize(this);
     }
 }

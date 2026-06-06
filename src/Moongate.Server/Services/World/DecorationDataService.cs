@@ -15,9 +15,7 @@ public class DecorationDataService : LazyDataService, IDecorationDataService
     private List<DecorationEntry> _entries = [];
     private Dictionary<int, List<DecorationEntry>> _entriesByMap = [];
 
-    public DecorationDataService()
-    {
-    }
+    public DecorationDataService() { }
 
     public DecorationDataService(ServerAssetDataLoader loader)
     {
@@ -61,18 +59,16 @@ public class DecorationDataService : LazyDataService, IDecorationDataService
         {
             _entries = snapshot;
             _entriesByMap = snapshot
-                .GroupBy(static entry => entry.MapId)
-                .ToDictionary(
-                    static grouping => grouping.Key,
-                    static grouping => grouping.ToList()
-                );
+                            .GroupBy(static entry => entry.MapId)
+                            .ToDictionary(
+                                static grouping => grouping.Key,
+                                static grouping => grouping.ToList()
+                            );
         }
 
         MarkLoaded();
     }
 
     protected override void LoadCore()
-    {
-        _loader?.LoadDecorations(this);
-    }
+        => _loader?.LoadDecorations(this);
 }

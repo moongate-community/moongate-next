@@ -1,240 +1,240 @@
 decoration:
-- type: StoneFireplaceEastAddon
-  arguments: ''
-  description: fireplace
-  item_id: 2393
-  placements:
-  - location:
-    - 1547
-    - 1050
-    - -7
-  - location:
-    - 1547
-    - 1050
-    - 13
-- type: StoneFireplaceSouthAddon
-  arguments: ''
-  description: fireplace
-  item_id: 2401
-  placements:
-  - location:
-    - 1556
-    - 1038
-    - 13
-- type: MediumCrate
-  arguments: ''
-  description: crate
-  item_id: 3646
-  placements:
-  - location:
-    - 1549
-    - 1040
-    - -1
-- type: Static
-  arguments: ''
-  description: clock
-  item_id: 4171
-  placements:
-  - location:
-    - 1548
-    - 1051
-    - 8
-- type: DarkWoodDoor
-  arguments: (Facing = EastCCW)
-  description: wooden door
-  item_id: 1703
-  placements:
-  - location:
-    - 1549
-    - 1048
-    - 13
-  - location:
-    - 1556
-    - 1048
-    - 13
-  - location:
-    - 1562
-    - 1048
-    - 13
-- type: DarkWoodDoor
-  arguments: (Facing = EastCW)
-  description: wooden door
-  item_id: 1707
-  placements:
-  - location:
-    - 1556
-    - 1043
-    - 13
-- type: StrongWoodDoor
-  arguments: (Facing = NorthCCW)
-  description: wooden door
-  item_id: 1775
-  placements:
-  - location:
-    - 1565
-    - 1046
-    - -7
-- type: StrongWoodDoor
-  arguments: (Facing = SouthCW)
-  description: wooden door
-  item_id: 1773
-  placements:
-  - location:
-    - 1565
-    - 1047
-    - -7
-- type: DartBoard
-  arguments: ''
-  description: dartboard
-  item_id: 7727
-  placements:
-  - location:
-    - 1547
-    - 1046
-    - -7
-- type: LargeCrate
-  arguments: ''
-  description: crate
-  item_id: 3644
-  placements:
-  - location:
-    - 1549
-    - 1040
-    - -4
-  - location:
-    - 1549
-    - 1040
-    - -7
-  - location:
-    - 1549
-    - 1051
-    - -27
-  - location:
-    - 1549
-    - 1052
-    - -27
-  - location:
-    - 1549
-    - 1052
-    - -24
-- type: Static
-  arguments: ''
-  description: dartboard w/knives
-  item_id: 7731
-  placements:
-  - location:
-    - 1547
-    - 1048
-    - -7
-- type: MediumCrate
-  arguments: ''
-  description: crate
-  item_id: 3647
-  placements:
-  - location:
-    - 1549
-    - 1049
-    - -27
-- type: Drawer
-  arguments: ''
-  description: chest of drawers
-  item_id: 2612
-  placements:
-  - location:
-    - 1553
-    - 1049
-    - 13
-- type: Armoire
-  arguments: ''
-  description: armoire
-  item_id: 2643
-  placements:
-  - location:
-    - 1553
-    - 1052
-    - 13
-  - location:
-    - 1560
-    - 1054
-    - 13
-- type: Static
-  arguments: ''
-  description: dresser
-  item_id: 2621
-  placements:
-  - location:
-    - 1558
-    - 1038
-    - 13
-- type: Static
-  arguments: ''
-  description: dresser
-  item_id: 2620
-  placements:
-  - location:
-    - 1559
-    - 1038
-    - 13
-- type: FancyArmoire
-  arguments: ''
-  description: armoire
-  item_id: 2637
-  placements:
-  - location:
-    - 1561
-    - 1038
-    - 13
-- type: BeverageBottle
-  arguments: (Content = Liquor)
-  description: bottle of liquor
-  item_id: 2459
-  placements:
-  - location:
-    - 1555
-    - 1052
-    - -21
-- type: Drawer
-  arguments: ''
-  description: chest of drawers
-  item_id: 2604
-  placements:
-  - location:
-    - 1564
-    - 1049
-    - 13
-- type: LocalizedSign
-  arguments: (LabelNumber = 1016410)
-  description: Tavern
-  item_id: 3011
-  placements:
-  - location:
-    - 1566
-    - 1049
-    - -6
-- type: Static
-  arguments: ''
-  description: water barrel
-  item_id: 5453
-  placements:
-  - location:
-    - 1555
-    - 1041
-    - -7
-- type: Static
-  arguments: ''
-  description: fireplace
-  item_id: 2400
-  placements:
-  - location:
-    - 1555
-    - 1038
-    - 13
-- type: Static
-  arguments: ''
-  description: fireplace
-  item_id: 2399
-  placements:
-  - location:
-    - 1556
-    - 1038
-    - 13
+    -   type: StoneFireplaceEastAddon
+        arguments: ''
+        description: fireplace
+        item_id: 2393
+        placements:
+            -   location:
+                    - 1547
+                    - 1050
+                    - -7
+            -   location:
+                    - 1547
+                    - 1050
+                    - 13
+    -   type: StoneFireplaceSouthAddon
+        arguments: ''
+        description: fireplace
+        item_id: 2401
+        placements:
+            -   location:
+                    - 1556
+                    - 1038
+                    - 13
+    -   type: MediumCrate
+        arguments: ''
+        description: crate
+        item_id: 3646
+        placements:
+            -   location:
+                    - 1549
+                    - 1040
+                    - -1
+    -   type: Static
+        arguments: ''
+        description: clock
+        item_id: 4171
+        placements:
+            -   location:
+                    - 1548
+                    - 1051
+                    - 8
+    -   type: DarkWoodDoor
+        arguments: (Facing = EastCCW)
+        description: wooden door
+        item_id: 1703
+        placements:
+            -   location:
+                    - 1549
+                    - 1048
+                    - 13
+            -   location:
+                    - 1556
+                    - 1048
+                    - 13
+            -   location:
+                    - 1562
+                    - 1048
+                    - 13
+    -   type: DarkWoodDoor
+        arguments: (Facing = EastCW)
+        description: wooden door
+        item_id: 1707
+        placements:
+            -   location:
+                    - 1556
+                    - 1043
+                    - 13
+    -   type: StrongWoodDoor
+        arguments: (Facing = NorthCCW)
+        description: wooden door
+        item_id: 1775
+        placements:
+            -   location:
+                    - 1565
+                    - 1046
+                    - -7
+    -   type: StrongWoodDoor
+        arguments: (Facing = SouthCW)
+        description: wooden door
+        item_id: 1773
+        placements:
+            -   location:
+                    - 1565
+                    - 1047
+                    - -7
+    -   type: DartBoard
+        arguments: ''
+        description: dartboard
+        item_id: 7727
+        placements:
+            -   location:
+                    - 1547
+                    - 1046
+                    - -7
+    -   type: LargeCrate
+        arguments: ''
+        description: crate
+        item_id: 3644
+        placements:
+            -   location:
+                    - 1549
+                    - 1040
+                    - -4
+            -   location:
+                    - 1549
+                    - 1040
+                    - -7
+            -   location:
+                    - 1549
+                    - 1051
+                    - -27
+            -   location:
+                    - 1549
+                    - 1052
+                    - -27
+            -   location:
+                    - 1549
+                    - 1052
+                    - -24
+    -   type: Static
+        arguments: ''
+        description: dartboard w/knives
+        item_id: 7731
+        placements:
+            -   location:
+                    - 1547
+                    - 1048
+                    - -7
+    -   type: MediumCrate
+        arguments: ''
+        description: crate
+        item_id: 3647
+        placements:
+            -   location:
+                    - 1549
+                    - 1049
+                    - -27
+    -   type: Drawer
+        arguments: ''
+        description: chest of drawers
+        item_id: 2612
+        placements:
+            -   location:
+                    - 1553
+                    - 1049
+                    - 13
+    -   type: Armoire
+        arguments: ''
+        description: armoire
+        item_id: 2643
+        placements:
+            -   location:
+                    - 1553
+                    - 1052
+                    - 13
+            -   location:
+                    - 1560
+                    - 1054
+                    - 13
+    -   type: Static
+        arguments: ''
+        description: dresser
+        item_id: 2621
+        placements:
+            -   location:
+                    - 1558
+                    - 1038
+                    - 13
+    -   type: Static
+        arguments: ''
+        description: dresser
+        item_id: 2620
+        placements:
+            -   location:
+                    - 1559
+                    - 1038
+                    - 13
+    -   type: FancyArmoire
+        arguments: ''
+        description: armoire
+        item_id: 2637
+        placements:
+            -   location:
+                    - 1561
+                    - 1038
+                    - 13
+    -   type: BeverageBottle
+        arguments: (Content = Liquor)
+        description: bottle of liquor
+        item_id: 2459
+        placements:
+            -   location:
+                    - 1555
+                    - 1052
+                    - -21
+    -   type: Drawer
+        arguments: ''
+        description: chest of drawers
+        item_id: 2604
+        placements:
+            -   location:
+                    - 1564
+                    - 1049
+                    - 13
+    -   type: LocalizedSign
+        arguments: (LabelNumber = 1016410)
+        description: Tavern
+        item_id: 3011
+        placements:
+            -   location:
+                    - 1566
+                    - 1049
+                    - -6
+    -   type: Static
+        arguments: ''
+        description: water barrel
+        item_id: 5453
+        placements:
+            -   location:
+                    - 1555
+                    - 1041
+                    - -7
+    -   type: Static
+        arguments: ''
+        description: fireplace
+        item_id: 2400
+        placements:
+            -   location:
+                    - 1555
+                    - 1038
+                    - 13
+    -   type: Static
+        arguments: ''
+        description: fireplace
+        item_id: 2399
+        placements:
+            -   location:
+                    - 1556
+                    - 1038
+                    - 13

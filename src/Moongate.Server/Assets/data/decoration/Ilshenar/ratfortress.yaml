@@ -1,45 +1,45 @@
 decoration:
-- type: MetalDoor
-  arguments: (Facing = WestCW)
-  description: metal door
-  item_id: 1653
-  placements:
-  - location:
-    - 642
-    - 843
-    - -54
-  - location:
-    - 645
-    - 830
-    - -44
-- type: MetalDoor
-  arguments: (Facing = EastCCW)
-  description: metal door
-  item_id: 1655
-  placements:
-  - location:
-    - 637
-    - 816
-    - -44
-  - location:
-    - 643
-    - 843
-    - -54
-- type: RattanDoor
-  arguments: (Facing = EastCCW)
-  description: rattan door
-  item_id: 1687
-  placements:
-  - location:
-    - 646
-    - 830
-    - -44
-- type: StrongWoodDoor
-  arguments: (Facing = EastCCW)
-  description: wooden door
-  item_id: 1767
-  placements:
-  - location:
-    - 646
-    - 816
-    - -44
+    -   type: MetalDoor
+        arguments: (Facing = WestCW)
+        description: metal door
+        item_id: 1653
+        placements:
+            -   location:
+                    - 642
+                    - 843
+                    - -54
+            -   location:
+                    - 645
+                    - 830
+                    - -44
+    -   type: MetalDoor
+        arguments: (Facing = EastCCW)
+        description: metal door
+        item_id: 1655
+        placements:
+            -   location:
+                    - 637
+                    - 816
+                    - -44
+            -   location:
+                    - 643
+                    - 843
+                    - -54
+    -   type: RattanDoor
+        arguments: (Facing = EastCCW)
+        description: rattan door
+        item_id: 1687
+        placements:
+            -   location:
+                    - 646
+                    - 830
+                    - -44
+    -   type: StrongWoodDoor
+        arguments: (Facing = EastCCW)
+        description: wooden door
+        item_id: 1767
+        placements:
+            -   location:
+                    - 646
+                    - 816
+                    - -44

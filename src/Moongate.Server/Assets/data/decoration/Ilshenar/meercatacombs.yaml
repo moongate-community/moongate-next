@@ -1,862 +1,862 @@
 decoration:
-- type: Teleporter
-  arguments: (PointDest = (1790, 66, -26))
-  description: 'Teleporters #'
-  item_id: 7107
-  placements:
-  - location:
-    - 1037
-    - 579
-    - -73
-- type: Teleporter
-  arguments: (PointDest = (1790, 67, -26))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1037
-    - 580
-    - -73
-- type: Teleporter
-  arguments: (PointDest = (1790, 68, -26))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1037
-    - 581
-    - -73
-- type: Teleporter
-  arguments: (PointDest = (1786, 70, -26))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1038
-    - 578
-    - -73
-- type: Teleporter
-  arguments: (PointDest = (1786, 70, -26))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1038
-    - 579
-    - -73
-- type: Teleporter
-  arguments: (PointDest = (1786, 65, -26))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1038
-    - 581
-    - -73
-- type: Teleporter
-  arguments: (PointDest = (1786, 65, -26))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1038
-    - 582
-    - -73
-- type: Teleporter
-  arguments: (PointDest = (1787, 70, -26))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1039
-    - 578
-    - -73
-- type: Teleporter
-  arguments: (PointDest = (1787, 65, -26))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1039
-    - 582
-    - -73
-- type: Teleporter
-  arguments: (PointDest = (1788, 70, -26))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1040
-    - 578
-    - -73
-- type: Teleporter
-  arguments: (PointDest = (1788, 70, -26))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1040
-    - 579
-    - -73
-- type: Teleporter
-  arguments: (PointDest = (1788, 65, -26))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1040
-    - 581
-    - -73
-- type: Teleporter
-  arguments: (PointDest = (1788, 65, -26))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1040
-    - 582
-    - -73
-- type: Teleporter
-  arguments: (PointDest = (1785, 68, -26))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1041
-    - 581
-    - -73
-- type: Teleporter
-  arguments: (PointDest = (1785, 67, -26))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1041
-    - 580
-    - -73
-- type: Teleporter
-  arguments: (PointDest = (1785, 66, -26))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1041
-    - 579
-    - -73
-- type: Teleporter
-  arguments: (PointDest = (1038, 583, -78))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1786
-    - 66
-    - -26
-- type: Teleporter
-  arguments: (PointDest = (1042, 579, -78))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1786
-    - 67
-    - -26
-- type: Teleporter
-  arguments: (PointDest = (1042, 580, -78))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1786
-    - 68
-    - -26
-- type: Teleporter
-  arguments: (PointDest = (1042, 581, -78))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1786
-    - 69
-    - -26
-- type: Teleporter
-  arguments: (PointDest = (1039, 583, -78))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1787
-    - 66
-    - -26
-- type: Teleporter
-  arguments: (PointDest = (1040, 583, -78))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1788
-    - 66
-    - -26
-- type: Teleporter
-  arguments: (PointDest = (1041, 583, -78))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1789
-    - 66
-    - -26
-- type: Teleporter
-  arguments: (PointDest = (1038, 577, -78))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1787
-    - 69
-    - -26
-- type: Teleporter
-  arguments: (PointDest = (1039, 577, -78))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1788
-    - 69
-    - -26
-- type: Teleporter
-  arguments: (PointDest = (1036, 579, -78))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1789
-    - 67
-    - -26
-- type: Teleporter
-  arguments: (PointDest = (1036, 578, -78))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1789
-    - 68
-    - -26
-- type: Teleporter
-  arguments: (PointDest = (1036, 581, -78))
-  description: ''
-  item_id: 7107
-  placements:
-  - location:
-    - 1789
-    - 69
-    - -26
-- type: Static
-  arguments: (Hue = 0x58F)
-  description: 'Mainland # stone'
-  item_id: 1955
-  placements:
-  - location:
-    - 1037
-    - 578
-    - -80
-  - location:
-    - 1037
-    - 579
-    - -80
-  - location:
-    - 1037
-    - 580
-    - -80
-  - location:
-    - 1037
-    - 581
-    - -80
-  - location:
-    - 1037
-    - 582
-    - -80
-  - location:
-    - 1038
-    - 578
-    - -80
-  - location:
-    - 1038
-    - 579
-    - -80
-  - location:
-    - 1038
-    - 580
-    - -80
-  - location:
-    - 1038
-    - 581
-    - -80
-  - location:
-    - 1038
-    - 582
-    - -80
-  - location:
-    - 1039
-    - 578
-    - -80
-  - location:
-    - 1039
-    - 579
-    - -80
-  - location:
-    - 1039
-    - 580
-    - -80
-  - location:
-    - 1039
-    - 581
-    - -80
-  - location:
-    - 1039
-    - 582
-    - -80
-  - location:
-    - 1040
-    - 578
-    - -80
-  - location:
-    - 1040
-    - 579
-    - -80
-  - location:
-    - 1040
-    - 580
-    - -80
-  - location:
-    - 1040
-    - 581
-    - -80
-  - location:
-    - 1040
-    - 582
-    - -80
-  - location:
-    - 1041
-    - 578
-    - -80
-  - location:
-    - 1041
-    - 579
-    - -80
-  - location:
-    - 1041
-    - 580
-    - -80
-  - location:
-    - 1041
-    - 581
-    - -80
-  - location:
-    - 1041
-    - 582
-    - -80
-- type: Static
-  arguments: (Hue = 0x58F)
-  description: stone stairs
-  item_id: 1956
-  placements:
-  - location:
-    - 1037
-    - 583
-    - -80
-  - location:
-    - 1038
-    - 583
-    - -80
-  - location:
-    - 1039
-    - 583
-    - -80
-  - location:
-    - 1040
-    - 583
-    - -80
-  - location:
-    - 1041
-    - 583
-    - -80
-- type: Static
-  arguments: (Hue = 0x58F)
-  description: stone stairs
-  item_id: 1957
-  placements:
-  - location:
-    - 1042
-    - 578
-    - -80
-  - location:
-    - 1042
-    - 579
-    - -80
-  - location:
-    - 1042
-    - 580
-    - -80
-  - location:
-    - 1042
-    - 581
-    - -80
-  - location:
-    - 1042
-    - 582
-    - -80
-- type: Static
-  arguments: (Hue = 0x58F)
-  description: stone stairs
-  item_id: 1958
-  placements:
-  - location:
-    - 1037
-    - 577
-    - -80
-  - location:
-    - 1038
-    - 577
-    - -80
-  - location:
-    - 1039
-    - 577
-    - -80
-  - location:
-    - 1040
-    - 577
-    - -80
-  - location:
-    - 1041
-    - 577
-    - -80
-- type: Static
-  arguments: (Hue = 0x58F)
-  description: stone stairs
-  item_id: 1959
-  placements:
-  - location:
-    - 1036
-    - 578
-    - -80
-  - location:
-    - 1036
-    - 579
-    - -80
-  - location:
-    - 1036
-    - 580
-    - -80
-  - location:
-    - 1036
-    - 581
-    - -80
-  - location:
-    - 1036
-    - 582
-    - -80
-- type: Static
-  arguments: (Hue = 0x58F)
-  description: stone stairs
-  item_id: 1960
-  placements:
-  - location:
-    - 1036
-    - 577
-    - -80
-- type: Static
-  arguments: (Hue = 0x58F)
-  description: stone stairs
-  item_id: 1961
-  placements:
-  - location:
-    - 1042
-    - 583
-    - -80
-- type: Static
-  arguments: (Hue = 0x58F)
-  description: stone stairs
-  item_id: 1962
-  placements:
-  - location:
-    - 1042
-    - 577
-    - -80
-- type: Static
-  arguments: (Hue = 0x58F)
-  description: stone stairs
-  item_id: 1963
-  placements:
-  - location:
-    - 1036
-    - 583
-    - -80
-- type: Static
-  arguments: (Hue = 0x40C)
-  description: platform
-  item_id: 1981
-  placements:
-  - location:
-    - 1037
-    - 580
-    - -75
-  - location:
-    - 1038
-    - 579
-    - -75
-  - location:
-    - 1038
-    - 581
-    - -75
-  - location:
-    - 1039
-    - 578
-    - -75
-  - location:
-    - 1039
-    - 580
-    - -75
-  - location:
-    - 1039
-    - 582
-    - -75
-  - location:
-    - 1040
-    - 579
-    - -75
-  - location:
-    - 1040
-    - 581
-    - -75
-  - location:
-    - 1041
-    - 580
-    - -75
-- type: Static
-  arguments: (Hue = 0x40C)
-  description: platform
-  item_id: 1982
-  placements:
-  - location:
-    - 1037
-    - 579
-    - -75
-  - location:
-    - 1037
-    - 581
-    - -75
-  - location:
-    - 1038
-    - 578
-    - -75
-  - location:
-    - 1038
-    - 580
-    - -75
-  - location:
-    - 1038
-    - 582
-    - -75
-  - location:
-    - 1039
-    - 579
-    - -75
-  - location:
-    - 1039
-    - 581
-    - -75
-  - location:
-    - 1040
-    - 578
-    - -75
-  - location:
-    - 1040
-    - 580
-    - -75
-  - location:
-    - 1040
-    - 582
-    - -75
-  - location:
-    - 1041
-    - 579
-    - -75
-  - location:
-    - 1041
-    - 581
-    - -75
-- type: Static
-  arguments: (Hue = 0x40C)
-  description: platform
-  item_id: 1983
-  placements:
-  - location:
-    - 1037
-    - 578
-    - -75
-- type: Static
-  arguments: (Hue = 0x40C)
-  description: platform
-  item_id: 1984
-  placements:
-  - location:
-    - 1041
-    - 578
-    - -75
-- type: Static
-  arguments: (Hue = 0x40C)
-  description: platform
-  item_id: 1985
-  placements:
-  - location:
-    - 1037
-    - 582
-    - -75
-- type: Static
-  arguments: (Hue = 0x40C)
-  description: platform
-  item_id: 1986
-  placements:
-  - location:
-    - 1041
-    - 582
-    - -75
-- type: Static
-  arguments: (Hue = 0x40C)
-  description: glowing rune
-  item_id: 3677
-  placements:
-  - location:
-    - 1040
-    - 578
-    - -73
-- type: Static
-  arguments: (Hue = 0x40C)
-  description: rune
-  item_id: 3678
-  placements:
-  - location:
-    - 1037
-    - 580
-    - -73
-  - location:
-    - 1040
-    - 580
-    - -73
-- type: Static
-  arguments: (Hue = 0x40C)
-  description: glowing rune
-  item_id: 3680
-  placements:
-  - location:
-    - 1037
-    - 579
-    - -73
-  - location:
-    - 1038
-    - 581
-    - -73
-  - location:
-    - 1039
-    - 578
-    - -73
-  - location:
-    - 1041
-    - 581
-    - -73
-- type: Static
-  arguments: (Hue = 0x40C)
-  description: rune
-  item_id: 3681
-  placements:
-  - location:
-    - 1039
-    - 580
-    - -73
-- type: Static
-  arguments: (Hue = 0x40C)
-  description: glowing rune
-  item_id: 3683
-  placements:
-  - location:
-    - 1038
-    - 578
-    - -73
-  - location:
-    - 1038
-    - 580
-    - -73
-  - location:
-    - 1039
-    - 582
-    - -73
-  - location:
-    - 1040
-    - 581
-    - -73
-- type: Static
-  arguments: (Hue = 0x40C)
-  description: rune
-  item_id: 3684
-  placements:
-  - location:
-    - 1041
-    - 579
-    - -73
-- type: Static
-  arguments: (Hue = 0x40C)
-  description: glowing rune
-  item_id: 3686
-  placements:
-  - location:
-    - 1040
-    - 582
-    - -73
-- type: Static
-  arguments: (Hue = 0x40C)
-  description: rune
-  item_id: 3687
-  placements:
-  - location:
-    - 1037
-    - 581
-    - -73
-  - location:
-    - 1039
-    - 579
-    - -73
-  - location:
-    - 1039
-    - 581
-    - -73
-- type: Static
-  arguments: (Hue = 0x40C)
-  description: glowing rune
-  item_id: 3689
-  placements:
-  - location:
-    - 1038
-    - 579
-    - -73
-  - location:
-    - 1038
-    - 582
-    - -73
-  - location:
-    - 1040
-    - 579
-    - -73
-  - location:
-    - 1041
-    - 580
-    - -73
-- type: Static
-  arguments: (Hue = 0x40C)
-  description: 'Place.. # glowing rune'
-  item_id: 3677
-  placements:
-  - location:
-    - 1789
-    - 69
-    - -26
-- type: Static
-  arguments: (Hue = 0x40C)
-  description: rune
-  item_id: 3678
-  placements:
-  - location:
-    - 1788
-    - 67
-    - -26
-- type: Static
-  arguments: (Hue = 0x40C)
-  description: glowing rune
-  item_id: 3680
-  placements:
-  - location:
-    - 1786
-    - 68
-    - -26
-  - location:
-    - 1789
-    - 68
-    - -26
-- type: Static
-  arguments: (Hue = 0x40C)
-  description: rune
-  item_id: 3681
-  placements:
-  - location:
-    - 1787
-    - 67
-    - -26
-- type: Static
-  arguments: (Hue = 0x40C)
-  description: glowing rune
-  item_id: 3683
-  placements:
-  - location:
-    - 1786
-    - 67
-    - -26
-  - location:
-    - 1787
-    - 69
-    - -26
-  - location:
-    - 1788
-    - 68
-    - -26
-- type: Static
-  arguments: (Hue = 0x40C)
-  description: rune
-  item_id: 3684
-  placements:
-  - location:
-    - 1789
-    - 66
-    - -26
-- type: Static
-  arguments: (Hue = 0x40C)
-  description: glowing rune
-  item_id: 3686
-  placements:
-  - location:
-    - 1788
-    - 69
-    - -26
-- type: Static
-  arguments: (Hue = 0x40C)
-  description: rune
-  item_id: 3687
-  placements:
-  - location:
-    - 1787
-    - 66
-    - -26
-  - location:
-    - 1787
-    - 68
-    - -26
-- type: Static
-  arguments: (Hue = 0x40C)
-  description: glowing rune
-  item_id: 3689
-  placements:
-  - location:
-    - 1786
-    - 66
-    - -26
-  - location:
-    - 1786
-    - 69
-    - -26
-  - location:
-    - 1788
-    - 66
-    - -26
-  - location:
-    - 1789
-    - 67
-    - -26
+    -   type: Teleporter
+        arguments: (PointDest = (1790, 66, -26))
+        description: 'Teleporters #'
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1037
+                    - 579
+                    - -73
+    -   type: Teleporter
+        arguments: (PointDest = (1790, 67, -26))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1037
+                    - 580
+                    - -73
+    -   type: Teleporter
+        arguments: (PointDest = (1790, 68, -26))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1037
+                    - 581
+                    - -73
+    -   type: Teleporter
+        arguments: (PointDest = (1786, 70, -26))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1038
+                    - 578
+                    - -73
+    -   type: Teleporter
+        arguments: (PointDest = (1786, 70, -26))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1038
+                    - 579
+                    - -73
+    -   type: Teleporter
+        arguments: (PointDest = (1786, 65, -26))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1038
+                    - 581
+                    - -73
+    -   type: Teleporter
+        arguments: (PointDest = (1786, 65, -26))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1038
+                    - 582
+                    - -73
+    -   type: Teleporter
+        arguments: (PointDest = (1787, 70, -26))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1039
+                    - 578
+                    - -73
+    -   type: Teleporter
+        arguments: (PointDest = (1787, 65, -26))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1039
+                    - 582
+                    - -73
+    -   type: Teleporter
+        arguments: (PointDest = (1788, 70, -26))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1040
+                    - 578
+                    - -73
+    -   type: Teleporter
+        arguments: (PointDest = (1788, 70, -26))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1040
+                    - 579
+                    - -73
+    -   type: Teleporter
+        arguments: (PointDest = (1788, 65, -26))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1040
+                    - 581
+                    - -73
+    -   type: Teleporter
+        arguments: (PointDest = (1788, 65, -26))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1040
+                    - 582
+                    - -73
+    -   type: Teleporter
+        arguments: (PointDest = (1785, 68, -26))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1041
+                    - 581
+                    - -73
+    -   type: Teleporter
+        arguments: (PointDest = (1785, 67, -26))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1041
+                    - 580
+                    - -73
+    -   type: Teleporter
+        arguments: (PointDest = (1785, 66, -26))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1041
+                    - 579
+                    - -73
+    -   type: Teleporter
+        arguments: (PointDest = (1038, 583, -78))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1786
+                    - 66
+                    - -26
+    -   type: Teleporter
+        arguments: (PointDest = (1042, 579, -78))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1786
+                    - 67
+                    - -26
+    -   type: Teleporter
+        arguments: (PointDest = (1042, 580, -78))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1786
+                    - 68
+                    - -26
+    -   type: Teleporter
+        arguments: (PointDest = (1042, 581, -78))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1786
+                    - 69
+                    - -26
+    -   type: Teleporter
+        arguments: (PointDest = (1039, 583, -78))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1787
+                    - 66
+                    - -26
+    -   type: Teleporter
+        arguments: (PointDest = (1040, 583, -78))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1788
+                    - 66
+                    - -26
+    -   type: Teleporter
+        arguments: (PointDest = (1041, 583, -78))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1789
+                    - 66
+                    - -26
+    -   type: Teleporter
+        arguments: (PointDest = (1038, 577, -78))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1787
+                    - 69
+                    - -26
+    -   type: Teleporter
+        arguments: (PointDest = (1039, 577, -78))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1788
+                    - 69
+                    - -26
+    -   type: Teleporter
+        arguments: (PointDest = (1036, 579, -78))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1789
+                    - 67
+                    - -26
+    -   type: Teleporter
+        arguments: (PointDest = (1036, 578, -78))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1789
+                    - 68
+                    - -26
+    -   type: Teleporter
+        arguments: (PointDest = (1036, 581, -78))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 1789
+                    - 69
+                    - -26
+    -   type: Static
+        arguments: (Hue = 0x58F)
+        description: 'Mainland # stone'
+        item_id: 1955
+        placements:
+            -   location:
+                    - 1037
+                    - 578
+                    - -80
+            -   location:
+                    - 1037
+                    - 579
+                    - -80
+            -   location:
+                    - 1037
+                    - 580
+                    - -80
+            -   location:
+                    - 1037
+                    - 581
+                    - -80
+            -   location:
+                    - 1037
+                    - 582
+                    - -80
+            -   location:
+                    - 1038
+                    - 578
+                    - -80
+            -   location:
+                    - 1038
+                    - 579
+                    - -80
+            -   location:
+                    - 1038
+                    - 580
+                    - -80
+            -   location:
+                    - 1038
+                    - 581
+                    - -80
+            -   location:
+                    - 1038
+                    - 582
+                    - -80
+            -   location:
+                    - 1039
+                    - 578
+                    - -80
+            -   location:
+                    - 1039
+                    - 579
+                    - -80
+            -   location:
+                    - 1039
+                    - 580
+                    - -80
+            -   location:
+                    - 1039
+                    - 581
+                    - -80
+            -   location:
+                    - 1039
+                    - 582
+                    - -80
+            -   location:
+                    - 1040
+                    - 578
+                    - -80
+            -   location:
+                    - 1040
+                    - 579
+                    - -80
+            -   location:
+                    - 1040
+                    - 580
+                    - -80
+            -   location:
+                    - 1040
+                    - 581
+                    - -80
+            -   location:
+                    - 1040
+                    - 582
+                    - -80
+            -   location:
+                    - 1041
+                    - 578
+                    - -80
+            -   location:
+                    - 1041
+                    - 579
+                    - -80
+            -   location:
+                    - 1041
+                    - 580
+                    - -80
+            -   location:
+                    - 1041
+                    - 581
+                    - -80
+            -   location:
+                    - 1041
+                    - 582
+                    - -80
+    -   type: Static
+        arguments: (Hue = 0x58F)
+        description: stone stairs
+        item_id: 1956
+        placements:
+            -   location:
+                    - 1037
+                    - 583
+                    - -80
+            -   location:
+                    - 1038
+                    - 583
+                    - -80
+            -   location:
+                    - 1039
+                    - 583
+                    - -80
+            -   location:
+                    - 1040
+                    - 583
+                    - -80
+            -   location:
+                    - 1041
+                    - 583
+                    - -80
+    -   type: Static
+        arguments: (Hue = 0x58F)
+        description: stone stairs
+        item_id: 1957
+        placements:
+            -   location:
+                    - 1042
+                    - 578
+                    - -80
+            -   location:
+                    - 1042
+                    - 579
+                    - -80
+            -   location:
+                    - 1042
+                    - 580
+                    - -80
+            -   location:
+                    - 1042
+                    - 581
+                    - -80
+            -   location:
+                    - 1042
+                    - 582
+                    - -80
+    -   type: Static
+        arguments: (Hue = 0x58F)
+        description: stone stairs
+        item_id: 1958
+        placements:
+            -   location:
+                    - 1037
+                    - 577
+                    - -80
+            -   location:
+                    - 1038
+                    - 577
+                    - -80
+            -   location:
+                    - 1039
+                    - 577
+                    - -80
+            -   location:
+                    - 1040
+                    - 577
+                    - -80
+            -   location:
+                    - 1041
+                    - 577
+                    - -80
+    -   type: Static
+        arguments: (Hue = 0x58F)
+        description: stone stairs
+        item_id: 1959
+        placements:
+            -   location:
+                    - 1036
+                    - 578
+                    - -80
+            -   location:
+                    - 1036
+                    - 579
+                    - -80
+            -   location:
+                    - 1036
+                    - 580
+                    - -80
+            -   location:
+                    - 1036
+                    - 581
+                    - -80
+            -   location:
+                    - 1036
+                    - 582
+                    - -80
+    -   type: Static
+        arguments: (Hue = 0x58F)
+        description: stone stairs
+        item_id: 1960
+        placements:
+            -   location:
+                    - 1036
+                    - 577
+                    - -80
+    -   type: Static
+        arguments: (Hue = 0x58F)
+        description: stone stairs
+        item_id: 1961
+        placements:
+            -   location:
+                    - 1042
+                    - 583
+                    - -80
+    -   type: Static
+        arguments: (Hue = 0x58F)
+        description: stone stairs
+        item_id: 1962
+        placements:
+            -   location:
+                    - 1042
+                    - 577
+                    - -80
+    -   type: Static
+        arguments: (Hue = 0x58F)
+        description: stone stairs
+        item_id: 1963
+        placements:
+            -   location:
+                    - 1036
+                    - 583
+                    - -80
+    -   type: Static
+        arguments: (Hue = 0x40C)
+        description: platform
+        item_id: 1981
+        placements:
+            -   location:
+                    - 1037
+                    - 580
+                    - -75
+            -   location:
+                    - 1038
+                    - 579
+                    - -75
+            -   location:
+                    - 1038
+                    - 581
+                    - -75
+            -   location:
+                    - 1039
+                    - 578
+                    - -75
+            -   location:
+                    - 1039
+                    - 580
+                    - -75
+            -   location:
+                    - 1039
+                    - 582
+                    - -75
+            -   location:
+                    - 1040
+                    - 579
+                    - -75
+            -   location:
+                    - 1040
+                    - 581
+                    - -75
+            -   location:
+                    - 1041
+                    - 580
+                    - -75
+    -   type: Static
+        arguments: (Hue = 0x40C)
+        description: platform
+        item_id: 1982
+        placements:
+            -   location:
+                    - 1037
+                    - 579
+                    - -75
+            -   location:
+                    - 1037
+                    - 581
+                    - -75
+            -   location:
+                    - 1038
+                    - 578
+                    - -75
+            -   location:
+                    - 1038
+                    - 580
+                    - -75
+            -   location:
+                    - 1038
+                    - 582
+                    - -75
+            -   location:
+                    - 1039
+                    - 579
+                    - -75
+            -   location:
+                    - 1039
+                    - 581
+                    - -75
+            -   location:
+                    - 1040
+                    - 578
+                    - -75
+            -   location:
+                    - 1040
+                    - 580
+                    - -75
+            -   location:
+                    - 1040
+                    - 582
+                    - -75
+            -   location:
+                    - 1041
+                    - 579
+                    - -75
+            -   location:
+                    - 1041
+                    - 581
+                    - -75
+    -   type: Static
+        arguments: (Hue = 0x40C)
+        description: platform
+        item_id: 1983
+        placements:
+            -   location:
+                    - 1037
+                    - 578
+                    - -75
+    -   type: Static
+        arguments: (Hue = 0x40C)
+        description: platform
+        item_id: 1984
+        placements:
+            -   location:
+                    - 1041
+                    - 578
+                    - -75
+    -   type: Static
+        arguments: (Hue = 0x40C)
+        description: platform
+        item_id: 1985
+        placements:
+            -   location:
+                    - 1037
+                    - 582
+                    - -75
+    -   type: Static
+        arguments: (Hue = 0x40C)
+        description: platform
+        item_id: 1986
+        placements:
+            -   location:
+                    - 1041
+                    - 582
+                    - -75
+    -   type: Static
+        arguments: (Hue = 0x40C)
+        description: glowing rune
+        item_id: 3677
+        placements:
+            -   location:
+                    - 1040
+                    - 578
+                    - -73
+    -   type: Static
+        arguments: (Hue = 0x40C)
+        description: rune
+        item_id: 3678
+        placements:
+            -   location:
+                    - 1037
+                    - 580
+                    - -73
+            -   location:
+                    - 1040
+                    - 580
+                    - -73
+    -   type: Static
+        arguments: (Hue = 0x40C)
+        description: glowing rune
+        item_id: 3680
+        placements:
+            -   location:
+                    - 1037
+                    - 579
+                    - -73
+            -   location:
+                    - 1038
+                    - 581
+                    - -73
+            -   location:
+                    - 1039
+                    - 578
+                    - -73
+            -   location:
+                    - 1041
+                    - 581
+                    - -73
+    -   type: Static
+        arguments: (Hue = 0x40C)
+        description: rune
+        item_id: 3681
+        placements:
+            -   location:
+                    - 1039
+                    - 580
+                    - -73
+    -   type: Static
+        arguments: (Hue = 0x40C)
+        description: glowing rune
+        item_id: 3683
+        placements:
+            -   location:
+                    - 1038
+                    - 578
+                    - -73
+            -   location:
+                    - 1038
+                    - 580
+                    - -73
+            -   location:
+                    - 1039
+                    - 582
+                    - -73
+            -   location:
+                    - 1040
+                    - 581
+                    - -73
+    -   type: Static
+        arguments: (Hue = 0x40C)
+        description: rune
+        item_id: 3684
+        placements:
+            -   location:
+                    - 1041
+                    - 579
+                    - -73
+    -   type: Static
+        arguments: (Hue = 0x40C)
+        description: glowing rune
+        item_id: 3686
+        placements:
+            -   location:
+                    - 1040
+                    - 582
+                    - -73
+    -   type: Static
+        arguments: (Hue = 0x40C)
+        description: rune
+        item_id: 3687
+        placements:
+            -   location:
+                    - 1037
+                    - 581
+                    - -73
+            -   location:
+                    - 1039
+                    - 579
+                    - -73
+            -   location:
+                    - 1039
+                    - 581
+                    - -73
+    -   type: Static
+        arguments: (Hue = 0x40C)
+        description: glowing rune
+        item_id: 3689
+        placements:
+            -   location:
+                    - 1038
+                    - 579
+                    - -73
+            -   location:
+                    - 1038
+                    - 582
+                    - -73
+            -   location:
+                    - 1040
+                    - 579
+                    - -73
+            -   location:
+                    - 1041
+                    - 580
+                    - -73
+    -   type: Static
+        arguments: (Hue = 0x40C)
+        description: 'Place.. # glowing rune'
+        item_id: 3677
+        placements:
+            -   location:
+                    - 1789
+                    - 69
+                    - -26
+    -   type: Static
+        arguments: (Hue = 0x40C)
+        description: rune
+        item_id: 3678
+        placements:
+            -   location:
+                    - 1788
+                    - 67
+                    - -26
+    -   type: Static
+        arguments: (Hue = 0x40C)
+        description: glowing rune
+        item_id: 3680
+        placements:
+            -   location:
+                    - 1786
+                    - 68
+                    - -26
+            -   location:
+                    - 1789
+                    - 68
+                    - -26
+    -   type: Static
+        arguments: (Hue = 0x40C)
+        description: rune
+        item_id: 3681
+        placements:
+            -   location:
+                    - 1787
+                    - 67
+                    - -26
+    -   type: Static
+        arguments: (Hue = 0x40C)
+        description: glowing rune
+        item_id: 3683
+        placements:
+            -   location:
+                    - 1786
+                    - 67
+                    - -26
+            -   location:
+                    - 1787
+                    - 69
+                    - -26
+            -   location:
+                    - 1788
+                    - 68
+                    - -26
+    -   type: Static
+        arguments: (Hue = 0x40C)
+        description: rune
+        item_id: 3684
+        placements:
+            -   location:
+                    - 1789
+                    - 66
+                    - -26
+    -   type: Static
+        arguments: (Hue = 0x40C)
+        description: glowing rune
+        item_id: 3686
+        placements:
+            -   location:
+                    - 1788
+                    - 69
+                    - -26
+    -   type: Static
+        arguments: (Hue = 0x40C)
+        description: rune
+        item_id: 3687
+        placements:
+            -   location:
+                    - 1787
+                    - 66
+                    - -26
+            -   location:
+                    - 1787
+                    - 68
+                    - -26
+    -   type: Static
+        arguments: (Hue = 0x40C)
+        description: glowing rune
+        item_id: 3689
+        placements:
+            -   location:
+                    - 1786
+                    - 66
+                    - -26
+            -   location:
+                    - 1786
+                    - 69
+                    - -26
+            -   location:
+                    - 1788
+                    - 66
+                    - -26
+            -   location:
+                    - 1789
+                    - 67
+                    - -26

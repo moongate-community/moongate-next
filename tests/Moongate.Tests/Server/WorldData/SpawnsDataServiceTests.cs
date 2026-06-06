@@ -1,4 +1,3 @@
-using Moongate.Core.Geometry;
 using Moongate.Server.Data.World;
 using Moongate.Server.Services.World;
 using Moongate.Server.Types.World;
@@ -45,8 +44,7 @@ public class SpawnsDataServiceTests
         int mapId,
         IReadOnlyList<SpawnEntryDefinition>? entries = null
     )
-    {
-        return new(
+        => new(
             mapId,
             map,
             "shared",
@@ -54,7 +52,7 @@ public class SpawnsDataServiceTests
             Guid.NewGuid(),
             SpawnDefinitionKind.Spawner,
             $"{map} Spawner",
-            new Point3D(100, 200, 0),
+            new(100, 200, 0),
             1,
             TimeSpan.FromMinutes(1),
             TimeSpan.FromMinutes(2),
@@ -63,5 +61,4 @@ public class SpawnsDataServiceTests
             10,
             entries ?? [new("Rat", 1, 100)]
         );
-    }
 }

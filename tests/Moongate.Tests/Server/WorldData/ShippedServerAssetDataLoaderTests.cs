@@ -16,6 +16,14 @@ public sealed class ShippedServerAssetDataLoaderTests : IDisposable
         BundledDataAssetsBootstrapper.EnsureDataAssets(_dataDirectory.FullName, Log.Logger);
     }
 
+    public void Dispose()
+    {
+        if (_dataDirectory.Exists)
+        {
+            _dataDirectory.Delete(true);
+        }
+    }
+
     [Fact]
     public void LoadAllShippedWorldData_LoadsEveryFamily()
     {
@@ -120,22 +128,14 @@ public sealed class ShippedServerAssetDataLoaderTests : IDisposable
         );
 
         var sourceMapZeroSigns = signs
-            .GetAllEntries()
-            .Where(static entry => entry.SourceMapCode == 0)
-            .ToArray();
+                                 .GetAllEntries()
+                                 .Where(static entry => entry.SourceMapCode == 0)
+                                 .ToArray();
 
         Assert.NotEmpty(sourceMapZeroSigns);
         Assert.Contains(
             sourceMapZeroSigns.GroupBy(static entry => new { entry.ItemId, entry.Location, entry.Text }),
             group => group.Any(static entry => entry.MapId == 0) && group.Any(static entry => entry.MapId == 1)
         );
-    }
-
-    public void Dispose()
-    {
-        if (_dataDirectory.Exists)
-        {
-            _dataDirectory.Delete(true);
-        }
     }
 }

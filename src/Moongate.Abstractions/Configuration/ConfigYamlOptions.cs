@@ -13,25 +13,23 @@ namespace Moongate.Abstractions.Configuration;
 public static class ConfigYamlOptions
 {
     public static readonly ISerializer Serializer = new SerializerBuilder()
-        .WithNamingConvention(UnderscoredNamingConvention.Instance)
-        .WithTypeConverter(new Point3DYamlConverter())
-        .WithTypeConverter(new TimeSpanYamlConverter())
-        .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitNull)
-        .Build();
+                                                    .WithNamingConvention(UnderscoredNamingConvention.Instance)
+                                                    .WithTypeConverter(new Point3DYamlConverter())
+                                                    .WithTypeConverter(new TimeSpanYamlConverter())
+                                                    .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitNull)
+                                                    .Build();
 
     public static readonly IDeserializer Deserializer = new DeserializerBuilder()
-        .WithNamingConvention(UnderscoredNamingConvention.Instance)
-        .WithTypeConverter(new Point3DYamlConverter())
-        .WithTypeConverter(new TimeSpanYamlConverter())
-        .IgnoreUnmatchedProperties()
-        .Build();
+                                                        .WithNamingConvention(UnderscoredNamingConvention.Instance)
+                                                        .WithTypeConverter(new Point3DYamlConverter())
+                                                        .WithTypeConverter(new TimeSpanYamlConverter())
+                                                        .IgnoreUnmatchedProperties()
+                                                        .Build();
 
     private sealed class Point3DYamlConverter : IYamlTypeConverter
     {
         public bool Accepts(Type type)
-        {
-            return type == typeof(Point3D) || Nullable.GetUnderlyingType(type) == typeof(Point3D);
-        }
+            => type == typeof(Point3D) || Nullable.GetUnderlyingType(type) == typeof(Point3D);
 
         public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
         {
@@ -82,9 +80,7 @@ public static class ConfigYamlOptions
     private sealed class TimeSpanYamlConverter : IYamlTypeConverter
     {
         public bool Accepts(Type type)
-        {
-            return type == typeof(TimeSpan) || type == typeof(TimeSpan?);
-        }
+            => type == typeof(TimeSpan) || type == typeof(TimeSpan?);
 
         public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
         {

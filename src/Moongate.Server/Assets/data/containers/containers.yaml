@@ -1,357 +1,357 @@
 container_layout:
-- gump_id: 60
-  bounds:
-  - 44
-  - 65
-  - 142
-  - 94
-  drop_sound: 72
-  item_ids: []
-- gump_id: 9
-  bounds:
-  - 20
-  - 85
-  - 104
-  - 111
-  drop_sound: 66
-  item_ids:
-  - 8198
-  - 3786
-  - 3787
-  - 3788
-  - 3789
-  - 3790
-  - 3791
-  - 3792
-  - 3793
-  - 3794
-- gump_id: 61
-  bounds:
-  - 29
-  - 34
-  - 108
-  - 94
-  drop_sound: 72
-  item_ids:
-  - 3702
-  - 8790
-  - 8791
-- gump_id: 62
-  bounds:
-  - 33
-  - 36
-  - 109
-  - 112
-  drop_sound: 66
-  item_ids:
-  - 3703
-  - 3711
-- gump_id: 63
-  bounds:
-  - 19
-  - 47
-  - 163
-  - 76
-  drop_sound: 79
-  item_ids:
-  - 3706
-  - 9429
-  - 9430
-  - 9433
-  - 9434
-- gump_id: 65
-  bounds:
-  - 35
-  - 38
-  - 110
-  - 78
-  drop_sound: 79
-  item_ids:
-  - 2448
-  - 2476
-  - 2481
-  - 9431
-  - 9432
-  - 9437
-- gump_id: 66
-  bounds:
-  - 18
-  - 105
-  - 144
-  - 73
-  drop_sound: 66
-  item_ids:
-  - 3648
-  - 3649
-- gump_id: 67
-  bounds:
-  - 16
-  - 51
-  - 168
-  - 73
-  drop_sound: 66
-  item_ids:
-  - 3709
-  - 2474
-- gump_id: 68
-  bounds:
-  - 20
-  - 10
-  - 150
-  - 90
-  drop_sound: 66
-  item_ids:
-  - 3710
-  - 2473
-  - 3644
-  - 3645
-  - 3646
-  - 3647
-- gump_id: 72
-  bounds:
-  - 76
-  - 12
-  - 64
-  - 56
-  drop_sound: 66
-  item_ids:
-  - 2608
-  - 2616
-- gump_id: 73
-  bounds:
-  - 18
-  - 105
-  - 144
-  - 73
-  drop_sound: 66
-  item_ids:
-  - 3650
-  - 3651
-- gump_id: 74
-  bounds:
-  - 18
-  - 105
-  - 144
-  - 73
-  drop_sound: 66
-  item_ids:
-  - 3708
-  - 2475
-- gump_id: 75
-  bounds:
-  - 16
-  - 51
-  - 168
-  - 73
-  drop_sound: 66
-  item_ids:
-  - 3712
-  - 2472
-- gump_id: 76
-  bounds:
-  - 46
-  - 74
-  - 150
-  - 110
-  drop_sound: 66
-  item_ids:
-  - 15973
-  - 16019
-  - 16046
-  - 16057
-- gump_id: 77
-  bounds:
-  - 76
-  - 12
-  - 64
-  - 56
-  drop_sound: 66
-  item_ids:
-  - 2711
-  - 2712
-  - 2713
-  - 2714
-  - 2715
-  - 2716
-  - 2717
-  - 2718
-- gump_id: 78
-  bounds:
-  - 24
-  - 96
-  - 74
-  - 56
-  drop_sound: 66
-  item_ids:
-  - 2636
-  - 2637
-  - 2640
-  - 2641
-- gump_id: 79
-  bounds:
-  - 24
-  - 96
-  - 74
-  - 56
-  drop_sound: 66
-  item_ids:
-  - 2638
-  - 2639
-  - 2642
-  - 2643
-- gump_id: 81
-  bounds:
-  - 16
-  - 10
-  - 138
-  - 84
-  drop_sound: 66
-  item_ids:
-  - 2604
-  - 2612
-- gump_id: 82
-  bounds:
-  - 0
-  - 0
-  - 110
-  - 62
-  drop_sound: 66
-  item_ids:
-  - 7774
-- gump_id: 2330
-  bounds:
-  - 0
-  - 0
-  - 282
-  - 210
-  drop_sound: -1
-  item_ids:
-  - 4006
-- gump_id: 2350
-  bounds:
-  - 0
-  - 0
-  - 282
-  - 230
-  drop_sound: -1
-  item_ids:
-  - 3612
-  - 4013
-- gump_id: 258
-  bounds:
-  - 35
-  - 10
-  - 155
-  - 85
-  drop_sound: 66
-  item_ids:
-  - 9002
-  - 9003
-- gump_id: 261
-  bounds:
-  - 10
-  - 10
-  - 150
-  - 95
-  drop_sound: 66
-  item_ids:
-  - 10327
-  - 10328
-- gump_id: 262
-  bounds:
-  - 10
-  - 10
-  - 150
-  - 95
-  drop_sound: 66
-  item_ids:
-  - 10331
-  - 10332
-- gump_id: 263
-  bounds:
-  - 10
-  - 10
-  - 150
-  - 95
-  drop_sound: 66
-  item_ids:
-  - 10333
-  - 10334
-  - 10329
-  - 10330
-- gump_id: 264
-  bounds:
-  - 10
-  - 10
-  - 116
-  - 71
-  drop_sound: 79
-  item_ids:
-  - 9435
-  - 9436
-- gump_id: 265
-  bounds:
-  - 10
-  - 10
-  - 150
-  - 95
-  drop_sound: 66
-  item_ids:
-  - 10251
-  - 10252
-- gump_id: 266
-  bounds:
-  - 10
-  - 10
-  - 150
-  - 95
-  drop_sound: 66
-  item_ids:
-  - 10255
-  - 10256
-- gump_id: 267
-  bounds:
-  - 10
-  - 10
-  - 150
-  - 95
-  drop_sound: 66
-  item_ids:
-  - 10253
-  - 10254
-- gump_id: 268
-  bounds:
-  - 10
-  - 10
-  - 150
-  - 95
-  drop_sound: 66
-  item_ids:
-  - 10257
-  - 10258
-  - 10261
-  - 10262
-  - 10263
-  - 10264
-- gump_id: 269
-  bounds:
-  - 10
-  - 10
-  - 150
-  - 95
-  drop_sound: 66
-  item_ids:
-  - 10259
-  - 10260
-- gump_id: 288
-  bounds:
-  - 56
-  - 30
-  - 102
-  - 74
-  drop_sound: 66
-  item_ids:
-  - 18890
-  - 18891
-  - 18892
-  - 18896
+    -   gump_id: 60
+        bounds:
+            - 44
+            - 65
+            - 142
+            - 94
+        drop_sound: 72
+        item_ids: [ ]
+    -   gump_id: 9
+        bounds:
+            - 20
+            - 85
+            - 104
+            - 111
+        drop_sound: 66
+        item_ids:
+            - 8198
+            - 3786
+            - 3787
+            - 3788
+            - 3789
+            - 3790
+            - 3791
+            - 3792
+            - 3793
+            - 3794
+    -   gump_id: 61
+        bounds:
+            - 29
+            - 34
+            - 108
+            - 94
+        drop_sound: 72
+        item_ids:
+            - 3702
+            - 8790
+            - 8791
+    -   gump_id: 62
+        bounds:
+            - 33
+            - 36
+            - 109
+            - 112
+        drop_sound: 66
+        item_ids:
+            - 3703
+            - 3711
+    -   gump_id: 63
+        bounds:
+            - 19
+            - 47
+            - 163
+            - 76
+        drop_sound: 79
+        item_ids:
+            - 3706
+            - 9429
+            - 9430
+            - 9433
+            - 9434
+    -   gump_id: 65
+        bounds:
+            - 35
+            - 38
+            - 110
+            - 78
+        drop_sound: 79
+        item_ids:
+            - 2448
+            - 2476
+            - 2481
+            - 9431
+            - 9432
+            - 9437
+    -   gump_id: 66
+        bounds:
+            - 18
+            - 105
+            - 144
+            - 73
+        drop_sound: 66
+        item_ids:
+            - 3648
+            - 3649
+    -   gump_id: 67
+        bounds:
+            - 16
+            - 51
+            - 168
+            - 73
+        drop_sound: 66
+        item_ids:
+            - 3709
+            - 2474
+    -   gump_id: 68
+        bounds:
+            - 20
+            - 10
+            - 150
+            - 90
+        drop_sound: 66
+        item_ids:
+            - 3710
+            - 2473
+            - 3644
+            - 3645
+            - 3646
+            - 3647
+    -   gump_id: 72
+        bounds:
+            - 76
+            - 12
+            - 64
+            - 56
+        drop_sound: 66
+        item_ids:
+            - 2608
+            - 2616
+    -   gump_id: 73
+        bounds:
+            - 18
+            - 105
+            - 144
+            - 73
+        drop_sound: 66
+        item_ids:
+            - 3650
+            - 3651
+    -   gump_id: 74
+        bounds:
+            - 18
+            - 105
+            - 144
+            - 73
+        drop_sound: 66
+        item_ids:
+            - 3708
+            - 2475
+    -   gump_id: 75
+        bounds:
+            - 16
+            - 51
+            - 168
+            - 73
+        drop_sound: 66
+        item_ids:
+            - 3712
+            - 2472
+    -   gump_id: 76
+        bounds:
+            - 46
+            - 74
+            - 150
+            - 110
+        drop_sound: 66
+        item_ids:
+            - 15973
+            - 16019
+            - 16046
+            - 16057
+    -   gump_id: 77
+        bounds:
+            - 76
+            - 12
+            - 64
+            - 56
+        drop_sound: 66
+        item_ids:
+            - 2711
+            - 2712
+            - 2713
+            - 2714
+            - 2715
+            - 2716
+            - 2717
+            - 2718
+    -   gump_id: 78
+        bounds:
+            - 24
+            - 96
+            - 74
+            - 56
+        drop_sound: 66
+        item_ids:
+            - 2636
+            - 2637
+            - 2640
+            - 2641
+    -   gump_id: 79
+        bounds:
+            - 24
+            - 96
+            - 74
+            - 56
+        drop_sound: 66
+        item_ids:
+            - 2638
+            - 2639
+            - 2642
+            - 2643
+    -   gump_id: 81
+        bounds:
+            - 16
+            - 10
+            - 138
+            - 84
+        drop_sound: 66
+        item_ids:
+            - 2604
+            - 2612
+    -   gump_id: 82
+        bounds:
+            - 0
+            - 0
+            - 110
+            - 62
+        drop_sound: 66
+        item_ids:
+            - 7774
+    -   gump_id: 2330
+        bounds:
+            - 0
+            - 0
+            - 282
+            - 210
+        drop_sound: -1
+        item_ids:
+            - 4006
+    -   gump_id: 2350
+        bounds:
+            - 0
+            - 0
+            - 282
+            - 230
+        drop_sound: -1
+        item_ids:
+            - 3612
+            - 4013
+    -   gump_id: 258
+        bounds:
+            - 35
+            - 10
+            - 155
+            - 85
+        drop_sound: 66
+        item_ids:
+            - 9002
+            - 9003
+    -   gump_id: 261
+        bounds:
+            - 10
+            - 10
+            - 150
+            - 95
+        drop_sound: 66
+        item_ids:
+            - 10327
+            - 10328
+    -   gump_id: 262
+        bounds:
+            - 10
+            - 10
+            - 150
+            - 95
+        drop_sound: 66
+        item_ids:
+            - 10331
+            - 10332
+    -   gump_id: 263
+        bounds:
+            - 10
+            - 10
+            - 150
+            - 95
+        drop_sound: 66
+        item_ids:
+            - 10333
+            - 10334
+            - 10329
+            - 10330
+    -   gump_id: 264
+        bounds:
+            - 10
+            - 10
+            - 116
+            - 71
+        drop_sound: 79
+        item_ids:
+            - 9435
+            - 9436
+    -   gump_id: 265
+        bounds:
+            - 10
+            - 10
+            - 150
+            - 95
+        drop_sound: 66
+        item_ids:
+            - 10251
+            - 10252
+    -   gump_id: 266
+        bounds:
+            - 10
+            - 10
+            - 150
+            - 95
+        drop_sound: 66
+        item_ids:
+            - 10255
+            - 10256
+    -   gump_id: 267
+        bounds:
+            - 10
+            - 10
+            - 150
+            - 95
+        drop_sound: 66
+        item_ids:
+            - 10253
+            - 10254
+    -   gump_id: 268
+        bounds:
+            - 10
+            - 10
+            - 150
+            - 95
+        drop_sound: 66
+        item_ids:
+            - 10257
+            - 10258
+            - 10261
+            - 10262
+            - 10263
+            - 10264
+    -   gump_id: 269
+        bounds:
+            - 10
+            - 10
+            - 150
+            - 95
+        drop_sound: 66
+        item_ids:
+            - 10259
+            - 10260
+    -   gump_id: 288
+        bounds:
+            - 56
+            - 30
+            - 102
+            - 74
+        drop_sound: 66
+        item_ids:
+            - 18890
+            - 18891
+            - 18892
+            - 18896

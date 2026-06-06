@@ -1,272 +1,272 @@
 decoration:
-- type: LightWoodGate
-  arguments: (Facing = WestCW)
-  description: wooden gate
-  item_id: 2105
-  placements:
-  - location:
-    - 1234
-    - 543
-    - -6
-  - location:
-    - 1253
-    - 588
-    - -11
-- type: LightWoodGate
-  arguments: (Facing = EastCCW)
-  description: wooden gate
-  item_id: 2107
-  placements:
-  - location:
-    - 1235
-    - 543
-    - -6
-  - location:
-    - 1254
-    - 588
-    - -11
-- type: LightWoodGate
-  arguments: (Facing = SouthCW)
-  description: wooden gate
-  item_id: 2113
-  placements:
-  - location:
-    - 1227
-    - 555
-    - -11
-- type: LightWoodGate
-  arguments: (Facing = NorthCCW)
-  description: wooden gate
-  item_id: 2115
-  placements:
-  - location:
-    - 1227
-    - 554
-    - -11
-- type: DarkWoodGate
-  arguments: (Facing = SouthCCW)
-  description: wooden gate
-  item_id: 2162
-  placements:
-  - location:
-    - 1229
-    - 563
-    - -19
-- type: Static
-  arguments: ''
-  description: flowstone
-  item_id: 2274
-  placements:
-  - location:
-    - 1237
-    - 582
-    - -19
-  - location:
-    - 1237
-    - 586
-    - -19
-- type: Static
-  arguments: ''
-  description: pickaxe
-  item_id: 3717
-  placements:
-  - location:
-    - 1238
-    - 580
-    - -19
-- type: Static
-  arguments: ''
-  description: pickaxe
-  item_id: 3718
-  placements:
-  - location:
-    - 1239
-    - 586
-    - -19
-- type: AnvilEastAddon
-  arguments: ''
-  description: anvil
-  item_id: 4015
-  placements:
-  - location:
-    - 1260
-    - 583
-    - -19
-- type: Static
-  arguments: (Hue = 0x1; Name=a cave entrance)
-  description: tapestry
-  item_id: 4067
-  placements:
-  - location:
-    - 1237
-    - 585
-    - -22
-- type: Static
-  arguments: (Hue = 0x1; Name=a cave entrance)
-  description: tapestry
-  item_id: 4068
-  placements:
-  - location:
-    - 1237
-    - 583
-    - -22
-- type: Static
-  arguments: ''
-  description: boulder
-  item_id: 4949
-  placements:
-  - location:
-    - 1237
-    - 585
-    - 5
-- type: Static
-  arguments: ''
-  description: boulder
-  item_id: 4950
-  placements:
-  - location:
-    - 1237
-    - 584
-    - 5
-- type: Static
-  arguments: ''
-  description: boulder
-  item_id: 4961
-  placements:
-  - location:
-    - 1236
-    - 586
-    - -6
-- type: Static
-  arguments: ''
-  description: boulder
-  item_id: 4962
-  placements:
-  - location:
-    - 1237
-    - 586
-    - -6
-- type: Static
-  arguments: ''
-  description: rock
-  item_id: 4963
-  placements:
-  - location:
-    - 1237
-    - 582
-    - -1
-- type: Static
-  arguments: ''
-  description: rock
-  item_id: 4964
-  placements:
-  - location:
-    - 1237
-    - 583
-    - 4
-- type: Static
-  arguments: ''
-  description: rock
-  item_id: 4971
-  placements:
-  - location:
-    - 1237
-    - 583
-    - 1
-- type: Static
-  arguments: ''
-  description: rocks
-  item_id: 4973
-  placements:
-  - location:
-    - 1237
-    - 586
-    - 1
-- type: Static
-  arguments: ''
-  description: rock
-  item_id: 6002
-  placements:
-  - location:
-    - 1237
-    - 583
-    - 1
-- type: Static
-  arguments: ''
-  description: rock
-  item_id: 6003
-  placements:
-  - location:
-    - 1237
-    - 585
-    - 0
-- type: Static
-  arguments: ''
-  description: rock
-  item_id: 6005
-  placements:
-  - location:
-    - 1237
-    - 585
-    - 4
-  - location:
-    - 1237
-    - 586
-    - 3
-- type: Static
-  arguments: ''
-  description: rock
-  item_id: 6007
-  placements:
-  - location:
-    - 1236
-    - 584
-    - -1
-- type: Static
-  arguments: ''
-  description: bellows
-  item_id: 6522
-  placements:
-  - location:
-    - 1258
-    - 585
-    - -19
-- type: Static
-  arguments: (Light = Circle300)
-  description: forge
-  item_id: 6526
-  placements:
-  - location:
-    - 1259
-    - 585
-    - -19
-- type: Static
-  arguments: ''
-  description: forge
-  item_id: 6530
-  placements:
-  - location:
-    - 1260
-    - 585
-    - -19
-- type: Static
-  arguments: ''
-  description: nodraw--surface
-  item_id: 8600
-  placements:
-  - location:
-    - 1139
-    - 592
-    - -80
-  - location:
-    - 1140
-    - 592
-    - -80
-  - location:
-    - 1141
-    - 592
-    - -80
-  - location:
-    - 1142
-    - 592
-    - -80
+    -   type: LightWoodGate
+        arguments: (Facing = WestCW)
+        description: wooden gate
+        item_id: 2105
+        placements:
+            -   location:
+                    - 1234
+                    - 543
+                    - -6
+            -   location:
+                    - 1253
+                    - 588
+                    - -11
+    -   type: LightWoodGate
+        arguments: (Facing = EastCCW)
+        description: wooden gate
+        item_id: 2107
+        placements:
+            -   location:
+                    - 1235
+                    - 543
+                    - -6
+            -   location:
+                    - 1254
+                    - 588
+                    - -11
+    -   type: LightWoodGate
+        arguments: (Facing = SouthCW)
+        description: wooden gate
+        item_id: 2113
+        placements:
+            -   location:
+                    - 1227
+                    - 555
+                    - -11
+    -   type: LightWoodGate
+        arguments: (Facing = NorthCCW)
+        description: wooden gate
+        item_id: 2115
+        placements:
+            -   location:
+                    - 1227
+                    - 554
+                    - -11
+    -   type: DarkWoodGate
+        arguments: (Facing = SouthCCW)
+        description: wooden gate
+        item_id: 2162
+        placements:
+            -   location:
+                    - 1229
+                    - 563
+                    - -19
+    -   type: Static
+        arguments: ''
+        description: flowstone
+        item_id: 2274
+        placements:
+            -   location:
+                    - 1237
+                    - 582
+                    - -19
+            -   location:
+                    - 1237
+                    - 586
+                    - -19
+    -   type: Static
+        arguments: ''
+        description: pickaxe
+        item_id: 3717
+        placements:
+            -   location:
+                    - 1238
+                    - 580
+                    - -19
+    -   type: Static
+        arguments: ''
+        description: pickaxe
+        item_id: 3718
+        placements:
+            -   location:
+                    - 1239
+                    - 586
+                    - -19
+    -   type: AnvilEastAddon
+        arguments: ''
+        description: anvil
+        item_id: 4015
+        placements:
+            -   location:
+                    - 1260
+                    - 583
+                    - -19
+    -   type: Static
+        arguments: (Hue = 0x1; Name=a cave entrance)
+        description: tapestry
+        item_id: 4067
+        placements:
+            -   location:
+                    - 1237
+                    - 585
+                    - -22
+    -   type: Static
+        arguments: (Hue = 0x1; Name=a cave entrance)
+        description: tapestry
+        item_id: 4068
+        placements:
+            -   location:
+                    - 1237
+                    - 583
+                    - -22
+    -   type: Static
+        arguments: ''
+        description: boulder
+        item_id: 4949
+        placements:
+            -   location:
+                    - 1237
+                    - 585
+                    - 5
+    -   type: Static
+        arguments: ''
+        description: boulder
+        item_id: 4950
+        placements:
+            -   location:
+                    - 1237
+                    - 584
+                    - 5
+    -   type: Static
+        arguments: ''
+        description: boulder
+        item_id: 4961
+        placements:
+            -   location:
+                    - 1236
+                    - 586
+                    - -6
+    -   type: Static
+        arguments: ''
+        description: boulder
+        item_id: 4962
+        placements:
+            -   location:
+                    - 1237
+                    - 586
+                    - -6
+    -   type: Static
+        arguments: ''
+        description: rock
+        item_id: 4963
+        placements:
+            -   location:
+                    - 1237
+                    - 582
+                    - -1
+    -   type: Static
+        arguments: ''
+        description: rock
+        item_id: 4964
+        placements:
+            -   location:
+                    - 1237
+                    - 583
+                    - 4
+    -   type: Static
+        arguments: ''
+        description: rock
+        item_id: 4971
+        placements:
+            -   location:
+                    - 1237
+                    - 583
+                    - 1
+    -   type: Static
+        arguments: ''
+        description: rocks
+        item_id: 4973
+        placements:
+            -   location:
+                    - 1237
+                    - 586
+                    - 1
+    -   type: Static
+        arguments: ''
+        description: rock
+        item_id: 6002
+        placements:
+            -   location:
+                    - 1237
+                    - 583
+                    - 1
+    -   type: Static
+        arguments: ''
+        description: rock
+        item_id: 6003
+        placements:
+            -   location:
+                    - 1237
+                    - 585
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: rock
+        item_id: 6005
+        placements:
+            -   location:
+                    - 1237
+                    - 585
+                    - 4
+            -   location:
+                    - 1237
+                    - 586
+                    - 3
+    -   type: Static
+        arguments: ''
+        description: rock
+        item_id: 6007
+        placements:
+            -   location:
+                    - 1236
+                    - 584
+                    - -1
+    -   type: Static
+        arguments: ''
+        description: bellows
+        item_id: 6522
+        placements:
+            -   location:
+                    - 1258
+                    - 585
+                    - -19
+    -   type: Static
+        arguments: (Light = Circle300)
+        description: forge
+        item_id: 6526
+        placements:
+            -   location:
+                    - 1259
+                    - 585
+                    - -19
+    -   type: Static
+        arguments: ''
+        description: forge
+        item_id: 6530
+        placements:
+            -   location:
+                    - 1260
+                    - 585
+                    - -19
+    -   type: Static
+        arguments: ''
+        description: nodraw--surface
+        item_id: 8600
+        placements:
+            -   location:
+                    - 1139
+                    - 592
+                    - -80
+            -   location:
+                    - 1140
+                    - 592
+                    - -80
+            -   location:
+                    - 1141
+                    - 592
+                    - -80
+            -   location:
+                    - 1142
+                    - 592
+                    - -80

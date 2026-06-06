@@ -1,1017 +1,1017 @@
 decoration:
-- type: FullBookcase
-  arguments: ''
-  description: bookcase
-  item_id: 2715
-  placements:
-  - location:
-    - 250
-    - 88
-    - -28
-  - location:
-    - 253
-    - 88
-    - -28
-  - location:
-    - 259
-    - 69
-    - -28
-  - location:
-    - 265
-    - 69
-    - -28
-  - location:
-    - 267
-    - 69
-    - -28
-  - location:
-    - 269
-    - 69
-    - -28
-  - location:
-    - 273
-    - 69
-    - -28
-  - location:
-    - 444
-    - 9
-    - -28
-  - location:
-    - 448
-    - 9
-    - -28
-  - location:
-    - 99
-    - 36
-    - -28
-  - location:
-    - 101
-    - 36
-    - -28
-  - location:
-    - 108
-    - 36
-    - -28
-  - location:
-    - 110
-    - 36
-    - -28
-  - location:
-    - 114
-    - 36
-    - -28
-- type: FullBookcase
-  arguments: ''
-  description: bookcase
-  item_id: 2711
-  placements:
-  - location:
-    - 251
-    - 88
-    - -28
-  - location:
-    - 260
-    - 69
-    - -28
-  - location:
-    - 263
-    - 69
-    - -28
-  - location:
-    - 268
-    - 69
-    - -28
-  - location:
-    - 272
-    - 69
-    - -28
-  - location:
-    - 449
-    - 9
-    - -28
-  - location:
-    - 442
-    - 9
-    - -28
-  - location:
-    - 106
-    - 36
-    - -28
-  - location:
-    - 113
-    - 36
-    - -28
-  - location:
-    - 109
-    - 36
-    - -28
-- type: FullBookcase
-  arguments: ''
-  description: bookcase
-  item_id: 2716
-  placements:
-  - location:
-    - 257
-    - 70
-    - -28
-  - location:
-    - 257
-    - 78
-    - -28
-  - location:
-    - 261
-    - 76
-    - -28
-  - location:
-    - 269
-    - 56
-    - -28
-  - location:
-    - 270
-    - 96
-    - -28
-  - location:
-    - 261
-    - 78
-    - -28
-  - location:
-    - 261
-    - 74
-    - -28
-  - location:
-    - 270
-    - 98
-    - -28
-  - location:
-    - 247
-    - 92
-    - -28
-  - location:
-    - 247
-    - 94
-    - -28
-  - location:
-    - 247
-    - 98
-    - -28
-  - location:
-    - 247
-    - 99
-    - -28
-- type: FullBookcase
-  arguments: ''
-  description: bookcase
-  item_id: 2714
-  placements:
-  - location:
-    - 257
-    - 71
-    - -28
-  - location:
-    - 261
-    - 73
-    - -28
-  - location:
-    - 261
-    - 75
-    - -28
-  - location:
-    - 270
-    - 95
-    - -28
-  - location:
-    - 247
-    - 93
-    - -28
-  - location:
-    - 247
-    - 97
-    - -28
-- type: FullBookcase
-  arguments: ''
-  description: bookcase
-  item_id: 2712
-  placements:
-  - location:
-    - 258
-    - 69
-    - -28
-  - location:
-    - 261
-    - 69
-    - -28
-  - location:
-    - 264
-    - 69
-    - -28
-  - location:
-    - 266
-    - 69
-    - -28
-  - location:
-    - 271
-    - 69
-    - -28
-  - location:
-    - 274
-    - 69
-    - -28
-  - location:
-    - 450
-    - 9
-    - -28
-  - location:
-    - 443
-    - 9
-    - -28
-  - location:
-    - 100
-    - 36
-    - -28
-  - location:
-    - 447
-    - 9
-    - -28
-  - location:
-    - 107
-    - 36
-    - -28
-  - location:
-    - 248
-    - 88
-    - -28
-- type: FullBookcase
-  arguments: ''
-  description: bookcase
-  item_id: 2713
-  placements:
-  - location:
-    - 257
-    - 77
-    - -28
-  - location:
-    - 261
-    - 72
-    - -28
-  - location:
-    - 261
-    - 77
-    - -28
-  - location:
-    - 261
-    - 79
-    - -28
-  - location:
-    - 269
-    - 57
-    - -28
-  - location:
-    - 442
-    - 15
-    - -28
-  - location:
-    - 270
-    - 94
-    - -28
-  - location:
-    - 270
-    - 97
-    - -28
-  - location:
-    - 442
-    - 12
-    - -28
-  - location:
-    - 442
-    - 13
-    - -28
-  - location:
-    - 442
-    - 14
-    - -28
-  - location:
-    - 247
-    - 89
-    - -28
-  - location:
-    - 247
-    - 90
-    - -28
-  - location:
-    - 247
-    - 95
-    - -28
-- type: Static
-  arguments: (Hue = 0x835)
-  description: stone stairs
-  item_id: 1875
-  placements:
-  - location:
-    - 266
-    - 129
-    - -38
-  - location:
-    - 267
-    - 129
-    - -38
-  - location:
-    - 268
-    - 129
-    - -38
-  - location:
-    - 284
-    - 66
-    - -38
-  - location:
-    - 285
-    - 66
-    - -38
-  - location:
-    - 287
-    - 66
-    - -38
-  - location:
-    - 285
-    - 73
-    - -18
-  - location:
-    - 287
-    - 73
-    - -18
-  - location:
-    - 132
-    - 129
-    - -18
-  - location:
-    - 134
-    - 129
-    - -18
-  - location:
-    - 265
-    - 129
-    - -38
-  - location:
-    - 286
-    - 66
-    - -38
-  - location:
-    - 284
-    - 73
-    - -18
-  - location:
-    - 286
-    - 73
-    - -18
-  - location:
-    - 131
-    - 129
-    - -18
-  - location:
-    - 133
-    - 129
-    - -18
-- type: Static
-  arguments: ''
-  description: magical crystal
-  item_id: 7961
-  placements:
-  - location:
-    - 279
-    - 6
-    - -22
-  - location:
-    - 279
-    - 34
-    - -22
-  - location:
-    - 248
-    - 70
-    - -22
-  - location:
-    - 249
-    - 70
-    - -22
-  - location:
-    - 250
-    - 70
-    - -22
-- type: Static
-  arguments: (Hue = 0x848)
-  description: stone stairs
-  item_id: 1875
-  placements:
-  - location:
-    - 273
-    - 141
-    - -18
-- type: Static
-  arguments: ''
-  description: magical crystal
-  item_id: 7964
-  placements:
-  - location:
-    - 284
-    - 6
-    - -22
-  - location:
-    - 283
-    - 34
-    - -22
-- type: Static
-  arguments: ''
-  description: platemail gloves
-  item_id: 5140
-  placements:
-  - location:
-    - 217
-    - 49
-    - -28
-- type: LargeForgeEastAddon
-  arguments: ''
-  description: bellows
-  item_id: 6534
-  placements:
-  - location:
-    - 299
-    - 23
-    - -28
-- type: AnvilEastAddon
-  arguments: ''
-  description: anvil
-  item_id: 4015
-  placements:
-  - location:
-    - 301
-    - 24
-    - -28
-  - location:
-    - 301
-    - 25
-    - -28
-- type: Static
-  arguments: ''
-  description: wooden stairs
-  item_id: 1850
-  placements:
-  - location:
-    - 359
-    - 40
-    - -43
-  - location:
-    - 359
-    - 41
-    - -43
-  - location:
-    - 359
-    - 42
-    - -43
-  - location:
-    - 155
-    - 88
-    - -18
-  - location:
-    - 155
-    - 89
-    - -18
-  - location:
-    - 155
-    - 90
-    - -18
-- type: Static
-  arguments: ''
-  description: stone stairs
-  item_id: 1876
-  placements:
-  - location:
-    - 370
-    - 29
-    - -43
-  - location:
-    - 370
-    - 30
-    - -43
-  - location:
-    - 370
-    - 31
-    - -43
-  - location:
-    - 242
-    - 25
-    - -18
-  - location:
-    - 242
-    - 26
-    - -18
-  - location:
-    - 242
-    - 27
-    - -18
-- type: Static
-  arguments: ''
-  description: bone armor
-  item_id: 5204
-  placements:
-  - location:
-    - 130
-    - 109
-    - -28
-- type: MediumCrate
-  arguments: ''
-  description: crate
-  item_id: 3646
-  placements:
-  - location:
-    - 394
-    - 59
-    - -28
-  - location:
-    - 394
-    - 68
-    - -28
-  - location:
-    - 394
-    - 74
-    - -28
-  - location:
-    - 400
-    - 67
-    - -28
-  - location:
-    - 400
-    - 79
-    - -28
-  - location:
-    - 461
-    - 82
-    - -28
-- type: MetalBox
-  arguments: ''
-  description: strong box
-  item_id: 3712
-  placements:
-  - location:
-    - 394
-    - 62
-    - -28
-  - location:
-    - 394
-    - 65
-    - -28
-  - location:
-    - 394
-    - 80
-    - -28
-  - location:
-    - 400
-    - 58
-    - -28
-  - location:
-    - 400
-    - 64
-    - -28
-  - location:
-    - 400
-    - 73
-    - -28
-  - location:
-    - 400
-    - 76
-    - -28
-  - location:
-    - 433
-    - 96
-    - -22
-- type: MetalChest
-  arguments: ''
-  description: metal chest
-  item_id: 2475
-  placements:
-  - location:
-    - 399
-    - 62
-    - -28
-  - location:
-    - 399
-    - 71
-    - -28
-  - location:
-    - 393
-    - 72
-    - -28
-  - location:
-    - 393
-    - 78
-    - -28
-- type: Static
-  arguments: ''
-  description: pen and ink
-  item_id: 4031
-  placements:
-  - location:
-    - 423
-    - 95
-    - -22
-- type: StrongWoodDoor
-  arguments: (Facing = WestCW)
-  description: wooden door
-  item_id: 1765
-  placements:
-  - location:
-    - 272
-    - 87
-    - -28
-  - location:
-    - 266
-    - 87
-    - -28
-- type: Static
-  arguments: ''
-  description: book
-  item_id: 4029
-  placements:
-  - location:
-    - 423
-    - 96
-    - -22
-- type: BarredMetalDoor2
-  arguments: (Facing = SouthCW)
-  description: barred metal door
-  item_id: 8181
-  placements:
-  - location:
-    - 418
-    - 28
-    - -28
-  - location:
-    - 474
-    - 29
-    - -28
-  - location:
-    - 106
-    - 31
-    - -28
-  - location:
-    - 231
-    - 139
-    - -28
-  - location:
-    - 231
-    - 132
-    - -28
-  - location:
-    - 231
-    - 123
-    - -28
-  - location:
-    - 231
-    - 117
-    - -28
-- type: Static
-  arguments: ''
-  description: stone pavers
-  item_id: 1307
-  placements:
-  - location:
-    - 427
-    - 113
-    - -28
-- type: Static
-  arguments: ''
-  description: stone pavers
-  item_id: 1305
-  placements:
-  - location:
-    - 429
-    - 113
-    - -28
-- type: MetalGoldenChest
-  arguments: ''
-  description: metal chest
-  item_id: 3649
-  placements:
-  - location:
-    - 433
-    - 92
-    - -28
-  - location:
-    - 435
-    - 92
-    - -28
-  - location:
-    - 434
-    - 92
-    - -28
-- type: LargeCrate
-  arguments: ''
-  description: crate
-  item_id: 3644
-  placements:
-  - location:
-    - 462
-    - 82
-    - -28
-  - location:
-    - 462
-    - 82
-    - -25
-  - location:
-    - 139
-    - 52
-    - -25
-  - location:
-    - 139
-    - 52
-    - -28
-  - location:
-    - 140
-    - 53
-    - -28
-  - location:
-    - 140
-    - 52
-    - -28
-- type: MediumCrate
-  arguments: ''
-  description: crate
-  item_id: 3647
-  placements:
-  - location:
-    - 462
-    - 82
-    - -22
-  - location:
-    - 140
-    - 52
-    - -25
-  - location:
-    - 140
-    - 53
-    - -25
-- type: MetalGoldenChest
-  arguments: ''
-  description: metal chest
-  item_id: 3648
-  placements:
-  - location:
-    - 129
-    - 118
-    - -28
-  - location:
-    - 136
-    - 117
-    - -28
-  - location:
-    - 129
-    - 117
-    - -28
-  - location:
-    - 136
-    - 118
-    - -28
-- type: SmallCrate
-  arguments: ''
-  description: crate
-  item_id: 3710
-  placements:
-  - location:
-    - 140
-    - 52
-    - -22
-  - location:
-    - 140
-    - 53
-    - -22
-  - location:
-    - 139
-    - 52
-    - -22
-- type: StrongWoodDoor
-  arguments: (Facing = EastCCW)
-  description: wooden door
-  item_id: 1767
-  placements:
-  - location:
-    - 267
-    - 87
-    - -28
-  - location:
-    - 273
-    - 87
-    - -28
-- type: MetalDoor
-  arguments: (Facing = EastCCW)
-  description: metal door
-  item_id: 1655
-  placements:
-  - location:
-    - 104
-    - 35
-    - -28
-  - location:
-    - 249
-    - 80
-    - -28
-- type: MetalDoor
-  arguments: (Facing = WestCW)
-  description: metal door
-  item_id: 1653
-  placements:
-  - location:
-    - 248
-    - 80
-    - -28
-  - location:
-    - 103
-    - 35
-    - -28
-- type: Static
-  arguments: (Hue = 0x849)
-  description: stone stairs
-  item_id: 1875
-  placements:
-  - location:
-    - 274
-    - 141
-    - -18
-- type: Static
-  arguments: ''
-  description: ring
-  item_id: 7945
-  placements:
-  - location:
-    - 136
-    - 108
-    - -28
-- type: BarredMetalDoor2
-  arguments: (Facing = WestCW)
-  description: barred metal door
-  item_id: 8173
-  placements:
-  - location:
-    - 100
-    - 29
-    - -28
-  - location:
-    - 161
-    - 14
-    - -27
-- type: Static
-  arguments: (Hue = 0x847)
-  description: stone stairs
-  item_id: 1875
-  placements:
-  - location:
-    - 272
-    - 141
-    - -18
-- type: BarredMetalDoor2
-  arguments: (Facing = EastCCW)
-  description: barred metal door
-  item_id: 8175
-  placements:
-  - location:
-    - 162
-    - 14
-    - -28
-- type: BarredMetalDoor2
-  arguments: (Facing = NorthCCW)
-  description: barred metal door
-  item_id: 8183
-  placements:
-  - location:
-    - 231
-    - 138
-    - -28
-  - location:
-    - 231
-    - 131
-    - -28
-  - location:
-    - 231
-    - 122
-    - -28
-  - location:
-    - 231
-    - 116
-    - -28
-- type: BarredMetalDoor2
-  arguments: (Facing = NorthCW)
-  description: barred metal door
-  item_id: 8187
-  placements:
-  - location:
-    - 240
-    - 138
-    - -28
-- type: BarredMetalDoor2
-  arguments: (Facing = SouthCCW)
-  description: barred metal door
-  item_id: 8185
-  placements:
-  - location:
-    - 240
-    - 139
-    - -28
-- type: Static
-  arguments: ''
-  description: stone pavers
-  item_id: 1308
-  placements:
-  - location:
-    - 426
-    - 113
-    - -28
-  - location:
-    - 428
-    - 113
-    - -28
-- type: StrongWoodDoor
-  arguments: (Facing = NorthCCW)
-  description: wooden door
-  item_id: 1775
-  placements:
-  - location:
-    - 264
-    - 95
-    - -28
-- type: StrongWoodDoor
-  arguments: (Facing = SouthCW)
-  description: wooden door
-  item_id: 1773
-  placements:
-  - location:
-    - 264
-    - 96
-    - -28
-- type: Static
-  arguments: ''
-  description: skinning knife
-  item_id: 3781
-  placements:
-  - location:
-    - 174
-    - 41
-    - -28
-- type: Static
-  arguments: ''
-  description: iron maiden
-  item_id: 4683
-  placements:
-  - location:
-    - 146
-    - 7
-    - -28
-- type: Static
-  arguments: (Hue = 0x455)
-  description: death vortex
-  item_id: 14232
-  placements:
-  - location:
-    - 232
-    - 45
-    - -28
-- type: Static
-  arguments: ''
-  description: bottle
-  item_id: 3844
-  placements:
-  - location:
-    - 238
-    - 42
-    - -22
-- type: Static
-  arguments: ''
-  description: bottle
-  item_id: 3837
-  placements:
-  - location:
-    - 239
-    - 42
-    - -22
-- type: Static
-  arguments: (Hue = 0x59B)
-  description: death vortex
-  item_id: 14232
-  placements:
-  - location:
-    - 232
-    - 54
-    - -28
-- type: Static
-  arguments: (Hue = 0x84A)
-  description: death vortex
-  item_id: 14232
-  placements:
-  - location:
-    - 246
-    - 45
-    - -28
-- type: Static
-  arguments: (Hue = 0x66D)
-  description: death vortex
-  item_id: 14232
-  placements:
-  - location:
-    - 246
-    - 54
-    - -28
+    -   type: FullBookcase
+        arguments: ''
+        description: bookcase
+        item_id: 2715
+        placements:
+            -   location:
+                    - 250
+                    - 88
+                    - -28
+            -   location:
+                    - 253
+                    - 88
+                    - -28
+            -   location:
+                    - 259
+                    - 69
+                    - -28
+            -   location:
+                    - 265
+                    - 69
+                    - -28
+            -   location:
+                    - 267
+                    - 69
+                    - -28
+            -   location:
+                    - 269
+                    - 69
+                    - -28
+            -   location:
+                    - 273
+                    - 69
+                    - -28
+            -   location:
+                    - 444
+                    - 9
+                    - -28
+            -   location:
+                    - 448
+                    - 9
+                    - -28
+            -   location:
+                    - 99
+                    - 36
+                    - -28
+            -   location:
+                    - 101
+                    - 36
+                    - -28
+            -   location:
+                    - 108
+                    - 36
+                    - -28
+            -   location:
+                    - 110
+                    - 36
+                    - -28
+            -   location:
+                    - 114
+                    - 36
+                    - -28
+    -   type: FullBookcase
+        arguments: ''
+        description: bookcase
+        item_id: 2711
+        placements:
+            -   location:
+                    - 251
+                    - 88
+                    - -28
+            -   location:
+                    - 260
+                    - 69
+                    - -28
+            -   location:
+                    - 263
+                    - 69
+                    - -28
+            -   location:
+                    - 268
+                    - 69
+                    - -28
+            -   location:
+                    - 272
+                    - 69
+                    - -28
+            -   location:
+                    - 449
+                    - 9
+                    - -28
+            -   location:
+                    - 442
+                    - 9
+                    - -28
+            -   location:
+                    - 106
+                    - 36
+                    - -28
+            -   location:
+                    - 113
+                    - 36
+                    - -28
+            -   location:
+                    - 109
+                    - 36
+                    - -28
+    -   type: FullBookcase
+        arguments: ''
+        description: bookcase
+        item_id: 2716
+        placements:
+            -   location:
+                    - 257
+                    - 70
+                    - -28
+            -   location:
+                    - 257
+                    - 78
+                    - -28
+            -   location:
+                    - 261
+                    - 76
+                    - -28
+            -   location:
+                    - 269
+                    - 56
+                    - -28
+            -   location:
+                    - 270
+                    - 96
+                    - -28
+            -   location:
+                    - 261
+                    - 78
+                    - -28
+            -   location:
+                    - 261
+                    - 74
+                    - -28
+            -   location:
+                    - 270
+                    - 98
+                    - -28
+            -   location:
+                    - 247
+                    - 92
+                    - -28
+            -   location:
+                    - 247
+                    - 94
+                    - -28
+            -   location:
+                    - 247
+                    - 98
+                    - -28
+            -   location:
+                    - 247
+                    - 99
+                    - -28
+    -   type: FullBookcase
+        arguments: ''
+        description: bookcase
+        item_id: 2714
+        placements:
+            -   location:
+                    - 257
+                    - 71
+                    - -28
+            -   location:
+                    - 261
+                    - 73
+                    - -28
+            -   location:
+                    - 261
+                    - 75
+                    - -28
+            -   location:
+                    - 270
+                    - 95
+                    - -28
+            -   location:
+                    - 247
+                    - 93
+                    - -28
+            -   location:
+                    - 247
+                    - 97
+                    - -28
+    -   type: FullBookcase
+        arguments: ''
+        description: bookcase
+        item_id: 2712
+        placements:
+            -   location:
+                    - 258
+                    - 69
+                    - -28
+            -   location:
+                    - 261
+                    - 69
+                    - -28
+            -   location:
+                    - 264
+                    - 69
+                    - -28
+            -   location:
+                    - 266
+                    - 69
+                    - -28
+            -   location:
+                    - 271
+                    - 69
+                    - -28
+            -   location:
+                    - 274
+                    - 69
+                    - -28
+            -   location:
+                    - 450
+                    - 9
+                    - -28
+            -   location:
+                    - 443
+                    - 9
+                    - -28
+            -   location:
+                    - 100
+                    - 36
+                    - -28
+            -   location:
+                    - 447
+                    - 9
+                    - -28
+            -   location:
+                    - 107
+                    - 36
+                    - -28
+            -   location:
+                    - 248
+                    - 88
+                    - -28
+    -   type: FullBookcase
+        arguments: ''
+        description: bookcase
+        item_id: 2713
+        placements:
+            -   location:
+                    - 257
+                    - 77
+                    - -28
+            -   location:
+                    - 261
+                    - 72
+                    - -28
+            -   location:
+                    - 261
+                    - 77
+                    - -28
+            -   location:
+                    - 261
+                    - 79
+                    - -28
+            -   location:
+                    - 269
+                    - 57
+                    - -28
+            -   location:
+                    - 442
+                    - 15
+                    - -28
+            -   location:
+                    - 270
+                    - 94
+                    - -28
+            -   location:
+                    - 270
+                    - 97
+                    - -28
+            -   location:
+                    - 442
+                    - 12
+                    - -28
+            -   location:
+                    - 442
+                    - 13
+                    - -28
+            -   location:
+                    - 442
+                    - 14
+                    - -28
+            -   location:
+                    - 247
+                    - 89
+                    - -28
+            -   location:
+                    - 247
+                    - 90
+                    - -28
+            -   location:
+                    - 247
+                    - 95
+                    - -28
+    -   type: Static
+        arguments: (Hue = 0x835)
+        description: stone stairs
+        item_id: 1875
+        placements:
+            -   location:
+                    - 266
+                    - 129
+                    - -38
+            -   location:
+                    - 267
+                    - 129
+                    - -38
+            -   location:
+                    - 268
+                    - 129
+                    - -38
+            -   location:
+                    - 284
+                    - 66
+                    - -38
+            -   location:
+                    - 285
+                    - 66
+                    - -38
+            -   location:
+                    - 287
+                    - 66
+                    - -38
+            -   location:
+                    - 285
+                    - 73
+                    - -18
+            -   location:
+                    - 287
+                    - 73
+                    - -18
+            -   location:
+                    - 132
+                    - 129
+                    - -18
+            -   location:
+                    - 134
+                    - 129
+                    - -18
+            -   location:
+                    - 265
+                    - 129
+                    - -38
+            -   location:
+                    - 286
+                    - 66
+                    - -38
+            -   location:
+                    - 284
+                    - 73
+                    - -18
+            -   location:
+                    - 286
+                    - 73
+                    - -18
+            -   location:
+                    - 131
+                    - 129
+                    - -18
+            -   location:
+                    - 133
+                    - 129
+                    - -18
+    -   type: Static
+        arguments: ''
+        description: magical crystal
+        item_id: 7961
+        placements:
+            -   location:
+                    - 279
+                    - 6
+                    - -22
+            -   location:
+                    - 279
+                    - 34
+                    - -22
+            -   location:
+                    - 248
+                    - 70
+                    - -22
+            -   location:
+                    - 249
+                    - 70
+                    - -22
+            -   location:
+                    - 250
+                    - 70
+                    - -22
+    -   type: Static
+        arguments: (Hue = 0x848)
+        description: stone stairs
+        item_id: 1875
+        placements:
+            -   location:
+                    - 273
+                    - 141
+                    - -18
+    -   type: Static
+        arguments: ''
+        description: magical crystal
+        item_id: 7964
+        placements:
+            -   location:
+                    - 284
+                    - 6
+                    - -22
+            -   location:
+                    - 283
+                    - 34
+                    - -22
+    -   type: Static
+        arguments: ''
+        description: platemail gloves
+        item_id: 5140
+        placements:
+            -   location:
+                    - 217
+                    - 49
+                    - -28
+    -   type: LargeForgeEastAddon
+        arguments: ''
+        description: bellows
+        item_id: 6534
+        placements:
+            -   location:
+                    - 299
+                    - 23
+                    - -28
+    -   type: AnvilEastAddon
+        arguments: ''
+        description: anvil
+        item_id: 4015
+        placements:
+            -   location:
+                    - 301
+                    - 24
+                    - -28
+            -   location:
+                    - 301
+                    - 25
+                    - -28
+    -   type: Static
+        arguments: ''
+        description: wooden stairs
+        item_id: 1850
+        placements:
+            -   location:
+                    - 359
+                    - 40
+                    - -43
+            -   location:
+                    - 359
+                    - 41
+                    - -43
+            -   location:
+                    - 359
+                    - 42
+                    - -43
+            -   location:
+                    - 155
+                    - 88
+                    - -18
+            -   location:
+                    - 155
+                    - 89
+                    - -18
+            -   location:
+                    - 155
+                    - 90
+                    - -18
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 1876
+        placements:
+            -   location:
+                    - 370
+                    - 29
+                    - -43
+            -   location:
+                    - 370
+                    - 30
+                    - -43
+            -   location:
+                    - 370
+                    - 31
+                    - -43
+            -   location:
+                    - 242
+                    - 25
+                    - -18
+            -   location:
+                    - 242
+                    - 26
+                    - -18
+            -   location:
+                    - 242
+                    - 27
+                    - -18
+    -   type: Static
+        arguments: ''
+        description: bone armor
+        item_id: 5204
+        placements:
+            -   location:
+                    - 130
+                    - 109
+                    - -28
+    -   type: MediumCrate
+        arguments: ''
+        description: crate
+        item_id: 3646
+        placements:
+            -   location:
+                    - 394
+                    - 59
+                    - -28
+            -   location:
+                    - 394
+                    - 68
+                    - -28
+            -   location:
+                    - 394
+                    - 74
+                    - -28
+            -   location:
+                    - 400
+                    - 67
+                    - -28
+            -   location:
+                    - 400
+                    - 79
+                    - -28
+            -   location:
+                    - 461
+                    - 82
+                    - -28
+    -   type: MetalBox
+        arguments: ''
+        description: strong box
+        item_id: 3712
+        placements:
+            -   location:
+                    - 394
+                    - 62
+                    - -28
+            -   location:
+                    - 394
+                    - 65
+                    - -28
+            -   location:
+                    - 394
+                    - 80
+                    - -28
+            -   location:
+                    - 400
+                    - 58
+                    - -28
+            -   location:
+                    - 400
+                    - 64
+                    - -28
+            -   location:
+                    - 400
+                    - 73
+                    - -28
+            -   location:
+                    - 400
+                    - 76
+                    - -28
+            -   location:
+                    - 433
+                    - 96
+                    - -22
+    -   type: MetalChest
+        arguments: ''
+        description: metal chest
+        item_id: 2475
+        placements:
+            -   location:
+                    - 399
+                    - 62
+                    - -28
+            -   location:
+                    - 399
+                    - 71
+                    - -28
+            -   location:
+                    - 393
+                    - 72
+                    - -28
+            -   location:
+                    - 393
+                    - 78
+                    - -28
+    -   type: Static
+        arguments: ''
+        description: pen and ink
+        item_id: 4031
+        placements:
+            -   location:
+                    - 423
+                    - 95
+                    - -22
+    -   type: StrongWoodDoor
+        arguments: (Facing = WestCW)
+        description: wooden door
+        item_id: 1765
+        placements:
+            -   location:
+                    - 272
+                    - 87
+                    - -28
+            -   location:
+                    - 266
+                    - 87
+                    - -28
+    -   type: Static
+        arguments: ''
+        description: book
+        item_id: 4029
+        placements:
+            -   location:
+                    - 423
+                    - 96
+                    - -22
+    -   type: BarredMetalDoor2
+        arguments: (Facing = SouthCW)
+        description: barred metal door
+        item_id: 8181
+        placements:
+            -   location:
+                    - 418
+                    - 28
+                    - -28
+            -   location:
+                    - 474
+                    - 29
+                    - -28
+            -   location:
+                    - 106
+                    - 31
+                    - -28
+            -   location:
+                    - 231
+                    - 139
+                    - -28
+            -   location:
+                    - 231
+                    - 132
+                    - -28
+            -   location:
+                    - 231
+                    - 123
+                    - -28
+            -   location:
+                    - 231
+                    - 117
+                    - -28
+    -   type: Static
+        arguments: ''
+        description: stone pavers
+        item_id: 1307
+        placements:
+            -   location:
+                    - 427
+                    - 113
+                    - -28
+    -   type: Static
+        arguments: ''
+        description: stone pavers
+        item_id: 1305
+        placements:
+            -   location:
+                    - 429
+                    - 113
+                    - -28
+    -   type: MetalGoldenChest
+        arguments: ''
+        description: metal chest
+        item_id: 3649
+        placements:
+            -   location:
+                    - 433
+                    - 92
+                    - -28
+            -   location:
+                    - 435
+                    - 92
+                    - -28
+            -   location:
+                    - 434
+                    - 92
+                    - -28
+    -   type: LargeCrate
+        arguments: ''
+        description: crate
+        item_id: 3644
+        placements:
+            -   location:
+                    - 462
+                    - 82
+                    - -28
+            -   location:
+                    - 462
+                    - 82
+                    - -25
+            -   location:
+                    - 139
+                    - 52
+                    - -25
+            -   location:
+                    - 139
+                    - 52
+                    - -28
+            -   location:
+                    - 140
+                    - 53
+                    - -28
+            -   location:
+                    - 140
+                    - 52
+                    - -28
+    -   type: MediumCrate
+        arguments: ''
+        description: crate
+        item_id: 3647
+        placements:
+            -   location:
+                    - 462
+                    - 82
+                    - -22
+            -   location:
+                    - 140
+                    - 52
+                    - -25
+            -   location:
+                    - 140
+                    - 53
+                    - -25
+    -   type: MetalGoldenChest
+        arguments: ''
+        description: metal chest
+        item_id: 3648
+        placements:
+            -   location:
+                    - 129
+                    - 118
+                    - -28
+            -   location:
+                    - 136
+                    - 117
+                    - -28
+            -   location:
+                    - 129
+                    - 117
+                    - -28
+            -   location:
+                    - 136
+                    - 118
+                    - -28
+    -   type: SmallCrate
+        arguments: ''
+        description: crate
+        item_id: 3710
+        placements:
+            -   location:
+                    - 140
+                    - 52
+                    - -22
+            -   location:
+                    - 140
+                    - 53
+                    - -22
+            -   location:
+                    - 139
+                    - 52
+                    - -22
+    -   type: StrongWoodDoor
+        arguments: (Facing = EastCCW)
+        description: wooden door
+        item_id: 1767
+        placements:
+            -   location:
+                    - 267
+                    - 87
+                    - -28
+            -   location:
+                    - 273
+                    - 87
+                    - -28
+    -   type: MetalDoor
+        arguments: (Facing = EastCCW)
+        description: metal door
+        item_id: 1655
+        placements:
+            -   location:
+                    - 104
+                    - 35
+                    - -28
+            -   location:
+                    - 249
+                    - 80
+                    - -28
+    -   type: MetalDoor
+        arguments: (Facing = WestCW)
+        description: metal door
+        item_id: 1653
+        placements:
+            -   location:
+                    - 248
+                    - 80
+                    - -28
+            -   location:
+                    - 103
+                    - 35
+                    - -28
+    -   type: Static
+        arguments: (Hue = 0x849)
+        description: stone stairs
+        item_id: 1875
+        placements:
+            -   location:
+                    - 274
+                    - 141
+                    - -18
+    -   type: Static
+        arguments: ''
+        description: ring
+        item_id: 7945
+        placements:
+            -   location:
+                    - 136
+                    - 108
+                    - -28
+    -   type: BarredMetalDoor2
+        arguments: (Facing = WestCW)
+        description: barred metal door
+        item_id: 8173
+        placements:
+            -   location:
+                    - 100
+                    - 29
+                    - -28
+            -   location:
+                    - 161
+                    - 14
+                    - -27
+    -   type: Static
+        arguments: (Hue = 0x847)
+        description: stone stairs
+        item_id: 1875
+        placements:
+            -   location:
+                    - 272
+                    - 141
+                    - -18
+    -   type: BarredMetalDoor2
+        arguments: (Facing = EastCCW)
+        description: barred metal door
+        item_id: 8175
+        placements:
+            -   location:
+                    - 162
+                    - 14
+                    - -28
+    -   type: BarredMetalDoor2
+        arguments: (Facing = NorthCCW)
+        description: barred metal door
+        item_id: 8183
+        placements:
+            -   location:
+                    - 231
+                    - 138
+                    - -28
+            -   location:
+                    - 231
+                    - 131
+                    - -28
+            -   location:
+                    - 231
+                    - 122
+                    - -28
+            -   location:
+                    - 231
+                    - 116
+                    - -28
+    -   type: BarredMetalDoor2
+        arguments: (Facing = NorthCW)
+        description: barred metal door
+        item_id: 8187
+        placements:
+            -   location:
+                    - 240
+                    - 138
+                    - -28
+    -   type: BarredMetalDoor2
+        arguments: (Facing = SouthCCW)
+        description: barred metal door
+        item_id: 8185
+        placements:
+            -   location:
+                    - 240
+                    - 139
+                    - -28
+    -   type: Static
+        arguments: ''
+        description: stone pavers
+        item_id: 1308
+        placements:
+            -   location:
+                    - 426
+                    - 113
+                    - -28
+            -   location:
+                    - 428
+                    - 113
+                    - -28
+    -   type: StrongWoodDoor
+        arguments: (Facing = NorthCCW)
+        description: wooden door
+        item_id: 1775
+        placements:
+            -   location:
+                    - 264
+                    - 95
+                    - -28
+    -   type: StrongWoodDoor
+        arguments: (Facing = SouthCW)
+        description: wooden door
+        item_id: 1773
+        placements:
+            -   location:
+                    - 264
+                    - 96
+                    - -28
+    -   type: Static
+        arguments: ''
+        description: skinning knife
+        item_id: 3781
+        placements:
+            -   location:
+                    - 174
+                    - 41
+                    - -28
+    -   type: Static
+        arguments: ''
+        description: iron maiden
+        item_id: 4683
+        placements:
+            -   location:
+                    - 146
+                    - 7
+                    - -28
+    -   type: Static
+        arguments: (Hue = 0x455)
+        description: death vortex
+        item_id: 14232
+        placements:
+            -   location:
+                    - 232
+                    - 45
+                    - -28
+    -   type: Static
+        arguments: ''
+        description: bottle
+        item_id: 3844
+        placements:
+            -   location:
+                    - 238
+                    - 42
+                    - -22
+    -   type: Static
+        arguments: ''
+        description: bottle
+        item_id: 3837
+        placements:
+            -   location:
+                    - 239
+                    - 42
+                    - -22
+    -   type: Static
+        arguments: (Hue = 0x59B)
+        description: death vortex
+        item_id: 14232
+        placements:
+            -   location:
+                    - 232
+                    - 54
+                    - -28
+    -   type: Static
+        arguments: (Hue = 0x84A)
+        description: death vortex
+        item_id: 14232
+        placements:
+            -   location:
+                    - 246
+                    - 45
+                    - -28
+    -   type: Static
+        arguments: (Hue = 0x66D)
+        description: death vortex
+        item_id: 14232
+        placements:
+            -   location:
+                    - 246
+                    - 54
+                    - -28

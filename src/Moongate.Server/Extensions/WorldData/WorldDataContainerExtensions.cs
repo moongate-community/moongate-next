@@ -28,51 +28,51 @@ public static class WorldDataContainerExtensions
         container.RegisterDelegate(_ => new ServerAssetDataLoader(normalizedDataDirectory), Reuse.Singleton);
         RegisterDataService<IDoorDataService, DoorDataService>(
             container,
-            resolver => new DoorDataService(resolver.Resolve<ServerAssetDataLoader>())
+            resolver => new(resolver.Resolve<ServerAssetDataLoader>())
         );
         RegisterDataService<ISpawnsDataService, SpawnsDataService>(
             container,
-            resolver => new SpawnsDataService(resolver.Resolve<ServerAssetDataLoader>())
+            resolver => new(resolver.Resolve<ServerAssetDataLoader>())
         );
         RegisterDataService<ITeleportersDataService, TeleportersDataService>(
             container,
-            resolver => new TeleportersDataService(resolver.Resolve<ServerAssetDataLoader>())
+            resolver => new(resolver.Resolve<ServerAssetDataLoader>())
         );
         RegisterDataService<IRegionDataService, RegionDataService>(
             container,
-            resolver => new RegionDataService(resolver.Resolve<ServerAssetDataLoader>())
+            resolver => new(resolver.Resolve<ServerAssetDataLoader>())
         );
         RegisterDataService<IWeatherDataService, WeatherDataService>(
             container,
-            resolver => new WeatherDataService(resolver.Resolve<ServerAssetDataLoader>())
+            resolver => new(resolver.Resolve<ServerAssetDataLoader>())
         );
         RegisterDataService<IContainerDataService, ContainerDataService>(
             container,
-            resolver => new ContainerDataService(resolver.Resolve<ServerAssetDataLoader>())
+            resolver => new(resolver.Resolve<ServerAssetDataLoader>())
         );
         RegisterDataService<ILocationCatalogService, LocationCatalogService>(
             container,
-            resolver => new LocationCatalogService(resolver.Resolve<ServerAssetDataLoader>())
+            resolver => new(resolver.Resolve<ServerAssetDataLoader>())
         );
         RegisterDataService<INameDataService, NameDataService>(
             container,
-            resolver => new NameDataService(resolver.Resolve<ServerAssetDataLoader>())
+            resolver => new(resolver.Resolve<ServerAssetDataLoader>())
         );
         RegisterDataService<IProfessionDataService, ProfessionDataService>(
             container,
-            resolver => new ProfessionDataService(resolver.Resolve<ServerAssetDataLoader>())
+            resolver => new(resolver.Resolve<ServerAssetDataLoader>())
         );
         RegisterDataService<ISignDataService, SignDataService>(
             container,
-            resolver => new SignDataService(resolver.Resolve<ServerAssetDataLoader>())
+            resolver => new(resolver.Resolve<ServerAssetDataLoader>())
         );
         RegisterDataService<IDecorationDataService, DecorationDataService>(
             container,
-            resolver => new DecorationDataService(resolver.Resolve<ServerAssetDataLoader>())
+            resolver => new(resolver.Resolve<ServerAssetDataLoader>())
         );
         RegisterDataService<IMountDataService, MountDataService>(
             container,
-            resolver => new MountDataService(resolver.Resolve<ServerAssetDataLoader>())
+            resolver => new(resolver.Resolve<ServerAssetDataLoader>())
         );
 
         container.AddMoongateHosting();
