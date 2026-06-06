@@ -6,7 +6,7 @@ using Serilog.Core;
 namespace Moongate.Server.Services.Logging;
 
 /// <summary>
-/// Builds the server logger from TOML configuration.
+/// Builds the server logger from YAML configuration.
 /// </summary>
 public static class LoggerService
 {

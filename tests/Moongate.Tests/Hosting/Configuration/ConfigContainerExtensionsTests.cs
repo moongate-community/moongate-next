@@ -8,7 +8,7 @@ namespace Moongate.Tests.Hosting.Configuration;
 public class ConfigContainerExtensionsTests : IDisposable
 {
     private readonly string _dir = Path.Combine(Path.GetTempPath(), $"nh-config-di-{Guid.NewGuid():N}");
-    private string Path_ => Path.Combine(_dir, "moongate.toml");
+    private string Path_ => Path.Combine(_dir, "moongate.yaml");
 
     [Fact]
     public void AddMoongateConfig_MissingFile_CreatesDefaultAndRegistersDefault()
@@ -36,7 +36,7 @@ public class ConfigContainerExtensionsTests : IDisposable
     public void AddMoongateConfig_RegistersBoundInstance()
     {
         Directory.CreateDirectory(_dir);
-        File.WriteAllText(Path_, "[server]\nport = 9000\n");
+        File.WriteAllText(Path_, "server:\n  port: 9000\n");
 
         var container = new Container();
         container.RegisterConfigSection("server", () => new TestServerSettings());

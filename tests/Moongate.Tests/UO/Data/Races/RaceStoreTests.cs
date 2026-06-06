@@ -4,27 +4,25 @@ namespace Moongate.Tests.UO.Data.Races;
 
 public class RaceStoreTests
 {
-    private const string Toml =
+    private const string Yaml =
         """
-        [[race]]
-        id = 0
-        index = 0
-        name = "Human"
-        plural_name = "Humans"
-        male_body = 400
-        female_body = 401
-        male_ghost_body = 402
-        female_ghost_body = 403
-
-        [[race]]
-        id = 2
-        index = 2
-        name = "Gargoyle"
-        plural_name = "Gargoyles"
-        male_body = 666
-        female_body = 667
-        male_ghost_body = 970
-        female_ghost_body = 971
+        race:
+          - id: 0
+            index: 0
+            name: Human
+            plural_name: Humans
+            male_body: 400
+            female_body: 401
+            male_ghost_body: 402
+            female_ghost_body: 403
+          - id: 2
+            index: 2
+            name: Gargoyle
+            plural_name: Gargoyles
+            male_body: 666
+            female_body: 667
+            male_ghost_body: 970
+            female_ghost_body: 971
         """;
 
     [Fact]
@@ -34,7 +32,7 @@ public class RaceStoreTests
 
         try
         {
-            File.WriteAllText(Path.Combine(dir.FullName, "races.toml"), Toml);
+            File.WriteAllText(Path.Combine(dir.FullName, "races.yaml"), Yaml);
             var store = new RaceStore(dir.FullName);
 
             Assert.Equal(2, store.Races.Count);

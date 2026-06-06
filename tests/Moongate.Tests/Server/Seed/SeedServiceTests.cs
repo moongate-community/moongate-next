@@ -20,7 +20,7 @@ namespace Moongate.Tests.Server.Seed;
 public sealed class SeedServiceTests : IDisposable
 {
     private readonly string _dir = Path.Combine(Path.GetTempPath(), $"nr-seed-{Guid.NewGuid():N}");
-    private string ConfigPath => Path.Combine(_dir, "moongate.toml");
+    private string ConfigPath => Path.Combine(_dir, "moongate.yaml");
 
     private sealed class SeedProbe
     {
@@ -63,7 +63,7 @@ public sealed class SeedServiceTests : IDisposable
     public async Task DefaultAdminSeed_CreatesInitialAdminUser()
     {
         Directory.CreateDirectory(_dir);
-        File.WriteAllText(ConfigPath, "[persistence]\nenable_file_lock = false\n");
+        File.WriteAllText(ConfigPath, "persistence:\n  enable_file_lock: false\n");
 
         var container = new Container();
         container.AddMoongateEventBus();

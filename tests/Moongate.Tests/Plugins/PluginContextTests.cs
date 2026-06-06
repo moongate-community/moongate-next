@@ -33,8 +33,8 @@ public sealed class PluginContextTests : IDisposable
     {
         Directory.CreateDirectory(PluginDirectory);
         File.WriteAllText(
-            Path.Combine(PluginDirectory, "plugin.toml"),
-            "weather_interval_seconds = 7\nregion = \"Trammel\"\n"
+            Path.Combine(PluginDirectory, "plugin.yaml"),
+            "weather_interval_seconds: 7\nregion: Trammel\n"
         );
         var context = CreateContext();
 
@@ -48,11 +48,11 @@ public sealed class PluginContextTests : IDisposable
     public void LoadConfig_MalformedFile_Throws()
     {
         Directory.CreateDirectory(PluginDirectory);
-        File.WriteAllText(Path.Combine(PluginDirectory, "plugin.toml"), "weather_interval_seconds = = =\n");
+        File.WriteAllText(Path.Combine(PluginDirectory, "plugin.yaml"), "weather_interval_seconds: [\n");
         var context = CreateContext();
 
         var ex = Assert.Throws<InvalidOperationException>(() => context.LoadConfig(() => new WeatherPluginConfig()));
-        Assert.Contains("plugin.toml", ex.Message);
+        Assert.Contains("plugin.yaml", ex.Message);
     }
 
     [Fact]
@@ -64,7 +64,7 @@ public sealed class PluginContextTests : IDisposable
 
         Assert.Equal(2, config.WeatherIntervalSeconds);
         Assert.True(File.Exists(context.PluginConfigPath));
-        Assert.Contains("weather_interval_seconds = 2", File.ReadAllText(context.PluginConfigPath));
+        Assert.Contains("weather_interval_seconds: 2", File.ReadAllText(context.PluginConfigPath));
     }
 
     private PluginContext CreateContext()

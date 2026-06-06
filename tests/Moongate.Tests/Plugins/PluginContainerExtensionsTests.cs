@@ -31,9 +31,9 @@ public sealed class PluginContainerExtensionsTests : IDisposable
             module => module.ModuleType.FullName == "Moongate.PluginFixtures.Basic.BasicPluginScriptModule"
         );
 
-        var configPath = Path.Combine(directories[DirectoryType.Config], "moongate.toml");
+        var configPath = Path.Combine(directories[DirectoryType.Config], "moongate.yaml");
         container.AddMoongateConfig(configPath);
-        Assert.Contains("[fixture_plugin]", File.ReadAllText(configPath));
+        Assert.Contains("fixture_plugin:", File.ReadAllText(configPath));
     }
 
     public void Dispose()

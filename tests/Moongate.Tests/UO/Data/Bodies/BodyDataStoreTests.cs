@@ -5,14 +5,14 @@ namespace Moongate.Tests.UO.Data.Bodies;
 
 public class BodyDataStoreTests
 {
-    private const string Toml =
+    private const string Yaml =
         """
-        [bodies]
-        monster = [1, 2, 7]
-        animal = [5, 6]
-        sea = [150]
-        human = [400, 401]
-        equipment = []
+        bodies:
+          monster: [1, 2, 7]
+          animal: [5, 6]
+          sea: [150]
+          human: [400, 401]
+          equipment: []
         """;
 
     [Fact]
@@ -22,7 +22,7 @@ public class BodyDataStoreTests
 
         try
         {
-            File.WriteAllText(Path.Combine(dir.FullName, "bodies.toml"), Toml);
+            File.WriteAllText(Path.Combine(dir.FullName, "bodies.yaml"), Yaml);
             var store = new BodyDataStore(dir.FullName);
 
             Assert.Equal(UoBodyType.Monster, store.GetBodyType(1));

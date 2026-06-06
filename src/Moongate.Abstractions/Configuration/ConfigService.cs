@@ -1,16 +1,13 @@
-using System.Text;
 using Moongate.Abstractions.Data.Internal;
 using Moongate.Abstractions.Interfaces.Config;
 using Serilog;
-using Tomlyn;
-using Tomlyn.Model;
 using ILogger = Serilog.ILogger;
 
 namespace Moongate.Abstractions.Configuration;
 
 /// <summary>
-/// Loads the single TOML config file once at boot: creates it with defaults when missing, binds each
-/// registered section, validates, and fails fast on malformed TOML or invalid values. Stateless.
+/// Loads the single YAML config file once at boot: creates it with defaults when missing, binds each
+/// registered section, validates, and fails fast on malformed YAML or invalid values. Stateless.
 /// </summary>
 public static class ConfigService
 {
@@ -19,7 +16,7 @@ public static class ConfigService
     /// <summary>
     /// Loads (and self-heals) the config file for the given section registrations.
     /// </summary>
-    /// <param name="filePath">Full path to the TOML file.</param>
+    /// <param name="filePath">Full path to the YAML file.</param>
     /// <param name="sections">Registered config sections.</param>
     /// <returns>One bound instance per section, in registration order.</returns>
     public static IReadOnlyList<ConfigLoadResult> Load(
@@ -49,9 +46,9 @@ public static class ConfigService
         {
             object instance;
 
-            if (root.TryGetValue(section.Name, out var raw) && raw is TomlTable table)
+            if (root.TryGetValue(section.Name, out var raw) && raw is not null)
             {
-                instance = BindSection(section, table);
+                instance = BindSection(section, raw);
             }
             else
             {
@@ -89,13 +86,14 @@ public static class ConfigService
         return results;
     }
 
-    private static object BindSection(ConfigSectionRegistration section, TomlTable table)
+    private static object BindSection(ConfigSectionRegistration section, object raw)
     {
         try
         {
-            var sectionToml = TomlSerializer.Serialize(table, ConfigTomlOptions.Instance);
+            var sectionYaml = ConfigYamlOptions.Serializer.Serialize(raw);
 
-            return TomlSerializer.Deserialize(sectionToml, section.Type, ConfigTomlOptions.Instance);
+            return ConfigYamlOptions.Deserializer.Deserialize(sectionYaml, section.Type) ??
+                   throw new InvalidOperationException($"Config section [{section.Name}] returned null.");
         }
         catch (Exception ex)
         {
@@ -105,13 +103,13 @@ public static class ConfigService
         }
     }
 
-    private static TomlTable ParseRoot(string fullPath)
+    private static Dictionary<string, object?> ParseRoot(string fullPath)
     {
         var text = File.ReadAllText(fullPath);
 
         try
         {
-            return TomlSerializer.Deserialize<TomlTable>(text, ConfigTomlOptions.Instance);
+            return ConfigYamlOptions.Deserializer.Deserialize<Dictionary<string, object?>>(text) ?? [];
         }
         catch (Exception ex)
         {
@@ -122,7 +120,7 @@ public static class ConfigService
     }
 
     private static void WarnUnknownSections(
-        TomlTable root,
+        Dictionary<string, object?> root,
         IReadOnlyList<ConfigSectionRegistration> sections
     )
     {
@@ -130,7 +128,7 @@ public static class ConfigService
 
         foreach (var key in root.Keys)
         {
-            if (root[key] is TomlTable && !known.Contains(key))
+            if (!known.Contains(key))
             {
                 _logger.Warning("Ignoring unknown config section [{Section}]", key);
             }
@@ -143,21 +141,15 @@ public static class ConfigService
         IReadOnlyList<ConfigSectionRegistration> sections
     )
     {
-        var builder = new StringBuilder();
+        var root = new Dictionary<string, object?>(StringComparer.Ordinal);
 
         for (var i = 0; i < results.Count; i++)
         {
-            builder.Append('[').Append(sections[i].Name).Append("]\n");
-            builder.Append(TomlSerializer.Serialize(results[i].Instance, results[i].Type, ConfigTomlOptions.Instance));
-
-            if (i < results.Count - 1)
-            {
-                builder.Append('\n');
-            }
+            root[sections[i].Name] = results[i].Instance;
         }
 
         var tempPath = fullPath + ".tmp";
-        File.WriteAllText(tempPath, builder.ToString());
+        File.WriteAllText(tempPath, ConfigYamlOptions.Serializer.Serialize(root));
         File.Move(tempPath, fullPath, true);
     }
 }

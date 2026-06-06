@@ -9,7 +9,7 @@ namespace Moongate.Tests.Hosting.Logging;
 public sealed class LoggerConfigTests : IDisposable
 {
     private readonly string _dir = Path.Combine(Path.GetTempPath(), $"nr-logger-config-{Guid.NewGuid():N}");
-    private string ConfigPath => Path.Combine(_dir, "moongate.toml");
+    private string ConfigPath => Path.Combine(_dir, "moongate.yaml");
 
     [Fact]
     public void AddMoongateLogging_RegistersLoggerConfigSection()
@@ -17,7 +17,7 @@ public sealed class LoggerConfigTests : IDisposable
         Directory.CreateDirectory(_dir);
         File.WriteAllText(
             ConfigPath,
-            "[logger]\nlevel = \"Debug\"\nlog_packets = true\nwrite_to_file = true\nfile_name = \"server.log\"\n"
+            "logger:\n  level: Debug\n  log_packets: true\n  write_to_file: true\n  file_name: server.log\n"
         );
 
         var container = new Container();

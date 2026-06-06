@@ -6,18 +6,18 @@ namespace Moongate.Tests.UO.Data.Expansions;
 
 public class ExpansionStoreTests
 {
-    private const string Toml =
+    private const string Yaml =
         """
-        [[expansion]]
-        id = 5
-        name = "Age of Shadows"
-        client_flags = "Trammel, Ilshenar, Malas"
-        supported_features = "ExpansionAos"
-        character_list_flags = "ExpansionAos"
-        housing_flags = "HousingAos"
-        map_selection_flags = "Felucca, Trammel, Ilshenar, Malas"
-        mobile_status_version = 6
-        required_client_version = "4.0.0a"
+        expansion:
+          - id: 5
+            name: Age of Shadows
+            client_flags: Trammel, Ilshenar, Malas
+            supported_features: ExpansionAos
+            character_list_flags: ExpansionAos
+            housing_flags: HousingAos
+            map_selection_flags: Felucca, Trammel, Ilshenar, Malas
+            mobile_status_version: 6
+            required_client_version: 4.0.0a
         """;
 
     [Fact]
@@ -27,7 +27,7 @@ public class ExpansionStoreTests
 
         try
         {
-            File.WriteAllText(Path.Combine(dir.FullName, "expansions.toml"), Toml);
+            File.WriteAllText(Path.Combine(dir.FullName, "expansions.yaml"), Yaml);
             var store = new ExpansionStore(dir.FullName);
 
             Assert.Equal(1, store.Count);

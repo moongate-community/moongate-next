@@ -11,7 +11,7 @@ namespace Moongate.Tests.Hosting.Metrics;
 public class MetricsExtensionsTests : IDisposable
 {
     private readonly string _dir = Path.Combine(Path.GetTempPath(), $"nh-metrics-config-{Guid.NewGuid():N}");
-    private string Path_ => Path.Combine(_dir, "moongate.toml");
+    private string Path_ => Path.Combine(_dir, "moongate.yaml");
 
     private sealed class NamedProvider : IMetricProvider
     {
@@ -39,7 +39,7 @@ public class MetricsExtensionsTests : IDisposable
     public void AddMoongateMetrics_AppliesCustomConfig()
     {
         Directory.CreateDirectory(_dir);
-        File.WriteAllText(Path_, "[metrics]\nrefresh_interval = \"00:00:02\"\n");
+        File.WriteAllText(Path_, "metrics:\n  refresh_interval: \"00:00:02\"\n");
 
         var container = new Container();
         container.AddMoongateTimerWheel();

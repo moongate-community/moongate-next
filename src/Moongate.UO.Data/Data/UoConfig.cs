@@ -5,7 +5,7 @@ namespace Moongate.UO.Data.Data;
 
 /// <summary>
 /// Configuration for the Ultima Online client data files (idx/mul/uop). Bound from the <c>uo</c>
-/// TOML section. Validation fails boot when the directory or the minimum required files are absent.
+/// YAML section. Validation fails boot when the directory or the minimum required files are absent.
 /// </summary>
 public sealed class UoConfig : IValidatableConfig
 {

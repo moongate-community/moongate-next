@@ -1,14 +1,13 @@
-using Moongate.Abstractions.Configuration;
+using Moongate.Core.Yaml;
 using Moongate.UO.Data.Data.Internal;
 using Moongate.UO.Data.Interfaces.Bodies;
 using Moongate.UO.Data.Types.Bodies;
 using Serilog;
-using Tomlyn;
 
 namespace Moongate.UO.Data.Bodies;
 
 /// <summary>
-/// Loads the body-id classification table from <c>bodies.toml</c> in the data directory. A missing
+/// Loads the body-id classification table from <c>bodies.yaml</c> in the data directory. A missing
 /// or malformed file yields an empty table (non-fatal).
 /// </summary>
 public sealed class BodyDataStore : IBodyDataStore
@@ -25,11 +24,11 @@ public sealed class BodyDataStore : IBodyDataStore
 
         _types = new UoBodyType[TableSize];
 
-        var path = Path.Combine(dataDirectory, "bodies.toml");
+        var path = Path.Combine(dataDirectory, "bodies.yaml");
 
         if (!File.Exists(path))
         {
-            _logger.Warning("bodies.toml not found in {Directory}; body table is empty.", dataDirectory);
+            _logger.Warning("bodies.yaml not found in {Directory}; body table is empty.", dataDirectory);
 
             return;
         }
@@ -38,11 +37,11 @@ public sealed class BodyDataStore : IBodyDataStore
 
         try
         {
-            model = TomlSerializer.Deserialize<BodyTableModel>(File.ReadAllText(path), ConfigTomlOptions.Instance);
+            model = YamlUtils.DeserializeFromFile<BodyTableModel>(path);
         }
         catch (Exception ex)
         {
-            _logger.Error(ex, "Failed to parse bodies.toml; body table is empty.");
+            _logger.Error(ex, "Failed to parse bodies.yaml; body table is empty.");
 
             return;
         }

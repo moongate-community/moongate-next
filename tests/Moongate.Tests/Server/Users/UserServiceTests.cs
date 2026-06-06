@@ -20,7 +20,7 @@ namespace Moongate.Tests.Server.Users;
 public sealed class UserServiceTests : IDisposable
 {
     private readonly string _dir = Path.Combine(Path.GetTempPath(), $"nr-users-{Guid.NewGuid():N}");
-    private string ConfigPath => Path.Combine(_dir, "moongate.toml");
+    private string ConfigPath => Path.Combine(_dir, "moongate.yaml");
 
     private sealed class CapturingEventBusService : IEventBusService
     {
@@ -99,7 +99,7 @@ public sealed class UserServiceTests : IDisposable
     public async Task AddMoongateUsers_RegistersServiceAndUserPersistence()
     {
         Directory.CreateDirectory(_dir);
-        File.WriteAllText(ConfigPath, "[persistence]\nenable_file_lock = false\n");
+        File.WriteAllText(ConfigPath, "persistence:\n  enable_file_lock: false\n");
 
         var container = new Container();
         container.AddMoongateEventBus();

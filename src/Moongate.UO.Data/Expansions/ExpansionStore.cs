@@ -1,15 +1,14 @@
-using Moongate.Abstractions.Configuration;
+using Moongate.Core.Yaml;
 using Moongate.UO.Data.Data.Expansions;
 using Moongate.UO.Data.Data.Internal;
 using Moongate.UO.Data.Interfaces.Expansions;
 using Moongate.UO.Data.Types.Expansions;
 using Serilog;
-using Tomlyn;
 
 namespace Moongate.UO.Data.Expansions;
 
 /// <summary>
-/// Loads the UO expansion table from <c>expansions.toml</c> in the data directory. A missing or
+/// Loads the UO expansion table from <c>expansions.yaml</c> in the data directory. A missing or
 /// malformed file yields an empty store (non-fatal).
 /// </summary>
 public sealed class ExpansionStore : IExpansionStore
@@ -26,23 +25,23 @@ public sealed class ExpansionStore : IExpansionStore
         _table = [];
         _byId = new();
 
-        var path = Path.Combine(dataDirectory, "expansions.toml");
+        var path = Path.Combine(dataDirectory, "expansions.yaml");
 
         if (!File.Exists(path))
         {
-            _logger.Warning("expansions.toml not found in {Directory}; expansion table is empty.", dataDirectory);
+            _logger.Warning("expansions.yaml not found in {Directory}; expansion table is empty.", dataDirectory);
 
             return;
         }
 
         try
         {
-            var model = TomlSerializer.Deserialize<ExpansionTableModel>(File.ReadAllText(path), ConfigTomlOptions.Instance);
+            var model = YamlUtils.DeserializeFromFile<ExpansionTableModel>(path);
             _table = model.Expansion;
         }
         catch (Exception ex)
         {
-            _logger.Error(ex, "Failed to parse expansions.toml; expansion table is empty.");
+            _logger.Error(ex, "Failed to parse expansions.yaml; expansion table is empty.");
 
             return;
         }

@@ -12,7 +12,7 @@ namespace Moongate.Tests.Hosting.EventBus;
 public class EventBusServiceCollectionExtensionsTests : IDisposable
 {
     private readonly string _dir = Path.Combine(Path.GetTempPath(), $"nh-eventbus-config-{Guid.NewGuid():N}");
-    private string Path_ => Path.Combine(_dir, "moongate.toml");
+    private string Path_ => Path.Combine(_dir, "moongate.yaml");
 
     private sealed class NamedAsyncHandler : IAsyncEventHandler<TestAsyncEvent>
     {
@@ -71,7 +71,7 @@ public class EventBusServiceCollectionExtensionsTests : IDisposable
     public void AddMoongateEventBus_CustomConfig_AppliesConfig()
     {
         Directory.CreateDirectory(_dir);
-        File.WriteAllText(Path_, "[game_loop]\nidle_sleep_ms = 7\nidle_cpu_enabled = false\n");
+        File.WriteAllText(Path_, "game_loop:\n  idle_sleep_ms: 7\n  idle_cpu_enabled: false\n");
 
         var container = new Container();
 

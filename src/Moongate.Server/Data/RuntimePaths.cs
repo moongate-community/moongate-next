@@ -8,8 +8,8 @@ internal static class RuntimePaths
     public const string RootEnvironmentVariable = "MOONGATE_ROOT";
     public const string LegacyRootEnvironmentVariable = "NIGHTHEAVEN_ROOT";
     public const string DefaultRootDirectoryName = "moongate";
-    public const string ConfigFileName = "moongate.toml";
-    public const string LegacyConfigFileName = "nightheaven.toml";
+    public const string ConfigFileName = "moongate.yaml";
+    public const string LegacyConfigFileName = "nightheaven.yaml";
 
     public static string ResolveConfigPath(DirectoriesConfig directories)
     {

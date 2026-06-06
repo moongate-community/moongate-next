@@ -1,7 +1,7 @@
 namespace Moongate.Abstractions.Data.Internal;
 
 /// <summary>
-/// Boot-time declaration of a config section: how to name it, default it, and bind it from TOML.
+/// Boot-time declaration of a config section: how to name it, default it, and bind it from YAML.
 /// Accumulated in the container and consumed by the config loader at startup.
 /// </summary>
 public sealed class ConfigSectionRegistration
@@ -19,7 +19,7 @@ public sealed class ConfigSectionRegistration
         _defaultFactory = defaultFactory;
     }
 
-    /// <summary>TOML table name for this section (e.g. <c>persistence</c>).</summary>
+    /// <summary>YAML mapping name for this section (e.g. <c>persistence</c>).</summary>
     public string Name { get; }
 
     /// <summary>CLR type of the config.</summary>

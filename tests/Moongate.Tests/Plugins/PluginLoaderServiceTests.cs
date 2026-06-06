@@ -71,7 +71,7 @@ public sealed class PluginLoaderServiceTests : IDisposable
 
         var plugin = Assert.Single(loaded);
         Assert.Equal("moongate.fixture.basic", plugin.Metadata.Id);
-        Assert.True(File.Exists(Path.Combine(plugin.PluginDirectory, "plugin.toml")));
+        Assert.True(File.Exists(Path.Combine(plugin.PluginDirectory, "plugin.yaml")));
         var modules = container.Resolve<List<ScriptModuleData>>();
         Assert.Contains(
             modules,

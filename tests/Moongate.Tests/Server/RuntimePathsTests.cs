@@ -28,12 +28,12 @@ public sealed class RuntimePathsTests : IDisposable
     {
         var directories = Directories();
         Directory.CreateDirectory(directories[DirectoryType.Config]);
-        File.WriteAllText(Path.Combine(directories[DirectoryType.Config], "nightheaven.toml"), "");
-        File.WriteAllText(Path.Combine(directories[DirectoryType.Config], "moongate.toml"), "");
+        File.WriteAllText(Path.Combine(directories[DirectoryType.Config], "nightheaven.yaml"), "");
+        File.WriteAllText(Path.Combine(directories[DirectoryType.Config], "moongate.yaml"), "");
 
         var configPath = RuntimePaths.ResolveConfigPath(directories);
 
-        Assert.Equal(Path.Combine(directories[DirectoryType.Config], "moongate.toml"), configPath);
+        Assert.Equal(Path.Combine(directories[DirectoryType.Config], "moongate.yaml"), configPath);
     }
 
     [Fact]
@@ -41,11 +41,11 @@ public sealed class RuntimePathsTests : IDisposable
     {
         var directories = Directories();
         Directory.CreateDirectory(directories[DirectoryType.Config]);
-        File.WriteAllText(Path.Combine(directories[DirectoryType.Config], "nightheaven.toml"), "");
+        File.WriteAllText(Path.Combine(directories[DirectoryType.Config], "nightheaven.yaml"), "");
 
         var configPath = RuntimePaths.ResolveConfigPath(directories);
 
-        Assert.Equal(Path.Combine(directories[DirectoryType.Config], "nightheaven.toml"), configPath);
+        Assert.Equal(Path.Combine(directories[DirectoryType.Config], "nightheaven.yaml"), configPath);
     }
 
     [Fact]
@@ -55,7 +55,7 @@ public sealed class RuntimePathsTests : IDisposable
 
         var configPath = RuntimePaths.ResolveConfigPath(directories);
 
-        Assert.Equal(Path.Combine(directories[DirectoryType.Config], "moongate.toml"), configPath);
+        Assert.Equal(Path.Combine(directories[DirectoryType.Config], "moongate.yaml"), configPath);
     }
 
     [Fact]

@@ -16,7 +16,7 @@ namespace Moongate.Tests.Hosting.Metrics;
 public class MetricsIntegrationTests : IDisposable
 {
     private readonly string _dir = Path.Combine(Path.GetTempPath(), $"nh-metrics-integration-config-{Guid.NewGuid():N}");
-    private string Path_ => Path.Combine(_dir, "moongate.toml");
+    private string Path_ => Path.Combine(_dir, "moongate.yaml");
 
     public void Dispose()
     {
@@ -32,7 +32,7 @@ public class MetricsIntegrationTests : IDisposable
     public async Task FullHost_AllProvidersAggregatedAndFormatted()
     {
         Directory.CreateDirectory(_dir);
-        File.WriteAllText(Path_, "[metrics]\nrefresh_interval = \"00:00:00.0500000\"\n");
+        File.WriteAllText(Path_, "metrics:\n  refresh_interval: \"00:00:00.0500000\"\n");
 
         var container = new Container();
         container.AddMoongateEventBus();

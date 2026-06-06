@@ -14,7 +14,7 @@ public class TimerWheelIntegrationTests : IDisposable
         $"moongate-timerwheel-integration-{Guid.NewGuid():N}"
     );
 
-    private string ConfigPath => Path.Combine(_dir, "moongate.toml");
+    private string ConfigPath => Path.Combine(_dir, "moongate.yaml");
 
     public void Dispose()
     {

@@ -9,13 +9,13 @@ namespace Moongate.Tests.Hosting.Timing;
 public class TimerWheelExtensionsTests : IDisposable
 {
     private readonly string _dir = Path.Combine(Path.GetTempPath(), $"nh-timing-config-{Guid.NewGuid():N}");
-    private string Path_ => Path.Combine(_dir, "moongate.toml");
+    private string Path_ => Path.Combine(_dir, "moongate.yaml");
 
     [Fact]
     public void AddMoongateTimerWheel_AppliesCustomConfig()
     {
         Directory.CreateDirectory(_dir);
-        File.WriteAllText(Path_, "[timing]\ntick_duration = \"00:00:00.0040000\"\nwheel_size = 1024\n");
+        File.WriteAllText(Path_, "timing:\n  tick_duration: \"00:00:00.0040000\"\n  wheel_size: 1024\n");
 
         var container = new Container();
         container.AddMoongateTimerWheel();

@@ -1,14 +1,13 @@
-using Moongate.Abstractions.Configuration;
+using Moongate.Core.Yaml;
 using Moongate.UO.Data.Data.Internal;
 using Moongate.UO.Data.Data.Races;
 using Moongate.UO.Data.Interfaces.Races;
 using Serilog;
-using Tomlyn;
 
 namespace Moongate.UO.Data.Races;
 
 /// <summary>
-/// Loads the UO race definitions from <c>races.toml</c> in the data directory. A missing or
+/// Loads the UO race definitions from <c>races.yaml</c> in the data directory. A missing or
 /// malformed file yields an empty store (non-fatal).
 /// </summary>
 public sealed class RaceStore : IRaceStore
@@ -25,23 +24,23 @@ public sealed class RaceStore : IRaceStore
         _races = [];
         _byId = new();
 
-        var path = Path.Combine(dataDirectory, "races.toml");
+        var path = Path.Combine(dataDirectory, "races.yaml");
 
         if (!File.Exists(path))
         {
-            _logger.Warning("races.toml not found in {Directory}; race table is empty.", dataDirectory);
+            _logger.Warning("races.yaml not found in {Directory}; race table is empty.", dataDirectory);
 
             return;
         }
 
         try
         {
-            var model = TomlSerializer.Deserialize<RaceTableModel>(File.ReadAllText(path), ConfigTomlOptions.Instance);
+            var model = YamlUtils.DeserializeFromFile<RaceTableModel>(path);
             _races = model.Race;
         }
         catch (Exception ex)
         {
-            _logger.Error(ex, "Failed to parse races.toml; race table is empty.");
+            _logger.Error(ex, "Failed to parse races.yaml; race table is empty.");
 
             return;
         }

@@ -13,7 +13,7 @@ namespace Moongate.Tests.Persistence.Service;
 public class PersistenceHostIntegrationTests : IDisposable
 {
     private readonly string _dir = Path.Combine(Path.GetTempPath(), $"nh-persist-host-{Guid.NewGuid():N}");
-    private string ConfigPath => Path.Combine(_dir, "moongate.toml");
+    private string ConfigPath => Path.Combine(_dir, "moongate.yaml");
 
     public void Dispose()
     {
@@ -62,7 +62,7 @@ public class PersistenceHostIntegrationTests : IDisposable
     private IContainer NewContainer()
     {
         Directory.CreateDirectory(_dir);
-        File.WriteAllText(ConfigPath, "[persistence]\nenable_file_lock = false\n");
+        File.WriteAllText(ConfigPath, "persistence:\n  enable_file_lock: false\n");
 
         var container = new Container();
         container.RegisterPersistenceEntity<TestPlayer, Serial>(1, 1, p => p.Id);

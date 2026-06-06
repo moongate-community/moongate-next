@@ -28,7 +28,7 @@ public sealed class MoongateBootstrapTests : IDisposable
         Assert.NotNull(container.Resolve<IMetricsService>());
         Assert.NotNull(container.Resolve<IScriptEngineService>());
         Assert.NotNull(container.Resolve<LoggerConfig>());
-        Assert.True(File.Exists(Path.Combine(context.Directories[DirectoryType.Config], "moongate.toml")));
+        Assert.True(File.Exists(Path.Combine(context.Directories[DirectoryType.Config], "moongate.yaml")));
     }
 
     [Fact]

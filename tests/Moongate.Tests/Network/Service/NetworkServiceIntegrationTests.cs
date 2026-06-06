@@ -349,8 +349,8 @@ public class NetworkServiceIntegrationTests : IDisposable
     private string WriteNetworkConfig(int port)
     {
         Directory.CreateDirectory(_dir);
-        var path = Path.Combine(_dir, $"network-{port}.toml");
-        File.WriteAllText(path, $"[network]\nport = {port}\nping_server_enabled = false\n");
+        var path = Path.Combine(_dir, $"network-{port}.yaml");
+        File.WriteAllText(path, $"network:\n  port: {port}\n  ping_server_enabled: false\n");
 
         return path;
     }

@@ -1,7 +1,6 @@
 using Moongate.Abstractions.Configuration;
 using Moongate.Core.Data.Directories;
 using Serilog;
-using Tomlyn;
 
 namespace Moongate.Plugins.Data;
 
@@ -18,21 +17,21 @@ public sealed class PluginContext
         ArgumentNullException.ThrowIfNull(directories);
 
         PluginDirectory = Path.GetFullPath(pluginDirectory);
-        PluginConfigPath = Path.Combine(PluginDirectory, "plugin.toml");
+        PluginConfigPath = Path.Combine(PluginDirectory, "plugin.yaml");
         Directories = directories;
     }
 
     /// <summary>Absolute directory containing the plugin package.</summary>
     public string PluginDirectory { get; }
 
-    /// <summary>Absolute path to the optional plugin runtime TOML config.</summary>
+    /// <summary>Absolute path to the optional plugin runtime YAML config.</summary>
     public string PluginConfigPath { get; }
 
     /// <summary>Global Moongate directory configuration.</summary>
     public DirectoriesConfig Directories { get; }
 
     /// <summary>
-    /// Loads this plugin's <c>plugin.toml</c> into a typed config. Missing files are created from defaults.
+    /// Loads this plugin's <c>plugin.yaml</c> into a typed config. Missing files are created from defaults.
     /// </summary>
     public TConfig LoadConfig<TConfig>(Func<TConfig> defaultFactory)
         where TConfig : class, new()
@@ -49,7 +48,7 @@ public sealed class PluginContext
 
             File.WriteAllText(
                 PluginConfigPath,
-                TomlSerializer.Serialize(defaults, ConfigTomlOptions.Instance)
+                ConfigYamlOptions.Serializer.Serialize(defaults)
             );
             _logger.Information("Created default plugin config at {Path}", PluginConfigPath);
 
@@ -59,7 +58,7 @@ public sealed class PluginContext
         try
         {
             var text = File.ReadAllText(PluginConfigPath);
-            var config = TomlSerializer.Deserialize<TConfig>(text, ConfigTomlOptions.Instance);
+            var config = ConfigYamlOptions.Deserializer.Deserialize<TConfig>(text);
 
             return config ??
                    throw new InvalidOperationException(

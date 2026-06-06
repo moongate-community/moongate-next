@@ -13,7 +13,7 @@ public interface IMoongatePlugin
 
     /// <summary>
     /// Registers the plugin's services, handlers, config sections, Lua modules, and other integrations.
-    /// Called during container configuration before global server TOML config is loaded.
+    /// Called during container configuration before global server YAML config is loaded.
     /// </summary>
     /// <param name="container">The DryIoc container being configured.</param>
     /// <param name="context">The plugin-specific boot context.</param>

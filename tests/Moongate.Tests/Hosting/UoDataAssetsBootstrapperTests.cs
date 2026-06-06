@@ -13,15 +13,15 @@ public class UoDataAssetsBootstrapperTests
 
         try
         {
-            File.WriteAllText(Path.Combine(src.FullName, "a.toml"), "new");
-            File.WriteAllText(Path.Combine(src.FullName, "b.toml"), "src-b");
-            File.WriteAllText(Path.Combine(dst.FullName, "b.toml"), "existing-b");
+            File.WriteAllText(Path.Combine(src.FullName, "a.yaml"), "new");
+            File.WriteAllText(Path.Combine(src.FullName, "b.yaml"), "src-b");
+            File.WriteAllText(Path.Combine(dst.FullName, "b.yaml"), "existing-b");
 
             var copied = UoDataAssetsBootstrapper.EnsureDataAssets(src.FullName, dst.FullName, Log.Logger);
 
             Assert.Equal(1, copied);
-            Assert.Equal("new", File.ReadAllText(Path.Combine(dst.FullName, "a.toml")));
-            Assert.Equal("existing-b", File.ReadAllText(Path.Combine(dst.FullName, "b.toml"))); // not overwritten
+            Assert.Equal("new", File.ReadAllText(Path.Combine(dst.FullName, "a.yaml")));
+            Assert.Equal("existing-b", File.ReadAllText(Path.Combine(dst.FullName, "b.yaml"))); // not overwritten
         }
         finally
         {

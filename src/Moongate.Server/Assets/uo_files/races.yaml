@@ -1,0 +1,25 @@
+race:
+  - id: 0
+    index: 0
+    name: Human
+    plural_name: Humans
+    male_body: 400
+    female_body: 401
+    male_ghost_body: 402
+    female_ghost_body: 403
+  - id: 1
+    index: 1
+    name: Elf
+    plural_name: Elves
+    male_body: 605
+    female_body: 606
+    male_ghost_body: 970
+    female_ghost_body: 971
+  - id: 2
+    index: 2
+    name: Gargoyle
+    plural_name: Gargoyles
+    male_body: 666
+    female_body: 667
+    male_ghost_body: 970
+    female_ghost_body: 971

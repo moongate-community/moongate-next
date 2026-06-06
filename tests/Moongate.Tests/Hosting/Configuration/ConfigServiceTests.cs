@@ -7,7 +7,7 @@ namespace Moongate.Tests.Hosting.Configuration;
 public class ConfigServiceTests : IDisposable
 {
     private readonly string _dir = Path.Combine(Path.GetTempPath(), $"nh-config-{Guid.NewGuid():N}");
-    private string Path_ => Path.Combine(_dir, "moongate.toml");
+    private string Path_ => Path.Combine(_dir, "moongate.yaml");
 
     public void Dispose()
     {
@@ -31,7 +31,7 @@ public class ConfigServiceTests : IDisposable
     public void Load_ExistingFile_BindsValues()
     {
         Directory.CreateDirectory(_dir);
-        File.WriteAllText(Path_, "[server]\nport = 7000\nname = \"shard\"\nheartbeat = \"00:01:00\"\n");
+        File.WriteAllText(Path_, "server:\n  port: 7000\n  name: shard\n  heartbeat: \"00:01:00\"\n");
 
         var results = ConfigService.Load(Path_, [ServerSection()]);
 
@@ -45,17 +45,17 @@ public class ConfigServiceTests : IDisposable
     public void Load_InvalidValue_Throws()
     {
         Directory.CreateDirectory(_dir);
-        File.WriteAllText(Path_, "[limits]\nmax_players = 0\n");
+        File.WriteAllText(Path_, "limits:\n  max_players: 0\n");
 
         var ex = Assert.ThrowsAny<Exception>(() => ConfigService.Load(Path_, [ValidatableSection()]));
         Assert.Contains("MaxPlayers", ex.Message);
     }
 
     [Fact]
-    public void Load_MalformedToml_Throws()
+    public void Load_MalformedYaml_Throws()
     {
         Directory.CreateDirectory(_dir);
-        File.WriteAllText(Path_, "[server]\nport = = =\n");
+        File.WriteAllText(Path_, "server:\n  port: [unterminated\n");
 
         Assert.ThrowsAny<Exception>(() => ConfigService.Load(Path_, [ServerSection()]));
     }
@@ -68,26 +68,31 @@ public class ConfigServiceTests : IDisposable
         Assert.True(File.Exists(Path_));
         var settings = Assert.IsType<TestServerSettings>(Assert.Single(results).Instance);
         Assert.Equal(2593, settings.Port);
-        Assert.Contains("[server]", File.ReadAllText(Path_));
+        var yaml = File.ReadAllText(Path_);
+        Assert.Contains("server:", yaml);
+        Assert.Contains("port: 2593", yaml);
+        Assert.DoesNotContain("!<", yaml);
     }
 
     [Fact]
     public void Load_MissingSectionInExistingFile_DefaultsAndWritesItBack()
     {
         Directory.CreateDirectory(_dir);
-        File.WriteAllText(Path_, "[server]\nport = 7000\n");
+        File.WriteAllText(Path_, "server:\n  port: 7000\n");
 
         var results = ConfigService.Load(Path_, [ServerSection(), ValidatableSection()]);
 
         Assert.Equal(2, results.Count);
-        Assert.Contains("[limits]", File.ReadAllText(Path_));
+        var yaml = File.ReadAllText(Path_);
+        Assert.Contains("limits:", yaml);
+        Assert.DoesNotContain("!<", yaml);
     }
 
     [Fact]
     public void Load_UnknownSection_IsIgnored()
     {
         Directory.CreateDirectory(_dir);
-        File.WriteAllText(Path_, "[server]\nport = 7000\n\n[ghost]\nfoo = 1\n");
+        File.WriteAllText(Path_, "server:\n  port: 7000\n\nghost:\n  foo: 1\n");
 
         var results = ConfigService.Load(Path_, [ServerSection()]);
 

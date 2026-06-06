@@ -1,14 +1,13 @@
-using Moongate.Abstractions.Configuration;
+using Moongate.Core.Yaml;
 using Moongate.UO.Data.Data.Internal;
 using Moongate.UO.Data.Data.Skills;
 using Moongate.UO.Data.Interfaces.Skills;
 using Serilog;
-using Tomlyn;
 
 namespace Moongate.UO.Data.Skills;
 
 /// <summary>
-/// Loads the UO skill table from <c>skills.toml</c> in the data directory. A missing or malformed
+/// Loads the UO skill table from <c>skills.yaml</c> in the data directory. A missing or malformed
 /// file yields an empty store (non-fatal).
 /// </summary>
 public sealed class SkillDataStore : ISkillDataStore
@@ -27,23 +26,23 @@ public sealed class SkillDataStore : ISkillDataStore
         _byId = new();
         _byName = new(StringComparer.OrdinalIgnoreCase);
 
-        var path = Path.Combine(dataDirectory, "skills.toml");
+        var path = Path.Combine(dataDirectory, "skills.yaml");
 
         if (!File.Exists(path))
         {
-            _logger.Warning("skills.toml not found in {Directory}; skill table is empty.", dataDirectory);
+            _logger.Warning("skills.yaml not found in {Directory}; skill table is empty.", dataDirectory);
 
             return;
         }
 
         try
         {
-            var model = TomlSerializer.Deserialize<SkillTableModel>(File.ReadAllText(path), ConfigTomlOptions.Instance);
+            var model = YamlUtils.DeserializeFromFile<SkillTableModel>(path);
             _skills = model.Skill;
         }
         catch (Exception ex)
         {
-            _logger.Error(ex, "Failed to parse skills.toml; skill table is empty.");
+            _logger.Error(ex, "Failed to parse skills.yaml; skill table is empty.");
 
             return;
         }

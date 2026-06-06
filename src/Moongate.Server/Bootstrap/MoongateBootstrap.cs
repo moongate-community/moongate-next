@@ -73,7 +73,7 @@ public static class MoongateBootstrap
 
         container.RegisterInstance(context.PacketRegistry);
 
-        // Logger config is loaded with the rest of the TOML sections, then applied immediately.
+        // Logger config is loaded with the rest of the YAML sections, then applied immediately.
         container.AddMoongateLogging();
 
         // Event bus + game loop (priority 0 / 10) and the diagnostic handler.
@@ -115,7 +115,7 @@ public static class MoongateBootstrap
         // This must run before AddMoongateConfig so plugin config sections are bound at boot.
         container.AddMoongatePlugins(directories);
 
-        // Load the root TOML config once and register every section as a DI instance. Must run after
+        // Load the root YAML config once and register every section as a DI instance. Must run after
         // all RegisterConfigSection calls (each module helper declares its section).
         container.AddMoongateConfig(RuntimePaths.ResolveConfigPath(directories));
         Log.Logger = LoggerService.CreateLogger(

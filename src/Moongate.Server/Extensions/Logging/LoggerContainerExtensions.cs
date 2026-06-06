@@ -12,7 +12,7 @@ public static class LoggerContainerExtensions
     extension(IContainer container)
     {
         /// <summary>
-        /// Registers the logger TOML config section.
+        /// Registers the logger YAML config section.
         /// </summary>
         public IContainer AddMoongateLogging()
         {

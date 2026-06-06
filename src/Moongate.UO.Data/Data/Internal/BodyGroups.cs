@@ -1,6 +1,6 @@
 namespace Moongate.UO.Data.Data.Internal;
 
-/// <summary>Body ids grouped by category, as bound from <c>bodies.toml</c>.</summary>
+/// <summary>Body ids grouped by category, as bound from <c>bodies.yaml</c>.</summary>
 public sealed class BodyGroups
 {
     public List<int> Monster { get; set; } = [];

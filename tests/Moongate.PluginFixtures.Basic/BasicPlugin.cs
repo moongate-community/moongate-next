@@ -19,13 +19,13 @@ public sealed class BasicPlugin : IMoongatePlugin
 
     public void Configure(IContainer container, PluginContext context)
     {
-        context.LoadConfig(() => new BasicPluginTomlConfig());
+        context.LoadConfig(() => new BasicPluginYamlConfig());
         container.RegisterConfigSection("fixture_plugin", () => new BasicPluginServerConfig());
         container.RegisterScriptModule<BasicPluginScriptModule>();
     }
 }
 
-public sealed class BasicPluginTomlConfig
+public sealed class BasicPluginYamlConfig
 {
     public int WeatherIntervalSeconds { get; set; } = 2;
 }

@@ -14,7 +14,7 @@ public class ContainerRegistrationCanaryTests : IDisposable
         $"moongate-container-canary-{Guid.NewGuid():N}"
     );
 
-    private string ConfigPath => Path.Combine(_dir, "moongate.toml");
+    private string ConfigPath => Path.Combine(_dir, "moongate.yaml");
 
     [Fact]
     public void AddMoongateHosting_CalledTwice_ResolvesSingleOrchestrator()

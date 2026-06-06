@@ -5,39 +5,37 @@ namespace Moongate.Tests.UO.Data.Skills;
 
 public class SkillDataStoreTests
 {
-    private const string Toml =
+    private const string Yaml =
         """
-        [[skill]]
-        id = 0
-        name = "Alchemy"
-        title = "Alchemist"
-        str_scale = 0.0
-        dex_scale = 0.05
-        int_scale = 0.05
-        stat_total = 10.0
-        str_gain = 0.0
-        dex_gain = 0.5
-        int_gain = 0.5
-        gain_factor = 1.0
-        profession_skill_name = "Alchemy"
-        primary_stat = "Intelligence"
-        secondary_stat = "Dexterity"
-
-        [[skill]]
-        id = 1
-        name = "Anatomy"
-        title = "Biologist"
-        str_scale = 0.0
-        dex_scale = 0.0
-        int_scale = 0.0
-        stat_total = 0.0
-        str_gain = 0.15
-        dex_gain = 0.15
-        int_gain = 0.7
-        gain_factor = 1.0
-        profession_skill_name = "Anatomy"
-        primary_stat = "Intelligence"
-        secondary_stat = "Strength"
+        skill:
+          - id: 0
+            name: Alchemy
+            title: Alchemist
+            str_scale: 0.0
+            dex_scale: 0.05
+            int_scale: 0.05
+            stat_total: 10.0
+            str_gain: 0.0
+            dex_gain: 0.5
+            int_gain: 0.5
+            gain_factor: 1.0
+            profession_skill_name: Alchemy
+            primary_stat: Intelligence
+            secondary_stat: Dexterity
+          - id: 1
+            name: Anatomy
+            title: Biologist
+            str_scale: 0.0
+            dex_scale: 0.0
+            int_scale: 0.0
+            stat_total: 0.0
+            str_gain: 0.15
+            dex_gain: 0.15
+            int_gain: 0.7
+            gain_factor: 1.0
+            profession_skill_name: Anatomy
+            primary_stat: Intelligence
+            secondary_stat: Strength
         """;
 
     [Fact]
@@ -47,7 +45,7 @@ public class SkillDataStoreTests
 
         try
         {
-            File.WriteAllText(Path.Combine(dir.FullName, "skills.toml"), Toml);
+            File.WriteAllText(Path.Combine(dir.FullName, "skills.yaml"), Yaml);
             var store = new SkillDataStore(dir.FullName);
 
             Assert.Equal(2, store.Count);

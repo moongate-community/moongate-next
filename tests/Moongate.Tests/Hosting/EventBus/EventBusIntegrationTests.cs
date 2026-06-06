@@ -16,7 +16,7 @@ public class EventBusIntegrationTests : IDisposable
         $"moongate-eventbus-integration-{Guid.NewGuid():N}"
     );
 
-    private string ConfigPath => Path.Combine(_dir, "moongate.toml");
+    private string ConfigPath => Path.Combine(_dir, "moongate.yaml");
 
     private sealed class IntegrationTickHandler : ITickEventHandler<TestTickEvent>
     {
