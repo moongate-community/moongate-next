@@ -4,15 +4,43 @@ title: Moongate
 
 # Moongate
 
-Moongate is a modern Ultima Online server runtime built around explicit service
-registration, YAML-backed shard data, plugin extensibility, and Lua scripting.
+<div class="mg-home">
+  <div>
+    <p>
+      Moongate is a modern Ultima Online server runtime built around explicit services,
+      YAML configuration, embedded data assets, trusted plugins, and Lua scripting.
+    </p>
+    <p>
+      These docs cover the runtime shape, operational configuration, plugin entry points,
+      data assets, commands, scripting, and API reference.
+    </p>
+  </div>
+  <img class="mg-home__logo" src="../images/moongate_logo.png" alt="Moongate logo" />
+</div>
 
-## Documentation
-
-- [Introduction](articles/intro.md)
-- [Runtime configuration](articles/runtime-configuration.md)
-- [Bundled data assets](articles/data-assets.md)
-- [Commands](articles/commands.md)
-- [Lua scripting](articles/lua-scripting.md)
-- [Plugins](articles/plugins.md)
-- [API reference](xref:Moongate)
+<div class="mg-link-grid">
+  <a href="articles/intro.md">
+    <strong>Runtime</strong>
+    <span>Architecture and server startup model.</span>
+  </a>
+  <a href="articles/runtime-configuration.md">
+    <strong>Configuration</strong>
+    <span><code>moongate.yaml</code> sections and runtime paths.</span>
+  </a>
+  <a href="articles/data-assets.md">
+    <strong>Data Assets</strong>
+    <span>Embedded YAML assets and lazy data services.</span>
+  </a>
+  <a href="articles/commands.md">
+    <strong>Commands</strong>
+    <span>Console, in-game, plugin, and Lua command registration.</span>
+  </a>
+  <a href="articles/lua-scripting.md">
+    <strong>Lua Scripting</strong>
+    <span>Server modules and event payloads exposed to Lua.</span>
+  </a>
+  <a href="api/Moongate.yml">
+    <strong>API Reference</strong>
+    <span>Generated .NET API documentation.</span>
+  </a>
+</div>

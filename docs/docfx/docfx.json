@@ -54,12 +54,19 @@
     ],
     "output": "_site",
     "template": [
-      "default"
+      "default",
+      "modern",
+      "templates/moongate"
     ],
     "globalMetadata": {
       "_appName": "Moongate",
       "_appTitle": "Moongate Documentation",
+      "_appLogoPath": "images/favicon.svg",
+      "_appFaviconPath": "images/favicon.svg",
+      "_appFooter": "Moongate documentation. MIT licensed.",
       "_enableSearch": "true",
+      "_enableNewTab": "true",
+      "_lang": "en",
       "_gitContribute": {
         "repo": "https://github.com/moongate-community/moongate-next",
         "branch": "master"
