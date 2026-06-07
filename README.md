@@ -2,7 +2,10 @@
 
 ## Overview
 
-Short description goes here.
+Moongate Next is a .NET server framework for Ultima Online shard experiments.
+It combines UO networking, YAML-backed data assets, Lua scripting, explicit
+plugin extension points, persistence, metrics, and DocFX documentation in a
+single modern runtime.
 
 ## Build
 

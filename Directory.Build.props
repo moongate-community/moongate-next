@@ -27,19 +27,29 @@
         <AssemblyVersion>0.1.0.0</AssemblyVersion>
         <FileVersion>0.1.0.0</FileVersion>
         <InformationalVersion>0.1.0</InformationalVersion>
-        <Authors>Squid Development</Authors>
-        <Product>Moongate</Product>
-        <Company>Squid Development</Company>
+        <Authors>Moongate Community</Authors>
+        <Title>Moongate Next</Title>
+        <Product>Moongate Next</Product>
+        <Company>Moongate Community</Company>
+        <Description>Next-generation .NET server framework for Ultima Online shard experiments, with YAML data assets, Lua scripting, plugins, and UO networking.</Description>
         <Copyright>Copyright 2026 tom@orivega.io</Copyright>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>moongate;moongate-next;ultima-online;uo;server;shard;emulator;lua;plugins;yaml;dotnet</PackageTags>
         <RepositoryType>git</RepositoryType>
-        <PackageProjectUrl>https://github.com/tgiachi/Moongate</PackageProjectUrl>
+        <PackageProjectUrl>https://github.com/moongate-community/moongate-next</PackageProjectUrl>
         <RepositoryUrl>$(PackageProjectUrl)</RepositoryUrl>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="" Visible="false" Condition="Exists('$(MSBuildThisFileDirectory)README.md')"/>
+        <None Include="$(MSBuildThisFileDirectory)LICENSE" Pack="true" PackagePath="" Visible="false" Condition="Exists('$(MSBuildThisFileDirectory)LICENSE')"/>
+        <None Include="$(MSBuildThisFileDirectory)NOTICE" Pack="true" PackagePath="" Visible="false" Condition="Exists('$(MSBuildThisFileDirectory)NOTICE')"/>
+    </ItemGroup>
 
     <!-- Build Configuration -->
     <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
