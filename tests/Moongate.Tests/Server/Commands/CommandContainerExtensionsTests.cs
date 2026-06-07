@@ -1,4 +1,5 @@
 using DryIoc;
+using Microsoft.Extensions.Hosting;
 using Moongate.Abstractions.Interfaces.Commands;
 using Moongate.Abstractions.Interfaces.Network;
 using Moongate.Network.UO.Packets.Incoming.Speech;
@@ -7,6 +8,7 @@ using Moongate.Server.Extensions.Commands;
 using Moongate.Server.Extensions.Network;
 using Moongate.Server.Interfaces.Commands;
 using Moongate.Server.Services.Commands;
+using Moongate.Tests.Support;
 
 namespace Moongate.Tests.Server.Commands;
 
@@ -16,6 +18,8 @@ public sealed class CommandContainerExtensionsTests
     public void AddMoongateCommands_RegistersRegistryBuiltinsAndSpeechHandlers()
     {
         var container = new Container();
+        using var lifetime = new TestHostApplicationLifetime();
+        container.RegisterInstance<IHostApplicationLifetime>(lifetime);
         container.RegisterInstance(new PacketRegistry());
         container.AddMoongateNetwork();
 
