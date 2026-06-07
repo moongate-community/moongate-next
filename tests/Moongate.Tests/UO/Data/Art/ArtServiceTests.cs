@@ -87,4 +87,22 @@ public class ArtServiceTests
             dir.Delete(true);
         }
     }
+
+    [Fact]
+    public void MaxItemId_ShortClassicIndex_ReturnsLegacyStaticLimit()
+    {
+        var dir = Directory.CreateTempSubdirectory("nr-uo-");
+
+        try
+        {
+            ArtFixture.WriteWhitePixel(dir.FullName, 0);
+            var service = new ArtService(new UoFileResolver(dir.FullName));
+
+            Assert.Equal(0x3FFF, service.MaxItemId);
+        }
+        finally
+        {
+            dir.Delete(true);
+        }
+    }
 }

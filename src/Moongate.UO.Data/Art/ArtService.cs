@@ -34,6 +34,8 @@ public sealed class ArtService : IArtService
         );
     }
 
+    public int MaxItemId => GetMaxItemId();
+
     public Image<Rgba32>? GetArt(int itemId, bool clone = true)
     {
         var legalItemId = GetLegalItemId(itemId);
