@@ -76,7 +76,7 @@ public class LuaCoreModulesTests
         );
 
         var commands = fixture.Container.Resolve<ICommandSystemService>();
-        var output = await commands.ExecuteCommandWithOutputAsync("lua_echo hello Britannia", CommandSourceType.Console);
+        var output = await commands.ExecuteCommandWithOutputAsync("lua_echo hello Britannia");
 
         Assert.Equal(["hello Britannia"], output);
         Assert.Equal("Console", fixture.Engine.ExecuteFunction("captured_source").Data);
