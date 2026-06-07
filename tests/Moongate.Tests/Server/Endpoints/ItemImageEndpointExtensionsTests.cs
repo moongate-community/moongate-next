@@ -35,6 +35,10 @@ public class ItemImageEndpointExtensionsTests : IDisposable
         Assert.True(File.Exists(cachePath));
         Assert.Equal(1, service.RenderCount);
         Assert.Contains("PhysicalFile", result.GetType().Name, StringComparison.OrdinalIgnoreCase);
+
+        using var image = Image.Load<Rgba32>(cachePath);
+        Assert.Equal(0, image[0, 0].A);
+        Assert.Equal(255, image[4, 4].A);
     }
 
     [Fact]

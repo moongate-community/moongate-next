@@ -61,7 +61,8 @@ GET /api/items/{itemId}.png
 ```
 
 Returns a cropped and padded PNG image for the requested UO item art id. The
-route expects hexadecimal ids in `0x...` form, for example:
+background around the item art is transparent. The route expects hexadecimal ids
+in `0x...` form, for example:
 
 ```http
 GET /api/items/0x001.png
