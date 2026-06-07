@@ -10,6 +10,8 @@ namespace Moongate.Server.Services.Commands;
 /// </summary>
 public sealed class ConsoleCommandService : IConsoleCommandService, IDisposable
 {
+    internal const string Prompt = "MG> ";
+
     private readonly ILogger _logger = Log.ForContext<ConsoleCommandService>();
     private readonly ICommandSystemService _commands;
     private CancellationTokenSource? _stop;
@@ -21,9 +23,6 @@ public sealed class ConsoleCommandService : IConsoleCommandService, IDisposable
 
         _commands = commands;
     }
-
-    public void Dispose()
-        => _stop?.Dispose();
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
@@ -64,7 +63,7 @@ public sealed class ConsoleCommandService : IConsoleCommandService, IDisposable
         {
             try
             {
-                Console.Write("> ");
+                Console.Write(Prompt);
                 var line = await Console.In.ReadLineAsync(cancellationToken);
 
                 if (line is null)
@@ -78,6 +77,11 @@ public sealed class ConsoleCommandService : IConsoleCommandService, IDisposable
                 }
 
                 await _commands.ExecuteCommandAsync(line, cancellationToken: cancellationToken);
+
+                if (IsLoopTerminatingCommand(line))
+                {
+                    return;
+                }
             }
             catch (OperationCanceledException)
             {
@@ -89,4 +93,37 @@ public sealed class ConsoleCommandService : IConsoleCommandService, IDisposable
             }
         }
     }
+
+    internal static bool IsLoopTerminatingCommand(string line)
+    {
+        ArgumentNullException.ThrowIfNull(line);
+
+        var trimmed = line.TrimStart();
+
+        if (trimmed.Length == 0)
+        {
+            return false;
+        }
+
+        var commandLength = trimmed.Length;
+
+        for (var i = 0; i < trimmed.Length; i++)
+        {
+            if (char.IsWhiteSpace(trimmed[i]))
+            {
+                commandLength = i;
+
+                break;
+            }
+        }
+
+        var command = trimmed[..commandLength];
+
+        return string.Equals(command, "exit", StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(command, "stop", StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(command, "quit", StringComparison.OrdinalIgnoreCase);
+    }
+
+    public void Dispose()
+        => _stop?.Dispose();
 }
