@@ -191,15 +191,16 @@ public static class MoongateBootstrap
         lifetime.ApplicationStarted.Register(
             () =>
             {
-                var bus = app.Services.GetRequiredService<IEventBusService>();
-                bus.Publish(new ServerStartedEvent(DateTimeOffset.UtcNow));
                 var elapsed = Stopwatch.GetElapsedTime(startTime);
 
                 Log.Information(
-                    "Server ready in {Elapsed} ({ElapsedMilliseconds:F0} ms)",
+                    "Moongate server ready in {Elapsed} ({ElapsedMilliseconds:F0} ms)",
                     elapsed,
                     elapsed.TotalMilliseconds
                 );
+
+                var bus = app.Services.GetRequiredService<IEventBusService>();
+                bus.Publish(new ServerStartedEvent(DateTimeOffset.UtcNow));
             }
         );
 
