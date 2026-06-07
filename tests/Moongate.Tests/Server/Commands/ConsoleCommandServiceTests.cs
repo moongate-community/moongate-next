@@ -15,14 +15,7 @@ public sealed class ConsoleCommandServiceTests
             TaskCreationOptions.RunContinuationsAsynchronously
         );
 
-        public Task<string> ExecutedCommand
-            => _executedCommand.Task;
-
-        public Task StartAsync(CancellationToken cancellationToken)
-            => Task.CompletedTask;
-
-        public Task StopAsync(CancellationToken cancellationToken)
-            => Task.CompletedTask;
+        public Task<string> ExecutedCommand => _executedCommand.Task;
 
         public Task ExecuteCommandAsync(
             string commandWithArgs,
@@ -51,13 +44,25 @@ public sealed class ConsoleCommandServiceTests
 
         public IReadOnlyList<CommandDefinition> GetRegisteredCommands()
             => [];
+
+        public Task StartAsync(CancellationToken cancellationToken)
+            => Task.CompletedTask;
+
+        public Task StopAsync(CancellationToken cancellationToken)
+            => Task.CompletedTask;
     }
+
+    [Theory, InlineData("exit"), InlineData("exit now"), InlineData(" stop"), InlineData("QUIT")]
+    public void IsLoopTerminatingCommand_ExitAliases_ReturnsTrue(string line)
+        => Assert.True(ConsoleCommandService.IsLoopTerminatingCommand(line));
+
+    [Theory, InlineData(""), InlineData(" "), InlineData("help"), InlineData("exitdoor"), InlineData(".exit")]
+    public void IsLoopTerminatingCommand_OtherInput_ReturnsFalse(string line)
+        => Assert.False(ConsoleCommandService.IsLoopTerminatingCommand(line));
 
     [Fact]
     public void Prompt_UsesMoongatePrefix()
-    {
-        Assert.Equal("MG> ", ConsoleCommandService.Prompt);
-    }
+        => Assert.Equal("MG> ", ConsoleCommandService.Prompt);
 
     [Fact]
     public async Task StartAsync_WaitsForApplicationStartedBeforePromptingAndReading()
@@ -92,26 +97,5 @@ public sealed class ConsoleCommandServiceTests
             Console.SetIn(originalIn);
             Console.SetOut(originalOut);
         }
-    }
-
-    [Theory]
-    [InlineData("exit")]
-    [InlineData("exit now")]
-    [InlineData(" stop")]
-    [InlineData("QUIT")]
-    public void IsLoopTerminatingCommand_ExitAliases_ReturnsTrue(string line)
-    {
-        Assert.True(ConsoleCommandService.IsLoopTerminatingCommand(line));
-    }
-
-    [Theory]
-    [InlineData("")]
-    [InlineData(" ")]
-    [InlineData("help")]
-    [InlineData("exitdoor")]
-    [InlineData(".exit")]
-    public void IsLoopTerminatingCommand_OtherInput_ReturnsFalse(string line)
-    {
-        Assert.False(ConsoleCommandService.IsLoopTerminatingCommand(line));
     }
 }

@@ -27,6 +27,10 @@ title: Moongate
     <strong>Configuration</strong>
     <span><code>moongate.yaml</code> sections and runtime paths.</span>
   </a>
+  <a href="articles/runtime-api.md">
+    <strong>Runtime API</strong>
+    <span>HTTP endpoints for metrics, version data, and lazy UO images.</span>
+  </a>
   <a href="articles/data-assets.md">
     <strong>Data Assets</strong>
     <span>Embedded YAML assets and lazy data services.</span>

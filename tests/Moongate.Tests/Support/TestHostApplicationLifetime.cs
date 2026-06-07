@@ -8,14 +8,18 @@ internal sealed class TestHostApplicationLifetime : IHostApplicationLifetime, ID
     private readonly CancellationTokenSource _stopping = new();
     private readonly CancellationTokenSource _stopped = new();
 
-    public CancellationToken ApplicationStarted
-        => _started.Token;
+    public CancellationToken ApplicationStarted => _started.Token;
 
-    public CancellationToken ApplicationStopping
-        => _stopping.Token;
+    public CancellationToken ApplicationStopping => _stopping.Token;
 
-    public CancellationToken ApplicationStopped
-        => _stopped.Token;
+    public CancellationToken ApplicationStopped => _stopped.Token;
+
+    public void Dispose()
+    {
+        _started.Dispose();
+        _stopping.Dispose();
+        _stopped.Dispose();
+    }
 
     public void Start()
         => _started.Cancel();
@@ -25,11 +29,4 @@ internal sealed class TestHostApplicationLifetime : IHostApplicationLifetime, ID
 
     public void StopApplication()
         => _stopping.Cancel();
-
-    public void Dispose()
-    {
-        _started.Dispose();
-        _stopping.Dispose();
-        _stopped.Dispose();
-    }
 }

@@ -1,3 +1,4 @@
+using System.Globalization;
 using Moongate.Abstractions.Interfaces.Commands;
 using Moongate.Abstractions.Types.Commands;
 using Moongate.Scripting.Lua.Attributes.Scripts;
@@ -77,16 +78,22 @@ public sealed class CommandsModule
         );
     }
 
+    private ICommandSystemService GetCommandSystem()
+        => _commands ?? throw new ScriptRuntimeException("Command system is not registered.");
+
     private static string? GetOutput(DynValue result)
         => result.Type switch
         {
             DataType.Nil     => null,
             DataType.Void    => null,
             DataType.String  => result.String,
-            DataType.Number  => result.Number.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            DataType.Number  => result.Number.ToString(CultureInfo.InvariantCulture),
             DataType.Boolean => result.Boolean.ToString(),
             _                => result.ToObject()?.ToString()
         };
+
+    private ICommandRegistry GetRegistry()
+        => _registry ?? throw new ScriptRuntimeException("Command registry is not registered.");
 
     private static CommandSourceType ParseSource(string? source, CommandSourceType defaultSource)
     {
@@ -97,17 +104,11 @@ public sealed class CommandsModule
 
         return source.Trim().ToLowerInvariant() switch
         {
-            "*" or "all"                 => CommandSourceType.All,
-            "console"                    => CommandSourceType.Console,
-            "game" or "ingame"           => CommandSourceType.InGame,
-            "in_game" or "in-game"       => CommandSourceType.InGame,
-            _                            => throw new ScriptRuntimeException($"Invalid command source '{source}'.")
+            "*" or "all"           => CommandSourceType.All,
+            "console"              => CommandSourceType.Console,
+            "game" or "ingame"     => CommandSourceType.InGame,
+            "in_game" or "in-game" => CommandSourceType.InGame,
+            _                      => throw new ScriptRuntimeException($"Invalid command source '{source}'.")
         };
     }
-
-    private ICommandRegistry GetRegistry()
-        => _registry ?? throw new ScriptRuntimeException("Command registry is not registered.");
-
-    private ICommandSystemService GetCommandSystem()
-        => _commands ?? throw new ScriptRuntimeException("Command system is not registered.");
 }

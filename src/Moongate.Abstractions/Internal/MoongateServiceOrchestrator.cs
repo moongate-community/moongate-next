@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.Extensions.Hosting;
 using Moongate.Abstractions.Interfaces.Services;
 using Serilog;
@@ -24,9 +25,13 @@ internal sealed class MoongateServiceOrchestrator : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
+        var startTime = Stopwatch.GetTimestamp();
+
         for (var i = 0; i < _startOrder.Length; i++)
         {
             var descriptor = _startOrder[i];
+            var serviceStartTime = Stopwatch.GetTimestamp();
+
             _logger.Debug(
                 "Starting {Service} (priority {Priority})",
                 descriptor.Service.GetType().Name,
@@ -34,7 +39,22 @@ internal sealed class MoongateServiceOrchestrator : IHostedService
             );
 
             await descriptor.Service.StartAsync(cancellationToken);
+
+            var serviceElapsed = Stopwatch.GetElapsedTime(serviceStartTime);
+            _logger.Debug(
+                "Started {Service} in {ElapsedMilliseconds:F0} ms (priority {Priority})",
+                descriptor.Service.GetType().Name,
+                serviceElapsed.TotalMilliseconds,
+                descriptor.Priority
+            );
         }
+
+        var elapsed = Stopwatch.GetElapsedTime(startTime);
+        _logger.Information(
+            "Moongate services started in {Elapsed} ({ElapsedMilliseconds:F0} ms)",
+            elapsed,
+            elapsed.TotalMilliseconds
+        );
     }
 
     public async Task StopAsync(CancellationToken cancellationToken)

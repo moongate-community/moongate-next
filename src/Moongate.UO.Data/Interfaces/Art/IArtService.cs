@@ -9,6 +9,11 @@ namespace Moongate.UO.Data.Interfaces.Art;
 public interface IArtService
 {
     /// <summary>
+    /// Gets the highest legal item graphic id supported by the loaded art index.
+    /// </summary>
+    int MaxItemId { get; }
+
+    /// <summary>
     /// Decodes the item-art bitmap for <paramref name="itemId" />, or <c>null</c> when absent.
     /// </summary>
     /// <param name="itemId">Item graphic id.</param>

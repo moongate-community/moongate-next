@@ -66,6 +66,16 @@ public static class UoDataContainerExtensions
             Reuse.Singleton
         );
 
+        container.RegisterDelegate<IMapImageService>(
+            resolver => new MapImageService(
+                resolver.Resolve<IMapService>(),
+                resolver.Resolve<IUoFileResolver>(),
+                resolver.Resolve<IRadarColorStore>(),
+                resolver.Resolve<ITileDataStore>()
+            ),
+            Reuse.Singleton
+        );
+
         container.RegisterDelegate<ILocalizationService>(
             resolver => new LocalizationService(resolver.Resolve<IUoFileResolver>()),
             Reuse.Singleton

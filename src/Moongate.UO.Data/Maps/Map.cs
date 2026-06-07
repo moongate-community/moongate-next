@@ -26,6 +26,8 @@ public sealed class Map
 
     public int MapId => _definition.MapId;
 
+    public int FileIndex => _definition.FileIndex;
+
     public string Name => _definition.Name;
 
     public int Width => _definition.Width;

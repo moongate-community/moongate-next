@@ -76,6 +76,7 @@ public static class MoongateBootstrap
 
         var directories = context.Directories;
 
+        container.RegisterInstance(directories, IfAlreadyRegistered.Keep);
         container.RegisterInstance(context.PacketRegistry);
 
         // Logger config is loaded with the rest of the YAML sections, then applied immediately.
@@ -190,15 +191,16 @@ public static class MoongateBootstrap
         lifetime.ApplicationStarted.Register(
             () =>
             {
-                var bus = app.Services.GetRequiredService<IEventBusService>();
-                bus.Publish(new ServerStartedEvent(DateTimeOffset.UtcNow));
                 var elapsed = Stopwatch.GetElapsedTime(startTime);
 
                 Log.Information(
-                    "Server ready in {Elapsed} ({ElapsedMilliseconds:F0} ms)",
+                    "Moongate server ready in {Elapsed} ({ElapsedMilliseconds:F0} ms)",
                     elapsed,
                     elapsed.TotalMilliseconds
                 );
+
+                var bus = app.Services.GetRequiredService<IEventBusService>();
+                bus.Publish(new ServerStartedEvent(DateTimeOffset.UtcNow));
             }
         );
 
@@ -215,6 +217,8 @@ public static class MoongateBootstrap
 
         app.MapMoongateVersion();
         app.MapMoongateMetrics();
+        app.MapMoongateMapImages();
+        app.MapMoongateItemImages();
         app.MapFallbackToFile("index.html");
     }
 }

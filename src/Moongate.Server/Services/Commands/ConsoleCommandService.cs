@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Hosting;
 using Moongate.Abstractions.Interfaces.Commands;
 using Moongate.Server.Interfaces.Commands;
 using Serilog;
@@ -22,9 +21,7 @@ public sealed class ConsoleCommandService : IConsoleCommandService, IDisposable
     private Task? _loop;
 
     public ConsoleCommandService(ICommandSystemService commands, IHostApplicationLifetime lifetime)
-        : this(commands, lifetime, static () => Console.IsInputRedirected)
-    {
-    }
+        : this(commands, lifetime, static () => Console.IsInputRedirected) { }
 
     internal ConsoleCommandService(
         ICommandSystemService commands,
@@ -39,6 +36,12 @@ public sealed class ConsoleCommandService : IConsoleCommandService, IDisposable
         _commands = commands;
         _lifetime = lifetime;
         _isInputRedirected = isInputRedirected;
+    }
+
+    public void Dispose()
+    {
+        _startupRegistration.Dispose();
+        _stop?.Dispose();
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -78,6 +81,36 @@ public sealed class ConsoleCommandService : IConsoleCommandService, IDisposable
         {
             await _loop.WaitAsync(cancellationToken);
         }
+    }
+
+    internal static bool IsLoopTerminatingCommand(string line)
+    {
+        ArgumentNullException.ThrowIfNull(line);
+
+        var trimmed = line.TrimStart();
+
+        if (trimmed.Length == 0)
+        {
+            return false;
+        }
+
+        var commandLength = trimmed.Length;
+
+        for (var i = 0; i < trimmed.Length; i++)
+        {
+            if (char.IsWhiteSpace(trimmed[i]))
+            {
+                commandLength = i;
+
+                break;
+            }
+        }
+
+        var command = trimmed[..commandLength];
+
+        return string.Equals(command, "exit", StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(command, "stop", StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(command, "quit", StringComparison.OrdinalIgnoreCase);
     }
 
     private async Task RunLoopAsync(CancellationToken cancellationToken)
@@ -126,41 +159,5 @@ public sealed class ConsoleCommandService : IConsoleCommandService, IDisposable
 
         _loop = RunLoopAsync(_stop.Token);
         _logger.Information("Console command service started.");
-    }
-
-    internal static bool IsLoopTerminatingCommand(string line)
-    {
-        ArgumentNullException.ThrowIfNull(line);
-
-        var trimmed = line.TrimStart();
-
-        if (trimmed.Length == 0)
-        {
-            return false;
-        }
-
-        var commandLength = trimmed.Length;
-
-        for (var i = 0; i < trimmed.Length; i++)
-        {
-            if (char.IsWhiteSpace(trimmed[i]))
-            {
-                commandLength = i;
-
-                break;
-            }
-        }
-
-        var command = trimmed[..commandLength];
-
-        return string.Equals(command, "exit", StringComparison.OrdinalIgnoreCase) ||
-               string.Equals(command, "stop", StringComparison.OrdinalIgnoreCase) ||
-               string.Equals(command, "quit", StringComparison.OrdinalIgnoreCase);
-    }
-
-    public void Dispose()
-    {
-        _startupRegistration.Dispose();
-        _stop?.Dispose();
     }
 }
