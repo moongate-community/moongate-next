@@ -30,8 +30,8 @@
         <Authors>Squid Development</Authors>
         <Product>Moongate</Product>
         <Company>Squid Development</Company>
-        <Copyright>© $(Company) $([System.DateTime]::Now.Year)</Copyright>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <Copyright>Copyright 2026 tom@orivega.io</Copyright>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <RepositoryType>git</RepositoryType>
         <PackageProjectUrl>https://github.com/tgiachi/Moongate</PackageProjectUrl>
         <RepositoryUrl>$(PackageProjectUrl)</RepositoryUrl>
