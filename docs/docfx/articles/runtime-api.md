@@ -67,6 +67,12 @@ route expects hexadecimal ids in `0x...` form, for example:
 GET /api/items/0x001.png
 ```
 
+For example, to render the gold coins item art:
+
+```http
+GET /api/items/0x0EED.png
+```
+
 Generated item images are stored under:
 
 ```text
