@@ -240,6 +240,7 @@ public static class MoongateBootstrap
         app.UseAuthorization();
 
         app.MapMoongateAuth();
+        app.MapMoongateAdminUsers();
         app.MapMoongateVersion();
         app.MapMoongateMetrics();
         app.MapMoongateMapImages();

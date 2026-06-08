@@ -4,6 +4,7 @@ import { AdminMetricStrip } from "../components/admin/AdminMetricStrip";
 import { AdminPersistencePanel } from "../components/admin/AdminPersistencePanel";
 import { AdminRuntimePanel } from "../components/admin/AdminRuntimePanel";
 import { AdminSecurityPanel } from "../components/admin/AdminSecurityPanel";
+import { UserManagementPanel } from "../components/admin/users/UserManagementPanel";
 import { buildMetricCards, buildRuntimeServices } from "../data/adminDashboard";
 import { getAdminRuntimeSnapshot, getOfflineSnapshot } from "../lib/adminClient";
 import { me } from "../lib/authClient";
@@ -86,6 +87,8 @@ export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, 
             <AdminMetricsPanel snapshot={snapshot} history={metricHistory} />
           </Suspense>
         )}
+
+        {activeView === "users" && <UserManagementPanel accessToken={accessToken} />}
 
         {activeView === "overview" ? (
           <div className="grid gap-4 lg:grid-cols-2">

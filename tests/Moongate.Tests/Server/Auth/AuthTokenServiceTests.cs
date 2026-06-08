@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using Moongate.Core.Ids;
 using Moongate.Core.Utils;
+using Moongate.Persistence.Data;
 using Moongate.Persistence.Interfaces.Persistence;
 using Moongate.Server.Data.Auth;
 using Moongate.Server.Data.Config;
@@ -105,7 +106,7 @@ public sealed class AuthTokenServiceTests
 
         public UserEntity Add(string username, string password, UserLevelType level, bool isActive)
         {
-            var user = new UserEntity(new(_nextId++), username, HashUtils.HashPassword(password), level, isActive);
+            var user = new UserEntity(new(_nextId++), username, $"{username}@test.local", HashUtils.HashPassword(password), level, isActive);
             _users[user.Id] = user;
 
             return user;
@@ -114,8 +115,20 @@ public sealed class AuthTokenServiceTests
         public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
             => ValueTask.FromResult(_users.Count);
 
+        public ValueTask<PagedResult<UserEntity>> ListAsync(
+            PageRequest request,
+            CancellationToken cancellationToken = default
+        )
+        {
+            var all = _users.Values.OrderBy(u => u.Username, StringComparer.OrdinalIgnoreCase).ToList();
+            var items = all.Skip((request.Page - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+            return ValueTask.FromResult(new PagedResult<UserEntity>(items, request.Page, request.PageSize, all.Count));
+        }
+
         public ValueTask<UserEntity> CreateAsync(
             string username,
+            string email,
             string password,
             UserLevelType level = UserLevelType.Player,
             bool isActive = true,
@@ -132,6 +145,23 @@ public sealed class AuthTokenServiceTests
                     user => string.Equals(user.Username, username, StringComparison.OrdinalIgnoreCase)
                 )
             );
+
+        public ValueTask<UserEntity?> UpdateAsync(
+            Serial id,
+            string email,
+            UserLevelType level,
+            CancellationToken cancellationToken = default
+        )
+            => ValueTask.FromResult(_users.GetValueOrDefault(id));
+
+        public ValueTask<UserEntity?> SetActiveAsync(Serial id, bool isActive, CancellationToken cancellationToken = default)
+            => ValueTask.FromResult(_users.GetValueOrDefault(id));
+
+        public ValueTask<bool> ResetPasswordAsync(Serial id, string newPassword, CancellationToken cancellationToken = default)
+            => ValueTask.FromResult(_users.ContainsKey(id));
+
+        public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
+            => ValueTask.FromResult(_users.Remove(id));
     }
 
     private sealed class FakeRefreshTokenAccess : IAutoDataAccess<AuthRefreshTokenEntity, Serial>

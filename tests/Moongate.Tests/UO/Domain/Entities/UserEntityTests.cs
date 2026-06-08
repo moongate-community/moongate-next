@@ -9,7 +9,7 @@ public class UserEntityTests
     [Fact]
     public void Constructor_AdminLevel_LevelIsAdministrator()
     {
-        var user = new UserEntity(new(3), "admin", "pw", UserLevelType.Administrator, true);
+        var user = new UserEntity(new(3), "admin", "admin@test.local", "pw", UserLevelType.Administrator, true);
 
         Assert.Equal(UserLevelType.Administrator, user.Level);
     }
@@ -17,7 +17,7 @@ public class UserEntityTests
     [Fact]
     public void Constructor_InactiveUser_IsActiveIsFalse()
     {
-        var user = new UserEntity(new(2), "banned", "pw", UserLevelType.Player, false);
+        var user = new UserEntity(new(2), "banned", "banned@test.local", "pw", UserLevelType.Player, false);
 
         Assert.False(user.IsActive);
     }
@@ -27,10 +27,11 @@ public class UserEntityTests
     {
         var id = new Serial(1);
 
-        var user = new UserEntity(id, "arthorius", "hashed_pw", UserLevelType.Player, true);
+        var user = new UserEntity(id, "arthorius", "arthorius@test.local", "hashed_pw", UserLevelType.Player, true);
 
         Assert.Equal(id, user.Id);
         Assert.Equal("arthorius", user.Username);
+        Assert.Equal("arthorius@test.local", user.Email);
         Assert.Equal("hashed_pw", user.Password);
         Assert.Equal(UserLevelType.Player, user.Level);
         Assert.True(user.IsActive);
@@ -39,8 +40,8 @@ public class UserEntityTests
     [Fact]
     public void Id_DifferentSerials_AreNotEqual()
     {
-        var a = new UserEntity(new(10), "a", "pw", UserLevelType.Player, true);
-        var b = new UserEntity(new(11), "b", "pw", UserLevelType.Player, true);
+        var a = new UserEntity(new(10), "a", "a@test.local", "pw", UserLevelType.Player, true);
+        var b = new UserEntity(new(11), "b", "b@test.local", "pw", UserLevelType.Player, true);
 
         Assert.NotEqual(a.Id, b.Id);
     }
@@ -48,7 +49,7 @@ public class UserEntityTests
     [Fact]
     public void IsActive_SetToFalse_ReflectsChange()
     {
-        var user = new UserEntity(new(4), "user", "pw", UserLevelType.Player, true);
+        var user = new UserEntity(new(4), "user", "user@test.local", "pw", UserLevelType.Player, true);
 
         user.IsActive = false;
 
@@ -58,7 +59,7 @@ public class UserEntityTests
     [Fact]
     public void Level_Promoted_ReflectsChange()
     {
-        var user = new UserEntity(new(5), "user", "pw", UserLevelType.Player, true);
+        var user = new UserEntity(new(5), "user", "user@test.local", "pw", UserLevelType.Player, true);
 
         user.Level = UserLevelType.GameMaster;
 
@@ -68,7 +69,7 @@ public class UserEntityTests
     [Fact]
     public void Password_Updated_ReflectsChange()
     {
-        var user = new UserEntity(new(6), "user", "old_hash", UserLevelType.Player, true);
+        var user = new UserEntity(new(6), "user", "user@test.local", "old_hash", UserLevelType.Player, true);
 
         user.Password = "new_hash";
 
