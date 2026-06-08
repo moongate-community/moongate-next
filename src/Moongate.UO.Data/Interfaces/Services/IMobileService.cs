@@ -24,7 +24,11 @@ public interface IMobileService
     /// <summary>Permanently removes a mobile; returns false when absent.</summary>
     ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default);
 
-    /// <summary>Returns the mobile's skill entry, or a fresh default entry when not yet trained.</summary>
+    /// <summary>
+    /// Returns the mobile's skill entry, or a fresh default entry when not yet trained.
+    /// Read-only: when the skill is untrained the returned entry is NOT stored, so mutating
+    /// it has no effect — use <see cref="SetSkillAsync" /> to change a skill.
+    /// </summary>
     SkillEntry GetSkill(MobileEntity mobile, UOSkillName skill);
 
     /// <summary>Sets a skill's value (creating the entry if needed) and persists the mobile.</summary>
@@ -37,7 +41,9 @@ public interface IMobileService
 
     /// <summary>
     /// Equips an item on the mobile at the given layer and persists both; returns false
-    /// when the layer is already occupied.
+    /// when the layer is already occupied. Precondition: the item must not already be
+    /// equipped on another mobile or held in a container — the caller must unequip/remove
+    /// it first, otherwise the previous owner's reference is left dangling.
     /// </summary>
     ValueTask<bool> EquipAsync(
         MobileEntity mobile,
