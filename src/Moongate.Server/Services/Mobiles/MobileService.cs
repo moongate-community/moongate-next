@@ -15,6 +15,8 @@ namespace Moongate.Server.Services.Mobiles;
 /// </summary>
 public sealed class MobileService : IMobileService
 {
+    private const int DefaultSkillCap = 1000;
+
     private readonly IAutoDataAccess<MobileEntity, Serial> _mobiles;
     private readonly IAutoDataAccess<ItemEntity, Serial> _items;
 
@@ -67,12 +69,14 @@ public sealed class MobileService : IMobileService
 
         if (!mobile.Skills.TryGetValue(skill, out var entry))
         {
-            entry = new SkillEntry();
+            entry = new SkillEntry { Cap = DefaultSkillCap, Lock = UOSkillLock.Up };
             mobile.Skills[skill] = entry;
         }
 
-        entry.Value = value;
+        // Sets the trained base; Value follows Base until effective-stat modifiers exist.
+        // Cap and Lock are preserved across calls (only initialized for a new entry).
         entry.Base = value;
+        entry.Value = value;
 
         await _mobiles.UpsertAsync(mobile, cancellationToken);
 
@@ -89,10 +93,14 @@ public sealed class MobileService : IMobileService
         ArgumentNullException.ThrowIfNull(mobile);
         ArgumentNullException.ThrowIfNull(item);
 
-        if (mobile.EquippedItemIds.ContainsKey(layer))
+        if (mobile.EquippedItemIds.TryGetValue(layer, out var existing))
         {
-            return false;
+            // Idempotent when the same item already sits on this layer; otherwise the layer is busy.
+            return existing == item.Id;
         }
+
+        // Detach the item from any previous owner so no dangling reference is left behind.
+        await DetachAsync(mobile, item, cancellationToken);
 
         mobile.EquippedItemIds[layer] = item.Id;
 
@@ -105,6 +113,38 @@ public sealed class MobileService : IMobileService
         await _items.UpsertAsync(item, cancellationToken);
 
         return true;
+    }
+
+    private async ValueTask DetachAsync(MobileEntity targetMobile, ItemEntity item, CancellationToken cancellationToken)
+    {
+        // Remove the item from a previous equip slot (this mobile or another one).
+        if (item.EquippedMobileId.IsValid && item.EquippedLayer is { } previousLayer)
+        {
+            if (item.EquippedMobileId == targetMobile.Id)
+            {
+                targetMobile.EquippedItemIds.Remove(previousLayer);
+            }
+            else
+            {
+                var previousMobile = await _mobiles.GetByIdAsync(item.EquippedMobileId, cancellationToken);
+
+                if (previousMobile is not null && previousMobile.EquippedItemIds.Remove(previousLayer))
+                {
+                    await _mobiles.UpsertAsync(previousMobile, cancellationToken);
+                }
+            }
+        }
+
+        // Remove the item from its parent container, if any.
+        if (item.ParentContainerId.IsValid)
+        {
+            var container = await _items.GetByIdAsync(item.ParentContainerId, cancellationToken);
+
+            if (container is not null && container.ContainedItemIds.Remove(item.Id))
+            {
+                await _items.UpsertAsync(container, cancellationToken);
+            }
+        }
     }
 
     public async ValueTask<bool> UnequipAsync(

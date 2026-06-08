@@ -96,6 +96,37 @@ public sealed class MobileEntityPersistenceTests : IDisposable
         }
     }
 
+    [Fact]
+    public async Task Snapshot_RoundTrip_CustomPropertyKeysStayCaseInsensitive()
+    {
+        var mobileId = new Serial(2);
+
+        var first = NewService();
+        await first.StartAsync(CancellationToken.None);
+        var mobile = new MobileEntity { Id = mobileId, Name = "Caseless" };
+        mobile.CustomProperties["Origin"] = new CustomProperty { Type = CustomPropertyType.String, StringValue = "seeded" };
+        await first.GetDataAccess<MobileEntity, Serial>().UpsertAsync(mobile);
+        await first.SaveSnapshotAsync();
+        await first.StopAsync(CancellationToken.None);
+
+        var second = NewService();
+        await second.StartAsync(CancellationToken.None);
+
+        try
+        {
+            var loaded = await second.GetDataAccess<MobileEntity, Serial>().GetByIdAsync(mobileId);
+
+            Assert.NotNull(loaded);
+            // Lookup with a different case must still resolve after the round-trip.
+            Assert.True(loaded!.CustomProperties.ContainsKey("ORIGIN"));
+            Assert.Equal("seeded", loaded.CustomProperties["origin"].StringValue);
+        }
+        finally
+        {
+            await second.StopAsync(CancellationToken.None);
+        }
+    }
+
     private PersistenceService NewService()
     {
         Directory.CreateDirectory(_dir);
