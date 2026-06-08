@@ -92,7 +92,7 @@ public sealed class UserServiceTests : IDisposable
         }
 
         private static UserEntity Clone(UserEntity user)
-            => new(user.Id, user.Username, user.Password, user.Level, user.IsActive);
+            => new(user.Id, user.Username, user.Email, user.Password, user.Level, user.IsActive);
     }
 
     [Fact]
@@ -129,8 +129,8 @@ public sealed class UserServiceTests : IDisposable
     public async Task CountAsync_ReturnsPersistedUserCount()
     {
         var access = new FakeUserAccess();
-        access.Add(new(new(1), "one", HashUtils.HashPassword("secret"), UserLevelType.Player, true));
-        access.Add(new(new(2), "two", HashUtils.HashPassword("secret"), UserLevelType.Player, true));
+        access.Add(new(new(1), "one", "one@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, true));
+        access.Add(new(new(2), "two", "two@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, true));
         var service = new UserService(access, new CapturingEventBusService());
 
         var count = await service.CountAsync();
@@ -142,7 +142,7 @@ public sealed class UserServiceTests : IDisposable
     public async Task CreateAsync_DuplicateUsernameCaseInsensitive_ThrowsAndDoesNotPublish()
     {
         var access = new FakeUserAccess();
-        access.Add(new(new(7), "Arthorius", HashUtils.HashPassword("old"), UserLevelType.Player, true));
+        access.Add(new(new(7), "Arthorius", "art@test.local", HashUtils.HashPassword("old"), UserLevelType.Player, true));
         var bus = new CapturingEventBusService();
         var service = new UserService(access, bus);
 
@@ -193,7 +193,7 @@ public sealed class UserServiceTests : IDisposable
     public async Task GetByUsernameAsync_MatchesUsernameCaseInsensitively()
     {
         var access = new FakeUserAccess();
-        access.Add(new(new(42), "Arthorius", HashUtils.HashPassword("secret"), UserLevelType.Player, true));
+        access.Add(new(new(42), "Arthorius", "art@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, true));
         var service = new UserService(access, new CapturingEventBusService());
 
         var user = await service.GetByUsernameAsync("arthorius");

@@ -42,7 +42,7 @@ public sealed class UserService : IUserService
         }
 
         var id = await _users.NextIdAsync(cancellationToken);
-        var user = new UserEntity(id, normalizedUsername, HashUtils.HashPassword(password), level, isActive);
+        var user = new UserEntity(id, normalizedUsername, "", HashUtils.HashPassword(password), level, isActive);
 
         await _users.UpsertAsync(user, cancellationToken);
         await _eventBus.PublishAsync(

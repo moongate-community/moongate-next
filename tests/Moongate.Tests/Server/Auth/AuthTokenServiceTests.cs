@@ -105,7 +105,7 @@ public sealed class AuthTokenServiceTests
 
         public UserEntity Add(string username, string password, UserLevelType level, bool isActive)
         {
-            var user = new UserEntity(new(_nextId++), username, HashUtils.HashPassword(password), level, isActive);
+            var user = new UserEntity(new(_nextId++), username, $"{username}@test.local", HashUtils.HashPassword(password), level, isActive);
             _users[user.Id] = user;
 
             return user;
