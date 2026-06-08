@@ -32,6 +32,41 @@ dotnet tool run docfx docs/docfx/docfx.json
 The generated site is written to `docs/docfx/_site`. GitHub Pages deployment is
 handled by the `Docs` workflow.
 
+## Web UI
+
+The web UI lives under `ui/` and is built with Vite.
+
+```bash
+cd ui
+npm install
+npm run build
+```
+
+During local development, run the server separately and start Vite:
+
+```bash
+cd ui
+npm run dev
+```
+
+The Vite dev proxy targets `http://127.0.0.1:5265` by default. Override it with
+`VITE_API_TARGET` when the backend runs on a different URL.
+
+The server Dockerfile builds the UI and copies `ui/dist` into the published
+server `wwwroot` directory.
+
+The admin portal dashboard reads the existing server endpoints:
+
+- `GET /api/version` for server version and codename.
+- `GET /api/auth/me` for the current authenticated admin identity.
+- `GET /metrics` for runtime, network, event bus, timer, and persistence metrics.
+- `GET /api/docs` for Scalar API documentation.
+
+The admin `Metrics` view renders client-side time-series panels from `/metrics`
+and refreshes while the view is open.
+
+The first admin dashboard phase intentionally does not manage map or item image generation.
+
 ## Configuration
 
 Moongate uses YAML for runtime configuration. The main server config is

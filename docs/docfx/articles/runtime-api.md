@@ -6,6 +6,71 @@ title: Runtime API
 
 Moongate exposes a small HTTP API from the server process.
 
+## API Docs
+
+When the server runs in development mode, Scalar is available at:
+
+```http
+GET /api/docs
+```
+
+The OpenAPI document used by Scalar is served at:
+
+```http
+GET /swagger/v1/swagger.json
+```
+
+## Authentication
+
+```http
+POST /api/auth/login
+```
+
+Authenticates a user account and returns an access token, refresh token, token
+expiry timestamps, and the authenticated user summary.
+
+```json
+{
+  "username": "admin",
+  "password": "admin"
+}
+```
+
+```http
+POST /api/auth/refresh
+```
+
+Exchanges an active refresh token for a new token pair. Refresh tokens are
+rotated by default, so the token used for the refresh is revoked.
+
+```json
+{
+  "refreshToken": "<refresh-token>"
+}
+```
+
+```http
+POST /api/auth/logout
+```
+
+Revokes an active refresh token.
+
+```json
+{
+  "refreshToken": "<refresh-token>"
+}
+```
+
+```http
+GET /api/auth/me
+Authorization: Bearer <access-token>
+```
+
+Returns the current authenticated web user.
+
+The access token is a JWT signed with `web.jwt.signing_key` from
+`moongate.yaml`. Configure a unique signing key before production use.
+
 ## Version
 
 ```http

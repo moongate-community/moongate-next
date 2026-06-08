@@ -71,6 +71,13 @@ artifacts/
 # Local code intelligence indexes
 .codegraph/
 
+# Frontend local outputs
+ui/node_modules/
+ui/dist/
+ui/*.tsbuildinfo
+ui/vite.config.js
+ui/vite.config.d.ts
+
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
 
