@@ -66,20 +66,6 @@ public static class AdminUserEndpointExtensions
         return endpoints;
     }
 
-    internal static async Task<IResult> HandleListAsync(
-        IUserService users,
-        int? page,
-        int? pageSize,
-        string? search,
-        CancellationToken cancellationToken
-    )
-    {
-        var request = PageRequest.Normalize(page, pageSize, search);
-        var result = await users.ListAsync(request, cancellationToken);
-
-        return TypedResults.Ok(result.Select(UserSummary.FromEntity));
-    }
-
     internal static async Task<IResult> HandleCreateAsync(
         IUserService users,
         CreateUserRequest request,
@@ -94,7 +80,13 @@ public static class AdminUserEndpointExtensions
         try
         {
             var user = await users.CreateAsync(
-                request.Username, request.Email, request.Password, level, request.IsActive, cancellationToken);
+                           request.Username,
+                           request.Email,
+                           request.Password,
+                           level,
+                           request.IsActive,
+                           cancellationToken
+                       );
 
             return TypedResults.Ok(UserSummary.FromEntity(user));
         }
@@ -106,6 +98,72 @@ public static class AdminUserEndpointExtensions
         {
             return TypedResults.Conflict(ex.Message);
         }
+    }
+
+    internal static async Task<IResult> HandleDeleteAsync(
+        IUserService users,
+        ClaimsPrincipal caller,
+        string id,
+        CancellationToken cancellationToken
+    )
+    {
+        if (IsSelf(caller, id))
+        {
+            return TypedResults.Forbid();
+        }
+
+        var deleted = await users.DeleteAsync(ParseId(id), cancellationToken);
+
+        return deleted ? TypedResults.NoContent() : TypedResults.NotFound();
+    }
+
+    internal static async Task<IResult> HandleListAsync(
+        IUserService users,
+        int? page,
+        int? pageSize,
+        string? search,
+        CancellationToken cancellationToken
+    )
+    {
+        var request = PageRequest.Normalize(page, pageSize, search);
+        var result = await users.ListAsync(request, cancellationToken);
+
+        return TypedResults.Ok(result.Select(UserSummary.FromEntity));
+    }
+
+    internal static async Task<IResult> HandleResetPasswordAsync(
+        IUserService users,
+        string id,
+        ResetUserPasswordRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        if (string.IsNullOrWhiteSpace(request.Password))
+        {
+            return TypedResults.BadRequest("password is required");
+        }
+
+        var changed = await users.ResetPasswordAsync(ParseId(id), request.Password, cancellationToken);
+
+        return changed ? TypedResults.NoContent() : TypedResults.NotFound();
+    }
+
+    internal static async Task<IResult> HandleSetActiveAsync(
+        IUserService users,
+        ClaimsPrincipal caller,
+        string id,
+        SetUserActiveRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        if (IsSelf(caller, id) && !request.IsActive)
+        {
+            return TypedResults.Forbid();
+        }
+
+        var user = await users.SetActiveAsync(ParseId(id), request.IsActive, cancellationToken);
+
+        return user is null ? TypedResults.NotFound() : TypedResults.Ok(UserSummary.FromEntity(user));
     }
 
     internal static async Task<IResult> HandleUpdateAsync(
@@ -140,58 +198,6 @@ public static class AdminUserEndpointExtensions
         {
             return TypedResults.Conflict(ex.Message);
         }
-    }
-
-    internal static async Task<IResult> HandleSetActiveAsync(
-        IUserService users,
-        ClaimsPrincipal caller,
-        string id,
-        SetUserActiveRequest request,
-        CancellationToken cancellationToken
-    )
-    {
-        if (IsSelf(caller, id) && !request.IsActive)
-        {
-            return TypedResults.Forbid();
-        }
-
-        var user = await users.SetActiveAsync(ParseId(id), request.IsActive, cancellationToken);
-
-        return user is null ? TypedResults.NotFound() : TypedResults.Ok(UserSummary.FromEntity(user));
-    }
-
-    internal static async Task<IResult> HandleResetPasswordAsync(
-        IUserService users,
-        string id,
-        ResetUserPasswordRequest request,
-        CancellationToken cancellationToken
-    )
-    {
-        if (string.IsNullOrWhiteSpace(request.Password))
-        {
-            return TypedResults.BadRequest("password is required");
-        }
-
-        var changed = await users.ResetPasswordAsync(ParseId(id), request.Password, cancellationToken);
-
-        return changed ? TypedResults.NoContent() : TypedResults.NotFound();
-    }
-
-    internal static async Task<IResult> HandleDeleteAsync(
-        IUserService users,
-        ClaimsPrincipal caller,
-        string id,
-        CancellationToken cancellationToken
-    )
-    {
-        if (IsSelf(caller, id))
-        {
-            return TypedResults.Forbid();
-        }
-
-        var deleted = await users.DeleteAsync(ParseId(id), cancellationToken);
-
-        return deleted ? TypedResults.NoContent() : TypedResults.NotFound();
     }
 
     private static bool IsSelf(ClaimsPrincipal caller, string id)

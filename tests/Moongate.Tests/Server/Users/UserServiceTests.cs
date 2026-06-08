@@ -139,6 +139,18 @@ public sealed class UserServiceTests : IDisposable
     }
 
     [Fact]
+    public async Task CreateAsync_DuplicateEmailCaseInsensitive_Throws()
+    {
+        var access = new FakeUserAccess();
+        access.Add(new(new(1), "first", "Taken@Realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
+        var service = new UserService(access, new CapturingEventBusService());
+
+        await Assert.ThrowsAsync<InvalidOperationException>(
+            async () => await service.CreateAsync("second", "taken@realm.local", "secret")
+        );
+    }
+
+    [Fact]
     public async Task CreateAsync_DuplicateUsernameCaseInsensitive_ThrowsAndDoesNotPublish()
     {
         var access = new FakeUserAccess();
@@ -147,7 +159,8 @@ public sealed class UserServiceTests : IDisposable
         var service = new UserService(access, bus);
 
         await Assert.ThrowsAsync<InvalidOperationException>(
-            async () => await service.CreateAsync("arthorius", "dupe@test.local", "secret"));
+            async () => await service.CreateAsync("arthorius", "dupe@test.local", "secret")
+        );
 
         Assert.Single(access.Users);
         Assert.Empty(bus.AsyncEvents);
@@ -180,6 +193,38 @@ public sealed class UserServiceTests : IDisposable
         Assert.True(created.IsActive);
     }
 
+    [Fact]
+    public async Task CreateAsync_InvalidEmail_ThrowsArgumentException()
+    {
+        var service = new UserService(new FakeUserAccess(), new CapturingEventBusService());
+
+        await Assert.ThrowsAsync<ArgumentException>(async () => await service.CreateAsync("user", "not-an-email", "secret"));
+    }
+
+    [Fact]
+    public async Task DeleteAsync_RemovesUser_PublishesDeletedEvent_ReturnsTrue()
+    {
+        var access = new FakeUserAccess();
+        access.Add(new(new(11), "zed", "z@realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
+        var bus = new CapturingEventBusService();
+        var service = new UserService(access, bus);
+
+        var deleted = await service.DeleteAsync(new(11));
+
+        Assert.True(deleted);
+        Assert.Empty(access.Users);
+        var evt = Assert.Single(bus.AsyncEvents.OfType<UserDeletedEvent>());
+        Assert.Equal(new(11), evt.UserId);
+    }
+
+    [Fact]
+    public async Task DeleteAsync_UnknownUser_ReturnsFalse()
+    {
+        var service = new UserService(new FakeUserAccess(), new CapturingEventBusService());
+
+        Assert.False(await service.DeleteAsync(new(404)));
+    }
+
     public void Dispose()
     {
         if (Directory.Exists(_dir))
@@ -194,28 +239,15 @@ public sealed class UserServiceTests : IDisposable
     public async Task GetByUsernameAsync_MatchesUsernameCaseInsensitively()
     {
         var access = new FakeUserAccess();
-        access.Add(new(new(42), "Arthorius", "art@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, true));
+        access.Add(
+            new(new(42), "Arthorius", "art@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, true)
+        );
         var service = new UserService(access, new CapturingEventBusService());
 
         var user = await service.GetByUsernameAsync("arthorius");
 
         Assert.NotNull(user);
         Assert.Equal(new(42), user!.Id);
-    }
-
-    [Fact]
-    public async Task ListAsync_SearchMatchesUsernameOrEmail_CaseInsensitive()
-    {
-        var access = new FakeUserAccess();
-        access.Add(new(new(1), "Arthorius", "art@realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
-        access.Add(new(new(2), "Bob", "bob@elsewhere.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
-        var service = new UserService(access, new CapturingEventBusService());
-
-        var byName = await service.ListAsync(new(1, 20, "arthor"));
-        var byEmail = await service.ListAsync(new(1, 20, "ELSEWHERE"));
-
-        Assert.Equal("Arthorius", Assert.Single(byName.Items).Username);
-        Assert.Equal("Bob", Assert.Single(byEmail.Items).Username);
     }
 
     [Fact]
@@ -236,62 +268,49 @@ public sealed class UserServiceTests : IDisposable
     }
 
     [Fact]
-    public async Task CreateAsync_InvalidEmail_ThrowsArgumentException()
+    public async Task ListAsync_SearchMatchesUsernameOrEmail_CaseInsensitive()
+    {
+        var access = new FakeUserAccess();
+        access.Add(new(new(1), "Arthorius", "art@realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
+        access.Add(new(new(2), "Bob", "bob@elsewhere.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
+        var service = new UserService(access, new CapturingEventBusService());
+
+        var byName = await service.ListAsync(new(1, 20, "arthor"));
+        var byEmail = await service.ListAsync(new(1, 20, "ELSEWHERE"));
+
+        Assert.Equal("Arthorius", Assert.Single(byName.Items).Username);
+        Assert.Equal("Bob", Assert.Single(byEmail.Items).Username);
+    }
+
+    [Fact]
+    public async Task ResetPasswordAsync_EmptyPassword_Throws()
+    {
+        var access = new FakeUserAccess();
+        access.Add(new(new(9), "ivo", "i@realm.local", HashUtils.HashPassword("old"), UserLevelType.Player, true));
+        var service = new UserService(access, new CapturingEventBusService());
+
+        await Assert.ThrowsAsync<ArgumentException>(async () => await service.ResetPasswordAsync(new(9), "  "));
+    }
+
+    [Fact]
+    public async Task ResetPasswordAsync_RehashesPassword_ReturnsTrue()
+    {
+        var access = new FakeUserAccess();
+        access.Add(new(new(9), "ivo", "i@realm.local", HashUtils.HashPassword("old"), UserLevelType.Player, true));
+        var service = new UserService(access, new CapturingEventBusService());
+
+        var changed = await service.ResetPasswordAsync(new(9), "fresh");
+
+        Assert.True(changed);
+        Assert.True(HashUtils.VerifyPassword("fresh", Assert.Single(access.Users).Password));
+    }
+
+    [Fact]
+    public async Task ResetPasswordAsync_UnknownUser_ReturnsFalse()
     {
         var service = new UserService(new FakeUserAccess(), new CapturingEventBusService());
 
-        await Assert.ThrowsAsync<ArgumentException>(
-            async () => await service.CreateAsync("user", "not-an-email", "secret"));
-    }
-
-    [Fact]
-    public async Task CreateAsync_DuplicateEmailCaseInsensitive_Throws()
-    {
-        var access = new FakeUserAccess();
-        access.Add(new(new(1), "first", "Taken@Realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
-        var service = new UserService(access, new CapturingEventBusService());
-
-        await Assert.ThrowsAsync<InvalidOperationException>(
-            async () => await service.CreateAsync("second", "taken@realm.local", "secret"));
-    }
-
-    [Fact]
-    public async Task UpdateAsync_ChangesEmailAndLevel_PublishesUpdatedEvent()
-    {
-        var access = new FakeUserAccess();
-        access.Add(new(new(5), "mara", "old@realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
-        var bus = new CapturingEventBusService();
-        var service = new UserService(access, bus);
-
-        var updated = await service.UpdateAsync(new(5), "new@realm.local", UserLevelType.GameMaster);
-
-        Assert.NotNull(updated);
-        Assert.Equal("new@realm.local", updated!.Email);
-        Assert.Equal(UserLevelType.GameMaster, updated.Level);
-        Assert.Equal("new@realm.local", Assert.Single(access.Users).Email);
-        Assert.Single(bus.AsyncEvents.OfType<UserUpdatedEvent>());
-    }
-
-    [Fact]
-    public async Task UpdateAsync_UnknownUser_ReturnsNull()
-    {
-        var service = new UserService(new FakeUserAccess(), new CapturingEventBusService());
-
-        var updated = await service.UpdateAsync(new(999), "x@realm.local", UserLevelType.Player);
-
-        Assert.Null(updated);
-    }
-
-    [Fact]
-    public async Task UpdateAsync_EmailTakenByAnotherUser_Throws()
-    {
-        var access = new FakeUserAccess();
-        access.Add(new(new(1), "a", "a@realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
-        access.Add(new(new(2), "b", "b@realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
-        var service = new UserService(access, new CapturingEventBusService());
-
-        await Assert.ThrowsAsync<InvalidOperationException>(
-            async () => await service.UpdateAsync(new(2), "a@realm.local", UserLevelType.Player));
+        Assert.False(await service.ResetPasswordAsync(new(404), "fresh"));
     }
 
     [Fact]
@@ -319,57 +338,42 @@ public sealed class UserServiceTests : IDisposable
     }
 
     [Fact]
-    public async Task ResetPasswordAsync_RehashesPassword_ReturnsTrue()
+    public async Task UpdateAsync_ChangesEmailAndLevel_PublishesUpdatedEvent()
     {
         var access = new FakeUserAccess();
-        access.Add(new(new(9), "ivo", "i@realm.local", HashUtils.HashPassword("old"), UserLevelType.Player, true));
-        var service = new UserService(access, new CapturingEventBusService());
-
-        var changed = await service.ResetPasswordAsync(new(9), "fresh");
-
-        Assert.True(changed);
-        Assert.True(HashUtils.VerifyPassword("fresh", Assert.Single(access.Users).Password));
-    }
-
-    [Fact]
-    public async Task ResetPasswordAsync_UnknownUser_ReturnsFalse()
-    {
-        var service = new UserService(new FakeUserAccess(), new CapturingEventBusService());
-
-        Assert.False(await service.ResetPasswordAsync(new(404), "fresh"));
-    }
-
-    [Fact]
-    public async Task ResetPasswordAsync_EmptyPassword_Throws()
-    {
-        var access = new FakeUserAccess();
-        access.Add(new(new(9), "ivo", "i@realm.local", HashUtils.HashPassword("old"), UserLevelType.Player, true));
-        var service = new UserService(access, new CapturingEventBusService());
-
-        await Assert.ThrowsAsync<ArgumentException>(async () => await service.ResetPasswordAsync(new(9), "  "));
-    }
-
-    [Fact]
-    public async Task DeleteAsync_RemovesUser_PublishesDeletedEvent_ReturnsTrue()
-    {
-        var access = new FakeUserAccess();
-        access.Add(new(new(11), "zed", "z@realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
+        access.Add(new(new(5), "mara", "old@realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
         var bus = new CapturingEventBusService();
         var service = new UserService(access, bus);
 
-        var deleted = await service.DeleteAsync(new(11));
+        var updated = await service.UpdateAsync(new(5), "new@realm.local", UserLevelType.GameMaster);
 
-        Assert.True(deleted);
-        Assert.Empty(access.Users);
-        var evt = Assert.Single(bus.AsyncEvents.OfType<UserDeletedEvent>());
-        Assert.Equal(new(11), evt.UserId);
+        Assert.NotNull(updated);
+        Assert.Equal("new@realm.local", updated!.Email);
+        Assert.Equal(UserLevelType.GameMaster, updated.Level);
+        Assert.Equal("new@realm.local", Assert.Single(access.Users).Email);
+        Assert.Single(bus.AsyncEvents.OfType<UserUpdatedEvent>());
     }
 
     [Fact]
-    public async Task DeleteAsync_UnknownUser_ReturnsFalse()
+    public async Task UpdateAsync_EmailTakenByAnotherUser_Throws()
+    {
+        var access = new FakeUserAccess();
+        access.Add(new(new(1), "a", "a@realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
+        access.Add(new(new(2), "b", "b@realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
+        var service = new UserService(access, new CapturingEventBusService());
+
+        await Assert.ThrowsAsync<InvalidOperationException>(
+            async () => await service.UpdateAsync(new(2), "a@realm.local", UserLevelType.Player)
+        );
+    }
+
+    [Fact]
+    public async Task UpdateAsync_UnknownUser_ReturnsNull()
     {
         var service = new UserService(new FakeUserAccess(), new CapturingEventBusService());
 
-        Assert.False(await service.DeleteAsync(new(404)));
+        var updated = await service.UpdateAsync(new(999), "x@realm.local", UserLevelType.Player);
+
+        Assert.Null(updated);
     }
 }

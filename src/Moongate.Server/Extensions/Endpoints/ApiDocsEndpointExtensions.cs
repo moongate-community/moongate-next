@@ -10,8 +10,7 @@ public static class ApiDocsEndpointExtensions
         this IEndpointRouteBuilder endpoints,
         string pattern = "/api/docs"
     )
-    {
-        return endpoints.MapScalarApiReference(
+        => endpoints.MapScalarApiReference(
             pattern,
             options =>
             {
@@ -20,5 +19,4 @@ public static class ApiDocsEndpointExtensions
                 options.OpenApiRoutePattern = OpenApiRoutePattern;
             }
         );
-    }
 }

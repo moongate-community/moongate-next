@@ -15,8 +15,7 @@ public sealed class JwtConfig
     public bool RotateRefreshTokens { get; set; } = true;
 
     [YamlIgnore]
-    public bool IsUsingDevelopmentSigningKey
-        => string.Equals(SigningKey, DevelopmentSigningKey, StringComparison.Ordinal);
+    public bool IsUsingDevelopmentSigningKey => string.Equals(SigningKey, DevelopmentSigningKey, StringComparison.Ordinal);
 
     public IEnumerable<string> Validate()
     {

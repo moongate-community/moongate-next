@@ -30,6 +30,6 @@ public sealed record PagedResult<T>
             mapped.Add(map(item));
         }
 
-        return new PagedResult<TOut>(mapped, Page, PageSize, TotalCount);
+        return new(mapped, Page, PageSize, TotalCount);
     }
 }

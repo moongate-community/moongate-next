@@ -29,9 +29,10 @@ public sealed record PageRequest
     {
         var safePage = page is null or < 1 ? 1 : page.Value;
         var requestedSize = pageSize ?? DefaultPageSize;
-        var safeSize = requestedSize < 1 ? 1 : requestedSize > MaxPageSize ? MaxPageSize : requestedSize;
+        var safeSize = requestedSize < 1 ? 1 :
+                       requestedSize > MaxPageSize ? MaxPageSize : requestedSize;
         var safeSearch = string.IsNullOrWhiteSpace(search) ? null : search.Trim();
 
-        return new PageRequest(safePage, safeSize, safeSearch);
+        return new(safePage, safeSize, safeSearch);
     }
 }

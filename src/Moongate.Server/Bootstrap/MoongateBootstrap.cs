@@ -3,7 +3,6 @@ using DryIoc;
 using DryIoc.Microsoft.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi;
 using Moongate.Abstractions.Data.Logging;
 using Moongate.Abstractions.Extensions.DryIoc;
 using Moongate.Abstractions.Interfaces.Services;
@@ -166,7 +165,7 @@ public static class MoongateBootstrap
             {
                 options.SwaggerDoc(
                     "v1",
-                    new OpenApiInfo
+                    new()
                     {
                         Title = "Moongate API",
                         Version = "v1"

@@ -4,7 +4,6 @@ using Moongate.Core.Utils;
 using Moongate.Persistence.Data;
 using Moongate.Persistence.Interfaces.Persistence;
 using Moongate.Server.Data.Auth;
-using Moongate.Server.Data.Config;
 using Moongate.Server.Services.Auth;
 using Moongate.UO.Domain.Entities;
 using Moongate.UO.Domain.Interfaces.Services;
@@ -16,89 +15,6 @@ public sealed class AuthTokenServiceTests
 {
     private static readonly DateTimeOffset FixedNow = new(2026, 6, 8, 12, 0, 0, TimeSpan.Zero);
 
-    [Fact]
-    public async Task LoginAsync_ValidCredentials_ReturnsJwtAndStoresRefreshToken()
-    {
-        var users = new FakeUserService();
-        var user = users.Add("admin", "secret", UserLevelType.Administrator, true);
-        var refreshTokens = new FakeRefreshTokenAccess();
-        var service = CreateService(users, refreshTokens);
-
-        var response = await service.LoginAsync("admin", "secret", CancellationToken.None);
-
-        Assert.NotNull(response);
-        Assert.NotEqual("", response!.AccessToken);
-        Assert.NotEqual("", response.RefreshToken);
-        Assert.Equal(FixedNow.AddMinutes(15), response.AccessTokenExpiresAt);
-        Assert.Equal(FixedNow.AddDays(14), response.RefreshTokenExpiresAt);
-        Assert.Equal(user.Id.ToString(), response.User.Id);
-        Assert.Equal("admin", response.User.Username);
-        Assert.Equal(UserLevelType.Administrator.ToString(), response.User.Level);
-
-        var token = Assert.Single(refreshTokens.Tokens);
-        Assert.Equal(user.Id, token.UserId);
-        Assert.NotEqual(response.RefreshToken, token.TokenHash);
-        Assert.Null(token.RevokedAt);
-
-        var jwt = new JwtSecurityTokenHandler().ReadJwtToken(response.AccessToken);
-        Assert.Equal(user.Id.ToString(), jwt.Subject);
-        Assert.Contains(jwt.Claims, claim => claim.Type == "role" && claim.Value == UserLevelType.Administrator.ToString());
-    }
-
-    [Fact]
-    public async Task LoginAsync_InvalidPassword_ReturnsNullAndDoesNotStoreRefreshToken()
-    {
-        var users = new FakeUserService();
-        users.Add("admin", "secret", UserLevelType.Administrator, true);
-        var refreshTokens = new FakeRefreshTokenAccess();
-        var service = CreateService(users, refreshTokens);
-
-        var response = await service.LoginAsync("admin", "wrong", CancellationToken.None);
-
-        Assert.Null(response);
-        Assert.Empty(refreshTokens.Tokens);
-    }
-
-    [Fact]
-    public async Task RefreshAsync_ValidToken_RotatesRefreshTokenAndRevokesOldToken()
-    {
-        var users = new FakeUserService();
-        users.Add("admin", "secret", UserLevelType.Administrator, true);
-        var refreshTokens = new FakeRefreshTokenAccess();
-        var service = CreateService(users, refreshTokens);
-        var login = await service.LoginAsync("admin", "secret", CancellationToken.None);
-
-        var refreshed = await service.RefreshAsync(login!.RefreshToken, CancellationToken.None);
-        var reused = await service.RefreshAsync(login.RefreshToken, CancellationToken.None);
-
-        Assert.NotNull(refreshed);
-        Assert.NotEqual(login.RefreshToken, refreshed!.RefreshToken);
-        Assert.Null(reused);
-        Assert.Equal(2, refreshTokens.Tokens.Count);
-        Assert.NotNull(refreshTokens.Tokens.Single(token => token.Id == new Serial(1)).RevokedAt);
-        Assert.Null(refreshTokens.Tokens.Single(token => token.Id == new Serial(2)).RevokedAt);
-    }
-
-    [Fact]
-    public async Task LogoutAsync_ValidToken_RevokesRefreshToken()
-    {
-        var users = new FakeUserService();
-        users.Add("admin", "secret", UserLevelType.Administrator, true);
-        var refreshTokens = new FakeRefreshTokenAccess();
-        var service = CreateService(users, refreshTokens);
-        var login = await service.LoginAsync("admin", "secret", CancellationToken.None);
-
-        var loggedOut = await service.LogoutAsync(login!.RefreshToken, CancellationToken.None);
-        var loggedOutAgain = await service.LogoutAsync(login.RefreshToken, CancellationToken.None);
-
-        Assert.True(loggedOut);
-        Assert.False(loggedOutAgain);
-        Assert.NotNull(Assert.Single(refreshTokens.Tokens).RevokedAt);
-    }
-
-    private static AuthTokenService CreateService(FakeUserService users, FakeRefreshTokenAccess refreshTokens)
-        => new(users, refreshTokens, new WebConfig(), () => FixedNow);
-
     private sealed class FakeUserService : IUserService
     {
         private readonly Dictionary<Serial, UserEntity> _users = [];
@@ -106,7 +22,14 @@ public sealed class AuthTokenServiceTests
 
         public UserEntity Add(string username, string password, UserLevelType level, bool isActive)
         {
-            var user = new UserEntity(new(_nextId++), username, $"{username}@test.local", HashUtils.HashPassword(password), level, isActive);
+            var user = new UserEntity(
+                new(_nextId++),
+                username,
+                $"{username}@test.local",
+                HashUtils.HashPassword(password),
+                level,
+                isActive
+            );
             _users[user.Id] = user;
 
             return user;
@@ -114,6 +37,29 @@ public sealed class AuthTokenServiceTests
 
         public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
             => ValueTask.FromResult(_users.Count);
+
+        public ValueTask<UserEntity> CreateAsync(
+            string username,
+            string email,
+            string password,
+            UserLevelType level = UserLevelType.Player,
+            bool isActive = true,
+            CancellationToken cancellationToken = default
+        )
+            => ValueTask.FromResult(Add(username, password, level, isActive));
+
+        public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
+            => ValueTask.FromResult(_users.Remove(id));
+
+        public ValueTask<UserEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
+            => ValueTask.FromResult(_users.GetValueOrDefault(id));
+
+        public ValueTask<UserEntity?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
+            => ValueTask.FromResult(
+                _users.Values.FirstOrDefault(
+                    user => string.Equals(user.Username, username, StringComparison.OrdinalIgnoreCase)
+                )
+            );
 
         public ValueTask<PagedResult<UserEntity>> ListAsync(
             PageRequest request,
@@ -126,25 +72,15 @@ public sealed class AuthTokenServiceTests
             return ValueTask.FromResult(new PagedResult<UserEntity>(items, request.Page, request.PageSize, all.Count));
         }
 
-        public ValueTask<UserEntity> CreateAsync(
-            string username,
-            string email,
-            string password,
-            UserLevelType level = UserLevelType.Player,
-            bool isActive = true,
+        public ValueTask<bool> ResetPasswordAsync(
+            Serial id,
+            string newPassword,
             CancellationToken cancellationToken = default
         )
-            => ValueTask.FromResult(Add(username, password, level, isActive));
+            => ValueTask.FromResult(_users.ContainsKey(id));
 
-        public ValueTask<UserEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
+        public ValueTask<UserEntity?> SetActiveAsync(Serial id, bool isActive, CancellationToken cancellationToken = default)
             => ValueTask.FromResult(_users.GetValueOrDefault(id));
-
-        public ValueTask<UserEntity?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(
-                _users.Values.FirstOrDefault(
-                    user => string.Equals(user.Username, username, StringComparison.OrdinalIgnoreCase)
-                )
-            );
 
         public ValueTask<UserEntity?> UpdateAsync(
             Serial id,
@@ -153,15 +89,6 @@ public sealed class AuthTokenServiceTests
             CancellationToken cancellationToken = default
         )
             => ValueTask.FromResult(_users.GetValueOrDefault(id));
-
-        public ValueTask<UserEntity?> SetActiveAsync(Serial id, bool isActive, CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(_users.GetValueOrDefault(id));
-
-        public ValueTask<bool> ResetPasswordAsync(Serial id, string newPassword, CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(_users.ContainsKey(id));
-
-        public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(_users.Remove(id));
     }
 
     private sealed class FakeRefreshTokenAccess : IAutoDataAccess<AuthRefreshTokenEntity, Serial>
@@ -208,4 +135,87 @@ public sealed class AuthTokenServiceTests
                 token.RevokedAt
             );
     }
+
+    [Fact]
+    public async Task LoginAsync_InvalidPassword_ReturnsNullAndDoesNotStoreRefreshToken()
+    {
+        var users = new FakeUserService();
+        users.Add("admin", "secret", UserLevelType.Administrator, true);
+        var refreshTokens = new FakeRefreshTokenAccess();
+        var service = CreateService(users, refreshTokens);
+
+        var response = await service.LoginAsync("admin", "wrong", CancellationToken.None);
+
+        Assert.Null(response);
+        Assert.Empty(refreshTokens.Tokens);
+    }
+
+    [Fact]
+    public async Task LoginAsync_ValidCredentials_ReturnsJwtAndStoresRefreshToken()
+    {
+        var users = new FakeUserService();
+        var user = users.Add("admin", "secret", UserLevelType.Administrator, true);
+        var refreshTokens = new FakeRefreshTokenAccess();
+        var service = CreateService(users, refreshTokens);
+
+        var response = await service.LoginAsync("admin", "secret", CancellationToken.None);
+
+        Assert.NotNull(response);
+        Assert.NotEqual("", response!.AccessToken);
+        Assert.NotEqual("", response.RefreshToken);
+        Assert.Equal(FixedNow.AddMinutes(15), response.AccessTokenExpiresAt);
+        Assert.Equal(FixedNow.AddDays(14), response.RefreshTokenExpiresAt);
+        Assert.Equal(user.Id.ToString(), response.User.Id);
+        Assert.Equal("admin", response.User.Username);
+        Assert.Equal(UserLevelType.Administrator.ToString(), response.User.Level);
+
+        var token = Assert.Single(refreshTokens.Tokens);
+        Assert.Equal(user.Id, token.UserId);
+        Assert.NotEqual(response.RefreshToken, token.TokenHash);
+        Assert.Null(token.RevokedAt);
+
+        var jwt = new JwtSecurityTokenHandler().ReadJwtToken(response.AccessToken);
+        Assert.Equal(user.Id.ToString(), jwt.Subject);
+        Assert.Contains(jwt.Claims, claim => claim.Type == "role" && claim.Value == UserLevelType.Administrator.ToString());
+    }
+
+    [Fact]
+    public async Task LogoutAsync_ValidToken_RevokesRefreshToken()
+    {
+        var users = new FakeUserService();
+        users.Add("admin", "secret", UserLevelType.Administrator, true);
+        var refreshTokens = new FakeRefreshTokenAccess();
+        var service = CreateService(users, refreshTokens);
+        var login = await service.LoginAsync("admin", "secret", CancellationToken.None);
+
+        var loggedOut = await service.LogoutAsync(login!.RefreshToken, CancellationToken.None);
+        var loggedOutAgain = await service.LogoutAsync(login.RefreshToken, CancellationToken.None);
+
+        Assert.True(loggedOut);
+        Assert.False(loggedOutAgain);
+        Assert.NotNull(Assert.Single(refreshTokens.Tokens).RevokedAt);
+    }
+
+    [Fact]
+    public async Task RefreshAsync_ValidToken_RotatesRefreshTokenAndRevokesOldToken()
+    {
+        var users = new FakeUserService();
+        users.Add("admin", "secret", UserLevelType.Administrator, true);
+        var refreshTokens = new FakeRefreshTokenAccess();
+        var service = CreateService(users, refreshTokens);
+        var login = await service.LoginAsync("admin", "secret", CancellationToken.None);
+
+        var refreshed = await service.RefreshAsync(login!.RefreshToken, CancellationToken.None);
+        var reused = await service.RefreshAsync(login.RefreshToken, CancellationToken.None);
+
+        Assert.NotNull(refreshed);
+        Assert.NotEqual(login.RefreshToken, refreshed!.RefreshToken);
+        Assert.Null(reused);
+        Assert.Equal(2, refreshTokens.Tokens.Count);
+        Assert.NotNull(refreshTokens.Tokens.Single(token => token.Id == new Serial(1)).RevokedAt);
+        Assert.Null(refreshTokens.Tokens.Single(token => token.Id == new Serial(2)).RevokedAt);
+    }
+
+    private static AuthTokenService CreateService(FakeUserService users, FakeRefreshTokenAccess refreshTokens)
+        => new(users, refreshTokens, new(), () => FixedNow);
 }
