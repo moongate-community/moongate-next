@@ -1,4 +1,4 @@
-export type AdminNavId = "overview" | "runtime" | "metrics" | "persistence" | "security" | "diagnostics";
+export type AdminNavId = "overview" | "runtime" | "metrics" | "persistence" | "security";
 
 export type AdminStatus = "healthy" | "warning" | "offline";
 
@@ -36,14 +36,6 @@ export type AdminMetricCard = {
   status: AdminStatus;
   series?: number[];
   trend?: AdminMetricTrend;
-};
-
-export type AdminActivityEvent = {
-  id: string;
-  label: string;
-  detail: string;
-  at: string;
-  status: AdminStatus;
 };
 
 export type AdminRuntimeSnapshot = {
