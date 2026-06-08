@@ -53,7 +53,6 @@ export default function App() {
 
         setPlayerNav(itemId as PlayerNavId);
       }}
-      onSectionChange={setSection}
       onLogout={handleLogout}
     >
       {section === "admin" ? (
