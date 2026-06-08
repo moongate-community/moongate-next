@@ -5,7 +5,7 @@ using Moongate.Server.Data.Events;
 using Moongate.Server.Interfaces.Seed;
 using Moongate.Server.Services.Seed;
 using Moongate.UO.Domain.Interfaces.Services;
-using Moongate.UO.Domain.Types;
+using Moongate.Core.Types;
 using Serilog;
 
 namespace Moongate.Server.Extensions.Seed;

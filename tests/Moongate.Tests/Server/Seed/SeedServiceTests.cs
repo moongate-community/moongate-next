@@ -13,7 +13,7 @@ using Moongate.Server.Extensions.Users;
 using Moongate.Server.Services.Seed;
 using Moongate.Tests.Support;
 using Moongate.UO.Domain.Interfaces.Services;
-using Moongate.UO.Domain.Types;
+using Moongate.Core.Types;
 
 namespace Moongate.Tests.Server.Seed;
 
