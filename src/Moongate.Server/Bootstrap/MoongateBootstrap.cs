@@ -31,6 +31,7 @@ using Moongate.Server.Extensions.Timing;
 using Moongate.Server.Extensions.UoData;
 using Moongate.Server.Extensions.Users;
 using Moongate.Server.Extensions.WorldData;
+using Moongate.Server.FileLoaders;
 using Moongate.Server.Services.Auth;
 using Moongate.Server.Services.Diagnostics;
 using Moongate.Server.Services.EventBus;
@@ -104,6 +105,7 @@ public static class MoongateBootstrap
         container.AddMoongateUsers();
         container.AddMoongateItems();
         container.AddMoongateMobiles();
+        RaceLoader.RegisterDefaultRaces();
         container.AddDefaultAdminUserSeed();
         container.AddMoongateAuth();
 
