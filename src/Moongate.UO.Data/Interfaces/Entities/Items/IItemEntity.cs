@@ -8,9 +8,10 @@ using Moongate.UO.Data.Types.Items;
 namespace Moongate.UO.Data.Interfaces.Entities.Items;
 
 /// <summary>
-/// Contract for item entities: a world entity with item-specific graphic,
-/// stacking, placement (in a container or equipped on a mobile) and, when the
-/// item's art is a container, child-item containment.
+/// Data contract for item entities: a world entity with item-specific graphic,
+/// stacking, placement (in a container or equipped on a mobile) and persisted
+/// containment ids. Derived facts (IsContainer/IsDoor, total weight) and
+/// containment behavior live in the item/container service layer, not here.
 /// </summary>
 public interface IItemEntity : IWorldEntity
 {
@@ -53,21 +54,6 @@ public interface IItemEntity : IWorldEntity
     /// <summary>Persisted serials of the items contained when this item acts as a container.</summary>
     List<Serial> ContainedItemIds { get; set; }
 
-    /// <summary>True when this item's art allows it to hold other items (data-driven from tile data).</summary>
-    bool IsContainer { get; }
-
-    /// <summary>True when this item's art is a door (data-driven from tile data).</summary>
-    bool IsDoor { get; }
-
     /// <summary>Typed custom properties keyed by name, for plugin- or script-defined data.</summary>
     Dictionary<string, ItemCustomProperty> CustomProperties { get; set; }
-
-    /// <summary>Effective weight including stack amount and any contained items.</summary>
-    int TotalWeight { get; }
-
-    /// <summary>Adds a child item at the given position when this item is a container.</summary>
-    void AddItem(IItemEntity item, Point2D position);
-
-    /// <summary>Removes a child item by serial; returns true when one was removed.</summary>
-    bool RemoveItem(Serial itemId);
 }
