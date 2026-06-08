@@ -1,6 +1,6 @@
 using Moongate.Abstractions.Interfaces.Events;
 using Moongate.Core.Ids;
-using Moongate.UO.Domain.Types;
+using Moongate.Core.Types;
 
 namespace Moongate.UO.Domain.Events;
 

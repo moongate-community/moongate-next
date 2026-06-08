@@ -7,7 +7,7 @@ using Moongate.Server.Data.Users;
 using Moongate.Server.Extensions.Endpoints;
 using Moongate.UO.Domain.Entities;
 using Moongate.UO.Domain.Interfaces.Services;
-using Moongate.UO.Domain.Types;
+using Moongate.Core.Types;
 
 namespace Moongate.Tests.Server.Endpoints;
 

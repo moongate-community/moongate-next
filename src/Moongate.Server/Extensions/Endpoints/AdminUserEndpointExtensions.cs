@@ -3,7 +3,7 @@ using Moongate.Core.Ids;
 using Moongate.Persistence.Data;
 using Moongate.Server.Data.Users;
 using Moongate.UO.Domain.Interfaces.Services;
-using Moongate.UO.Domain.Types;
+using Moongate.Core.Types;
 
 namespace Moongate.Server.Extensions.Endpoints;
 

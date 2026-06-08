@@ -2,7 +2,7 @@ using Moongate.Core.Geometry;
 using Moongate.Core.Ids;
 using Moongate.Core.Types;
 
-namespace Moongate.UO.Data.Interfaces.Entities;
+namespace Moongate.UO.Data.Interfaces.Entities.Base;
 
 /// <summary>
 /// Common contract shared by every entity that exists in the game world

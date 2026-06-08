@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Moongate.Server.Data.Auth;
 using Moongate.Server.Extensions.Endpoints;
 using Moongate.Server.Interfaces.Auth;
-using Moongate.UO.Domain.Types;
+using Moongate.Core.Types;
 
 namespace Moongate.Tests.Server.Auth;
 
