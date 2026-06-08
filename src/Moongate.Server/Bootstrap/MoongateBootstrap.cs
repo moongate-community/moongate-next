@@ -21,6 +21,7 @@ using Moongate.Server.Extensions.EventBus;
 using Moongate.Server.Extensions.Items;
 using Moongate.Server.Extensions.Logging;
 using Moongate.Server.Extensions.Metrics;
+using Moongate.Server.Extensions.Mobiles;
 using Moongate.Server.Extensions.Network;
 using Moongate.Server.Extensions.Persistence;
 using Moongate.Server.Extensions.Plugins;
@@ -102,6 +103,7 @@ public static class MoongateBootstrap
         // UO domain services register persisted entities before persistence starts.
         container.AddMoongateUsers();
         container.AddMoongateItems();
+        container.AddMoongateMobiles();
         container.AddDefaultAdminUserSeed();
         container.AddMoongateAuth();
 
