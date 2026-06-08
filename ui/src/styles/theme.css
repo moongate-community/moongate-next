@@ -1,0 +1,166 @@
+@import "tailwindcss";
+
+/* Dark variant driven by the `.dark` class on <html> (toggled at runtime). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Semantic design tokens. The @theme inline block maps Tailwind utility
+ * namespaces (bg-*, text-*, border-*, shadow-*, font-*, rounded-*) onto the
+ * runtime CSS variables defined in :root / .dark, so every utility follows
+ * the active theme automatically.
+ */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
+  --color-ring: var(--ring);
+
+  --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+
+  --shadow-card: var(--elev-card);
+  --shadow-raised: var(--elev-raised);
+  --shadow-glow: var(--glow);
+}
+
+/* Light theme (default) */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --muted: #f1f3f6;
+  --border: #e3e7ed;
+  --border-strong: #cdd5da;
+  --fg: #16201b;
+  --fg-muted: #5c685f;
+  --fg-subtle: #8a958c;
+  --accent: #2f5c3b;
+  --accent-fg: #ffffff;
+  --success: #2f5c3b;
+  --warning: #b9802d;
+  --danger: #9a2d2d;
+  --info: #1f5053;
+  --ring: rgba(47, 92, 59, 0.35);
+
+  --elev-card: 0 1px 2px rgba(16, 24, 32, 0.04), 0 6px 16px rgba(16, 24, 32, 0.06);
+  --elev-raised: 0 4px 8px rgba(16, 24, 32, 0.06), 0 16px 40px rgba(16, 24, 32, 0.1);
+  --glow: none;
+
+  color-scheme: light;
+}
+
+/* Dark theme */
+.dark {
+  --bg: #0b0f19;
+  --surface: #111725;
+  --surface-raised: #161d2e;
+  --muted: #1a2335;
+  --border: #243044;
+  --border-strong: #324056;
+  --fg: #e6eaf2;
+  --fg-muted: #9aa6bc;
+  --fg-subtle: #6b7689;
+  --accent: #34d399;
+  --accent-fg: #04140c;
+  --success: #34d399;
+  --warning: #f5b14c;
+  --danger: #f87171;
+  --info: #5bb7ba;
+  --ring: rgba(52, 211, 153, 0.4);
+
+  --elev-card: 0 0 0 1px rgba(255, 255, 255, 0.02) inset, 0 8px 24px rgba(0, 0, 0, 0.4);
+  --elev-raised: 0 0 0 1px rgba(255, 255, 255, 0.03) inset, 0 18px 48px rgba(0, 0, 0, 0.55);
+  --glow: 0 0 24px rgba(52, 211, 153, 0.12);
+
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+    color: var(--fg);
+    background: var(--bg);
+  }
+
+  button {
+    font: inherit;
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  input {
+    font: inherit;
+  }
+
+  /* Tabular figures everywhere mono is used, so data columns never shift. */
+  .font-mono {
+    font-variant-numeric: tabular-nums;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@layer utilities {
+  .animate-rise {
+    animation: rise 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

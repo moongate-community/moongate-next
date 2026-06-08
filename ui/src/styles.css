@@ -1,34 +1,8 @@
-:root {
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #18211c;
-  background: #f5f6f2;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-button,
-input {
-  font: inherit;
-}
-
-button {
-  cursor: pointer;
-}
+/* Base resets, fonts and theme tokens now live in styles/theme.css.
+   This file keeps the legacy component styles for login/player views
+   until they are migrated to the Tailwind token system. */
 
 button:disabled {
-  cursor: not-allowed;
   opacity: 0.64;
 }
 
@@ -422,13 +396,6 @@ button:disabled {
   font-weight: 760;
 }
 
-.admin-metrics {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.admin-metrics article,
 .player-summary article {
   display: grid;
   gap: 8px;
@@ -440,7 +407,6 @@ button:disabled {
   background: #ffffff;
 }
 
-.admin-metrics span,
 .player-summary span,
 .entry-panel span {
   color: #66736a;
@@ -449,24 +415,11 @@ button:disabled {
   text-transform: uppercase;
 }
 
-.admin-metrics strong,
 .player-summary strong {
   color: #1f3528;
   font-size: 26px;
   font-weight: 760;
   line-height: 1.1;
-}
-
-.admin-metrics small {
-  color: #6d7a71;
-  font-size: 13px;
-  line-height: 1.45;
-}
-
-.admin-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
-  gap: 16px;
 }
 
 .ops-panel,
@@ -703,8 +656,6 @@ button:disabled {
   }
 
   .metric-grid,
-  .admin-metrics,
-  .admin-grid,
   .player-summary,
   .player-grid {
     grid-template-columns: 1fr;

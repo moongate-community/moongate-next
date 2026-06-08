@@ -21,11 +21,21 @@ export type RuntimeServiceStatus = {
   secondary: string;
 };
 
+export type TrendPolarity = "positive" | "negative" | "neutral";
+
+export type AdminMetricTrend = {
+  direction: "up" | "down" | "flat";
+  label: string;
+  polarity: TrendPolarity;
+};
+
 export type AdminMetricCard = {
   label: string;
   value: string;
   detail: string;
   status: AdminStatus;
+  series?: number[];
+  trend?: AdminMetricTrend;
 };
 
 export type AdminActivityEvent = {

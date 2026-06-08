@@ -107,7 +107,7 @@ export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, 
     return () => window.clearInterval(timer);
   }, [activeView, refresh]);
 
-  const metrics = useMemo(() => buildMetricCards(snapshot), [snapshot]);
+  const metrics = useMemo(() => buildMetricCards(snapshot, metricHistory), [snapshot, metricHistory]);
   const services = useMemo(() => buildRuntimeServices(snapshot), [snapshot]);
 
   async function copyVersion() {
@@ -124,15 +124,21 @@ export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, 
   }
 
   return (
-    <section className={`workspace admin-dashboard admin-view-${activeView}`}>
+    <section className="grid gap-6 px-5 py-6 md:px-7">
       <AdminDashboardHeader snapshot={snapshot} loading={loading} onRefresh={refresh} />
       <AdminMetricStrip metrics={metrics} />
 
-      <div className="admin-layout">
-        <div className="admin-main-column">
+      <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(300px,360px)]">
+        <div className="grid min-w-0 gap-4">
           {(activeView === "overview" || activeView === "runtime") && <AdminRuntimePanel services={services} />}
           {activeView === "metrics" && (
-            <Suspense fallback={<article className="admin-panel admin-loading-panel">Loading metrics panels...</article>}>
+            <Suspense
+              fallback={
+                <div className="rounded-lg border border-border bg-surface p-5 text-sm font-semibold text-fg-muted shadow-card">
+                  Loading metrics panels…
+                </div>
+              }
+            >
               <AdminMetricsPanel snapshot={snapshot} history={metricHistory} />
             </Suspense>
           )}
@@ -145,7 +151,7 @@ export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, 
           )}
         </div>
 
-        <aside className="admin-side-column">
+        <aside className="grid min-w-0 gap-4">
           {activeView !== "diagnostics" && (
             <AdminDiagnosticsPanel snapshot={snapshot} onRefresh={refresh} onCopyVersion={copyVersion} />
           )}

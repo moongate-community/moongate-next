@@ -1,5 +1,7 @@
 import { KeyRound } from "lucide-react";
 import type { AuthUser } from "../../types/auth";
+import { DefinitionList } from "./DefinitionList";
+import { Panel } from "./Panel";
 
 type AdminSecurityPanelProps = {
   accessTokenExpiresAt: string;
@@ -11,29 +13,15 @@ export function AdminSecurityPanel({ accessTokenExpiresAt, verifiedUser, user }:
   const account = verifiedUser ?? user;
 
   return (
-    <article className="admin-panel">
-      <header>
-        <KeyRound size={20} aria-hidden />
-        <h3>Security</h3>
-      </header>
-      <dl className="admin-definition-list">
-        <div>
-          <dt>User</dt>
-          <dd>{account.username}</dd>
-        </div>
-        <div>
-          <dt>Access level</dt>
-          <dd>{account.level}</dd>
-        </div>
-        <div>
-          <dt>Account state</dt>
-          <dd>{account.isActive ? "Active" : "Disabled"}</dd>
-        </div>
-        <div>
-          <dt>Access token expires</dt>
-          <dd>{new Date(accessTokenExpiresAt).toLocaleString()}</dd>
-        </div>
-      </dl>
-    </article>
+    <Panel title="Security" icon={KeyRound}>
+      <DefinitionList
+        items={[
+          { term: "User", value: account.username },
+          { term: "Access level", value: account.level },
+          { term: "Account state", value: account.isActive ? "Active" : "Disabled" },
+          { term: "Access token expires", value: new Date(accessTokenExpiresAt).toLocaleString(), mono: true }
+        ]}
+      />
+    </Panel>
   );
 }

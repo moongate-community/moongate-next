@@ -1,5 +1,7 @@
 import { ServerCog } from "lucide-react";
 import type { RuntimeServiceStatus } from "../../types/admin";
+import { statusAccentClass } from "./adminUi";
+import { Panel } from "./Panel";
 
 type AdminRuntimePanelProps = {
   services: RuntimeServiceStatus[];
@@ -7,23 +9,22 @@ type AdminRuntimePanelProps = {
 
 export function AdminRuntimePanel({ services }: AdminRuntimePanelProps) {
   return (
-    <article className="admin-panel admin-runtime-panel">
-      <header>
-        <ServerCog size={20} aria-hidden />
-        <h3>Runtime services</h3>
-      </header>
-      <div className="admin-service-list">
+    <Panel title="Runtime services" icon={ServerCog}>
+      <div className="grid gap-2">
         {services.map((service) => (
-          <div key={service.id} className={`admin-service-row admin-status-${service.status}`}>
-            <span className="admin-status-dot" aria-hidden />
-            <div>
-              <strong>{service.label}</strong>
-              <small>{service.secondary}</small>
+          <div
+            key={service.id}
+            className="flex min-h-[48px] items-center gap-3 rounded-md bg-muted px-3 py-2 transition-colors duration-150 hover:bg-border/40"
+          >
+            <span className={`h-2 w-2 shrink-0 rounded-full ${statusAccentClass[service.status]}`} aria-hidden />
+            <div className="min-w-0 flex-1">
+              <strong className="block truncate text-sm font-semibold text-fg">{service.label}</strong>
+              <small className="block truncate text-xs text-fg-muted">{service.secondary}</small>
             </div>
-            <b>{service.primary}</b>
+            <b className="shrink-0 font-mono text-xs font-semibold text-fg">{service.primary}</b>
           </div>
         ))}
       </div>
-    </article>
+    </Panel>
   );
 }
