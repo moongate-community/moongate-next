@@ -168,21 +168,31 @@ public sealed class PersistenceService : IPersistenceService, IMetricProvider, I
             await PublishSnapshotEventAsync(new SnapshotSaveStartedEvent(startedAt), cancellationToken);
 
             long lastSequenceId;
-            EntitySnapshotBucket[] buckets;
+            List<(string TypeName, EntitySnapshotBucket? Bucket)> captured;
 
             lock (_stateStore.SyncRoot)
             {
                 lastSequenceId = _stateStore.LastSequenceId;
-                buckets = _registry.GetRegisteredDescriptors()
-                                   .Select(d => Applier(d.TypeId).CaptureBucket(_stateStore))
-                                   .Where(b => b is not null)
-                                   .Select(b => b!)
-                                   .ToArray();
+                captured = _registry.GetRegisteredDescriptors()
+                                    .Select(d => (d.TypeName, Bucket: Applier(d.TypeId).CaptureBucket(_stateStore)))
+                                    .ToList();
             }
 
-            foreach (var bucket in buckets)
+            var typesWritten = 0;
+
+            foreach (var (typeName, bucket) in captured)
             {
-                await _snapshot.SaveBucketAsync(bucket, lastSequenceId, cancellationToken);
+                if (bucket is not null)
+                {
+                    await _snapshot.SaveBucketAsync(bucket, lastSequenceId, cancellationToken);
+                    typesWritten++;
+                }
+                else
+                {
+                    // An emptied type must drop its snapshot file; otherwise the trimmed journal can
+                    // no longer override it and the deleted entities would resurrect on reload.
+                    await _snapshot.DeleteBucketAsync(typeName, cancellationToken);
+                }
             }
 
             await _journal.TrimThroughSequenceAsync(lastSequenceId, cancellationToken);
@@ -191,7 +201,7 @@ public sealed class PersistenceService : IPersistenceService, IMetricProvider, I
             var completedAt = DateTimeOffset.UtcNow;
 
             await PublishSnapshotEventAsync(
-                new SnapshotSaveCompletedEvent(lastSequenceId, buckets.Length, startedAt, completedAt),
+                new SnapshotSaveCompletedEvent(lastSequenceId, typesWritten, startedAt, completedAt),
                 cancellationToken
             );
 
@@ -200,7 +210,7 @@ public sealed class PersistenceService : IPersistenceService, IMetricProvider, I
             _logger.Information(
                 "Snapshot written LastSequenceId={LastSequenceId} Types={Types}",
                 lastSequenceId,
-                buckets.Length
+                typesWritten
             );
         }
         finally

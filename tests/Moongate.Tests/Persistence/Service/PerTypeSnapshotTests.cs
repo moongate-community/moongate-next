@@ -62,6 +62,29 @@ public sealed class PerTypeSnapshotTests : IDisposable
         await second.StopAsync(CancellationToken.None);
     }
 
+    [Fact]
+    public async Task RemovedEntities_StayRemoved_AfterEmptyingTypeAndReload()
+    {
+        var first = NewService();
+        await first.StartAsync(CancellationToken.None);
+        var players = first.GetDataAccess<TestPlayer, Serial>();
+        await players.UpsertAsync(new() { Id = new(1), Name = "Bob" });
+        await first.SaveSnapshotAsync();
+        await players.RemoveAsync(new(1));
+        await first.SaveSnapshotAsync();
+        await first.StopAsync(CancellationToken.None);
+
+        // The emptied type's snapshot file must be gone so it cannot resurrect on reload.
+        Assert.False(File.Exists(Path.Combine(_dir, "TestPlayer.snapshot.bin")));
+
+        var second = NewService();
+        await second.StartAsync(CancellationToken.None);
+
+        Assert.Null(await second.GetDataAccess<TestPlayer, Serial>().GetByIdAsync(new(1)));
+        Assert.Equal(0, await second.GetDataAccess<TestPlayer, Serial>().CountAsync());
+        await second.StopAsync(CancellationToken.None);
+    }
+
     private PersistenceService NewService()
     {
         Directory.CreateDirectory(_dir);

@@ -14,4 +14,7 @@ public interface ISnapshotService
 
     /// <summary>Loads a type's snapshot bucket by type name, or null when absent or unreadable.</summary>
     ValueTask<PersistedBucket?> LoadBucketAsync(string typeName, CancellationToken cancellationToken = default);
+
+    /// <summary>Deletes a type's snapshot file, if present, so an emptied type does not resurrect on reload.</summary>
+    ValueTask DeleteBucketAsync(string typeName, CancellationToken cancellationToken = default);
 }

@@ -89,7 +89,9 @@ public sealed class MessagePackSnapshotService : ISnapshotService, IDisposable
             var bytes = await File.ReadAllBytesAsync(path, cancellationToken);
             var envelope = MessagePackSerializer.Deserialize<SnapshotFileEnvelope>(bytes, _options, cancellationToken);
 
-            if (envelope is null || ChecksumUtils.Compute(envelope.Bucket.Payload) != envelope.Checksum)
+            if (envelope is null
+                || ChecksumUtils.Compute(envelope.Bucket.Payload) != envelope.Checksum
+                || !string.Equals(envelope.Bucket.TypeName, typeName, StringComparison.Ordinal))
             {
                 return null;
             }
@@ -105,6 +107,25 @@ public sealed class MessagePackSnapshotService : ISnapshotService, IDisposable
             // A corrupt/unreadable snapshot file is treated as "no snapshot"; the journal replay
             // rebuilds from the last good state.
             return null;
+        }
+        finally
+        {
+            _ioLock.Release();
+        }
+    }
+
+    public async ValueTask DeleteBucketAsync(string typeName, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(typeName);
+
+        var path = PathFor(typeName);
+
+        await _ioLock.WaitAsync(cancellationToken);
+
+        try
+        {
+            File.Delete(path);
+            File.Delete(path + ".tmp");
         }
         finally
         {
