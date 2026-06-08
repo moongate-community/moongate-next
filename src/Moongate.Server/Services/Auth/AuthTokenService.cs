@@ -31,17 +31,14 @@ public sealed class AuthTokenService : IAuthTokenService
 
     private IUserService Users => _users ??= _usersFactory();
 
-    private IAutoDataAccess<AuthRefreshTokenEntity, Serial> RefreshTokens
-        => _refreshTokens ??= _refreshTokensFactory();
+    private IAutoDataAccess<AuthRefreshTokenEntity, Serial> RefreshTokens => _refreshTokens ??= _refreshTokensFactory();
 
     public AuthTokenService(
         Func<IUserService> usersFactory,
         Func<IAutoDataAccess<AuthRefreshTokenEntity, Serial>> refreshTokensFactory,
         WebConfig webConfig
     )
-        : this(usersFactory, refreshTokensFactory, webConfig, static () => DateTimeOffset.UtcNow)
-    {
-    }
+        : this(usersFactory, refreshTokensFactory, webConfig, static () => DateTimeOffset.UtcNow) { }
 
     internal AuthTokenService(
         IUserService users,
@@ -49,9 +46,7 @@ public sealed class AuthTokenService : IAuthTokenService
         WebConfig webConfig,
         Func<DateTimeOffset> now
     )
-        : this(() => users, () => refreshTokens, webConfig, now)
-    {
-    }
+        : this(() => users, () => refreshTokens, webConfig, now) { }
 
     internal AuthTokenService(
         Func<IUserService> usersFactory,
@@ -90,6 +85,22 @@ public sealed class AuthTokenService : IAuthTokenService
         }
 
         return await IssueTokenPairAsync(user, cancellationToken);
+    }
+
+    public async ValueTask<bool> LogoutAsync(string refreshToken, CancellationToken cancellationToken = default)
+    {
+        var now = _now();
+        var entity = FindRefreshToken(refreshToken);
+
+        if (entity is null || !entity.IsActive(now))
+        {
+            return false;
+        }
+
+        entity.RevokedAt = now;
+        await RefreshTokens.UpsertAsync(entity, cancellationToken);
+
+        return true;
     }
 
     public async ValueTask<AuthTokenResponse?> RefreshAsync(
@@ -131,44 +142,6 @@ public sealed class AuthTokenService : IAuthTokenService
         );
     }
 
-    public async ValueTask<bool> LogoutAsync(string refreshToken, CancellationToken cancellationToken = default)
-    {
-        var now = _now();
-        var entity = FindRefreshToken(refreshToken);
-
-        if (entity is null || !entity.IsActive(now))
-        {
-            return false;
-        }
-
-        entity.RevokedAt = now;
-        await RefreshTokens.UpsertAsync(entity, cancellationToken);
-
-        return true;
-    }
-
-    private static AuthUserResponse CreateUserResponse(UserEntity user)
-        => new(user.Id.ToString(), user.Username, user.Level.ToString(), user.IsActive);
-
-    private static string GenerateRefreshToken()
-    {
-        var bytes = RandomNumberGenerator.GetBytes(RefreshTokenByteCount);
-
-        return Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
-    }
-
-    private static string HashRefreshToken(string refreshToken)
-    {
-        if (string.IsNullOrWhiteSpace(refreshToken))
-        {
-            return "";
-        }
-
-        var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(refreshToken));
-
-        return Convert.ToBase64String(bytes);
-    }
-
     private string CreateAccessToken(UserEntity user, DateTimeOffset now, DateTimeOffset expiresAt)
     {
         var jwt = _webConfig.Jwt;
@@ -201,6 +174,9 @@ public sealed class AuthTokenService : IAuthTokenService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
+    private static AuthUserResponse CreateUserResponse(UserEntity user)
+        => new(user.Id.ToString(), user.Username, user.Level.ToString(), user.IsActive);
+
     private AuthRefreshTokenEntity? FindRefreshToken(string refreshToken)
     {
         var hash = HashRefreshToken(refreshToken);
@@ -210,9 +186,26 @@ public sealed class AuthTokenService : IAuthTokenService
             return null;
         }
 
-        return RefreshTokens.Query().FirstOrDefault(
-            token => string.Equals(token.TokenHash, hash, StringComparison.Ordinal)
-        );
+        return RefreshTokens.Query().FirstOrDefault(token => string.Equals(token.TokenHash, hash, StringComparison.Ordinal));
+    }
+
+    private static string GenerateRefreshToken()
+    {
+        var bytes = RandomNumberGenerator.GetBytes(RefreshTokenByteCount);
+
+        return Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+    }
+
+    private static string HashRefreshToken(string refreshToken)
+    {
+        if (string.IsNullOrWhiteSpace(refreshToken))
+        {
+            return "";
+        }
+
+        var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(refreshToken));
+
+        return Convert.ToBase64String(bytes);
     }
 
     private async ValueTask<AuthTokenResponse> IssueTokenPairAsync(

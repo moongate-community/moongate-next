@@ -9,6 +9,29 @@ namespace Moongate.Tests.Server.Auth;
 
 public sealed class AuthEndpointExtensionsTests
 {
+    private sealed class FakeAuthTokenService : IAuthTokenService
+    {
+        public AuthTokenResponse? LoginResponse { get; set; }
+        public AuthTokenResponse? RefreshResponse { get; set; }
+        public bool LogoutResponse { get; set; }
+
+        public ValueTask<AuthTokenResponse?> LoginAsync(
+            string username,
+            string password,
+            CancellationToken cancellationToken = default
+        )
+            => ValueTask.FromResult(LoginResponse);
+
+        public ValueTask<bool> LogoutAsync(string refreshToken, CancellationToken cancellationToken = default)
+            => ValueTask.FromResult(LogoutResponse);
+
+        public ValueTask<AuthTokenResponse?> RefreshAsync(
+            string refreshToken,
+            CancellationToken cancellationToken = default
+        )
+            => ValueTask.FromResult(RefreshResponse);
+    }
+
     [Fact]
     public async Task HandleLoginAsync_MissingCredentials_ReturnsBadRequest()
     {
@@ -89,27 +112,4 @@ public sealed class AuthEndpointExtensionsTests
             DateTimeOffset.UtcNow.AddDays(14),
             new("0x00000001", "admin", UserLevelType.Administrator.ToString(), true)
         );
-
-    private sealed class FakeAuthTokenService : IAuthTokenService
-    {
-        public AuthTokenResponse? LoginResponse { get; set; }
-        public AuthTokenResponse? RefreshResponse { get; set; }
-        public bool LogoutResponse { get; set; }
-
-        public ValueTask<AuthTokenResponse?> LoginAsync(
-            string username,
-            string password,
-            CancellationToken cancellationToken = default
-        )
-            => ValueTask.FromResult(LoginResponse);
-
-        public ValueTask<AuthTokenResponse?> RefreshAsync(
-            string refreshToken,
-            CancellationToken cancellationToken = default
-        )
-            => ValueTask.FromResult(RefreshResponse);
-
-        public ValueTask<bool> LogoutAsync(string refreshToken, CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(LogoutResponse);
-    }
 }

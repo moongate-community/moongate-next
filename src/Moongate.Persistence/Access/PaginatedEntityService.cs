@@ -12,18 +12,16 @@ namespace Moongate.Persistence.Access;
 public abstract class PaginatedEntityService<TEntity, TKey> : IPaginatedService<TEntity>
     where TKey : struct, IAutoIncrementKey<TKey>
 {
-    private readonly IAutoDataAccess<TEntity, TKey> _data;
-
     protected PaginatedEntityService(IAutoDataAccess<TEntity, TKey> data)
     {
-        _data = data;
+        Data = data;
     }
 
-    protected IAutoDataAccess<TEntity, TKey> Data => _data;
+    protected IAutoDataAccess<TEntity, TKey> Data { get; }
 
     public ValueTask<PagedResult<TEntity>> ListAsync(PageRequest request, CancellationToken cancellationToken = default)
     {
-        var query = _data.Query();
+        var query = Data.Query();
 
         if (!string.IsNullOrWhiteSpace(request.Search))
         {
@@ -41,10 +39,10 @@ public abstract class PaginatedEntityService<TEntity, TKey> : IPaginatedService<
         return ValueTask.FromResult(new PagedResult<TEntity>(items, request.Page, request.PageSize, total));
     }
 
-    /// <summary>Applies an entity-specific case-insensitive search filter.</summary>
-    protected abstract IQueryable<TEntity> ApplySearch(IQueryable<TEntity> query, string term);
-
     /// <summary>Applies a stable default ordering. Override to customize.</summary>
     protected virtual IQueryable<TEntity> ApplyOrder(IQueryable<TEntity> query)
         => query;
+
+    /// <summary>Applies an entity-specific case-insensitive search filter.</summary>
+    protected abstract IQueryable<TEntity> ApplySearch(IQueryable<TEntity> query, string term);
 }

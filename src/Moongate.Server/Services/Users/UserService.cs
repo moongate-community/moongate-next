@@ -1,3 +1,4 @@
+using System.Net.Mail;
 using Moongate.Abstractions.Interfaces.Services;
 using Moongate.Core.Ids;
 using Moongate.Core.Utils;
@@ -25,14 +26,6 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
         _eventBus = eventBus;
     }
 
-    protected override IQueryable<UserEntity> ApplySearch(IQueryable<UserEntity> query, string term)
-        => query.Where(u =>
-            u.Username.Contains(term, StringComparison.OrdinalIgnoreCase) ||
-            u.Email.Contains(term, StringComparison.OrdinalIgnoreCase));
-
-    protected override IQueryable<UserEntity> ApplyOrder(IQueryable<UserEntity> query)
-        => query.OrderBy(u => u.Username, StringComparer.OrdinalIgnoreCase);
-
     public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
         => _users.CountAsync(cancellationToken);
 
@@ -56,7 +49,8 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
         await EnsureEmailIsFreeAsync(normalizedEmail, null, cancellationToken);
 
         var id = await _users.NextIdAsync(cancellationToken);
-        var user = new UserEntity(id, normalizedUsername, normalizedEmail, HashUtils.HashPassword(password), level, isActive);
+        var user =
+            new UserEntity(id, normalizedUsername, normalizedEmail, HashUtils.HashPassword(password), level, isActive);
 
         await _users.UpsertAsync(user, cancellationToken);
         await _eventBus.PublishAsync(
@@ -65,77 +59,6 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
         );
 
         return user;
-    }
-
-    public async ValueTask<UserEntity?> UpdateAsync(
-        Serial id,
-        string email,
-        UserLevelType level,
-        CancellationToken cancellationToken = default
-    )
-    {
-        var user = await _users.GetByIdAsync(id, cancellationToken);
-
-        if (user is null)
-        {
-            return null;
-        }
-
-        var normalizedEmail = NormalizeEmail(email);
-
-        await EnsureEmailIsFreeAsync(normalizedEmail, id, cancellationToken);
-
-        user.Email = normalizedEmail;
-        user.Level = level;
-
-        await _users.UpsertAsync(user, cancellationToken);
-        await _eventBus.PublishAsync(
-            new UserUpdatedEvent(user.Id, user.Username, user.Email, user.Level, user.IsActive, DateTimeOffset.UtcNow),
-            cancellationToken
-        );
-
-        return user;
-    }
-
-    public async ValueTask<UserEntity?> SetActiveAsync(Serial id, bool isActive, CancellationToken cancellationToken = default)
-    {
-        var user = await _users.GetByIdAsync(id, cancellationToken);
-
-        if (user is null)
-        {
-            return null;
-        }
-
-        user.IsActive = isActive;
-
-        await _users.UpsertAsync(user, cancellationToken);
-        await _eventBus.PublishAsync(
-            new UserUpdatedEvent(user.Id, user.Username, user.Email, user.Level, user.IsActive, DateTimeOffset.UtcNow),
-            cancellationToken
-        );
-
-        return user;
-    }
-
-    public async ValueTask<bool> ResetPasswordAsync(Serial id, string newPassword, CancellationToken cancellationToken = default)
-    {
-        if (string.IsNullOrWhiteSpace(newPassword))
-        {
-            throw new ArgumentException("Password cannot be null or empty.", nameof(newPassword));
-        }
-
-        var user = await _users.GetByIdAsync(id, cancellationToken);
-
-        if (user is null)
-        {
-            return false;
-        }
-
-        user.Password = HashUtils.HashPassword(newPassword);
-
-        await _users.UpsertAsync(user, cancellationToken);
-
-        return true;
     }
 
     public async ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
@@ -178,14 +101,113 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
         return ValueTask.FromResult(user);
     }
 
-    private static string NormalizeUsername(string username)
+    public async ValueTask<bool> ResetPasswordAsync(
+        Serial id,
+        string newPassword,
+        CancellationToken cancellationToken = default
+    )
     {
-        if (string.IsNullOrWhiteSpace(username))
+        if (string.IsNullOrWhiteSpace(newPassword))
         {
-            throw new ArgumentException("Username cannot be null or empty.", nameof(username));
+            throw new ArgumentException("Password cannot be null or empty.", nameof(newPassword));
         }
 
-        return username.Trim();
+        var user = await _users.GetByIdAsync(id, cancellationToken);
+
+        if (user is null)
+        {
+            return false;
+        }
+
+        user.Password = HashUtils.HashPassword(newPassword);
+
+        await _users.UpsertAsync(user, cancellationToken);
+
+        return true;
+    }
+
+    public async ValueTask<UserEntity?> SetActiveAsync(
+        Serial id,
+        bool isActive,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var user = await _users.GetByIdAsync(id, cancellationToken);
+
+        if (user is null)
+        {
+            return null;
+        }
+
+        user.IsActive = isActive;
+
+        await _users.UpsertAsync(user, cancellationToken);
+        await _eventBus.PublishAsync(
+            new UserUpdatedEvent(user.Id, user.Username, user.Email, user.Level, user.IsActive, DateTimeOffset.UtcNow),
+            cancellationToken
+        );
+
+        return user;
+    }
+
+    public async ValueTask<UserEntity?> UpdateAsync(
+        Serial id,
+        string email,
+        UserLevelType level,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var user = await _users.GetByIdAsync(id, cancellationToken);
+
+        if (user is null)
+        {
+            return null;
+        }
+
+        var normalizedEmail = NormalizeEmail(email);
+
+        await EnsureEmailIsFreeAsync(normalizedEmail, id, cancellationToken);
+
+        user.Email = normalizedEmail;
+        user.Level = level;
+
+        await _users.UpsertAsync(user, cancellationToken);
+        await _eventBus.PublishAsync(
+            new UserUpdatedEvent(user.Id, user.Username, user.Email, user.Level, user.IsActive, DateTimeOffset.UtcNow),
+            cancellationToken
+        );
+
+        return user;
+    }
+
+    protected override IQueryable<UserEntity> ApplyOrder(IQueryable<UserEntity> query)
+        => query.OrderBy(u => u.Username, StringComparer.OrdinalIgnoreCase);
+
+    protected override IQueryable<UserEntity> ApplySearch(IQueryable<UserEntity> query, string term)
+        => query.Where(
+            u =>
+                u.Username.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                u.Email.Contains(term, StringComparison.OrdinalIgnoreCase)
+        );
+
+    private async ValueTask EnsureEmailIsFreeAsync(string email, Serial? excludingId, CancellationToken cancellationToken)
+    {
+        var hasExclusion = excludingId.HasValue;
+        var excludedSerial = excludingId.GetValueOrDefault();
+        var clash = _users
+                    .Query()
+                    .FirstOrDefault(
+                        u =>
+                            string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase) &&
+                            (!hasExclusion || u.Id != excludedSerial)
+                    );
+
+        if (clash is not null)
+        {
+            throw new InvalidOperationException($"Email '{email}' is already in use.");
+        }
+
+        await ValueTask.CompletedTask;
     }
 
     private static string NormalizeEmail(string email)
@@ -197,7 +219,7 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
 
         var trimmed = email.Trim();
 
-        if (!System.Net.Mail.MailAddress.TryCreate(trimmed, out _))
+        if (!MailAddress.TryCreate(trimmed, out _))
         {
             throw new ArgumentException($"Email '{trimmed}' is not a valid address.", nameof(email));
         }
@@ -205,21 +227,13 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
         return trimmed;
     }
 
-    private async ValueTask EnsureEmailIsFreeAsync(string email, Serial? excludingId, CancellationToken cancellationToken)
+    private static string NormalizeUsername(string username)
     {
-        var hasExclusion = excludingId.HasValue;
-        var excludedSerial = excludingId.GetValueOrDefault();
-        var clash = _users
-                    .Query()
-                    .FirstOrDefault(u =>
-                        string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase) &&
-                        (!hasExclusion || u.Id != excludedSerial));
-
-        if (clash is not null)
+        if (string.IsNullOrWhiteSpace(username))
         {
-            throw new InvalidOperationException($"Email '{email}' is already in use.");
+            throw new ArgumentException("Username cannot be null or empty.", nameof(username));
         }
 
-        await ValueTask.CompletedTask;
+        return username.Trim();
     }
 }

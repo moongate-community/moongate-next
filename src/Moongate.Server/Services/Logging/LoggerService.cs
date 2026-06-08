@@ -2,6 +2,7 @@ using Moongate.Abstractions.Data.Logging;
 using Moongate.Core.Extensions.Logger;
 using Serilog;
 using Serilog.Core;
+using Serilog.Events;
 
 namespace Moongate.Server.Services.Logging;
 
@@ -21,6 +22,8 @@ public static class LoggerService
         var builder = new LoggerConfiguration()
                       .MinimumLevel
                       .Is(config.Level.ToSerilogLogLevel())
+                      .MinimumLevel
+                      .Override("Microsoft.AspNetCore", LogEventLevel.Warning)
                       .WriteTo
                       .Console();
 

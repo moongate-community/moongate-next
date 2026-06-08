@@ -85,25 +85,6 @@ public static class AuthEndpointExtensions
         return response is null ? TypedResults.Unauthorized() : TypedResults.Ok(response);
     }
 
-    internal static async Task<IResult> HandleRefreshAsync(
-        AuthRefreshRequest request,
-        IAuthTokenService auth,
-        CancellationToken cancellationToken
-    )
-    {
-        ArgumentNullException.ThrowIfNull(request);
-        ArgumentNullException.ThrowIfNull(auth);
-
-        if (string.IsNullOrWhiteSpace(request.RefreshToken))
-        {
-            return TypedResults.BadRequest("refresh_token is required");
-        }
-
-        var response = await auth.RefreshAsync(request.RefreshToken, cancellationToken);
-
-        return response is null ? TypedResults.Unauthorized() : TypedResults.Ok(response);
-    }
-
     internal static async Task<IResult> HandleLogoutAsync(
         AuthLogoutRequest request,
         IAuthTokenService auth,
@@ -134,5 +115,24 @@ public static class AuthEndpointExtensions
         var isActive = !bool.TryParse(activeText, out var parsed) || parsed;
 
         return TypedResults.Ok(new AuthUserResponse(id, username, level, isActive));
+    }
+
+    internal static async Task<IResult> HandleRefreshAsync(
+        AuthRefreshRequest request,
+        IAuthTokenService auth,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(auth);
+
+        if (string.IsNullOrWhiteSpace(request.RefreshToken))
+        {
+            return TypedResults.BadRequest("refresh_token is required");
+        }
+
+        var response = await auth.RefreshAsync(request.RefreshToken, cancellationToken);
+
+        return response is null ? TypedResults.Unauthorized() : TypedResults.Ok(response);
     }
 }

@@ -21,18 +21,18 @@ public interface IAuthTokenService
     );
 
     /// <summary>
-    /// Exchanges an active refresh token for a new access token and refresh token.
-    /// </summary>
-    /// <param name="refreshToken">Opaque refresh token.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>New token pair when the refresh token is active; otherwise null.</returns>
-    ValueTask<AuthTokenResponse?> RefreshAsync(string refreshToken, CancellationToken cancellationToken = default);
-
-    /// <summary>
     /// Revokes an active refresh token.
     /// </summary>
     /// <param name="refreshToken">Opaque refresh token.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>True when a token was revoked; otherwise false.</returns>
     ValueTask<bool> LogoutAsync(string refreshToken, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Exchanges an active refresh token for a new access token and refresh token.
+    /// </summary>
+    /// <param name="refreshToken">Opaque refresh token.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>New token pair when the refresh token is active; otherwise null.</returns>
+    ValueTask<AuthTokenResponse?> RefreshAsync(string refreshToken, CancellationToken cancellationToken = default);
 }

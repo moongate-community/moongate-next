@@ -15,9 +15,38 @@ public sealed class WebConfigTests : IDisposable
         var config = new WebConfig();
 
         Assert.Empty(config.Validate());
+        Assert.Equal("", config.BaseUrl);
         Assert.Equal("Moongate", config.Jwt.Issuer);
         Assert.Equal("Moongate.Web", config.Jwt.Audience);
         Assert.True(config.Jwt.IsUsingDevelopmentSigningKey);
+    }
+
+    [Fact]
+    public void Load_WebSection_BindsBaseUrl()
+    {
+        Directory.CreateDirectory(_dir);
+        File.WriteAllText(
+            ConfigPath,
+            """
+            web:
+              base_url: https://play.moongate.io
+            """
+        );
+
+        var results = ConfigService.Load(ConfigPath, [WebSection()]);
+        var config = Assert.IsType<WebConfig>(Assert.Single(results).Instance);
+
+        Assert.Equal("https://play.moongate.io", config.BaseUrl);
+    }
+
+    public void Dispose()
+    {
+        if (Directory.Exists(_dir))
+        {
+            Directory.Delete(_dir, true);
+        }
+
+        GC.SuppressFinalize(this);
     }
 
     [Fact]
@@ -63,16 +92,6 @@ public sealed class WebConfigTests : IDisposable
         var errors = config.Validate().ToArray();
 
         Assert.Contains(errors, error => error.Contains("SigningKey", StringComparison.Ordinal));
-    }
-
-    public void Dispose()
-    {
-        if (Directory.Exists(_dir))
-        {
-            Directory.Delete(_dir, true);
-        }
-
-        GC.SuppressFinalize(this);
     }
 
     private static ConfigSectionRegistration WebSection()
