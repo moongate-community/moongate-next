@@ -8,6 +8,8 @@ using Moongate.Core.Types;
 using Moongate.Network.UO.Registry;
 using Moongate.Scripting.Lua.Interfaces.Scripts;
 using Moongate.Server.Bootstrap;
+using Moongate.Server.Data.Config;
+using Moongate.Server.Interfaces.Auth;
 using Moongate.Server.Interfaces.Services.World;
 using Moongate.Server.Services.WorldData;
 
@@ -30,13 +32,19 @@ public sealed class MoongateBootstrapTests : IDisposable
         Assert.NotNull(container.Resolve<ITimerService>());
         Assert.NotNull(container.Resolve<IMetricsService>());
         Assert.NotNull(container.Resolve<IScriptEngineService>());
+        Assert.NotNull(container.Resolve<IAuthTokenService>());
         Assert.NotNull(container.Resolve<IDoorDataService>());
         Assert.NotNull(container.Resolve<ISpawnsDataService>());
         Assert.NotNull(container.Resolve<ITeleportersDataService>());
         Assert.NotNull(container.Resolve<ServerAssetDataLoader>());
         Assert.NotNull(container.Resolve<ServerAssetDataBootService>());
         Assert.NotNull(container.Resolve<LoggerConfig>());
-        Assert.True(File.Exists(Path.Combine(context.Directories[DirectoryType.Config], "moongate.yaml")));
+        Assert.NotNull(container.Resolve<WebConfig>());
+        var configPath = Path.Combine(context.Directories[DirectoryType.Config], "moongate.yaml");
+        Assert.True(File.Exists(configPath));
+        var yaml = File.ReadAllText(configPath);
+        Assert.Contains("web:", yaml);
+        Assert.Contains("jwt:", yaml);
 
         var dataServices = container.ResolveMany<IDataService>().ToArray();
         Assert.Equal(12, dataServices.Length);

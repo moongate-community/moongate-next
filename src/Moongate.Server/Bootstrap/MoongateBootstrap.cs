@@ -1,6 +1,9 @@
 using System.Diagnostics;
 using DryIoc;
 using DryIoc.Microsoft.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
+using Microsoft.OpenApi;
 using Moongate.Abstractions.Data.Logging;
 using Moongate.Abstractions.Extensions.DryIoc;
 using Moongate.Abstractions.Interfaces.Services;
@@ -11,6 +14,7 @@ using Moongate.Network.UO.Registry;
 using Moongate.Server.Bootstrap.Internal;
 using Moongate.Server.Data;
 using Moongate.Server.Data.Events;
+using Moongate.Server.Extensions.Auth;
 using Moongate.Server.Extensions.Commands;
 using Moongate.Server.Extensions.Configuration;
 using Moongate.Server.Extensions.Endpoints;
@@ -26,6 +30,7 @@ using Moongate.Server.Extensions.Timing;
 using Moongate.Server.Extensions.UoData;
 using Moongate.Server.Extensions.Users;
 using Moongate.Server.Extensions.WorldData;
+using Moongate.Server.Services.Auth;
 using Moongate.Server.Services.Diagnostics;
 using Moongate.Server.Services.EventBus;
 using Moongate.Server.Services.GameLoop;
@@ -97,6 +102,7 @@ public static class MoongateBootstrap
         // UO domain services register persisted entities before persistence starts.
         container.AddMoongateUsers();
         container.AddDefaultAdminUserSeed();
+        container.AddMoongateAuth();
 
         // Persistence (priority 15): snapshot + journal.
         container.AddMoongatePersistence(directories[DirectoryType.Save]);
@@ -154,8 +160,23 @@ public static class MoongateBootstrap
         builder.Logging.ClearProviders().AddSerilog();
 
         // ASP.NET Core services (OpenAPI, Kestrel, routing, ...) register through IServiceCollection.
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-        builder.Services.AddOpenApi();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen(
+            options =>
+            {
+                options.SwaggerDoc(
+                    "v1",
+                    new OpenApiInfo
+                    {
+                        Title = "Moongate API",
+                        Version = "v1"
+                    }
+                );
+            }
+        );
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+        builder.Services.AddAuthorization();
+        builder.Services.AddSingleton<IConfigureOptions<JwtBearerOptions>, JwtBearerOptionsConfigurator>();
 
         // The generic host collects hosted services from IServiceCollection, so bridge the
         // DryIoc-registered orchestrator here; it resolves its descriptors from the unified provider.
@@ -207,6 +228,7 @@ public static class MoongateBootstrap
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
+            app.UseSwagger();
             app.MapMoongateApiDocs();
         }
 
@@ -214,7 +236,10 @@ public static class MoongateBootstrap
 
         app.UseDefaultFiles();
         app.UseStaticFiles();
+        app.UseAuthentication();
+        app.UseAuthorization();
 
+        app.MapMoongateAuth();
         app.MapMoongateVersion();
         app.MapMoongateMetrics();
         app.MapMoongateMapImages();

@@ -70,6 +70,15 @@ persistence:
   journal_file_name: world.journal.bin
   enable_file_lock: true
 
+web:
+  jwt:
+    issuer: Moongate
+    audience: Moongate.Web
+    signing_key: MOONGATE_DEVELOPMENT_ONLY_SIGNING_KEY_CHANGE_ME_2026
+    access_token_minutes: 15
+    refresh_token_days: 14
+    rotate_refresh_tokens: true
+
 network:
   port: 2593
   ping_server_enabled: true
@@ -160,6 +169,21 @@ and `TerMur`.
 | `snapshot_file_name` | `world.snapshot.bin` | Snapshot file name under `<root>/save`. |
 | `journal_file_name` | `world.journal.bin` | Journal file name under `<root>/save`. |
 | `enable_file_lock` | `true` | Opens the journal file with a per-process lock. |
+
+### `web`
+
+| Key | Default | Description |
+|---|---:|---|
+| `jwt.issuer` | `Moongate` | Expected JWT issuer. |
+| `jwt.audience` | `Moongate.Web` | Expected JWT audience. |
+| `jwt.signing_key` | development key | HMAC signing key for access tokens. It must be at least 32 UTF-8 bytes. Replace the development default before production use. |
+| `jwt.access_token_minutes` | `15` | Access token lifetime in minutes. |
+| `jwt.refresh_token_days` | `14` | Refresh token lifetime in days. |
+| `jwt.rotate_refresh_tokens` | `true` | Revokes the used refresh token and returns a new one on every refresh. |
+
+The default `jwt.signing_key` is intentionally present so development servers
+can boot without manual setup. Production deployments should always configure a
+unique secret value.
 
 ### `network`
 
