@@ -1,9 +1,9 @@
-namespace Moongate.UO.Data.Types.Items;
+namespace Moongate.UO.Data.Types;
 
 /// <summary>
-/// Declares the supported value kind for an item custom property.
+/// Declares the supported value kind for a custom property.
 /// </summary>
-public enum ItemCustomPropertyType : byte
+public enum CustomPropertyType : byte
 {
     /// <summary>A 64-bit integer value.</summary>
     Integer = 0,

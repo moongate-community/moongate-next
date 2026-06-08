@@ -1,7 +1,7 @@
 using Moongate.Core.Geometry;
 using Moongate.Core.Ids;
 using Moongate.Core.Types;
-using Moongate.UO.Data.Data.Items;
+using Moongate.UO.Data.Data;
 using Moongate.UO.Data.Interfaces.Entities.Base;
 using Moongate.UO.Data.Types.Items;
 
@@ -55,5 +55,5 @@ public interface IItemEntity : IWorldEntity
     List<Serial> ContainedItemIds { get; set; }
 
     /// <summary>Typed custom properties keyed by name, for plugin- or script-defined data.</summary>
-    Dictionary<string, ItemCustomProperty> CustomProperties { get; set; }
+    Dictionary<string, CustomProperty> CustomProperties { get; set; }
 }

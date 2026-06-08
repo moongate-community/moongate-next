@@ -2,10 +2,11 @@ using Moongate.Core.Geometry;
 using Moongate.Core.Ids;
 using Moongate.Persistence.Interfaces.Persistence;
 using Moongate.Server.Services.Items;
-using Moongate.UO.Data.Data.Items;
+using Moongate.UO.Data.Data;
 using Moongate.UO.Data.Data.Tiles;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Interfaces.Tiles;
+using Moongate.UO.Data.Types;
 using Moongate.UO.Data.Types.Items;
 using Moongate.UO.Data.Types.Tiles;
 
@@ -61,9 +62,9 @@ public sealed class ItemServiceTests
         for (var i = 0; i < ChildCount; i++)
         {
             var child = new ItemEntity { ItemId = ArrowItemId, Weight = 1, Amount = 1 };
-            child.CustomProperties["index"] = new ItemCustomProperty
+            child.CustomProperties["index"] = new CustomProperty
             {
-                Type = ItemCustomPropertyType.Integer,
+                Type = CustomPropertyType.Integer,
                 IntegerValue = i
             };
 

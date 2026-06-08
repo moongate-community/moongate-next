@@ -1,7 +1,7 @@
 using Moongate.Core.Geometry;
 using Moongate.Core.Ids;
 using Moongate.Core.Types;
-using Moongate.UO.Data.Data.Items;
+using Moongate.UO.Data.Data;
 using Moongate.UO.Data.Interfaces.Entities.Items;
 using Moongate.UO.Data.Types.Items;
 
@@ -52,5 +52,5 @@ public sealed class ItemEntity : IItemEntity
 
     public List<Serial> ContainedItemIds { get; set; } = [];
 
-    public Dictionary<string, ItemCustomProperty> CustomProperties { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, CustomProperty> CustomProperties { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 }

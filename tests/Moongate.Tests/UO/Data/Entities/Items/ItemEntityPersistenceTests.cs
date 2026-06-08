@@ -2,8 +2,9 @@ using Moongate.Abstractions.Data.Persistence;
 using Moongate.Core.Ids;
 using Moongate.Persistence.Data;
 using Moongate.Persistence.Services.Persistence;
-using Moongate.UO.Data.Data.Items;
+using Moongate.UO.Data.Data;
 using Moongate.UO.Data.Entities.Items;
+using Moongate.UO.Data.Types;
 using Moongate.UO.Data.Types.Items;
 
 namespace Moongate.Tests.UO.Data.Entities.Items;
@@ -56,19 +57,19 @@ public sealed class ItemEntityPersistenceTests : IDisposable
                 ParentContainerId = backpackId
             };
 
-            child.CustomProperties["index"] = new ItemCustomProperty
+            child.CustomProperties["index"] = new CustomProperty
             {
-                Type = ItemCustomPropertyType.Integer,
+                Type = CustomPropertyType.Integer,
                 IntegerValue = i
             };
-            child.CustomProperties["name"] = new ItemCustomProperty
+            child.CustomProperties["name"] = new CustomProperty
             {
-                Type = ItemCustomPropertyType.String,
+                Type = CustomPropertyType.String,
                 StringValue = $"arrow-{i}"
             };
-            child.CustomProperties["blessed"] = new ItemCustomProperty
+            child.CustomProperties["blessed"] = new CustomProperty
             {
-                Type = ItemCustomPropertyType.Boolean,
+                Type = CustomPropertyType.Boolean,
                 BooleanValue = i % 2 == 0
             };
 
