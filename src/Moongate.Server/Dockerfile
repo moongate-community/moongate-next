@@ -6,16 +6,16 @@
 FROM node:22-alpine AS web-build
 WORKDIR /web
 
-COPY ["web/package.json", "web/package-lock.json", "./"]
+COPY ["ui/package.json", "ui/package-lock.json", "./"]
 RUN npm ci
 
-COPY web/ ./
+COPY ui/ ./
 RUN npm run build
 
 # ---------------------------------------------------------------------------
 # Build stage
 # ---------------------------------------------------------------------------
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0.203 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 

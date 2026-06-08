@@ -1,0 +1,15 @@
+.git
+.github
+.idea
+.codegraph
+.superpowers
+dist
+artifacts
+BenchmarkDotNet.Artifacts
+docs/docfx/_site
+ui/node_modules
+ui/dist
+src/**/bin
+src/**/obj
+tests/**/bin
+tests/**/obj
