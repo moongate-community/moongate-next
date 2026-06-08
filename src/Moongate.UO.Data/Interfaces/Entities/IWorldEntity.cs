@@ -28,7 +28,4 @@ public interface IWorldEntity
 
     /// <summary>Identifier of the map facet the entity belongs to; resolve the runtime map via a map service.</summary>
     int MapId { get; set; }
-
-    /// <summary>Weight of the entity, used for encumbrance and container limits.</summary>
-    int Weight { get; set; }
 }
