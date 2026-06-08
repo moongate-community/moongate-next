@@ -1,4 +1,4 @@
-import { Activity, Map, Shield, Sparkles, UserRound } from "lucide-react";
+import { Activity, Gauge, HeartPulse, KeyRound, ScrollText, Sparkles, UserRound } from "lucide-react";
 
 export const adminItems = [
   {
@@ -7,14 +7,24 @@ export const adminItems = [
     icon: Activity
   },
   {
-    id: "world",
-    label: "World",
-    icon: Map
+    id: "runtime",
+    label: "Runtime",
+    icon: Gauge
+  },
+  {
+    id: "persistence",
+    label: "Persistence",
+    icon: ScrollText
   },
   {
     id: "security",
     label: "Security",
-    icon: Shield
+    icon: KeyRound
+  },
+  {
+    id: "diagnostics",
+    label: "Diagnostics",
+    icon: HeartPulse
   }
 ] as const;
 

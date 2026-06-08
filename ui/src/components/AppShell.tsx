@@ -1,19 +1,31 @@
 import type { ReactNode } from "react";
 import { LogOut } from "lucide-react";
 import { adminItems, playerItems } from "../data/navigation";
+import type { AdminNavId } from "../types/admin";
 import type { AuthUser } from "../types/auth";
 
 type AppSection = "admin" | "player";
+type PlayerNavId = (typeof playerItems)[number]["id"];
 
 type AppShellProps = {
   user: AuthUser;
   section: AppSection;
+  activeItemId: AdminNavId | PlayerNavId;
+  onItemChange: (itemId: AdminNavId | PlayerNavId) => void;
   onSectionChange: (section: AppSection) => void;
   onLogout: () => Promise<void>;
   children: ReactNode;
 };
 
-export function AppShell({ user, section, onSectionChange, onLogout, children }: AppShellProps) {
+export function AppShell({
+  user,
+  section,
+  activeItemId,
+  onItemChange,
+  onSectionChange,
+  onLogout,
+  children
+}: AppShellProps) {
   const items = section === "admin" ? adminItems : playerItems;
 
   return (
@@ -33,7 +45,7 @@ export function AppShell({ user, section, onSectionChange, onLogout, children }:
         </nav>
         <nav className="side-nav" aria-label={`${section} navigation`}>
           {items.map((item) => (
-            <button key={item.id}>
+            <button key={item.id} className={activeItemId === item.id ? "active" : ""} onClick={() => onItemChange(item.id)}>
               <item.icon size={18} aria-hidden />
               {item.label}
             </button>

@@ -55,6 +55,15 @@ The Vite dev proxy targets `http://127.0.0.1:5265` by default. Override it with
 The server Dockerfile builds the UI and copies `ui/dist` into the published
 server `wwwroot` directory.
 
+The admin portal dashboard reads the existing server endpoints:
+
+- `GET /api/version` for server version and codename.
+- `GET /api/auth/me` for the current authenticated admin identity.
+- `GET /metrics` for runtime, network, event bus, timer, and persistence metrics.
+- `GET /api/docs` for Scalar API documentation.
+
+The first admin dashboard phase intentionally does not manage map or item image generation.
+
 ## Configuration
 
 Moongate uses YAML for runtime configuration. The main server config is

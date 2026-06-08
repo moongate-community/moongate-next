@@ -260,7 +260,9 @@ button:disabled {
   background: transparent;
 }
 
-.side-nav button:hover {
+.side-nav button:hover,
+.side-nav button.active {
+  color: #17211c;
   background: #eef1e9;
 }
 

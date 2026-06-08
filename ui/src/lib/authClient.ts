@@ -1,6 +1,6 @@
 import type { AuthTokenResponse, AuthUser } from "../types/auth";
 
-async function readJson<T>(response: Response): Promise<T> {
+export async function readJson<T>(response: Response): Promise<T> {
   if (!response.ok) {
     throw new Error(`${response.status} ${response.statusText}`);
   }

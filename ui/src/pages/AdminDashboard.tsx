@@ -1,96 +1,122 @@
-import { Activity, Database, ServerCog, ShieldCheck } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { AdminActivityTimeline } from "../components/admin/AdminActivityTimeline";
+import { AdminDashboardHeader } from "../components/admin/AdminDashboardHeader";
+import { AdminDiagnosticsPanel } from "../components/admin/AdminDiagnosticsPanel";
+import { AdminMetricStrip } from "../components/admin/AdminMetricStrip";
+import { AdminPersistencePanel } from "../components/admin/AdminPersistencePanel";
+import { AdminRuntimePanel } from "../components/admin/AdminRuntimePanel";
+import { AdminSecurityPanel } from "../components/admin/AdminSecurityPanel";
+import { buildMetricCards, buildRuntimeServices } from "../data/adminDashboard";
+import { getAdminRuntimeSnapshot, getOfflineSnapshot } from "../lib/adminClient";
+import { me } from "../lib/authClient";
+import type { AdminActivityEvent, AdminNavId, AdminRuntimeSnapshot } from "../types/admin";
+import type { AuthUser } from "../types/auth";
 
-const systemMetrics = [
-  {
-    label: "Shard state",
-    value: "Online",
-    detail: "HTTP and game loop active"
-  },
-  {
-    label: "Sessions",
-    value: "0",
-    detail: "No active players"
-  },
-  {
-    label: "Data services",
-    value: "Lazy",
-    detail: "Loaded on first query"
-  },
-  {
-    label: "Auth",
-    value: "JWT",
-    detail: "Refresh rotation enabled"
+type AdminDashboardProps = {
+  activeView: AdminNavId;
+  accessToken: string;
+  accessTokenExpiresAt: string;
+  user: AuthUser;
+};
+
+export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, user }: AdminDashboardProps) {
+  const [snapshot, setSnapshot] = useState<AdminRuntimeSnapshot>(() => getOfflineSnapshot());
+  const [verifiedUser, setVerifiedUser] = useState<AuthUser | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [events, setEvents] = useState<AdminActivityEvent[]>([]);
+
+  const pushEvent = useCallback((label: string, detail: string, status: AdminActivityEvent["status"]) => {
+    const at = new Date().toISOString();
+
+    setEvents((current) => [
+      {
+        id: `${at}-${label}`,
+        label,
+        detail,
+        at,
+        status
+      },
+      ...current.slice(0, 7)
+    ]);
+  }, []);
+
+  const refresh = useCallback(async () => {
+    setLoading(true);
+
+    const [runtimeResult, authResult] = await Promise.allSettled([
+      getAdminRuntimeSnapshot(),
+      me(accessToken)
+    ]);
+
+    if (runtimeResult.status === "fulfilled") {
+      setSnapshot(runtimeResult.value);
+      pushEvent("Dashboard refreshed", "Version and metrics loaded from the server", "healthy");
+    } else {
+      setSnapshot(getOfflineSnapshot());
+      pushEvent(
+        "Dashboard refresh failed",
+        runtimeResult.reason instanceof Error ? runtimeResult.reason.message : "Unknown error",
+        "offline"
+      );
+    }
+
+    if (authResult.status === "fulfilled") {
+      setVerifiedUser(authResult.value);
+    } else {
+      setVerifiedUser(null);
+      pushEvent(
+        "Auth check failed",
+        authResult.reason instanceof Error ? authResult.reason.message : "Current token could not be verified",
+        "warning"
+      );
+    }
+
+    setLoading(false);
+  }, [accessToken, pushEvent]);
+
+  useEffect(() => {
+    void refresh();
+  }, [refresh]);
+
+  const metrics = useMemo(() => buildMetricCards(snapshot), [snapshot]);
+  const services = useMemo(() => buildRuntimeServices(snapshot), [snapshot]);
+
+  async function copyVersion() {
+    if (!snapshot.server) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(`${snapshot.server.version} ${snapshot.server.codename}`);
+      pushEvent("Server version copied", `${snapshot.server.version} ${snapshot.server.codename}`, "healthy");
+    } catch (error) {
+      pushEvent("Copy failed", error instanceof Error ? error.message : "Clipboard is unavailable", "warning");
+    }
   }
-];
 
-const operations = [
-  "World data seeding",
-  "Persistence journal",
-  "Lua command registry",
-  "Map and item image cache"
-];
-
-export function AdminDashboard() {
   return (
-    <section className="workspace admin-dashboard">
-      <header className="dashboard-header">
-        <div>
-          <h2>Admin dashboard</h2>
-          <p>Operational control surface for server health, data pipelines, auth, and shard runtime state.</p>
+    <section className={`workspace admin-dashboard admin-view-${activeView}`}>
+      <AdminDashboardHeader snapshot={snapshot} loading={loading} onRefresh={refresh} />
+      <AdminMetricStrip metrics={metrics} />
+
+      <div className="admin-layout">
+        <div className="admin-main-column">
+          {(activeView === "overview" || activeView === "runtime") && <AdminRuntimePanel services={services} />}
+          {(activeView === "overview" || activeView === "persistence") && <AdminPersistencePanel snapshot={snapshot} />}
+          {(activeView === "overview" || activeView === "security") && (
+            <AdminSecurityPanel user={user} verifiedUser={verifiedUser} accessTokenExpiresAt={accessTokenExpiresAt} />
+          )}
+          {activeView === "diagnostics" && (
+            <AdminDiagnosticsPanel snapshot={snapshot} onRefresh={refresh} onCopyVersion={copyVersion} />
+          )}
         </div>
-        <div className="status-pill">
-          <Activity size={16} aria-hidden />
-          Live
-        </div>
-      </header>
 
-      <div className="admin-metrics">
-        {systemMetrics.map((metric) => (
-          <article key={metric.label}>
-            <span>{metric.label}</span>
-            <strong>{metric.value}</strong>
-            <small>{metric.detail}</small>
-          </article>
-        ))}
-      </div>
-
-      <div className="admin-grid">
-        <article className="ops-panel">
-          <header>
-            <ServerCog size={20} aria-hidden />
-            <h3>Runtime services</h3>
-          </header>
-          <div className="ops-list">
-            {operations.map((item) => (
-              <div key={item} className="ops-row">
-                <ShieldCheck size={16} aria-hidden />
-                <span>{item}</span>
-                <strong>Ready</strong>
-              </div>
-            ))}
-          </div>
-        </article>
-
-        <article className="data-panel">
-          <header>
-            <Database size={20} aria-hidden />
-            <h3>Data pipeline</h3>
-          </header>
-          <dl>
-            <div>
-              <dt>World assets</dt>
-              <dd>Embedded YAML seeded into runtime data</dd>
-            </div>
-            <div>
-              <dt>Image cache</dt>
-              <dd>`cache/images/maps` and `cache/images/items`</dd>
-            </div>
-            <div>
-              <dt>Config source</dt>
-              <dd>`moongate.yaml` with web JWT section</dd>
-            </div>
-          </dl>
-        </article>
+        <aside className="admin-side-column">
+          {activeView !== "diagnostics" && (
+            <AdminDiagnosticsPanel snapshot={snapshot} onRefresh={refresh} onCopyVersion={copyVersion} />
+          )}
+          <AdminActivityTimeline events={events} />
+        </aside>
       </div>
     </section>
   );
