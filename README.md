@@ -62,6 +62,9 @@ The admin portal dashboard reads the existing server endpoints:
 - `GET /metrics` for runtime, network, event bus, timer, and persistence metrics.
 - `GET /api/docs` for Scalar API documentation.
 
+The admin `Metrics` view renders client-side time-series panels from `/metrics`
+and refreshes while the view is open.
+
 The first admin dashboard phase intentionally does not manage map or item image generation.
 
 ## Configuration

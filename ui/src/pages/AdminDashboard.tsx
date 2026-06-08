@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { Suspense, lazy, useCallback, useEffect, useMemo, useState } from "react";
 import { AdminActivityTimeline } from "../components/admin/AdminActivityTimeline";
 import { AdminDashboardHeader } from "../components/admin/AdminDashboardHeader";
 import { AdminDiagnosticsPanel } from "../components/admin/AdminDiagnosticsPanel";
@@ -9,8 +9,12 @@ import { AdminSecurityPanel } from "../components/admin/AdminSecurityPanel";
 import { buildMetricCards, buildRuntimeServices } from "../data/adminDashboard";
 import { getAdminRuntimeSnapshot, getOfflineSnapshot } from "../lib/adminClient";
 import { me } from "../lib/authClient";
-import type { AdminActivityEvent, AdminNavId, AdminRuntimeSnapshot } from "../types/admin";
+import type { AdminActivityEvent, AdminMetricHistoryPoint, AdminNavId, AdminRuntimeSnapshot } from "../types/admin";
 import type { AuthUser } from "../types/auth";
+
+const AdminMetricsPanel = lazy(() =>
+  import("../components/admin/AdminMetricsPanel").then((module) => ({ default: module.AdminMetricsPanel }))
+);
 
 type AdminDashboardProps = {
   activeView: AdminNavId;
@@ -24,6 +28,7 @@ export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, 
   const [verifiedUser, setVerifiedUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(false);
   const [events, setEvents] = useState<AdminActivityEvent[]>([]);
+  const [metricHistory, setMetricHistory] = useState<AdminMetricHistoryPoint[]>([]);
 
   const pushEvent = useCallback((label: string, detail: string, status: AdminActivityEvent["status"]) => {
     const at = new Date().toISOString();
@@ -40,7 +45,7 @@ export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, 
     ]);
   }, []);
 
-  const refresh = useCallback(async () => {
+  const refresh = useCallback(async (recordEvent = true) => {
     setLoading(true);
 
     const [runtimeResult, authResult] = await Promise.allSettled([
@@ -50,25 +55,35 @@ export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, 
 
     if (runtimeResult.status === "fulfilled") {
       setSnapshot(runtimeResult.value);
-      pushEvent("Dashboard refreshed", "Version and metrics loaded from the server", "healthy");
+      setMetricHistory((current) => appendMetricHistory(current, runtimeResult.value));
+
+      if (recordEvent) {
+        pushEvent("Dashboard refreshed", "Version and metrics loaded from the server", "healthy");
+      }
     } else {
       setSnapshot(getOfflineSnapshot());
-      pushEvent(
-        "Dashboard refresh failed",
-        runtimeResult.reason instanceof Error ? runtimeResult.reason.message : "Unknown error",
-        "offline"
-      );
+
+      if (recordEvent) {
+        pushEvent(
+          "Dashboard refresh failed",
+          runtimeResult.reason instanceof Error ? runtimeResult.reason.message : "Unknown error",
+          "offline"
+        );
+      }
     }
 
     if (authResult.status === "fulfilled") {
       setVerifiedUser(authResult.value);
     } else {
       setVerifiedUser(null);
-      pushEvent(
-        "Auth check failed",
-        authResult.reason instanceof Error ? authResult.reason.message : "Current token could not be verified",
-        "warning"
-      );
+
+      if (recordEvent) {
+        pushEvent(
+          "Auth check failed",
+          authResult.reason instanceof Error ? authResult.reason.message : "Current token could not be verified",
+          "warning"
+        );
+      }
     }
 
     setLoading(false);
@@ -77,6 +92,20 @@ export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, 
   useEffect(() => {
     void refresh();
   }, [refresh]);
+
+  useEffect(() => {
+    if (activeView !== "metrics") {
+      return;
+    }
+
+    void refresh(false);
+
+    const timer = window.setInterval(() => {
+      void refresh(false);
+    }, 5000);
+
+    return () => window.clearInterval(timer);
+  }, [activeView, refresh]);
 
   const metrics = useMemo(() => buildMetricCards(snapshot), [snapshot]);
   const services = useMemo(() => buildRuntimeServices(snapshot), [snapshot]);
@@ -102,6 +131,11 @@ export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, 
       <div className="admin-layout">
         <div className="admin-main-column">
           {(activeView === "overview" || activeView === "runtime") && <AdminRuntimePanel services={services} />}
+          {activeView === "metrics" && (
+            <Suspense fallback={<article className="admin-panel admin-loading-panel">Loading metrics panels...</article>}>
+              <AdminMetricsPanel snapshot={snapshot} history={metricHistory} />
+            </Suspense>
+          )}
           {(activeView === "overview" || activeView === "persistence") && <AdminPersistencePanel snapshot={snapshot} />}
           {(activeView === "overview" || activeView === "security") && (
             <AdminSecurityPanel user={user} verifiedUser={verifiedUser} accessTokenExpiresAt={accessTokenExpiresAt} />
@@ -120,4 +154,19 @@ export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, 
       </div>
     </section>
   );
+}
+
+function appendMetricHistory(
+  current: AdminMetricHistoryPoint[],
+  snapshot: AdminRuntimeSnapshot
+): AdminMetricHistoryPoint[] {
+  const at = snapshot.collectedAt ?? new Date().toISOString();
+
+  return [
+    ...current,
+    {
+      at,
+      metrics: snapshot.metrics
+    }
+  ].slice(-48);
 }

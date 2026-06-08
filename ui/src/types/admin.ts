@@ -1,4 +1,4 @@
-export type AdminNavId = "overview" | "runtime" | "persistence" | "security" | "diagnostics";
+export type AdminNavId = "overview" | "runtime" | "metrics" | "persistence" | "security" | "diagnostics";
 
 export type AdminStatus = "healthy" | "warning" | "offline";
 
@@ -40,5 +40,10 @@ export type AdminRuntimeSnapshot = {
   server: ServerVersionInfo | null;
   collectedAt: string | null;
   reachable: boolean;
+  metrics: Record<string, number>;
+};
+
+export type AdminMetricHistoryPoint = {
+  at: string;
   metrics: Record<string, number>;
 };

@@ -1,4 +1,4 @@
-import { Activity, Gauge, HeartPulse, KeyRound, ScrollText, Sparkles, UserRound } from "lucide-react";
+import { Activity, ChartSpline, Gauge, HeartPulse, KeyRound, ScrollText, Sparkles, UserRound } from "lucide-react";
 
 export const adminItems = [
   {
@@ -10,6 +10,11 @@ export const adminItems = [
     id: "runtime",
     label: "Runtime",
     icon: Gauge
+  },
+  {
+    id: "metrics",
+    label: "Metrics",
+    icon: ChartSpline
   },
   {
     id: "persistence",
