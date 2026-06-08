@@ -1,5 +1,4 @@
 using Moongate.Tests.UO.Data.Support;
-using Moongate.UO.Data.Data.Maps;
 using Moongate.UO.Data.Data.Tiles;
 using Moongate.UO.Data.Files;
 using Moongate.UO.Data.Interfaces.Maps;
@@ -13,6 +12,41 @@ namespace Moongate.Tests.UO.Data.Maps;
 
 public class MapImageServiceTests
 {
+    private sealed class TestMapService : IMapService
+    {
+        private readonly Map _map;
+
+        public TestMapService(Map map)
+        {
+            _map = map;
+        }
+
+        public IReadOnlyList<Map> Maps => [_map];
+
+        public Map? GetMap(int mapId)
+            => mapId == _map.MapId ? _map : null;
+    }
+
+    private sealed class TestTileDataStore : ITileDataStore
+    {
+        private readonly ItemData _staticTileData;
+
+        public TestTileDataStore(ItemData staticTileData)
+        {
+            _staticTileData = staticTileData;
+        }
+
+        public IReadOnlyList<LandData> LandTable => [];
+
+        public IReadOnlyList<ItemData> ItemTable => [];
+
+        public ItemData GetItem(int id)
+            => _staticTileData;
+
+        public LandData GetLand(int id)
+            => default;
+    }
+
     [Fact]
     public void GetMapImage_MissingMap_ReturnsNull()
     {
@@ -76,7 +110,7 @@ public class MapImageServiceTests
             Assert.Equal(8, image!.Width);
             Assert.Equal(8, image.Height);
             using var pixels = image.CloneAs<Rgb24>();
-            Assert.Equal(new Rgb24(255, 255, 255), pixels[3, 2]);
+            Assert.Equal(new(255, 255, 255), pixels[3, 2]);
         }
         finally
         {
@@ -107,13 +141,13 @@ public class MapImageServiceTests
                     [0x4000 + 10] = 0x001F
                 }
             );
-            var service = BuildService(dir.FullName, new ItemData("wall", default, 0, 0, 0, 0, 0, 1));
+            var service = BuildService(dir.FullName, new("wall", default, 0, 0, 0, 0, 0, 1));
 
             using var image = service.GetMapImage(0);
 
             Assert.NotNull(image);
             using var pixels = image!.CloneAs<Rgb24>();
-            Assert.Equal(new Rgb24(0, 0, 255), pixels[3, 2]);
+            Assert.Equal(new(0, 0, 255), pixels[3, 2]);
         }
         finally
         {
@@ -132,40 +166,5 @@ public class MapImageServiceTests
             new RadarColorStore(resolver),
             new TestTileDataStore(staticTileData)
         );
-    }
-
-    private sealed class TestMapService : IMapService
-    {
-        private readonly Map _map;
-
-        public TestMapService(Map map)
-        {
-            _map = map;
-        }
-
-        public IReadOnlyList<Map> Maps => [_map];
-
-        public Map? GetMap(int mapId)
-            => mapId == _map.MapId ? _map : null;
-    }
-
-    private sealed class TestTileDataStore : ITileDataStore
-    {
-        private readonly ItemData _staticTileData;
-
-        public TestTileDataStore(ItemData staticTileData)
-        {
-            _staticTileData = staticTileData;
-        }
-
-        public IReadOnlyList<LandData> LandTable => [];
-
-        public IReadOnlyList<ItemData> ItemTable => [];
-
-        public ItemData GetItem(int id)
-            => _staticTileData;
-
-        public LandData GetLand(int id)
-            => default;
     }
 }

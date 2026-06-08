@@ -48,26 +48,17 @@ public static class ItemImageEndpointExtensions
         return endpoints;
     }
 
-    internal static async Task<IResult> HandleGetItemImageAsync(
-        string itemIdText,
-        IArtService artService,
-        DirectoriesConfig directories,
-        CancellationToken cancellationToken
-    )
+    internal static string FormatFileName(int itemId)
+        => $"0x{itemId.ToString("X3", CultureInfo.InvariantCulture)}.png";
+
+    internal static string GetCachePath(DirectoriesConfig directories, int itemId)
     {
-        ArgumentNullException.ThrowIfNull(artService);
         ArgumentNullException.ThrowIfNull(directories);
 
-        if (!TryParseHexItemId(itemIdText, out var itemId))
-        {
-            return TypedResults.BadRequest("itemId must be in 0x... format");
-        }
+        var directory = Path.Combine(directories[DirectoryType.Cache], "images", "items");
+        Directory.CreateDirectory(directory);
 
-        var result = await EnsureItemImageAsync(itemId, artService, directories, cancellationToken);
-
-        return result.HasImage
-            ? Results.File(result.CachePath, "image/png")
-            : TypedResults.NotFound();
+        return Path.Combine(directory, FormatFileName(itemId));
     }
 
     internal static async Task<IResult> HandleBuildItemImagesAsync(
@@ -128,18 +119,27 @@ public static class ItemImageEndpointExtensions
         );
     }
 
-    internal static string GetCachePath(DirectoriesConfig directories, int itemId)
+    internal static async Task<IResult> HandleGetItemImageAsync(
+        string itemIdText,
+        IArtService artService,
+        DirectoriesConfig directories,
+        CancellationToken cancellationToken
+    )
     {
+        ArgumentNullException.ThrowIfNull(artService);
         ArgumentNullException.ThrowIfNull(directories);
 
-        var directory = Path.Combine(directories[DirectoryType.Cache], "images", "items");
-        Directory.CreateDirectory(directory);
+        if (!TryParseHexItemId(itemIdText, out var itemId))
+        {
+            return TypedResults.BadRequest("itemId must be in 0x... format");
+        }
 
-        return Path.Combine(directory, FormatFileName(itemId));
+        var result = await EnsureItemImageAsync(itemId, artService, directories, cancellationToken);
+
+        return result.HasImage
+                   ? Results.File(result.CachePath, "image/png")
+                   : TypedResults.NotFound();
     }
-
-    internal static string FormatFileName(int itemId)
-        => $"0x{itemId.ToString("X3", CultureInfo.InvariantCulture)}.png";
 
     private static async Task<(bool HasImage, bool Generated, string CachePath)> EnsureItemImageAsync(
         int itemId,

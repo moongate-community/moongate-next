@@ -30,6 +30,16 @@ public static class MapImageEndpointExtensions
         return endpoints;
     }
 
+    internal static string GetCachePath(DirectoriesConfig directories, int mapId)
+    {
+        ArgumentNullException.ThrowIfNull(directories);
+
+        var directory = Path.Combine(directories[DirectoryType.Cache], "images", "maps");
+        Directory.CreateDirectory(directory);
+
+        return Path.Combine(directory, $"{mapId}.png");
+    }
+
     internal static async Task<IResult> HandleGetMapImageAsync(
         int mapId,
         IMapImageService mapImages,
@@ -89,15 +99,5 @@ public static class MapImageEndpointExtensions
         {
             generationLock.Release();
         }
-    }
-
-    internal static string GetCachePath(DirectoriesConfig directories, int mapId)
-    {
-        ArgumentNullException.ThrowIfNull(directories);
-
-        var directory = Path.Combine(directories[DirectoryType.Cache], "images", "maps");
-        Directory.CreateDirectory(directory);
-
-        return Path.Combine(directory, $"{mapId}.png");
     }
 }
