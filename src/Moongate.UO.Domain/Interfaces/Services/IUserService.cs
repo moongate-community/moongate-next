@@ -28,4 +28,21 @@ public interface IUserService : IPaginatedService<UserEntity>
 
     /// <summary>Gets a user by username using case-insensitive matching, or null when absent.</summary>
     ValueTask<UserEntity?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default);
+
+    /// <summary>Updates a user's email and level; returns null when the user is absent.</summary>
+    ValueTask<UserEntity?> UpdateAsync(
+        Serial id,
+        string email,
+        UserLevelType level,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>Locks or unlocks a user by toggling IsActive; returns null when absent.</summary>
+    ValueTask<UserEntity?> SetActiveAsync(Serial id, bool isActive, CancellationToken cancellationToken = default);
+
+    /// <summary>Replaces a user's password with a freshly hashed value; false when absent.</summary>
+    ValueTask<bool> ResetPasswordAsync(Serial id, string newPassword, CancellationToken cancellationToken = default);
+
+    /// <summary>Permanently removes a user; false when absent.</summary>
+    ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default);
 }

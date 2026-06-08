@@ -145,6 +145,23 @@ public sealed class AuthTokenServiceTests
                     user => string.Equals(user.Username, username, StringComparison.OrdinalIgnoreCase)
                 )
             );
+
+        public ValueTask<UserEntity?> UpdateAsync(
+            Serial id,
+            string email,
+            UserLevelType level,
+            CancellationToken cancellationToken = default
+        )
+            => ValueTask.FromResult(_users.GetValueOrDefault(id));
+
+        public ValueTask<UserEntity?> SetActiveAsync(Serial id, bool isActive, CancellationToken cancellationToken = default)
+            => ValueTask.FromResult(_users.GetValueOrDefault(id));
+
+        public ValueTask<bool> ResetPasswordAsync(Serial id, string newPassword, CancellationToken cancellationToken = default)
+            => ValueTask.FromResult(_users.ContainsKey(id));
+
+        public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
+            => ValueTask.FromResult(_users.Remove(id));
     }
 
     private sealed class FakeRefreshTokenAccess : IAutoDataAccess<AuthRefreshTokenEntity, Serial>
