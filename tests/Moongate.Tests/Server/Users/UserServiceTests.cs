@@ -114,7 +114,7 @@ public sealed class UserServiceTests : IDisposable
         {
             var service = container.Resolve<IUserService>();
 
-            var user = await service.CreateAsync("ContainerUser", "secret");
+            var user = await service.CreateAsync("ContainerUser", "container@test.local", "secret");
 
             Assert.Equal(new(1), user.Id);
             Assert.True(HashUtils.VerifyPassword("secret", user.Password));
@@ -146,7 +146,8 @@ public sealed class UserServiceTests : IDisposable
         var bus = new CapturingEventBusService();
         var service = new UserService(access, bus);
 
-        await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.CreateAsync("arthorius", "secret"));
+        await Assert.ThrowsAsync<InvalidOperationException>(
+            async () => await service.CreateAsync("arthorius", "dupe@test.local", "secret"));
 
         Assert.Single(access.Users);
         Assert.Empty(bus.AsyncEvents);
@@ -159,7 +160,7 @@ public sealed class UserServiceTests : IDisposable
         var bus = new CapturingEventBusService();
         var service = new UserService(access, bus);
 
-        var user = await service.CreateAsync("Arthorius", "secret", UserLevelType.GameMaster);
+        var user = await service.CreateAsync("Arthorius", "arthorius@test.local", "secret", UserLevelType.GameMaster);
 
         Assert.Equal(new(1), user.Id);
         Assert.Equal("Arthorius", user.Username);
@@ -200,5 +201,37 @@ public sealed class UserServiceTests : IDisposable
 
         Assert.NotNull(user);
         Assert.Equal(new(42), user!.Id);
+    }
+
+    [Fact]
+    public async Task ListAsync_SearchMatchesUsernameOrEmail_CaseInsensitive()
+    {
+        var access = new FakeUserAccess();
+        access.Add(new(new(1), "Arthorius", "art@realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
+        access.Add(new(new(2), "Bob", "bob@elsewhere.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
+        var service = new UserService(access, new CapturingEventBusService());
+
+        var byName = await service.ListAsync(new(1, 20, "arthor"));
+        var byEmail = await service.ListAsync(new(1, 20, "ELSEWHERE"));
+
+        Assert.Equal("Arthorius", Assert.Single(byName.Items).Username);
+        Assert.Equal("Bob", Assert.Single(byEmail.Items).Username);
+    }
+
+    [Fact]
+    public async Task ListAsync_PaginatesAndReportsTotalOrderedByUsername()
+    {
+        var access = new FakeUserAccess();
+        access.Add(new(new(3), "carol", "c@x.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
+        access.Add(new(new(1), "alice", "a@x.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
+        access.Add(new(new(2), "bob", "b@x.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
+        var service = new UserService(access, new CapturingEventBusService());
+
+        var firstPage = await service.ListAsync(new(1, 2, null));
+        var secondPage = await service.ListAsync(new(2, 2, null));
+
+        Assert.Equal(3, firstPage.TotalCount);
+        Assert.Equal(["alice", "bob"], firstPage.Items.Select(u => u.Username));
+        Assert.Equal(["carol"], secondPage.Items.Select(u => u.Username));
     }
 }

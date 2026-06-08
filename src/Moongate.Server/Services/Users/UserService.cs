@@ -1,6 +1,7 @@
 using Moongate.Abstractions.Interfaces.Services;
 using Moongate.Core.Ids;
 using Moongate.Core.Utils;
+using Moongate.Persistence.Access;
 using Moongate.Persistence.Interfaces.Persistence;
 using Moongate.UO.Domain.Entities;
 using Moongate.UO.Domain.Events;
@@ -12,22 +13,32 @@ namespace Moongate.Server.Services.Users;
 /// <summary>
 /// Default user service backed by auto-increment persistence.
 /// </summary>
-public sealed class UserService : IUserService
+public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IUserService
 {
     private readonly IAutoDataAccess<UserEntity, Serial> _users;
     private readonly IEventBusService _eventBus;
 
     public UserService(IAutoDataAccess<UserEntity, Serial> users, IEventBusService eventBus)
+        : base(users)
     {
         _users = users;
         _eventBus = eventBus;
     }
+
+    protected override IQueryable<UserEntity> ApplySearch(IQueryable<UserEntity> query, string term)
+        => query.Where(u =>
+            u.Username.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+            u.Email.Contains(term, StringComparison.OrdinalIgnoreCase));
+
+    protected override IQueryable<UserEntity> ApplyOrder(IQueryable<UserEntity> query)
+        => query.OrderBy(u => u.Username, StringComparer.OrdinalIgnoreCase);
 
     public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
         => _users.CountAsync(cancellationToken);
 
     public async ValueTask<UserEntity> CreateAsync(
         string username,
+        string email,
         string password,
         UserLevelType level = UserLevelType.Player,
         bool isActive = true,
@@ -42,7 +53,7 @@ public sealed class UserService : IUserService
         }
 
         var id = await _users.NextIdAsync(cancellationToken);
-        var user = new UserEntity(id, normalizedUsername, "", HashUtils.HashPassword(password), level, isActive);
+        var user = new UserEntity(id, normalizedUsername, email.Trim(), HashUtils.HashPassword(password), level, isActive);
 
         await _users.UpsertAsync(user, cancellationToken);
         await _eventBus.PublishAsync(

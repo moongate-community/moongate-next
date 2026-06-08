@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using Moongate.Core.Ids;
 using Moongate.Core.Utils;
+using Moongate.Persistence.Data;
 using Moongate.Persistence.Interfaces.Persistence;
 using Moongate.Server.Data.Auth;
 using Moongate.Server.Data.Config;
@@ -114,8 +115,20 @@ public sealed class AuthTokenServiceTests
         public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
             => ValueTask.FromResult(_users.Count);
 
+        public ValueTask<PagedResult<UserEntity>> ListAsync(
+            PageRequest request,
+            CancellationToken cancellationToken = default
+        )
+        {
+            var all = _users.Values.OrderBy(u => u.Username, StringComparer.OrdinalIgnoreCase).ToList();
+            var items = all.Skip((request.Page - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+            return ValueTask.FromResult(new PagedResult<UserEntity>(items, request.Page, request.PageSize, all.Count));
+        }
+
         public ValueTask<UserEntity> CreateAsync(
             string username,
+            string email,
             string password,
             UserLevelType level = UserLevelType.Player,
             bool isActive = true,

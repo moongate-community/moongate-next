@@ -34,6 +34,7 @@ public static class SeedContainerExtensions
 
                     await users.CreateAsync(
                         "admin",
+                        "admin@moongate.local",
                         "admin",
                         UserLevelType.Administrator,
                         true,
