@@ -40,10 +40,10 @@ public interface IMobileService
     );
 
     /// <summary>
-    /// Equips an item on the mobile at the given layer and persists both; returns false
-    /// when the layer is already occupied. Precondition: the item must not already be
-    /// equipped on another mobile or held in a container — the caller must unequip/remove
-    /// it first, otherwise the previous owner's reference is left dangling.
+    /// Equips an item on the mobile at the given layer and persists the affected entities,
+    /// first detaching the item from any previous owner (another mobile's layer or a
+    /// container) so no dangling reference is left behind. Returns true (idempotent) when the
+    /// same item already occupies the layer, and false when a different item occupies it.
     /// </summary>
     ValueTask<bool> EquipAsync(
         MobileEntity mobile,

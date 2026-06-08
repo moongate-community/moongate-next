@@ -27,7 +27,11 @@ public sealed class PersistenceEntityDescriptor<TEntity, TKey>
                     AutoInt32MessagePackFormatter.Instance,
                     AutoInt64MessagePackFormatter.Instance
                 },
-                new IFormatterResolver[] { ContractlessStandardResolver.Instance }
+                new IFormatterResolver[]
+                {
+                    CaseInsensitiveStringDictionaryResolver.Instance,
+                    ContractlessStandardResolver.Instance
+                }
             )
         );
 
