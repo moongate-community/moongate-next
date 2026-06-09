@@ -47,7 +47,30 @@ internal sealed class LuaEngineFixture : IDisposable
 
         if (Directory.Exists(ScriptsDirectory))
         {
-            Directory.Delete(ScriptsDirectory, true);
+            DeleteDirectoryWithRetry(ScriptsDirectory);
+        }
+    }
+
+    private static void DeleteDirectoryWithRetry(string directory)
+    {
+        const int maxAttempts = 5;
+
+        for (var attempt = 1; attempt <= maxAttempts; attempt++)
+        {
+            try
+            {
+                Directory.Delete(directory, true);
+
+                return;
+            }
+            catch (IOException) when (attempt < maxAttempts)
+            {
+                Thread.Sleep(50);
+            }
+            catch (UnauthorizedAccessException) when (attempt < maxAttempts)
+            {
+                Thread.Sleep(50);
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 using DryIoc;
+using Moongate.Abstractions.Configuration;
 using Moongate.Abstractions.Data.Logging;
 using Moongate.Abstractions.Interfaces.Metrics;
 using Moongate.Abstractions.Interfaces.Services;
@@ -12,6 +13,8 @@ using Moongate.Server.Data.Config;
 using Moongate.Server.Interfaces.Auth;
 using Moongate.Server.Interfaces.Services.World;
 using Moongate.Server.Services.WorldData;
+using Moongate.Tests.UO.Data.Support;
+using Moongate.UO.Data.Data;
 
 namespace Moongate.Tests.Server.Bootstrap;
 
@@ -24,6 +27,7 @@ public sealed class MoongateBootstrapTests : IDisposable
     {
         using var container = new Container();
         var context = MoongateBootstrap.CreateContext(new([], _root, false, false));
+        WriteTestConfig(context);
 
         MoongateBootstrap.ConfigureContainer(container, context);
 
@@ -60,6 +64,24 @@ public sealed class MoongateBootstrapTests : IDisposable
         var descriptor = container.Resolve<MoongateServiceDescriptor>(serviceKey: typeof(ServerAssetDataBootService));
         Assert.IsType<ServerAssetDataBootService>(descriptor.Service);
         Assert.Equal(11, descriptor.Priority);
+    }
+
+    private void WriteTestConfig(MoongateBootstrapContext context)
+    {
+        var uoDirectory = Path.Combine(_root, "uo-client");
+        Directory.CreateDirectory(uoDirectory);
+        TileDataFixture.Write(uoDirectory, [], []);
+
+        var configPath = Path.Combine(context.Directories[DirectoryType.Config], "moongate.yaml");
+        var config = new Dictionary<string, object?>
+        {
+            ["uo"] = new UoConfig
+            {
+                ClientFilesDirectory = uoDirectory
+            }
+        };
+
+        File.WriteAllText(configPath, ConfigYamlOptions.Serializer.Serialize(config));
     }
 
     [Fact]
