@@ -4,6 +4,7 @@ import { AdminMetricStrip } from "../components/admin/AdminMetricStrip";
 import { AdminPersistencePanel } from "../components/admin/AdminPersistencePanel";
 import { AdminRuntimePanel } from "../components/admin/AdminRuntimePanel";
 import { AdminSecurityPanel } from "../components/admin/AdminSecurityPanel";
+import { ConsolePanel } from "../components/admin/ConsolePanel";
 import { UserManagementPanel } from "../components/admin/users/UserManagementPanel";
 import { buildMetricCards, buildRuntimeServices } from "../data/adminDashboard";
 import { getAdminRuntimeSnapshot, getOfflineSnapshot } from "../lib/adminClient";
@@ -67,6 +68,10 @@ export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, 
 
   const metrics = useMemo(() => buildMetricCards(snapshot, metricHistory), [snapshot, metricHistory]);
   const services = useMemo(() => buildRuntimeServices(snapshot), [snapshot]);
+
+  if (activeView === "console") {
+    return <ConsolePanel accessToken={accessToken} />;
+  }
 
   return (
     <section className="grid gap-6 px-5 py-6 md:px-7">

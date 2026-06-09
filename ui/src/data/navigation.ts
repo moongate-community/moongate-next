@@ -1,4 +1,4 @@
-import { Activity, ChartSpline, Gauge, KeyRound, ScrollText, Sparkles, Users, UserRound } from "lucide-react";
+import { Activity, ChartSpline, Gauge, KeyRound, ScrollText, Sparkles, TerminalSquare, Users, UserRound } from "lucide-react";
 
 export const adminItems = [
   {
@@ -30,6 +30,11 @@ export const adminItems = [
     id: "users",
     label: "Users",
     icon: Users
+  },
+  {
+    id: "console",
+    label: "Console",
+    icon: TerminalSquare
   }
 ] as const;
 

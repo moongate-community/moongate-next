@@ -9,6 +9,7 @@
     "preview": "vite preview --host 127.0.0.1"
   },
   "dependencies": {
+    "@microsoft/signalr": "^10.0.0",
     "@vitejs/plugin-react": "^5.1.1",
     "echarts": "^6.1.0",
     "lucide-react": "^0.552.0",

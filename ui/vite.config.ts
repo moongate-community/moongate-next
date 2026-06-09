@@ -13,7 +13,8 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": apiTarget,
-      "/metrics": apiTarget
+      "/metrics": apiTarget,
+      "/hubs": { target: apiTarget, ws: true }
     }
   }
 });
