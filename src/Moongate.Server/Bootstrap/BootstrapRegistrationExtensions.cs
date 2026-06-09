@@ -118,6 +118,9 @@ internal static class BootstrapRegistrationExtensions
         container.AddMetricProvider<GameLoopService>();
         container.AddMetricProvider<TimerWheelService>();
 
+        // Core server identity config (the "server" section).
+        container.AddMoongateServerConfig();
+
         return container;
     }
 
