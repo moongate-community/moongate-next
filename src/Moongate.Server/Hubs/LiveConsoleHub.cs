@@ -17,6 +17,9 @@ namespace Moongate.Server.Hubs;
 [Authorize(Roles = nameof(UserLevelType.Administrator))]
 public sealed class LiveConsoleHub : Hub
 {
+    /// <summary>The SignalR route the console hub is mapped at (shared by MapHub and the WS auth check).</summary>
+    public const string Route = "/hubs/console";
+
     private readonly ILiveConsoleBroadcaster _broadcaster;
     private readonly ICommandSystemService _commandSystem;
 

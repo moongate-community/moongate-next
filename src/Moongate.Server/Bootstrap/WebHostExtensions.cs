@@ -1,7 +1,10 @@
 using System.Diagnostics;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Moongate.Abstractions.Interfaces.Services;
+using Moongate.Server.Hubs;
+using Moongate.Server.Services.LiveConsole;
 using Moongate.Abstractions.Internal;
 using Moongate.Server.Data.Events;
 using Moongate.Server.Extensions.Endpoints;
@@ -41,6 +44,16 @@ internal static class WebHostExtensions
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
         builder.Services.AddAuthorization();
         builder.Services.AddSingleton<IConfigureOptions<JwtBearerOptions>, JwtBearerOptionsConfigurator>();
+
+        // SignalR for the live admin console. Serialize enums as names so the client receives
+        // "Log"/"CommandEcho"/"CommandOutput" instead of numbers.
+        builder.Services
+               .AddSignalR()
+               .AddJsonProtocol(options => options.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+        // Bridge the DryIoc-registered relay into the host's hosted-service collection (same pattern
+        // as the orchestrator below).
+        builder.Services.AddSingleton<IHostedService>(sp => sp.GetRequiredService<LiveConsoleRelay>());
 
         // The generic host collects hosted services from IServiceCollection, so bridge the
         // DryIoc-registered orchestrator here; it resolves its descriptors from the unified provider.
@@ -95,6 +108,7 @@ internal static class WebHostExtensions
         app.MapMoongateMetrics();
         app.MapMoongateMapImages();
         app.MapMoongateItemImages();
+        app.MapHub<LiveConsoleHub>(LiveConsoleHub.Route);
         app.MapFallbackToFile("index.html");
 
         return app;

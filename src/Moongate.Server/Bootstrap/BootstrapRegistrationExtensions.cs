@@ -23,9 +23,11 @@ using Moongate.Server.Extensions.UoData;
 using Moongate.Server.Extensions.Users;
 using Moongate.Server.Extensions.WorldData;
 using Moongate.Server.FileLoaders;
+using Moongate.Server.Interfaces.LiveConsole;
 using Moongate.Server.Services.Diagnostics;
 using Moongate.Server.Services.EventBus;
 using Moongate.Server.Services.GameLoop;
+using Moongate.Server.Services.LiveConsole;
 using Moongate.Server.Services.Logging;
 using Moongate.Server.Services.Network;
 using Moongate.Server.Services.Timing;
@@ -48,11 +50,17 @@ internal static class BootstrapRegistrationExtensions
         return container;
     }
 
-    /// <summary>Logging, event bus + game loop, seeds, timer wheel and metrics providers.</summary>
+    /// <summary>Logging (incl. the live-console broadcaster + relay), event bus + game loop, seeds, timer wheel and metrics providers.</summary>
     public static IContainer AddObservability(this IContainer container)
     {
         // Logger config is loaded with the rest of the YAML sections, then applied immediately.
         container.AddMoongateLogging();
+
+        // Live admin console: the broadcaster must exist before the logger is built (the sink feeds
+        // it) and is shared by the hub + relay. The relay is a singleton bridged as an IHostedService
+        // in AddMoongateAspNetServices.
+        container.RegisterInstance<ILiveConsoleBroadcaster>(new LiveConsoleBroadcaster());
+        container.Register<LiveConsoleRelay>(Reuse.Singleton);
 
         // Event bus + game loop (priority 0 / 10) and the diagnostic handler.
         container.AddMoongateEventBus();
@@ -130,7 +138,8 @@ internal static class BootstrapRegistrationExtensions
         container.AddMoongateConfig(RuntimePaths.ResolveConfigPath(directories));
         Log.Logger = LoggerService.CreateLogger(
             container.Resolve<LoggerConfig>(),
-            directories[DirectoryType.Logs]
+            directories[DirectoryType.Logs],
+            container.Resolve<ILiveConsoleBroadcaster>()
         );
 
         return container;

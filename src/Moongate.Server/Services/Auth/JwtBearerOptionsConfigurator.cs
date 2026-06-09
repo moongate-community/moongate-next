@@ -3,6 +3,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using Moongate.Server.Hubs;
 using Microsoft.IdentityModel.Tokens;
 using Moongate.Server.Data.Config;
 using Serilog;
@@ -79,7 +80,7 @@ public sealed class JwtBearerOptionsConfigurator : IConfigureNamedOptions<JwtBea
     {
         string? token = query["access_token"];
 
-        if (!string.IsNullOrEmpty(token) && path.StartsWithSegments("/hubs/console"))
+        if (!string.IsNullOrEmpty(token) && path.StartsWithSegments(LiveConsoleHub.Route))
         {
             return token;
         }
