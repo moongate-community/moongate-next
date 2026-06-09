@@ -1,5 +1,6 @@
 using Moongate.Abstractions.Data.Logging;
 using Moongate.Core.Extensions.Logger;
+using Moongate.Server.Interfaces.LiveConsole;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
@@ -14,7 +15,7 @@ public static class LoggerService
     /// <summary>
     /// Creates a Serilog logger using the configured level and sinks.
     /// </summary>
-    public static Logger CreateLogger(LoggerConfig config, string logsDirectory)
+    public static Logger CreateLogger(LoggerConfig config, string logsDirectory, ILiveConsoleBroadcaster? liveConsole = null)
     {
         ArgumentNullException.ThrowIfNull(config);
         ArgumentException.ThrowIfNullOrWhiteSpace(logsDirectory);
@@ -26,6 +27,11 @@ public static class LoggerService
                       .Override("Microsoft.AspNetCore", LogEventLevel.Warning)
                       .WriteTo
                       .Console();
+
+        if (liveConsole is not null)
+        {
+            builder.WriteTo.Sink(new LiveConsoleSink(liveConsole), restrictedToMinimumLevel: LogEventLevel.Information);
+        }
 
         if (config.WriteToFile)
         {
