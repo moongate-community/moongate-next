@@ -34,8 +34,8 @@ public class MessagePackSnapshotServiceTests : IDisposable
 
         await service.SaveBucketAsync(bucket, 9);
 
-        Assert.True(File.Exists(Path.Combine(_dir, "TestPlayer.snapshot.bin")));
-        Assert.False(File.Exists(Path.Combine(_dir, "TestPlayer.snapshot.bin.tmp")));
+        Assert.True(File.Exists(Path.Combine(_dir, "test_player.snapshot.bin")));
+        Assert.False(File.Exists(Path.Combine(_dir, "test_player.snapshot.bin.tmp")));
     }
 
     [Fact]
@@ -61,7 +61,7 @@ public class MessagePackSnapshotServiceTests : IDisposable
         await service.SaveBucketAsync(bucket, 1);
 
         // Truncate the file so it can no longer be deserialized.
-        var path = Path.Combine(_dir, "TestPlayer.snapshot.bin");
+        var path = Path.Combine(_dir, "test_player.snapshot.bin");
         var bytes = await File.ReadAllBytesAsync(path);
         await File.WriteAllBytesAsync(path, bytes[..(bytes.Length / 2)]);
 

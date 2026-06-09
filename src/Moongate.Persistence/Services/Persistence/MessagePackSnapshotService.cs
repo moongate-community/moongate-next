@@ -1,5 +1,6 @@
 using MessagePack;
 using MessagePack.Resolvers;
+using Moongate.Core.Utils;
 using Moongate.Persistence.Data;
 using Moongate.Persistence.Interfaces.Persistence;
 using Moongate.Persistence.Internal;
@@ -8,8 +9,8 @@ namespace Moongate.Persistence.Services.Persistence;
 
 /// <summary>
 /// Stores each registered entity type as its own MessagePack snapshot file
-/// (<c>&lt;TypeName&gt;&lt;suffix&gt;</c> under the save directory), written atomically via temp +
-/// rename and verified by a payload checksum on load.
+/// (<c>&lt;snake_case type name&gt;&lt;suffix&gt;</c> under the save directory), written atomically
+/// via temp + rename and verified by a payload checksum on load.
 /// </summary>
 public sealed class MessagePackSnapshotService : ISnapshotService, IDisposable
 {
@@ -145,6 +146,6 @@ public sealed class MessagePackSnapshotService : ISnapshotService, IDisposable
             );
         }
 
-        return Path.Combine(_directory, typeName + _suffix);
+        return Path.Combine(_directory, StringUtils.ToSnakeCase(typeName) + _suffix);
     }
 }
