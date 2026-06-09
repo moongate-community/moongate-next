@@ -67,4 +67,23 @@ public class MessagePackSnapshotServiceTests : IDisposable
 
         Assert.Null(await service.LoadBucketAsync("TestPlayer"));
     }
+
+    [Theory]
+    [InlineData("../evil")]
+    [InlineData("a/b")]
+    public async Task SaveBucket_UnsafeTypeName_Throws(string typeName)
+    {
+        var service = NewService();
+        var bucket = new EntitySnapshotBucket { TypeId = 1, TypeName = typeName, SchemaVersion = 1, Payload = [1] };
+
+        await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.SaveBucketAsync(bucket, 1));
+    }
+
+    [Fact]
+    public async Task LoadBucket_UnsafeTypeName_Throws()
+    {
+        var service = NewService();
+
+        await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.LoadBucketAsync("../evil"));
+    }
 }
