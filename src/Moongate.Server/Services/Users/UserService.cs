@@ -101,6 +101,27 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
         return ValueTask.FromResult(user);
     }
 
+    public async ValueTask<UserEntity?> LoginAsync(
+        string username,
+        string password,
+        CancellationToken cancellationToken = default
+    )
+    {
+        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+        {
+            return null;
+        }
+
+        var user = await GetByUsernameAsync(username, cancellationToken);
+
+        if (user is null || !user.IsActive || !HashUtils.VerifyPassword(password, user.Password))
+        {
+            return null;
+        }
+
+        return user;
+    }
+
     public async ValueTask<bool> ResetPasswordAsync(
         Serial id,
         string newPassword,

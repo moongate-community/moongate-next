@@ -4,7 +4,6 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Moongate.Core.Ids;
-using Moongate.Core.Utils;
 using Moongate.Persistence.Interfaces.Persistence;
 using Moongate.Server.Data.Auth;
 using Moongate.Server.Data.Config;
@@ -72,14 +71,9 @@ public sealed class AuthTokenService : IAuthTokenService
         CancellationToken cancellationToken = default
     )
     {
-        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
-        {
-            return null;
-        }
+        var user = await Users.LoginAsync(username, password, cancellationToken);
 
-        var user = await Users.GetByUsernameAsync(username.Trim(), cancellationToken);
-
-        if (user is null || !user.IsActive || !HashUtils.VerifyPassword(password, user.Password))
+        if (user is null)
         {
             return null;
         }
