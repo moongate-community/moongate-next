@@ -196,8 +196,9 @@ public class NetworkServiceIntegrationTests : IDisposable
             using var client = new TcpClient();
             await client.ConnectAsync(IPAddress.Loopback, port);
 
-            // DoubleClick packet: opcode 0x06 + 4-byte serial (fixed length 5).
-            await client.GetStream().WriteAsync(new byte[] { 0x06, 0x00, 0x00, 0x00, 0x2A });
+            // A connection opens with a raw 4-byte seed, then packets follow. Seed (0x10000000),
+            // then a DoubleClick packet (opcode 0x06 + 4-byte serial, fixed length 5).
+            await client.GetStream().WriteAsync(new byte[] { 0x10, 0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x2A });
 
             await WaitForAsync(
                 () =>

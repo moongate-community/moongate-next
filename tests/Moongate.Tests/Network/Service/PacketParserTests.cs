@@ -171,6 +171,55 @@ public class PacketParserTests
         Assert.Equal(2, pending.Count);
     }
 
+    [Fact]
+    public void Append_RawSeed_ConsumesFourBytesThenParsesFollowingPacket()
+    {
+        var (parser, metrics, captured, pending) = Setup();
+        var state = new PacketStreamState();
+
+        // Game-server reconnect: 4 raw seed bytes (0xDEADBEEF big-endian) then a fixed 0x06 packet.
+        parser.Append(pending, [0xDE, 0xAD, 0xBE, 0xEF, 0x06, 0, 0, 0, 0x2A], metrics, Capture(captured), state);
+
+        Assert.True(state.SeedConsumed);
+        Assert.Equal(0xDEADBEEFu, state.Seed);
+        Assert.Single(captured);
+        Assert.Empty(pending);
+    }
+
+    [Fact]
+    public void Append_RawSeedSplitAcrossCalls_WaitsThenConsumes()
+    {
+        var (parser, metrics, captured, pending) = Setup();
+        var state = new PacketStreamState();
+
+        parser.Append(pending, [0xDE, 0xAD], metrics, Capture(captured), state);
+
+        Assert.False(state.SeedConsumed);
+        Assert.Equal(2, pending.Count);
+
+        parser.Append(pending, [0xBE, 0xEF, 0x06, 0, 0, 0, 0x2A], metrics, Capture(captured), state);
+
+        Assert.True(state.SeedConsumed);
+        Assert.Equal(0xDEADBEEFu, state.Seed);
+        Assert.Single(captured);
+    }
+
+    [Fact]
+    public void Append_LoginSeedOpcode_RecognizedAsPacketNotRawSeed()
+    {
+        var (parser, metrics, captured, pending) = Setup();
+        var state = new PacketStreamState();
+
+        // A lone 0xEF is recognized as the login-seed packet start: marked seed-consumed and left
+        // for normal framing (a known opcode awaiting more bytes), not eaten as a raw 4-byte seed.
+        parser.Append(pending, [0xEF], metrics, Capture(captured), state);
+
+        Assert.True(state.SeedConsumed);
+        Assert.Null(state.Seed);
+        Assert.Equal(1, pending.Count);
+        Assert.Empty(captured);
+    }
+
     private static Action<byte, IGameNetworkPacket, byte[]> Capture(List<IGameNetworkPacket> sink)
         => (_, packet, _) => sink.Add(packet);
 
@@ -184,6 +233,7 @@ public class PacketParserTests
         registry.RegisterFixed<TestFixedPacket>(0x06, 5);
         registry.RegisterFixed<TestFailingPacket>(0x07, 5);
         registry.RegisterVariable<TestVariablePacket>(0x12);
+        registry.RegisterFixed<TestFixedPacket>(0xEF, 5);
 
         var parser = new PacketParser(registry, maxPendingBufferBytes, maxDeclaredPacketLength);
 

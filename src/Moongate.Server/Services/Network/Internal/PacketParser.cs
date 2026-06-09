@@ -16,6 +16,10 @@ namespace Moongate.Server.Services.Network.Internal;
 /// </summary>
 internal sealed class PacketParser
 {
+    // The 0xEF login-seed packet (21 bytes, seed + version) opens a login-server connection; any other
+    // first byte on a fresh connection is a raw 4-byte seed (game-server reconnect).
+    private const byte LoginSeedOpCode = 0xEF;
+
     private readonly ILogger _logger = Log.ForContext<PacketParser>();
     private readonly PacketRegistry _registry;
     private readonly int _maxPendingBufferBytes;
@@ -37,7 +41,8 @@ internal sealed class PacketParser
         List<byte> pendingBytes,
         byte[] incoming,
         NetworkParserSessionMetrics metrics,
-        Action<byte, IGameNetworkPacket, byte[]> onPacket
+        Action<byte, IGameNetworkPacket, byte[]> onPacket,
+        PacketStreamState? state = null
     )
     {
         metrics.AddReceivedBytes(incoming.Length);
@@ -52,17 +57,30 @@ internal sealed class PacketParser
             return;
         }
 
-        ParseAvailable(pendingBytes, metrics, onPacket);
+        ParseAvailable(pendingBytes, metrics, onPacket, state);
     }
 
     private void ParseAvailable(
         List<byte> pendingBytes,
         NetworkParserSessionMetrics metrics,
-        Action<byte, IGameNetworkPacket, byte[]> onPacket
+        Action<byte, IGameNetworkPacket, byte[]> onPacket,
+        PacketStreamState? state
     )
     {
         while (pendingBytes.Count > 0)
         {
+            if (state is { SeedConsumed: false })
+            {
+                // Consume the initial seed before any packet framing. Returns false when more bytes
+                // are still needed (a partial raw seed).
+                if (!TryConsumeSeed(pendingBytes, state))
+                {
+                    return;
+                }
+
+                continue;
+            }
+
             var opCode = pendingBytes[0];
 
             if (!_registry.TryGetDescriptor(opCode, out var descriptor))
@@ -128,6 +146,30 @@ internal sealed class PacketParser
             metrics.IncrementParsedPackets();
             onPacket(opCode, packet, rawPacket);
         }
+    }
+
+    private static bool TryConsumeSeed(List<byte> pendingBytes, PacketStreamState state)
+    {
+        if (pendingBytes[0] == LoginSeedOpCode)
+        {
+            // Login connection: the 0xEF packet carries the seed; let normal framing parse it.
+            state.SeedConsumed = true;
+
+            return true;
+        }
+
+        if (pendingBytes.Count < 4)
+        {
+            // Wait for the full raw 4-byte seed.
+            return false;
+        }
+
+        Span<byte> seedBytes = [pendingBytes[0], pendingBytes[1], pendingBytes[2], pendingBytes[3]];
+        state.Seed = BinaryPrimitives.ReadUInt32BigEndian(seedBytes);
+        state.SeedConsumed = true;
+        pendingBytes.RemoveRange(0, 4);
+
+        return true;
     }
 
     private static int? ResolvePacketLength(List<byte> pendingBytes, PacketDescriptor descriptor)
