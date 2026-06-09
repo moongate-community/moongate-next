@@ -63,6 +63,40 @@ public class GameSessionTests
     }
 
     [Fact]
+    public async Task Endpoints_CapturedFromConnectedClient()
+    {
+        using var listener = new TcpListener(IPAddress.Loopback, 0);
+        listener.Start();
+        var port = ((IPEndPoint)listener.LocalEndpoint).Port;
+
+        using var receiver = new TcpClient();
+        var connectTask = receiver.ConnectAsync(IPAddress.Loopback, port);
+        using var senderSocket = await listener.AcceptSocketAsync();
+        await connectTask;
+
+        await using var sender = new MoongateTCPClient(senderSocket);
+        var session = new GameSession(sender);
+
+        Assert.NotNull(session.ServerEndPoint);
+        Assert.Equal(IPAddress.Loopback, session.ServerEndPoint!.Address);
+        Assert.Equal(port, session.ServerEndPoint.Port);
+
+        Assert.NotNull(session.ClientEndPoint);
+        Assert.Equal(IPAddress.Loopback, session.ClientEndPoint!.Address);
+    }
+
+    [Fact]
+    public void Endpoints_UnconnectedClient_AreNull()
+    {
+        using var client = NewClient();
+
+        var session = new GameSession(client);
+
+        Assert.Null(session.ServerEndPoint);
+        Assert.Null(session.ClientEndPoint);
+    }
+
+    [Fact]
     public void SessionId_MatchesOwningClient()
     {
         using var client = NewClient();

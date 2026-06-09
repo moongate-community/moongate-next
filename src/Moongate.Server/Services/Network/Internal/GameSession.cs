@@ -1,3 +1,4 @@
+using System.Net;
 using Moongate.Abstractions.Interfaces.Network;
 using Moongate.Network.Client;
 using Moongate.Network.Spans;
@@ -25,12 +26,26 @@ public sealed class GameSession
     /// </summary>
     public MoongateTCPClient Client { get; }
 
+    /// <summary>
+    /// Remote endpoint of the connecting client, captured at session creation (stable for the
+    /// session's lifetime, unlike the live socket endpoint which becomes null once the socket closes).
+    /// </summary>
+    public IPEndPoint? ClientEndPoint { get; }
+
+    /// <summary>
+    /// Local endpoint the client connected to — the server IP:port that answered — captured at
+    /// session creation. Useful e.g. to advertise the shard address back to the client.
+    /// </summary>
+    public IPEndPoint? ServerEndPoint { get; }
+
     public GameSession(MoongateTCPClient client)
     {
         ArgumentNullException.ThrowIfNull(client);
 
         Client = client;
         SessionId = client.SessionId;
+        ClientEndPoint = client.RemoteEndPoint as IPEndPoint;
+        ServerEndPoint = client.LocalEndPoint as IPEndPoint;
     }
 
     /// <summary>
