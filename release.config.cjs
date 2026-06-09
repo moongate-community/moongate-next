@@ -37,8 +37,8 @@ module.exports = {
       "@semantic-release/github",
       {
         assets: [
-          { path: "artifacts/release/moongate-linux-x64-v${nextRelease.version}.tar.gz", label: "Moongate Linux x64" },
-          { path: "artifacts/release/moongate-win-x64-v${nextRelease.version}.zip", label: "Moongate Windows x64" },
+          { path: "artifacts/release/moongate-linux-x64-v*.tar.gz", label: "Moongate Linux x64" },
+          { path: "artifacts/release/moongate-win-x64-v*.zip", label: "Moongate Windows x64" },
           { path: "artifacts/packages/*.nupkg", label: "NuGet package" },
           { path: "artifacts/packages/*.snupkg", label: "NuGet symbols package" }
         ]
