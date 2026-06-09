@@ -17,9 +17,22 @@ button:disabled {
 }
 
 .admin-login-screen {
+  position: relative;
+  overflow: hidden;
   background:
     radial-gradient(circle at 16% 18%, rgba(47, 92, 59, 0.28), transparent 32%),
     linear-gradient(135deg, #16231b 0%, #26382c 42%, #eef1e8 42%, #f7f8f4 100%);
+}
+
+.vanta-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.admin-login-screen .login-panel {
+  position: relative;
+  z-index: 1;
 }
 
 .player-login-screen {
