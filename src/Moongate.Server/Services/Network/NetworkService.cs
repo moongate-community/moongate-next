@@ -357,7 +357,8 @@ public sealed class NetworkService : INetworkService, IMetricProvider, IDisposab
                     }
 
                     _eventBus.Publish(new PacketReceivedEvent(session.SessionId, opCode, packet, DateTimeOffset.UtcNow));
-                }
+                },
+                session.Stream
             )
         );
     }

@@ -38,6 +38,12 @@ public sealed class GameSession
     /// </summary>
     public IPEndPoint? ServerEndPoint { get; }
 
+    /// <summary>Per-session parser state for the initial seed phase (touched only under the parse lock).</summary>
+    internal PacketStreamState Stream { get; } = new();
+
+    /// <summary>The connection seed captured on the game-server reconnect path; null otherwise.</summary>
+    public uint? Seed => Stream.Seed;
+
     public GameSession(MoongateTCPClient client)
     {
         ArgumentNullException.ThrowIfNull(client);
