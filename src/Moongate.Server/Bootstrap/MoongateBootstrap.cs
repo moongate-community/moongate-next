@@ -81,63 +81,12 @@ public static class MoongateBootstrap
         ArgumentNullException.ThrowIfNull(container);
         ArgumentNullException.ThrowIfNull(context);
 
-        var directories = context.Directories;
-
-        container.RegisterInstance(directories, IfAlreadyRegistered.Keep);
-        container.RegisterInstance(context.PacketRegistry);
-
-        // Logger config is loaded with the rest of the YAML sections, then applied immediately.
-        container.AddMoongateLogging();
-
-        // Event bus + game loop (priority 0 / 10) and the diagnostic handler.
-        container.AddMoongateEventBus();
-        container.AddTickEventHandler<ServerStartedHandler, ServerStartedEvent>();
-        container.AddMoongateSeeds();
-
-        // Metrics: needs the timer wheel for the background refresh.
-        container.AddMoongateTimerWheel();
-        container.AddMoongateMetrics();
-        container.AddMetricProvider<EventBusService>();
-        container.AddMetricProvider<GameLoopService>();
-        container.AddMetricProvider<TimerWheelService>();
-
-        // UO domain services register persisted entities before persistence starts.
-        container.AddMoongateUsers();
-        container.AddMoongateItems();
-        container.AddMoongateMobiles();
-        RaceLoader.RegisterDefaultRaces();
-        container.AddDefaultAdminUserSeed();
-        container.AddMoongateAuth();
-
-        // Persistence (priority 15): snapshot + journal.
-        container.AddMoongatePersistence(directories[DirectoryType.Save]);
-
-        // Seed bundled YAML assets from embedded resources, then register client-file + UO stores.
-        var dataDirectory = directories[DirectoryType.Data];
-        BundledDataAssetsBootstrapper.EnsureDataAssets(dataDirectory, Log.Logger);
-        container.AddMoongateUoData(Path.Combine(dataDirectory, "uo_files"));
-        container.AddMoongateWorldData(dataDirectory);
-
-        // Network: TCP game listeners + UDP ping server + packet parser (priority 20).
-        container.AddMoongateNetwork();
-        container.AddMoongatePacketHandlers();
-        container.AddMoongateCommands();
-        container.AddMetricProvider<NetworkService>();
-
-        // Lua scripting engine (priority 30).
-        container.AddMoongateLuaScripting(directories);
-
-        // Plugins can declare config sections, services, Lua modules, persistence entities, and handlers.
-        // This must run before AddMoongateConfig so plugin config sections are bound at boot.
-        container.AddMoongatePlugins(directories);
-
-        // Load the root YAML config once and register every section as a DI instance. Must run after
-        // all RegisterConfigSection calls (each module helper declares its section).
-        container.AddMoongateConfig(RuntimePaths.ResolveConfigPath(directories));
-        Log.Logger = LoggerService.CreateLogger(
-            container.Resolve<LoggerConfig>(),
-            directories[DirectoryType.Logs]
-        );
+        container.RegisterBootstrapContext(context);
+        container.AddObservability();
+        container.AddDomainServices();              // registers persisted entities before persistence
+        container.AddDataPersistence(context);      // persistence, then bundled assets + UO/world data
+        container.AddNetworkAndScripting(context);  // plugins must run before config
+        container.LoadConfigurationAndLogger(context); // config last, then the real logger
     }
 
     internal static WebApplicationBuilder CreateBuilder(
