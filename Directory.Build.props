@@ -35,6 +35,7 @@
         <Copyright>Copyright 2026 tom@orivega.io</Copyright>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageIcon>moongate_logo.png</PackageIcon>
         <PackageTags>moongate;moongate-next;ultima-online;uo;server;shard;emulator;lua;plugins;yaml;dotnet</PackageTags>
         <RepositoryType>git</RepositoryType>
         <PackageProjectUrl>https://github.com/moongate-community/moongate-next</PackageProjectUrl>
@@ -49,6 +50,7 @@
         <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="" Visible="false" Condition="Exists('$(MSBuildThisFileDirectory)README.md')"/>
         <None Include="$(MSBuildThisFileDirectory)LICENSE" Pack="true" PackagePath="" Visible="false" Condition="Exists('$(MSBuildThisFileDirectory)LICENSE')"/>
         <None Include="$(MSBuildThisFileDirectory)NOTICE" Pack="true" PackagePath="" Visible="false" Condition="Exists('$(MSBuildThisFileDirectory)NOTICE')"/>
+        <None Include="$(MSBuildThisFileDirectory)images/moongate_logo.png" Pack="true" PackagePath="" Visible="false"/>
     </ItemGroup>
 
     <!-- Build Configuration -->

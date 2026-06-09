@@ -17,19 +17,36 @@ RUN npm run build
 # ---------------------------------------------------------------------------
 FROM mcr.microsoft.com/dotnet/sdk:10.0.203 AS build
 ARG BUILD_CONFIGURATION=Release
+ARG TARGETARCH
 WORKDIR /src
 
 # Copy source before restore so every project referenced by the server project
 # is present in the Docker context.
 COPY ["Directory.Build.props", "global.json", "./"]
 COPY src/ src/
-RUN dotnet restore "src/Moongate.Server/Moongate.Server.csproj"
+RUN case "$TARGETARCH" in \
+          amd64) runtime="linux-x64" ;; \
+          arm64) runtime="linux-arm64" ;; \
+          *) echo "Unsupported Docker target architecture: $TARGETARCH" >&2; exit 1 ;; \
+        esac && \
+    dotnet restore "src/Moongate.Server/Moongate.Server.csproj" -r "$runtime"
 
-RUN dotnet publish "src/Moongate.Server/Moongate.Server.csproj" \
+RUN case "$TARGETARCH" in \
+          amd64) runtime="linux-x64" ;; \
+          arm64) runtime="linux-arm64" ;; \
+          *) echo "Unsupported Docker target architecture: $TARGETARCH" >&2; exit 1 ;; \
+        esac && \
+    dotnet publish "src/Moongate.Server/Moongate.Server.csproj" \
         -c "$BUILD_CONFIGURATION" \
+        -r "$runtime" \
+        --self-contained false \
         -o /app/publish \
         --no-restore \
-        /p:UseAppHost=false
+        /p:PublishSingleFile=true \
+        /p:EnableCompressionInSingleFile=true \
+        /p:DebugType=none \
+        /p:DebugSymbols=false \
+        /p:GenerateDocumentationFile=false
 
 # ---------------------------------------------------------------------------
 # Runtime stage
@@ -58,4 +75,4 @@ EXPOSE 8080
 EXPOSE 2593/tcp
 EXPOSE 12000/udp
 
-ENTRYPOINT ["dotnet", "Moongate.Server.dll"]
+ENTRYPOINT ["./Moongate.Server"]
