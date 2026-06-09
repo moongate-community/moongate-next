@@ -16,8 +16,8 @@ module.exports = {
     [
       "@semantic-release/exec",
       {
-        prepareCmd: "node scripts/release/update-version.mjs ${nextRelease.version} && bash scripts/release/build-artifacts.sh ${nextRelease.version} && bash scripts/release/pack-nuget.sh ${nextRelease.version}",
-        publishCmd: "bash scripts/release/publish-docker.sh ${nextRelease.version} && bash scripts/release/publish-nuget.sh ${nextRelease.version}"
+        prepareCmd: "node scripts/publishing/update-version.mjs ${nextRelease.version} && bash scripts/publishing/build-artifacts.sh ${nextRelease.version} && bash scripts/publishing/pack-nuget.sh ${nextRelease.version}",
+        publishCmd: "bash scripts/publishing/publish-docker.sh ${nextRelease.version} && bash scripts/publishing/publish-nuget.sh ${nextRelease.version}"
       }
     ],
     [
