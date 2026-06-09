@@ -1,9 +1,9 @@
 using System.Security.Claims;
 using Moongate.Core.Ids;
+using Moongate.Core.Types;
 using Moongate.Persistence.Data;
 using Moongate.Server.Data.Users;
 using Moongate.UO.Domain.Interfaces.Services;
-using Moongate.Core.Types;
 
 namespace Moongate.Server.Extensions.Endpoints;
 

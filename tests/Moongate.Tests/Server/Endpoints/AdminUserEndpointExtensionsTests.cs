@@ -1,13 +1,13 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Moongate.Core.Ids;
+using Moongate.Core.Types;
 using Moongate.Core.Utils;
 using Moongate.Persistence.Data;
 using Moongate.Server.Data.Users;
 using Moongate.Server.Extensions.Endpoints;
 using Moongate.UO.Domain.Entities;
 using Moongate.UO.Domain.Interfaces.Services;
-using Moongate.Core.Types;
 
 namespace Moongate.Tests.Server.Endpoints;
 

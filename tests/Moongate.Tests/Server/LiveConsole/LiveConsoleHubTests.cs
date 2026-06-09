@@ -17,14 +17,14 @@ public class LiveConsoleHubTests
 
         public event Action<LiveConsoleEntry>? EntryPublished;
 
+        public IReadOnlyList<LiveConsoleEntry> GetBacklog()
+            => Published.ToList();
+
         public void Publish(LiveConsoleEntry entry)
         {
             Published.Add(entry);
             EntryPublished?.Invoke(entry);
         }
-
-        public IReadOnlyList<LiveConsoleEntry> GetBacklog()
-            => Published.ToList();
     }
 
     private sealed class FakeCommandSystem : ICommandSystemService
@@ -40,6 +40,15 @@ public class LiveConsoleHubTests
 
         public CommandSourceType? LastSource { get; private set; }
 
+        public Task ExecuteCommandAsync(
+            string commandWithArgs,
+            CommandSourceType source = CommandSourceType.Console,
+            long? sessionId = null,
+            PlayerSession? playerSession = null,
+            CancellationToken cancellationToken = default
+        )
+            => throw new NotSupportedException();
+
         public Task<IReadOnlyList<string>> ExecuteCommandWithOutputAsync(
             string commandWithArgs,
             CommandSourceType source = CommandSourceType.Console,
@@ -54,15 +63,6 @@ public class LiveConsoleHubTests
             return Task.FromResult(_output);
         }
 
-        public Task ExecuteCommandAsync(
-            string commandWithArgs,
-            CommandSourceType source = CommandSourceType.Console,
-            long? sessionId = null,
-            PlayerSession? playerSession = null,
-            CancellationToken cancellationToken = default
-        )
-            => throw new NotSupportedException();
-
         public IReadOnlyList<string> GetAutocompleteSuggestions(string commandWithArgs)
             => throw new NotSupportedException();
 
@@ -74,6 +74,19 @@ public class LiveConsoleHubTests
 
         public Task StopAsync(CancellationToken cancellationToken)
             => Task.CompletedTask;
+    }
+
+    [Fact]
+    public async Task ExecuteCommand_BlankInput_PublishesNothing()
+    {
+        var broadcaster = new RecordingBroadcaster();
+        var commands = new FakeCommandSystem(Array.Empty<string>());
+        var hub = new LiveConsoleHub(broadcaster, commands);
+
+        await hub.ExecuteCommand("   ");
+
+        Assert.Empty(broadcaster.Published);
+        Assert.Null(commands.LastCommand);
     }
 
     [Fact]
@@ -94,18 +107,5 @@ public class LiveConsoleHubTests
         Assert.Equal("admin (Administrator)", broadcaster.Published[1].Message);
         Assert.Equal(LiveConsoleEntryKind.CommandOutput, broadcaster.Published[2].Kind);
         Assert.Equal("bob (Player)", broadcaster.Published[2].Message);
-    }
-
-    [Fact]
-    public async Task ExecuteCommand_BlankInput_PublishesNothing()
-    {
-        var broadcaster = new RecordingBroadcaster();
-        var commands = new FakeCommandSystem(Array.Empty<string>());
-        var hub = new LiveConsoleHub(broadcaster, commands);
-
-        await hub.ExecuteCommand("   ");
-
-        Assert.Empty(broadcaster.Published);
-        Assert.Null(commands.LastCommand);
     }
 }

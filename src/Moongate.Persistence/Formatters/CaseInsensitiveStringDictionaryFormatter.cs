@@ -11,26 +11,6 @@ namespace Moongate.Persistence.Formatters;
 /// </summary>
 public sealed class CaseInsensitiveStringDictionaryFormatter<TValue> : IMessagePackFormatter<Dictionary<string, TValue>?>
 {
-    public void Serialize(ref MessagePackWriter writer, Dictionary<string, TValue>? value, MessagePackSerializerOptions options)
-    {
-        if (value is null)
-        {
-            writer.WriteNil();
-
-            return;
-        }
-
-        var valueFormatter = options.Resolver.GetFormatterWithVerify<TValue>();
-
-        writer.WriteMapHeader(value.Count);
-
-        foreach (var pair in value)
-        {
-            writer.Write(pair.Key);
-            valueFormatter.Serialize(ref writer, pair.Value, options);
-        }
-    }
-
     public Dictionary<string, TValue>? Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
     {
         if (reader.TryReadNil())
@@ -58,5 +38,29 @@ public sealed class CaseInsensitiveStringDictionaryFormatter<TValue> : IMessageP
         }
 
         return result;
+    }
+
+    public void Serialize(
+        ref MessagePackWriter writer,
+        Dictionary<string, TValue>? value,
+        MessagePackSerializerOptions options
+    )
+    {
+        if (value is null)
+        {
+            writer.WriteNil();
+
+            return;
+        }
+
+        var valueFormatter = options.Resolver.GetFormatterWithVerify<TValue>();
+
+        writer.WriteMapHeader(value.Count);
+
+        foreach (var pair in value)
+        {
+            writer.Write(pair.Key);
+            valueFormatter.Serialize(ref writer, pair.Value, options);
+        }
     }
 }

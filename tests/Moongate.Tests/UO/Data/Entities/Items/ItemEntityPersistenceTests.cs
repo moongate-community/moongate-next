@@ -2,7 +2,6 @@ using Moongate.Abstractions.Data.Persistence;
 using Moongate.Core.Ids;
 using Moongate.Persistence.Data;
 using Moongate.Persistence.Services.Persistence;
-using Moongate.UO.Data.Data;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Types;
 using Moongate.UO.Data.Types.Items;
@@ -57,17 +56,17 @@ public sealed class ItemEntityPersistenceTests : IDisposable
                 ParentContainerId = backpackId
             };
 
-            child.CustomProperties["index"] = new CustomProperty
+            child.CustomProperties["index"] = new()
             {
                 Type = CustomPropertyType.Integer,
                 IntegerValue = i
             };
-            child.CustomProperties["name"] = new CustomProperty
+            child.CustomProperties["name"] = new()
             {
                 Type = CustomPropertyType.String,
                 StringValue = $"arrow-{i}"
             };
-            child.CustomProperties["blessed"] = new CustomProperty
+            child.CustomProperties["blessed"] = new()
             {
                 Type = CustomPropertyType.Boolean,
                 BooleanValue = i % 2 == 0
@@ -142,6 +141,6 @@ public sealed class ItemEntityPersistenceTests : IDisposable
             new(new PersistenceEntityDescriptor<ItemEntity, Serial>(ItemEntityTypeId, "ItemEntity", 1, item => item.Id))
         };
 
-        return new PersistenceService(_dir, config, registrations);
+        return new(_dir, config, registrations);
     }
 }

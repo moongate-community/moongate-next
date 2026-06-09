@@ -1,13 +1,13 @@
 using System.Net.Mail;
 using Moongate.Abstractions.Interfaces.Services;
 using Moongate.Core.Ids;
+using Moongate.Core.Types;
 using Moongate.Core.Utils;
 using Moongate.Persistence.Access;
 using Moongate.Persistence.Interfaces.Persistence;
 using Moongate.UO.Domain.Entities;
 using Moongate.UO.Domain.Events;
 using Moongate.UO.Domain.Interfaces.Services;
-using Moongate.Core.Types;
 
 namespace Moongate.Server.Services.Users;
 

@@ -17,13 +17,41 @@ public class MessagePackSnapshotServiceTests : IDisposable
         GC.SuppressFinalize(this);
     }
 
-    private MessagePackSnapshotService NewService()
-        => new(_dir, ".snapshot.bin");
+    [Fact]
+    public async Task LoadBucket_CorruptedFile_ReturnsNull()
+    {
+        var service = NewService();
+        var bucket = new EntitySnapshotBucket
+            { TypeId = 1, TypeName = "TestPlayer", SchemaVersion = 1, Payload = [10, 20, 30] };
+        await service.SaveBucketAsync(bucket, 1);
+
+        // Truncate the file so it can no longer be deserialized.
+        var path = Path.Combine(_dir, "test_player.snapshot.bin");
+        var bytes = await File.ReadAllBytesAsync(path);
+        await File.WriteAllBytesAsync(path, bytes[..(bytes.Length / 2)]);
+
+        Assert.Null(await service.LoadBucketAsync("TestPlayer"));
+    }
 
     [Fact]
     public async Task LoadBucket_MissingFile_ReturnsNull()
+        => Assert.Null(await NewService().LoadBucketAsync("TestPlayer"));
+
+    [Fact]
+    public async Task LoadBucket_UnsafeTypeName_Throws()
     {
-        Assert.Null(await NewService().LoadBucketAsync("TestPlayer"));
+        var service = NewService();
+
+        await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.LoadBucketAsync("../evil"));
+    }
+
+    [Theory, InlineData("../evil"), InlineData("a/b")]
+    public async Task SaveBucket_UnsafeTypeName_Throws(string typeName)
+    {
+        var service = NewService();
+        var bucket = new EntitySnapshotBucket { TypeId = 1, TypeName = typeName, SchemaVersion = 1, Payload = [1] };
+
+        await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.SaveBucketAsync(bucket, 1));
     }
 
     [Fact]
@@ -42,7 +70,8 @@ public class MessagePackSnapshotServiceTests : IDisposable
     public async Task SaveThenLoad_RoundTripsBucketAndSequence()
     {
         var service = NewService();
-        var bucket = new EntitySnapshotBucket { TypeId = 1, TypeName = "TestPlayer", SchemaVersion = 1, Payload = [1, 2, 3] };
+        var bucket =
+            new EntitySnapshotBucket { TypeId = 1, TypeName = "TestPlayer", SchemaVersion = 1, Payload = [1, 2, 3] };
 
         await service.SaveBucketAsync(bucket, 9);
         var loaded = await service.LoadBucketAsync("TestPlayer");
@@ -53,37 +82,6 @@ public class MessagePackSnapshotServiceTests : IDisposable
         Assert.Equal(new byte[] { 1, 2, 3 }, loaded.Bucket.Payload);
     }
 
-    [Fact]
-    public async Task LoadBucket_CorruptedFile_ReturnsNull()
-    {
-        var service = NewService();
-        var bucket = new EntitySnapshotBucket { TypeId = 1, TypeName = "TestPlayer", SchemaVersion = 1, Payload = [10, 20, 30] };
-        await service.SaveBucketAsync(bucket, 1);
-
-        // Truncate the file so it can no longer be deserialized.
-        var path = Path.Combine(_dir, "test_player.snapshot.bin");
-        var bytes = await File.ReadAllBytesAsync(path);
-        await File.WriteAllBytesAsync(path, bytes[..(bytes.Length / 2)]);
-
-        Assert.Null(await service.LoadBucketAsync("TestPlayer"));
-    }
-
-    [Theory]
-    [InlineData("../evil")]
-    [InlineData("a/b")]
-    public async Task SaveBucket_UnsafeTypeName_Throws(string typeName)
-    {
-        var service = NewService();
-        var bucket = new EntitySnapshotBucket { TypeId = 1, TypeName = typeName, SchemaVersion = 1, Payload = [1] };
-
-        await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.SaveBucketAsync(bucket, 1));
-    }
-
-    [Fact]
-    public async Task LoadBucket_UnsafeTypeName_Throws()
-    {
-        var service = NewService();
-
-        await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.LoadBucketAsync("../evil"));
-    }
+    private MessagePackSnapshotService NewService()
+        => new(_dir, ".snapshot.bin");
 }

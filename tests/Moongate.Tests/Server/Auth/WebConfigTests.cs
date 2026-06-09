@@ -21,6 +21,16 @@ public sealed class WebConfigTests : IDisposable
         Assert.True(config.Jwt.IsUsingDevelopmentSigningKey);
     }
 
+    public void Dispose()
+    {
+        if (Directory.Exists(_dir))
+        {
+            Directory.Delete(_dir, true);
+        }
+
+        GC.SuppressFinalize(this);
+    }
+
     [Fact]
     public void Load_WebSection_BindsBaseUrl()
     {
@@ -37,16 +47,6 @@ public sealed class WebConfigTests : IDisposable
         var config = Assert.IsType<WebConfig>(Assert.Single(results).Instance);
 
         Assert.Equal("https://play.moongate.io", config.BaseUrl);
-    }
-
-    public void Dispose()
-    {
-        if (Directory.Exists(_dir))
-        {
-            Directory.Delete(_dir, true);
-        }
-
-        GC.SuppressFinalize(this);
     }
 
     [Fact]

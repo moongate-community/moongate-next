@@ -18,11 +18,24 @@ public interface IMobileService
     /// <summary>Persists a mobile, allocating a serial when one is not already set.</summary>
     ValueTask<MobileEntity> CreateAsync(MobileEntity mobile, CancellationToken cancellationToken = default);
 
-    /// <summary>Gets a mobile by serial, or null when absent.</summary>
-    ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default);
-
     /// <summary>Permanently removes a mobile; returns false when absent.</summary>
     ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Equips an item on the mobile at the given layer and persists the affected entities,
+    /// first detaching the item from any previous owner (another mobile's layer or a
+    /// container) so no dangling reference is left behind. Returns true (idempotent) when the
+    /// same item already occupies the layer, and false when a different item occupies it.
+    /// </summary>
+    ValueTask<bool> EquipAsync(
+        MobileEntity mobile,
+        ItemEntity item,
+        ItemLayerType layer,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>Gets a mobile by serial, or null when absent.</summary>
+    ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Returns the mobile's skill entry, or a fresh default entry when not yet trained.
@@ -36,19 +49,6 @@ public interface IMobileService
         MobileEntity mobile,
         UOSkillName skill,
         double value,
-        CancellationToken cancellationToken = default
-    );
-
-    /// <summary>
-    /// Equips an item on the mobile at the given layer and persists the affected entities,
-    /// first detaching the item from any previous owner (another mobile's layer or a
-    /// container) so no dangling reference is left behind. Returns true (idempotent) when the
-    /// same item already occupies the layer, and false when a different item occupies it.
-    /// </summary>
-    ValueTask<bool> EquipAsync(
-        MobileEntity mobile,
-        ItemEntity item,
-        ItemLayerType layer,
         CancellationToken cancellationToken = default
     );
 

@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Hosting;
 using Moongate.Server.Data.LiveConsole;
 using Moongate.Server.Hubs;
 using Moongate.Server.Interfaces.LiveConsole;

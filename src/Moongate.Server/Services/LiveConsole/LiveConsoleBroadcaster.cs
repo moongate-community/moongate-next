@@ -22,6 +22,14 @@ public sealed class LiveConsoleBroadcaster : ILiveConsoleBroadcaster
 
     public event Action<LiveConsoleEntry>? EntryPublished;
 
+    public IReadOnlyList<LiveConsoleEntry> GetBacklog()
+    {
+        lock (_lock)
+        {
+            return _backlog.ToArray();
+        }
+    }
+
     public void Publish(LiveConsoleEntry entry)
     {
         ArgumentNullException.ThrowIfNull(entry);
@@ -45,14 +53,6 @@ public sealed class LiveConsoleBroadcaster : ILiveConsoleBroadcaster
         {
             // A faulty subscriber must not break the logging / command path.
             _logger.Error(ex, "Live console subscriber threw while handling a published entry");
-        }
-    }
-
-    public IReadOnlyList<LiveConsoleEntry> GetBacklog()
-    {
-        lock (_lock)
-        {
-            return _backlog.ToArray();
         }
     }
 }

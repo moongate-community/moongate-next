@@ -1,11 +1,10 @@
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using Moongate.Server.Hubs;
 using Microsoft.IdentityModel.Tokens;
 using Moongate.Server.Data.Config;
+using Moongate.Server.Hubs;
 using Serilog;
 using ILogger = Serilog.ILogger;
 
@@ -55,19 +54,22 @@ public sealed class JwtBearerOptionsConfigurator : IConfigureNamedOptions<JwtBea
             RoleClaimType = ClaimTypes.Role
         };
 
-        options.Events = new JwtBearerEvents
+        options.Events = new()
         {
             OnMessageReceived = context =>
-            {
-                var token = ResolveWebSocketToken(context.HttpContext.Request.Query, context.HttpContext.Request.Path);
+                                {
+                                    var token = ResolveWebSocketToken(
+                                        context.HttpContext.Request.Query,
+                                        context.HttpContext.Request.Path
+                                    );
 
-                if (token is not null)
-                {
-                    context.Token = token;
-                }
+                                    if (token is not null)
+                                    {
+                                        context.Token = token;
+                                    }
 
-                return Task.CompletedTask;
-            }
+                                    return Task.CompletedTask;
+                                }
         };
     }
 

@@ -51,9 +51,9 @@ public static class MoongateBootstrap
 
         container.RegisterBootstrapContext(context);
         container.AddObservability();
-        container.AddDomainServices();              // registers persisted entities before persistence
-        container.AddDataPersistence(context);      // persistence, then bundled assets + UO/world data
-        container.AddNetworkAndScripting(context);  // plugins must run before config
+        container.AddDomainServices();                 // registers persisted entities before persistence
+        container.AddDataPersistence(context);         // persistence, then bundled assets + UO/world data
+        container.AddNetworkAndScripting(context);     // plugins must run before config
         container.LoadConfigurationAndLogger(context); // config last, then the real logger
     }
 

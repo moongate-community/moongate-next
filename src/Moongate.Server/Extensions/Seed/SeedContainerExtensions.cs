@@ -1,11 +1,11 @@
 using DryIoc;
 using Moongate.Abstractions.Data.Seed;
 using Moongate.Abstractions.Extensions.DryIoc;
+using Moongate.Core.Types;
 using Moongate.Server.Data.Events;
 using Moongate.Server.Interfaces.Seed;
 using Moongate.Server.Services.Seed;
 using Moongate.UO.Domain.Interfaces.Services;
-using Moongate.Core.Types;
 using Serilog;
 
 namespace Moongate.Server.Extensions.Seed;

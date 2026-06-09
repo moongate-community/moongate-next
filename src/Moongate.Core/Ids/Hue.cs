@@ -50,28 +50,20 @@ public readonly struct Hue
         => Value.GetHashCode();
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public int ToInt32()
-        => Value;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator ==(Hue left, Hue right)
         => left.Value == right.Value;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator !=(Hue left, Hue right)
-        => left.Value != right.Value;
+    public static explicit operator Hue(int value)
+        => new((ushort)value);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator <(Hue left, Hue right)
-        => left.Value < right.Value;
+    public static explicit operator int(Hue value)
+        => value.Value;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator >(Hue left, Hue right)
         => left.Value > right.Value;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool operator <=(Hue left, Hue right)
-        => left.Value <= right.Value;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator >=(Hue left, Hue right)
@@ -86,12 +78,16 @@ public readonly struct Hue
         => value.Value;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator Hue(int value)
-        => new((ushort)value);
+    public static bool operator !=(Hue left, Hue right)
+        => left.Value != right.Value;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator int(Hue value)
-        => value.Value;
+    public static bool operator <(Hue left, Hue right)
+        => left.Value < right.Value;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool operator <=(Hue left, Hue right)
+        => left.Value <= right.Value;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Hue Parse(string s)
@@ -110,6 +106,10 @@ public readonly struct Hue
 
         throw new FormatException("Input string was not in a correct hue format.");
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public int ToInt32()
+        => Value;
 
     public override string ToString()
     {

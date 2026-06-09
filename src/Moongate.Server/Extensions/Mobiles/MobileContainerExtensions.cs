@@ -20,7 +20,11 @@ public static class MobileContainerExtensions
     /// </summary>
     public static IContainer AddMoongateMobiles(this IContainer container)
     {
-        container.RegisterPersistenceEntity<MobileEntity, Serial>(MobileEntityTypeId, MobileEntitySchemaVersion, mobile => mobile.Id);
+        container.RegisterPersistenceEntity<MobileEntity, Serial>(
+            MobileEntityTypeId,
+            MobileEntitySchemaVersion,
+            mobile => mobile.Id
+        );
         container.Register<IMobileService, MobileService>(Reuse.Singleton);
 
         return container;

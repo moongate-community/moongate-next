@@ -21,29 +21,6 @@ public sealed class PerTypeSnapshotTests : IDisposable
     }
 
     [Fact]
-    public async Task SaveSnapshot_WritesOneFilePerType_AndReloads()
-    {
-        var first = NewService();
-        await first.StartAsync(CancellationToken.None);
-        await first.GetDataAccess<TestPlayer, Serial>().UpsertAsync(new() { Id = new(1), Name = "Bob" });
-        await first.GetDataAccess<TestItem, Serial>().UpsertAsync(new() { Id = new(Serial.ItemOffset + 1), Label = "Sword" });
-        await first.SaveSnapshotAsync();
-        await first.StopAsync(CancellationToken.None);
-
-        // One file per registered type — no single mega file.
-        Assert.True(File.Exists(Path.Combine(_dir, "test_player.snapshot.bin")));
-        Assert.True(File.Exists(Path.Combine(_dir, "test_item.snapshot.bin")));
-        Assert.False(File.Exists(Path.Combine(_dir, "world.snapshot.bin")));
-
-        var second = NewService();
-        await second.StartAsync(CancellationToken.None);
-
-        Assert.Equal("Bob", (await second.GetDataAccess<TestPlayer, Serial>().GetByIdAsync(new(1)))!.Name);
-        Assert.Equal("Sword", (await second.GetDataAccess<TestItem, Serial>().GetByIdAsync(new(Serial.ItemOffset + 1)))!.Label);
-        await second.StopAsync(CancellationToken.None);
-    }
-
-    [Fact]
     public async Task OrphanSnapshotFile_ForUnregisteredType_IsIgnored()
     {
         var first = NewService();
@@ -85,6 +62,33 @@ public sealed class PerTypeSnapshotTests : IDisposable
         await second.StopAsync(CancellationToken.None);
     }
 
+    [Fact]
+    public async Task SaveSnapshot_WritesOneFilePerType_AndReloads()
+    {
+        var first = NewService();
+        await first.StartAsync(CancellationToken.None);
+        await first.GetDataAccess<TestPlayer, Serial>().UpsertAsync(new() { Id = new(1), Name = "Bob" });
+        await first.GetDataAccess<TestItem, Serial>()
+                   .UpsertAsync(new() { Id = new(Serial.ItemOffset + 1), Label = "Sword" });
+        await first.SaveSnapshotAsync();
+        await first.StopAsync(CancellationToken.None);
+
+        // One file per registered type — no single mega file.
+        Assert.True(File.Exists(Path.Combine(_dir, "test_player.snapshot.bin")));
+        Assert.True(File.Exists(Path.Combine(_dir, "test_item.snapshot.bin")));
+        Assert.False(File.Exists(Path.Combine(_dir, "world.snapshot.bin")));
+
+        var second = NewService();
+        await second.StartAsync(CancellationToken.None);
+
+        Assert.Equal("Bob", (await second.GetDataAccess<TestPlayer, Serial>().GetByIdAsync(new(1)))!.Name);
+        Assert.Equal(
+            "Sword",
+            (await second.GetDataAccess<TestItem, Serial>().GetByIdAsync(new(Serial.ItemOffset + 1)))!.Label
+        );
+        await second.StopAsync(CancellationToken.None);
+    }
+
     private PersistenceService NewService()
     {
         Directory.CreateDirectory(_dir);
@@ -96,6 +100,6 @@ public sealed class PerTypeSnapshotTests : IDisposable
             new(new PersistenceEntityDescriptor<TestItem, Serial>(2, "TestItem", 1, i => i.Id))
         };
 
-        return new PersistenceService(_dir, config, registrations);
+        return new(_dir, config, registrations);
     }
 }

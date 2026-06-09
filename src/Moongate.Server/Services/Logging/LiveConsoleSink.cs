@@ -1,4 +1,3 @@
-using Moongate.Server.Data.LiveConsole;
 using Moongate.Server.Interfaces.LiveConsole;
 using Moongate.Server.Types.LiveConsole;
 using Serilog.Core;
@@ -29,7 +28,7 @@ public sealed class LiveConsoleSink : ILogEventSink
         }
 
         _broadcaster.Publish(
-            new LiveConsoleEntry
+            new()
             {
                 Kind = LiveConsoleEntryKind.Log,
                 Level = logEvent.Level.ToString(),
@@ -41,13 +40,13 @@ public sealed class LiveConsoleSink : ILogEventSink
 
     private static bool IsSignalRNoise(LogEvent logEvent)
     {
-        if (!logEvent.Properties.TryGetValue("SourceContext", out var value)
-            || value is not ScalarValue { Value: string source })
+        if (!logEvent.Properties.TryGetValue("SourceContext", out var value) ||
+            value is not ScalarValue { Value: string source })
         {
             return false;
         }
 
-        return source.StartsWith("Microsoft.AspNetCore.SignalR", StringComparison.Ordinal)
-               || source.StartsWith("Microsoft.AspNetCore.Http.Connections", StringComparison.Ordinal);
+        return source.StartsWith("Microsoft.AspNetCore.SignalR", StringComparison.Ordinal) ||
+               source.StartsWith("Microsoft.AspNetCore.Http.Connections", StringComparison.Ordinal);
     }
 }

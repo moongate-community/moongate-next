@@ -23,75 +23,6 @@ public sealed class ItemService : IItemService
         _tileData = tileData;
     }
 
-    public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
-        => _items.CountAsync(cancellationToken);
-
-    public async ValueTask<ItemEntity> CreateAsync(ItemEntity item, CancellationToken cancellationToken = default)
-    {
-        ArgumentNullException.ThrowIfNull(item);
-
-        if (!item.Id.IsValid)
-        {
-            // Items live in the serial range >= ItemOffset (mobiles take the lower range).
-            // The shared auto-increment counter starts at 1, so lift the first allocations
-            // into the item range; once item serials are persisted the counter self-corrects.
-            var allocated = await _items.NextIdAsync(cancellationToken);
-
-            item.Id = allocated.Value < Serial.ItemOffset
-                          ? new Serial(allocated.Value + Serial.ItemOffset)
-                          : allocated;
-        }
-
-        await _items.UpsertAsync(item, cancellationToken);
-
-        return item;
-    }
-
-    public ValueTask<ItemEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
-        => _items.GetByIdAsync(id, cancellationToken);
-
-    public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
-        => _items.RemoveAsync(id, cancellationToken);
-
-    public bool IsContainer(ItemEntity item)
-    {
-        ArgumentNullException.ThrowIfNull(item);
-
-        return IsContainer(item.ItemId);
-    }
-
-    public bool IsContainer(int itemId)
-        => _tileData.GetItem(itemId).Flags.HasFlag(UoTileFlag.Container);
-
-    public bool IsDoor(ItemEntity item)
-    {
-        ArgumentNullException.ThrowIfNull(item);
-
-        return IsDoor(item.ItemId);
-    }
-
-    public bool IsDoor(int itemId)
-        => _tileData.GetItem(itemId).Door;
-
-    public async ValueTask<int> TotalWeightAsync(ItemEntity item, CancellationToken cancellationToken = default)
-    {
-        ArgumentNullException.ThrowIfNull(item);
-
-        var total = item.Weight * Math.Max(1, item.Amount);
-
-        foreach (var childId in item.ContainedItemIds)
-        {
-            var child = await _items.GetByIdAsync(childId, cancellationToken);
-
-            if (child is not null)
-            {
-                total += await TotalWeightAsync(child, cancellationToken);
-            }
-        }
-
-        return total;
-    }
-
     public async ValueTask<bool> AddItemAsync(
         ItemEntity container,
         ItemEntity child,
@@ -123,6 +54,56 @@ public sealed class ItemService : IItemService
         return true;
     }
 
+    public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
+        => _items.CountAsync(cancellationToken);
+
+    public async ValueTask<ItemEntity> CreateAsync(ItemEntity item, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+
+        if (!item.Id.IsValid)
+        {
+            // Items live in the serial range >= ItemOffset (mobiles take the lower range).
+            // The shared auto-increment counter starts at 1, so lift the first allocations
+            // into the item range; once item serials are persisted the counter self-corrects.
+            var allocated = await _items.NextIdAsync(cancellationToken);
+
+            item.Id = allocated.Value < Serial.ItemOffset
+                          ? new(allocated.Value + Serial.ItemOffset)
+                          : allocated;
+        }
+
+        await _items.UpsertAsync(item, cancellationToken);
+
+        return item;
+    }
+
+    public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
+        => _items.RemoveAsync(id, cancellationToken);
+
+    public ValueTask<ItemEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
+        => _items.GetByIdAsync(id, cancellationToken);
+
+    public bool IsContainer(ItemEntity item)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+
+        return IsContainer(item.ItemId);
+    }
+
+    public bool IsContainer(int itemId)
+        => _tileData.GetItem(itemId).Flags.HasFlag(UoTileFlag.Container);
+
+    public bool IsDoor(ItemEntity item)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+
+        return IsDoor(item.ItemId);
+    }
+
+    public bool IsDoor(int itemId)
+        => _tileData.GetItem(itemId).Door;
+
     public async ValueTask<bool> RemoveItemAsync(
         ItemEntity container,
         Serial itemId,
@@ -149,5 +130,24 @@ public sealed class ItemService : IItemService
         }
 
         return true;
+    }
+
+    public async ValueTask<int> TotalWeightAsync(ItemEntity item, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+
+        var total = item.Weight * Math.Max(1, item.Amount);
+
+        foreach (var childId in item.ContainedItemIds)
+        {
+            var child = await _items.GetByIdAsync(childId, cancellationToken);
+
+            if (child is not null)
+            {
+                total += await TotalWeightAsync(child, cancellationToken);
+            }
+        }
+
+        return total;
     }
 }

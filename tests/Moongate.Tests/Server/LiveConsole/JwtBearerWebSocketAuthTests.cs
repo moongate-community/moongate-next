@@ -6,29 +6,15 @@ namespace Moongate.Tests.Server.LiveConsole;
 
 public class JwtBearerWebSocketAuthTests
 {
-    private static IQueryCollection Query(params (string Key, string Value)[] pairs)
-        => new QueryCollection(pairs.ToDictionary(p => p.Key, p => new StringValues(p.Value)));
-
     [Fact]
     public void ResolveWebSocketToken_HubPathWithToken_ReturnsToken()
     {
         var token = JwtBearerOptionsConfigurator.ResolveWebSocketToken(
             Query(("access_token", "abc.def.ghi")),
-            new PathString("/hubs/console")
+            new("/hubs/console")
         );
 
         Assert.Equal("abc.def.ghi", token);
-    }
-
-    [Fact]
-    public void ResolveWebSocketToken_OtherPath_ReturnsNull()
-    {
-        var token = JwtBearerOptionsConfigurator.ResolveWebSocketToken(
-            Query(("access_token", "abc.def.ghi")),
-            new PathString("/api/auth/me")
-        );
-
-        Assert.Null(token);
     }
 
     [Fact]
@@ -36,7 +22,18 @@ public class JwtBearerWebSocketAuthTests
     {
         var token = JwtBearerOptionsConfigurator.ResolveWebSocketToken(
             Query(),
-            new PathString("/hubs/console")
+            new("/hubs/console")
+        );
+
+        Assert.Null(token);
+    }
+
+    [Fact]
+    public void ResolveWebSocketToken_OtherPath_ReturnsNull()
+    {
+        var token = JwtBearerOptionsConfigurator.ResolveWebSocketToken(
+            Query(("access_token", "abc.def.ghi")),
+            new("/api/auth/me")
         );
 
         Assert.Null(token);
@@ -47,9 +44,12 @@ public class JwtBearerWebSocketAuthTests
     {
         var token = JwtBearerOptionsConfigurator.ResolveWebSocketToken(
             Query(("access_token", "abc.def.ghi")),
-            new PathString("/hubs/consolexyz")
+            new("/hubs/consolexyz")
         );
 
         Assert.Null(token);
     }
+
+    private static IQueryCollection Query(params (string Key, string Value)[] pairs)
+        => new QueryCollection(pairs.ToDictionary(p => p.Key, p => new StringValues(p.Value)));
 }

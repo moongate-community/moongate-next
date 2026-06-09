@@ -3,13 +3,13 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Moongate.Abstractions.Interfaces.Services;
-using Moongate.Server.Hubs;
-using Moongate.Server.Services.LiveConsole;
 using Moongate.Abstractions.Internal;
 using Moongate.Server.Data.Events;
 using Moongate.Server.Extensions.Endpoints;
 using Moongate.Server.Extensions.Metrics;
+using Moongate.Server.Hubs;
 using Moongate.Server.Services.Auth;
+using Moongate.Server.Services.LiveConsole;
 using Serilog;
 
 namespace Moongate.Server.Bootstrap;
@@ -64,29 +64,6 @@ internal static class WebHostExtensions
         return builder;
     }
 
-    /// <summary>Publishes <see cref="ServerStartedEvent" /> and logs readiness when the host starts.</summary>
-    public static WebApplication UseServerReadyHook(this WebApplication app, long startTime)
-    {
-        var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
-        lifetime.ApplicationStarted.Register(
-            () =>
-            {
-                var elapsed = Stopwatch.GetElapsedTime(startTime);
-
-                Log.Information(
-                    "Moongate server ready in {Elapsed} ({ElapsedMilliseconds:F0} ms)",
-                    elapsed,
-                    elapsed.TotalMilliseconds
-                );
-
-                var bus = app.Services.GetRequiredService<IEventBusService>();
-                bus.Publish(new ServerStartedEvent(DateTimeOffset.UtcNow));
-            }
-        );
-
-        return app;
-    }
-
     /// <summary>Wires the HTTP middleware and maps all Moongate endpoints.</summary>
     public static WebApplication MapMoongateHttpPipeline(this WebApplication app)
     {
@@ -110,6 +87,29 @@ internal static class WebHostExtensions
         app.MapMoongateItemImages();
         app.MapHub<LiveConsoleHub>(LiveConsoleHub.Route);
         app.MapFallbackToFile("index.html");
+
+        return app;
+    }
+
+    /// <summary>Publishes <see cref="ServerStartedEvent" /> and logs readiness when the host starts.</summary>
+    public static WebApplication UseServerReadyHook(this WebApplication app, long startTime)
+    {
+        var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
+        lifetime.ApplicationStarted.Register(
+            () =>
+            {
+                var elapsed = Stopwatch.GetElapsedTime(startTime);
+
+                Log.Information(
+                    "Moongate server ready in {Elapsed} ({ElapsedMilliseconds:F0} ms)",
+                    elapsed,
+                    elapsed.TotalMilliseconds
+                );
+
+                var bus = app.Services.GetRequiredService<IEventBusService>();
+                bus.Publish(new ServerStartedEvent(DateTimeOffset.UtcNow));
+            }
+        );
 
         return app;
     }

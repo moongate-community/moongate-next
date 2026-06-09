@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using Moongate.Core.Ids;
+using Moongate.Core.Types;
 using Moongate.Core.Utils;
 using Moongate.Persistence.Data;
 using Moongate.Persistence.Interfaces.Persistence;
@@ -7,7 +8,6 @@ using Moongate.Server.Data.Auth;
 using Moongate.Server.Services.Auth;
 using Moongate.UO.Domain.Entities;
 using Moongate.UO.Domain.Interfaces.Services;
-using Moongate.Core.Types;
 
 namespace Moongate.Tests.Server.Auth;
 

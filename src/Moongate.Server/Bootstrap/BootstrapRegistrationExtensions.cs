@@ -1,7 +1,6 @@
 using DryIoc;
 using Moongate.Abstractions.Data.Logging;
 using Moongate.Abstractions.Extensions.DryIoc;
-using Moongate.Core.Data.Directories;
 using Moongate.Core.Types;
 using Moongate.Server.Data;
 using Moongate.Server.Data.Events;
@@ -41,16 +40,61 @@ namespace Moongate.Server.Bootstrap;
 /// </summary>
 internal static class BootstrapRegistrationExtensions
 {
-    /// <summary>Registers the boot context instances (directories + packet registry).</summary>
-    public static IContainer RegisterBootstrapContext(this IContainer container, MoongateBootstrapContext context)
+    /// <summary>Persistence, then bundled-asset seeding, then the UO client-file and world stores.</summary>
+    public static IContainer AddDataPersistence(this IContainer container, MoongateBootstrapContext context)
     {
-        container.RegisterInstance(context.Directories, IfAlreadyRegistered.Keep);
-        container.RegisterInstance(context.PacketRegistry);
+        var directories = context.Directories;
+
+        // Persistence (priority 15): snapshot + journal.
+        container.AddMoongatePersistence(directories[DirectoryType.Save]);
+
+        // Seed bundled YAML assets from embedded resources, then register client-file + UO stores.
+        var dataDirectory = directories[DirectoryType.Data];
+        BundledDataAssetsBootstrapper.EnsureDataAssets(dataDirectory, Log.Logger);
+        container.AddMoongateUoData(Path.Combine(dataDirectory, "uo_files"));
+        container.AddMoongateWorldData(dataDirectory);
 
         return container;
     }
 
-    /// <summary>Logging (incl. the live-console broadcaster + relay), event bus + game loop, seeds, timer wheel and metrics providers.</summary>
+    /// <summary>UO domain services: they register persisted entities before persistence starts.</summary>
+    public static IContainer AddDomainServices(this IContainer container)
+    {
+        container.AddMoongateUsers();
+        container.AddMoongateItems();
+        container.AddMoongateMobiles();
+        RaceLoader.RegisterDefaultRaces();
+        container.AddDefaultAdminUserSeed();
+        container.AddMoongateAuth();
+
+        return container;
+    }
+
+    /// <summary>Network, packet handlers and commands, Lua scripting, then plugins.</summary>
+    public static IContainer AddNetworkAndScripting(this IContainer container, MoongateBootstrapContext context)
+    {
+        var directories = context.Directories;
+
+        // Network: TCP game listeners + UDP ping server + packet parser (priority 20).
+        container.AddMoongateNetwork();
+        container.AddMoongatePacketHandlers();
+        container.AddMoongateCommands();
+        container.AddMetricProvider<NetworkService>();
+
+        // Lua scripting engine (priority 30).
+        container.AddMoongateLuaScripting(directories);
+
+        // Plugins can declare config sections, services, Lua modules, persistence entities, and handlers.
+        // This must run before AddMoongateConfig so plugin config sections are bound at boot.
+        container.AddMoongatePlugins(directories);
+
+        return container;
+    }
+
+    /// <summary>
+    /// Logging (incl. the live-console broadcaster + relay), event bus + game loop, seeds, timer wheel and metrics
+    /// providers.
+    /// </summary>
     public static IContainer AddObservability(this IContainer container)
     {
         // Logger config is loaded with the rest of the YAML sections, then applied immediately.
@@ -77,57 +121,6 @@ internal static class BootstrapRegistrationExtensions
         return container;
     }
 
-    /// <summary>UO domain services: they register persisted entities before persistence starts.</summary>
-    public static IContainer AddDomainServices(this IContainer container)
-    {
-        container.AddMoongateUsers();
-        container.AddMoongateItems();
-        container.AddMoongateMobiles();
-        RaceLoader.RegisterDefaultRaces();
-        container.AddDefaultAdminUserSeed();
-        container.AddMoongateAuth();
-
-        return container;
-    }
-
-    /// <summary>Persistence, then bundled-asset seeding, then the UO client-file and world stores.</summary>
-    public static IContainer AddDataPersistence(this IContainer container, MoongateBootstrapContext context)
-    {
-        var directories = context.Directories;
-
-        // Persistence (priority 15): snapshot + journal.
-        container.AddMoongatePersistence(directories[DirectoryType.Save]);
-
-        // Seed bundled YAML assets from embedded resources, then register client-file + UO stores.
-        var dataDirectory = directories[DirectoryType.Data];
-        BundledDataAssetsBootstrapper.EnsureDataAssets(dataDirectory, Log.Logger);
-        container.AddMoongateUoData(Path.Combine(dataDirectory, "uo_files"));
-        container.AddMoongateWorldData(dataDirectory);
-
-        return container;
-    }
-
-    /// <summary>Network, packet handlers and commands, Lua scripting, then plugins.</summary>
-    public static IContainer AddNetworkAndScripting(this IContainer container, MoongateBootstrapContext context)
-    {
-        var directories = context.Directories;
-
-        // Network: TCP game listeners + UDP ping server + packet parser (priority 20).
-        container.AddMoongateNetwork();
-        container.AddMoongatePacketHandlers();
-        container.AddMoongateCommands();
-        container.AddMetricProvider<NetworkService>();
-
-        // Lua scripting engine (priority 30).
-        container.AddMoongateLuaScripting(directories);
-
-        // Plugins can declare config sections, services, Lua modules, persistence entities, and handlers.
-        // This must run before AddMoongateConfig so plugin config sections are bound at boot.
-        container.AddMoongatePlugins(directories);
-
-        return container;
-    }
-
     /// <summary>Loads the root YAML config (must run last), then builds and assigns the real logger.</summary>
     public static IContainer LoadConfigurationAndLogger(this IContainer container, MoongateBootstrapContext context)
     {
@@ -141,6 +134,15 @@ internal static class BootstrapRegistrationExtensions
             directories[DirectoryType.Logs],
             container.Resolve<ILiveConsoleBroadcaster>()
         );
+
+        return container;
+    }
+
+    /// <summary>Registers the boot context instances (directories + packet registry).</summary>
+    public static IContainer RegisterBootstrapContext(this IContainer container, MoongateBootstrapContext context)
+    {
+        container.RegisterInstance(context.Directories, IfAlreadyRegistered.Keep);
+        container.RegisterInstance(context.PacketRegistry);
 
         return container;
     }

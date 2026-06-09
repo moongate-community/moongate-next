@@ -13,9 +13,6 @@ public sealed class CaseInsensitiveStringDictionaryResolver : IFormatterResolver
 {
     public static readonly CaseInsensitiveStringDictionaryResolver Instance = new();
 
-    public IMessagePackFormatter<T>? GetFormatter<T>()
-        => FormatterCache<T>.Formatter;
-
     private static class FormatterCache<T>
     {
         public static readonly IMessagePackFormatter<T>? Formatter;
@@ -40,4 +37,7 @@ public sealed class CaseInsensitiveStringDictionaryResolver : IFormatterResolver
             Formatter = (IMessagePackFormatter<T>?)Activator.CreateInstance(formatterType);
         }
     }
+
+    public IMessagePackFormatter<T>? GetFormatter<T>()
+        => FormatterCache<T>.Formatter;
 }

@@ -1,6 +1,6 @@
 using Moongate.Core.Ids;
-using Moongate.UO.Domain.Entities;
 using Moongate.Core.Types;
+using Moongate.UO.Domain.Entities;
 
 namespace Moongate.Tests.UO.Domain.Entities;
 

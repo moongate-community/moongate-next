@@ -1,9 +1,9 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Moongate.Core.Types;
 using Moongate.Server.Data.Auth;
 using Moongate.Server.Extensions.Endpoints;
 using Moongate.Server.Interfaces.Auth;
-using Moongate.Core.Types;
 
 namespace Moongate.Tests.Server.Auth;
 

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.SignalR;
 using Moongate.Abstractions.Interfaces.Commands;
 using Moongate.Abstractions.Types.Commands;
 using Moongate.Core.Types;
-using Moongate.Server.Data.LiveConsole;
 using Moongate.Server.Interfaces.LiveConsole;
 using Moongate.Server.Types.LiveConsole;
 
@@ -32,12 +31,6 @@ public sealed class LiveConsoleHub : Hub
         _commandSystem = commandSystem;
     }
 
-    public override async Task OnConnectedAsync()
-    {
-        await base.OnConnectedAsync();
-        await Clients.Caller.SendAsync("backlog", _broadcaster.GetBacklog());
-    }
-
     /// <summary>
     /// Runs a command as the Console source and streams its echo + output to all admins. A command
     /// that throws lets the exception surface to the calling admin (other clients are unaffected);
@@ -51,7 +44,7 @@ public sealed class LiveConsoleHub : Hub
         }
 
         _broadcaster.Publish(
-            new LiveConsoleEntry
+            new()
             {
                 Kind = LiveConsoleEntryKind.CommandEcho,
                 Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
@@ -59,12 +52,12 @@ public sealed class LiveConsoleHub : Hub
             }
         );
 
-        var output = await _commandSystem.ExecuteCommandWithOutputAsync(line, CommandSourceType.Console);
+        var output = await _commandSystem.ExecuteCommandWithOutputAsync(line);
 
         foreach (var outputLine in output)
         {
             _broadcaster.Publish(
-                new LiveConsoleEntry
+                new()
                 {
                     Kind = LiveConsoleEntryKind.CommandOutput,
                     Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
@@ -72,5 +65,11 @@ public sealed class LiveConsoleHub : Hub
                 }
             );
         }
+    }
+
+    public override async Task OnConnectedAsync()
+    {
+        await base.OnConnectedAsync();
+        await Clients.Caller.SendAsync("backlog", _broadcaster.GetBacklog());
     }
 }

@@ -1,7 +1,7 @@
 using Moongate.Core.Ids;
+using Moongate.Core.Types;
 using Moongate.Persistence.Interfaces.Persistence;
 using Moongate.UO.Domain.Entities;
-using Moongate.Core.Types;
 
 namespace Moongate.UO.Domain.Interfaces.Services;
 

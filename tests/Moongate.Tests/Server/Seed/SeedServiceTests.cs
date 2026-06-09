@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Moongate.Abstractions.Extensions.DryIoc;
 using Moongate.Abstractions.Interfaces.EventHandlers;
 using Moongate.Abstractions.Interfaces.Services;
+using Moongate.Core.Types;
 using Moongate.Core.Utils;
 using Moongate.Server.Data.Events;
 using Moongate.Server.Extensions.Configuration;
@@ -13,7 +14,6 @@ using Moongate.Server.Extensions.Users;
 using Moongate.Server.Services.Seed;
 using Moongate.Tests.Support;
 using Moongate.UO.Domain.Interfaces.Services;
-using Moongate.Core.Types;
 
 namespace Moongate.Tests.Server.Seed;
 

@@ -65,12 +65,6 @@ public abstract class Race : ISpanParsable<Race>
     public virtual int AliveBody(bool female)
         => female ? FemaleBody : MaleBody;
 
-    public virtual int GhostBody(MobileEntity mobile)
-        => GhostBody(mobile.Gender == GenderType.Female);
-
-    public virtual int GhostBody(bool female)
-        => female ? FemaleGhostBody : MaleGhostBody;
-
     public virtual int Body(MobileEntity mobile)
         => mobile.IsAlive ? AliveBody(mobile.Gender == GenderType.Female) : GhostBody(mobile.Gender == GenderType.Female);
 
@@ -78,21 +72,15 @@ public abstract class Race : ISpanParsable<Race>
 
     public abstract int ClipSkinHue(int hue);
 
-    public abstract int RandomFacialHair(bool female);
-
-    public abstract int RandomHair(bool female);
-
-    public abstract int RandomHairHue();
-
-    public abstract int RandomSkinHue();
-
-    public abstract bool ValidateFacialHair(bool female, int itemID);
-
-    public abstract bool ValidateHair(bool female, int itemID);
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Race? GetRace(int raceID)
         => AllRaces.FirstOrDefault(r => r.RaceID == raceID);
+
+    public virtual int GhostBody(MobileEntity mobile)
+        => GhostBody(mobile.Gender == GenderType.Female);
+
+    public virtual int GhostBody(bool female)
+        => female ? FemaleGhostBody : MaleGhostBody;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsAllowedRace(Race race, int allowedRaceFlags)
@@ -115,6 +103,17 @@ public abstract class Race : ISpanParsable<Race>
 
         throw new FormatException($"The input string '{s}' was not in a correct format.");
     }
+
+    public abstract int RandomFacialHair(bool female);
+
+    public abstract int RandomHair(bool female);
+
+    public abstract int RandomHairHue();
+
+    public abstract int RandomSkinHue();
+
+    public override string ToString()
+        => Name;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParse(string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out Race result)
@@ -146,6 +145,7 @@ public abstract class Race : ISpanParsable<Race>
         return false;
     }
 
-    public override string ToString()
-        => Name;
+    public abstract bool ValidateFacialHair(bool female, int itemID);
+
+    public abstract bool ValidateHair(bool female, int itemID);
 }

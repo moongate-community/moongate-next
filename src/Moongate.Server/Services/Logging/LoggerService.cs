@@ -30,7 +30,7 @@ public static class LoggerService
 
         if (liveConsole is not null)
         {
-            builder.WriteTo.Sink(new LiveConsoleSink(liveConsole), restrictedToMinimumLevel: LogEventLevel.Information);
+            builder.WriteTo.Sink(new LiveConsoleSink(liveConsole), LogEventLevel.Information);
         }
 
         if (config.WriteToFile)

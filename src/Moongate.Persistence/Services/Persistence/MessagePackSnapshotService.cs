@@ -34,8 +34,70 @@ public sealed class MessagePackSnapshotService : ISnapshotService, IDisposable
         Directory.CreateDirectory(_directory);
     }
 
+    public async ValueTask DeleteBucketAsync(string typeName, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(typeName);
+
+        var path = PathFor(typeName);
+
+        await _ioLock.WaitAsync(cancellationToken);
+
+        try
+        {
+            File.Delete(path);
+            File.Delete(path + ".tmp");
+        }
+        finally
+        {
+            _ioLock.Release();
+        }
+    }
+
     public void Dispose()
         => _ioLock.Dispose();
+
+    public async ValueTask<PersistedBucket?> LoadBucketAsync(string typeName, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(typeName);
+
+        var path = PathFor(typeName);
+
+        await _ioLock.WaitAsync(cancellationToken);
+
+        try
+        {
+            if (!File.Exists(path))
+            {
+                return null;
+            }
+
+            var bytes = await File.ReadAllBytesAsync(path, cancellationToken);
+            var envelope = MessagePackSerializer.Deserialize<SnapshotFileEnvelope>(bytes, _options, cancellationToken);
+
+            if (envelope is null ||
+                ChecksumUtils.Compute(envelope.Bucket.Payload) != envelope.Checksum ||
+                !string.Equals(envelope.Bucket.TypeName, typeName, StringComparison.Ordinal))
+            {
+                return null;
+            }
+
+            return new(envelope.Bucket, envelope.LastSequenceId);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch
+        {
+            // A corrupt/unreadable snapshot file is treated as "no snapshot"; the journal replay
+            // rebuilds from the last good state.
+            return null;
+        }
+        finally
+        {
+            _ioLock.Release();
+        }
+    }
 
     public async ValueTask SaveBucketAsync(
         EntitySnapshotBucket bucket,
@@ -75,75 +137,11 @@ public sealed class MessagePackSnapshotService : ISnapshotService, IDisposable
         }
     }
 
-    public async ValueTask<PersistedBucket?> LoadBucketAsync(string typeName, CancellationToken cancellationToken = default)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(typeName);
-
-        var path = PathFor(typeName);
-
-        await _ioLock.WaitAsync(cancellationToken);
-
-        try
-        {
-            if (!File.Exists(path))
-            {
-                return null;
-            }
-
-            var bytes = await File.ReadAllBytesAsync(path, cancellationToken);
-            var envelope = MessagePackSerializer.Deserialize<SnapshotFileEnvelope>(bytes, _options, cancellationToken);
-
-            if (envelope is null
-                || ChecksumUtils.Compute(envelope.Bucket.Payload) != envelope.Checksum
-                || !string.Equals(envelope.Bucket.TypeName, typeName, StringComparison.Ordinal))
-            {
-                return null;
-            }
-
-            return new PersistedBucket(envelope.Bucket, envelope.LastSequenceId);
-        }
-        catch (OperationCanceledException)
-        {
-            throw;
-        }
-        catch
-        {
-            // A corrupt/unreadable snapshot file is treated as "no snapshot"; the journal replay
-            // rebuilds from the last good state.
-            return null;
-        }
-        finally
-        {
-            _ioLock.Release();
-        }
-    }
-
-    public async ValueTask DeleteBucketAsync(string typeName, CancellationToken cancellationToken = default)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(typeName);
-
-        var path = PathFor(typeName);
-
-        await _ioLock.WaitAsync(cancellationToken);
-
-        try
-        {
-            File.Delete(path);
-            File.Delete(path + ".tmp");
-        }
-        finally
-        {
-            _ioLock.Release();
-        }
-    }
-
     private string PathFor(string typeName)
     {
         if (typeName.AsSpan().IndexOfAny(_invalidTypeNameChars) >= 0)
         {
-            throw new InvalidOperationException(
-                $"Persisted type name '{typeName}' cannot be used as a snapshot file name."
-            );
+            throw new InvalidOperationException($"Persisted type name '{typeName}' cannot be used as a snapshot file name.");
         }
 
         return Path.Combine(_directory, StringUtils.ToSnakeCase(typeName) + _suffix);

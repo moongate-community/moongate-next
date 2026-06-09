@@ -1,5 +1,5 @@
-using Moongate.Server.Services.Logging;
 using Moongate.Server.Services.LiveConsole;
+using Moongate.Server.Services.Logging;
 using Moongate.Server.Types.LiveConsole;
 using Serilog.Events;
 using Serilog.Parsing;
@@ -8,24 +8,6 @@ namespace Moongate.Tests.Server.LiveConsole;
 
 public class LiveConsoleSinkTests
 {
-    private static LogEvent MakeLogEvent(LogEventLevel level, string message, string? sourceContext = null)
-    {
-        var properties = new List<LogEventProperty>();
-
-        if (sourceContext is not null)
-        {
-            properties.Add(new LogEventProperty("SourceContext", new ScalarValue(sourceContext)));
-        }
-
-        return new LogEvent(
-            DateTimeOffset.UnixEpoch,
-            level,
-            exception: null,
-            new MessageTemplateParser().Parse(message),
-            properties
-        );
-    }
-
     [Fact]
     public void Emit_LogEvent_PublishesLogEntry()
     {
@@ -50,5 +32,23 @@ public class LiveConsoleSinkTests
         sink.Emit(MakeLogEvent(LogEventLevel.Information, "hub noise", "Microsoft.AspNetCore.SignalR.HubConnectionHandler"));
 
         Assert.Empty(broadcaster.GetBacklog());
+    }
+
+    private static LogEvent MakeLogEvent(LogEventLevel level, string message, string? sourceContext = null)
+    {
+        var properties = new List<LogEventProperty>();
+
+        if (sourceContext is not null)
+        {
+            properties.Add(new("SourceContext", new ScalarValue(sourceContext)));
+        }
+
+        return new(
+            DateTimeOffset.UnixEpoch,
+            level,
+            null,
+            new MessageTemplateParser().Parse(message),
+            properties
+        );
     }
 }
