@@ -23,10 +23,10 @@
 
     <!-- Package Metadata -->
     <PropertyGroup>
-        <Version>0.1.0-develop.2</Version>
+        <Version>0.1.0-develop.3</Version>
         <AssemblyVersion>0.1.0.0</AssemblyVersion>
         <FileVersion>0.1.0.0</FileVersion>
-        <InformationalVersion>0.1.0-develop.2</InformationalVersion>
+        <InformationalVersion>0.1.0-develop.3</InformationalVersion>
         <Authors>Moongate Community</Authors>
         <Title>Moongate Next</Title>
         <Product>Moongate Next</Product>

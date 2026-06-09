@@ -1,3 +1,10 @@
+# [0.1.0-develop.3](https://github.com/moongate-community/moongate-next/compare/v0.1.0-develop.2...v0.1.0-develop.3) (2026-06-09)
+
+
+### Bug Fixes
+
+* **ci:** add package icon and single-file docker publish ([39fd414](https://github.com/moongate-community/moongate-next/commit/39fd4141b803c677518144164bab31e7fbb50016))
+
 # [0.1.0-develop.2](https://github.com/moongate-community/moongate-next/compare/v0.1.0-develop.1...v0.1.0-develop.2) (2026-06-09)
 
 
