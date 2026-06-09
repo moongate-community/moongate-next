@@ -1,6 +1,9 @@
 using System.Reflection;
 using DryIoc;
+using Moongate.Abstractions.Attributes;
 using Moongate.Abstractions.Interfaces.Network;
+using Serilog;
+using ILogger = Serilog.ILogger;
 
 namespace Moongate.Abstractions.Extensions.DryIoc;
 
@@ -9,6 +12,8 @@ namespace Moongate.Abstractions.Extensions.DryIoc;
 /// </summary>
 public static class PacketHandlerContainerExtensions
 {
+    private static readonly ILogger _logger = Log.ForContext(typeof(PacketHandlerContainerExtensions));
+
     extension(IContainer container)
     {
         /// <summary>
@@ -25,15 +30,30 @@ public static class PacketHandlerContainerExtensions
         }
 
         /// <summary>
-        /// Scans an assembly for typed packet handlers and registers each mapping.
+        /// Scans an assembly for classes marked with <see cref="RegisterPacketHandlerAttribute" /> and
+        /// registers each (mapping every <c>IPacketHandler&lt;&gt;</c> interface it implements).
         /// </summary>
         public IContainer AddPacketHandlersFromAssembly(Assembly assembly)
         {
             ArgumentNullException.ThrowIfNull(assembly);
 
-            foreach (var handlerType in assembly.GetTypes())
+            return container.AddPacketHandlers(assembly.GetTypes());
+        }
+
+        /// <summary>
+        /// Registers every class in <paramref name="handlerTypes" /> that is marked with
+        /// <see cref="RegisterPacketHandlerAttribute" /> as a singleton, mapping each
+        /// <c>IPacketHandler&lt;&gt;</c> interface it implements. Throws if a marked class implements none.
+        /// </summary>
+        internal IContainer AddPacketHandlers(IEnumerable<Type> handlerTypes)
+        {
+            ArgumentNullException.ThrowIfNull(handlerTypes);
+
+            foreach (var handlerType in handlerTypes)
             {
-                if (handlerType.IsAbstract || !handlerType.IsClass)
+                if (handlerType.IsAbstract
+                    || !handlerType.IsClass
+                    || !handlerType.IsDefined(typeof(RegisterPacketHandlerAttribute), inherit: false))
                 {
                     continue;
                 }
@@ -49,7 +69,9 @@ public static class PacketHandlerContainerExtensions
 
                 if (handlerInterfaces.Length == 0)
                 {
-                    continue;
+                    throw new InvalidOperationException(
+                        $"{handlerType.FullName} is marked [RegisterPacketHandler] but implements no IPacketHandler<>."
+                    );
                 }
 
                 container.Register(handlerType, Reuse.Singleton, ifAlreadyRegistered: IfAlreadyRegistered.Keep);
@@ -58,6 +80,12 @@ public static class PacketHandlerContainerExtensions
                 {
                     container.RegisterMapping(handlerInterface, handlerType);
                 }
+
+                _logger.Information(
+                    "Registered packet handler {Handler} for {Packets}",
+                    handlerType.Name,
+                    string.Join(", ", handlerInterfaces.Select(static i => i.GetGenericArguments()[0].Name))
+                );
             }
 
             return container;

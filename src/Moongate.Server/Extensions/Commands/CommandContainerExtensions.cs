@@ -1,8 +1,6 @@
 using DryIoc;
 using Moongate.Abstractions.Interfaces.Commands;
-using Moongate.Abstractions.Interfaces.Network;
 using Moongate.Abstractions.Services.Commands;
-using Moongate.Network.UO.Packets.Incoming.Speech;
 using Moongate.Server.Commands;
 using Moongate.Server.Extensions.Hosting;
 using Moongate.Server.Interfaces.Commands;
@@ -32,13 +30,6 @@ public static class CommandContainerExtensions
         );
         container.AddMoongateService<ICommandSystemService, CommandSystemService>(CommandSystemPriority);
         container.AddMoongateService<IConsoleCommandService, ConsoleCommandService>(ConsoleCommandPriority);
-
-        container.Register<SpeechCommandPacketHandler>(
-            Reuse.Singleton,
-            ifAlreadyRegistered: IfAlreadyRegistered.Keep
-        );
-        container.RegisterMapping<IPacketHandler<UnicodeSpeechPacket>, SpeechCommandPacketHandler>();
-        container.RegisterMapping<IPacketHandler<TalkRequestPacket>, SpeechCommandPacketHandler>();
 
         BuiltinCommandRegistration.Register(container.Resolve<ICommandRegistry>());
 

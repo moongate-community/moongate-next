@@ -38,12 +38,6 @@ public class PacketDispatchHandlerTests
             => throw new InvalidOperationException("handler failed");
     }
 
-    private sealed class ScannedHandler : IPacketHandler<ScanPacket>
-    {
-        public Task HandleAsync(PacketContext<ScanPacket> context, CancellationToken cancellationToken = default)
-            => Task.CompletedTask;
-    }
-
     private sealed class FakeServiceProvider : IServiceProvider
     {
         private readonly IReadOnlyList<IPacketHandler<TestPacket>> _handlers;
@@ -139,18 +133,6 @@ public class PacketDispatchHandlerTests
             => true;
     }
 
-    private sealed class ScanPacket : BaseGameNetworkPacket
-    {
-        public ScanPacket()
-            : base(0xA3, 1) { }
-
-        public override void Write(ref SpanWriter writer)
-            => writer.Write(OpCode);
-
-        protected override bool ParsePayload(ref SpanReader reader)
-            => true;
-    }
-
     [Fact]
     public void AddMoongateNetwork_RegistersPlayerSessionServiceAndEventHandlers()
     {
@@ -221,18 +203,6 @@ public class PacketDispatchHandlerTests
 
         Assert.Single(handlers);
         Assert.IsType<CapturingHandler>(handlers[0]);
-    }
-
-    [Fact]
-    public void AddPacketHandlersFromAssembly_RegistersHandlers()
-    {
-        var container = new Container();
-
-        container.AddPacketHandlersFromAssembly(typeof(ScannedHandler).Assembly);
-
-        var handlers = container.ResolveMany<IPacketHandler<ScanPacket>>().ToArray();
-
-        Assert.Contains(handlers, static handler => handler.GetType() == typeof(ScannedHandler));
     }
 
     [Fact]

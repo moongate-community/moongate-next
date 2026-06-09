@@ -18,6 +18,7 @@ public static class PacketHandlerContainerExtensions
         public IContainer AddMoongatePacketHandlers()
         {
             container.AddTickEventHandler<PacketDispatchHandler, PacketReceivedEvent>();
+            container.AddPacketHandlersFromAssembly(typeof(PacketDispatchHandler).Assembly);
 
             return container;
         }

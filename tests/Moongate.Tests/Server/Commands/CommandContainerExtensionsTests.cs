@@ -1,13 +1,10 @@
 using DryIoc;
 using Microsoft.Extensions.Hosting;
 using Moongate.Abstractions.Interfaces.Commands;
-using Moongate.Abstractions.Interfaces.Network;
-using Moongate.Network.UO.Packets.Incoming.Speech;
 using Moongate.Network.UO.Registry;
 using Moongate.Server.Extensions.Commands;
 using Moongate.Server.Extensions.Network;
 using Moongate.Server.Interfaces.Commands;
-using Moongate.Server.Services.Commands;
 using Moongate.Tests.Support;
 
 namespace Moongate.Tests.Server.Commands;
@@ -15,7 +12,7 @@ namespace Moongate.Tests.Server.Commands;
 public sealed class CommandContainerExtensionsTests
 {
     [Fact]
-    public void AddMoongateCommands_RegistersRegistryBuiltinsAndSpeechHandlers()
+    public void AddMoongateCommands_RegistersRegistryBuiltinsAndServices()
     {
         var container = new Container();
         using var lifetime = new TestHostApplicationLifetime();
@@ -30,13 +27,5 @@ public sealed class CommandContainerExtensionsTests
         Assert.True(registry.TryGetCommand("exit", out _));
         Assert.NotNull(container.Resolve<ICommandSystemService>());
         Assert.NotNull(container.Resolve<IConsoleCommandService>());
-        Assert.Contains(
-            container.ResolveMany<IPacketHandler<UnicodeSpeechPacket>>(),
-            static handler => handler.GetType() == typeof(SpeechCommandPacketHandler)
-        );
-        Assert.Contains(
-            container.ResolveMany<IPacketHandler<TalkRequestPacket>>(),
-            static handler => handler.GetType() == typeof(SpeechCommandPacketHandler)
-        );
     }
 }

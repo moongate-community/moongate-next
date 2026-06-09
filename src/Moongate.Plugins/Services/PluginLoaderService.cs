@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Runtime.Loader;
 using DryIoc;
+using Moongate.Abstractions.Extensions.DryIoc;
 using Moongate.Abstractions.Interfaces.Commands;
 using Moongate.Core.Data.Directories;
 using Moongate.Core.Types;
@@ -54,6 +55,9 @@ public sealed class PluginLoaderService
                     ex
                 );
             }
+
+            // Auto-register the plugin's [RegisterPacketHandler]-marked handlers (scanned once per assembly).
+            container.AddPacketHandlersFromAssembly(plugin.Assembly);
         }
 
         return sorted;
