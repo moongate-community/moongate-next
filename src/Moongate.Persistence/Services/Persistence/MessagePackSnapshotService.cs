@@ -15,6 +15,9 @@ public sealed class MessagePackSnapshotService : ISnapshotService, IDisposable
 {
     private static readonly MessagePackSerializerOptions _options = ContractlessStandardResolver.Options;
 
+    private static readonly char[] _invalidTypeNameChars =
+        [.. Path.GetInvalidFileNameChars(), Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar];
+
     private readonly SemaphoreSlim _ioLock = new(1, 1);
     private readonly string _directory;
     private readonly string _suffix;
@@ -134,5 +137,14 @@ public sealed class MessagePackSnapshotService : ISnapshotService, IDisposable
     }
 
     private string PathFor(string typeName)
-        => Path.Combine(_directory, typeName + _suffix);
+    {
+        if (typeName.AsSpan().IndexOfAny(_invalidTypeNameChars) >= 0)
+        {
+            throw new InvalidOperationException(
+                $"Persisted type name '{typeName}' cannot be used as a snapshot file name."
+            );
+        }
+
+        return Path.Combine(_directory, typeName + _suffix);
+    }
 }
