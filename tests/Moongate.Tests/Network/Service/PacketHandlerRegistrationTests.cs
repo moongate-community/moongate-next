@@ -5,6 +5,8 @@ using Moongate.Abstractions.Extensions.DryIoc;
 using Moongate.Abstractions.Interfaces.Network;
 using Moongate.Network.Spans;
 using Moongate.Network.UO.Base;
+using Moongate.Network.UO.Packets.Incoming.Speech;
+using Moongate.Server.Services.Commands;
 
 namespace Moongate.Tests.Network.Service;
 
@@ -120,5 +122,16 @@ public class PacketHandlerRegistrationTests
         var container = new Container();
 
         Assert.Throws<InvalidOperationException>(() => container.AddPacketHandlers([typeof(MarkedNoInterfaceHandler)]));
+    }
+
+    [Fact]
+    public void AddPacketHandlersFromAssembly_ServerAssembly_RegistersSpeechHandler()
+    {
+        var container = new Container();
+
+        container.AddPacketHandlersFromAssembly(typeof(SpeechCommandPacketHandler).Assembly);
+
+        Assert.True(container.IsRegistered<IPacketHandler<UnicodeSpeechPacket>>());
+        Assert.True(container.IsRegistered<IPacketHandler<TalkRequestPacket>>());
     }
 }

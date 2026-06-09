@@ -1,3 +1,4 @@
+using Moongate.Abstractions.Attributes;
 using Moongate.Abstractions.Data.Network;
 using Moongate.Abstractions.Data.Player;
 using Moongate.Abstractions.Interfaces.Commands;
@@ -11,6 +12,7 @@ namespace Moongate.Server.Services.Commands;
 /// <summary>
 /// Converts in-game speech commands into command-system invocations.
 /// </summary>
+[RegisterPacketHandler]
 public sealed class SpeechCommandPacketHandler
     : IPacketHandler<UnicodeSpeechPacket>,
       IPacketHandler<TalkRequestPacket>
