@@ -2,8 +2,8 @@ name: Docs
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - "v*"
   workflow_dispatch:
 
 permissions:
@@ -19,6 +19,7 @@ jobs:
   build:
     name: Build DocFX site
     runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || !contains(github.ref_name, '-')
 
     steps:
       - name: Checkout
