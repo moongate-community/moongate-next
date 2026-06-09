@@ -21,7 +21,7 @@ public sealed class LuaPayloadBuilderTests
         var playerSession = new PlayerSession
         {
             SessionId = 42,
-            UserId = "user-1",
+            UserId = (Serial)0x00000001u,
             Username = "admin",
             State = PlayerSessionStateType.InWorld,
             CharacterSerial = (Serial)0x00000010u,
@@ -47,7 +47,7 @@ public sealed class LuaPayloadBuilderTests
         Assert.True((bool)payload["is_in_game"]!);
         Assert.Equal(42L, player["session_id"]);
         Assert.Equal("admin", player["username"]);
-        Assert.Equal("user-1", player["user_id"]);
+        Assert.Equal("0x00000001", player["user_id"]);
         Assert.Equal("InWorld", player["state"]);
         Assert.Equal("0x00000010", player["character_serial"]);
         Assert.Equal("0x00000020", player["mobile_serial"]);

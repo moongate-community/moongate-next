@@ -49,7 +49,7 @@ public static class LuaPayloadBuilder
         {
             ["session_id"] = playerSession.SessionId,
             ["username"] = playerSession.Username,
-            ["user_id"] = playerSession.UserId,
+            ["user_id"] = playerSession.UserId?.ToString(),
             ["state"] = playerSession.State.ToString(),
             ["character_serial"] = playerSession.CharacterSerial?.ToString(),
             ["mobile_serial"] = playerSession.MobileSerial?.ToString()

@@ -12,11 +12,12 @@ public sealed class PlayerSessionServiceTests
     public void Authenticate_ExistingSession_UpdatesLogicalIdentity()
     {
         var service = new PlayerSessionService();
+        var userId = (Serial)0x00000001u;
         service.GetOrCreateConnected(10, "127.0.0.1:1234", DateTimeOffset.UtcNow);
 
-        var session = service.Authenticate(10, "user-1", "admin", DateTimeOffset.UtcNow);
+        var session = service.Authenticate(10, userId, "admin", DateTimeOffset.UtcNow);
 
-        Assert.Equal("user-1", session.UserId);
+        Assert.Equal(userId, session.UserId);
         Assert.Equal("admin", session.Username);
         Assert.Equal(PlayerSessionStateType.Authenticated, session.State);
     }

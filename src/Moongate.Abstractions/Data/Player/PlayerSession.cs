@@ -11,7 +11,7 @@ public sealed class PlayerSession
 {
     public long SessionId { get; set; }
     public string? RemoteEndPoint { get; set; }
-    public string? UserId { get; set; }
+    public Serial? UserId { get; set; }
     public string? Username { get; set; }
     public Serial? CharacterSerial { get; set; }
     public Serial? MobileSerial { get; set; }

@@ -8,6 +8,7 @@ using Moongate.Network.UO.Data.Login;
 using Moongate.Network.UO.Packets.Incoming.Login;
 using Moongate.Network.UO.Packets.Outgoing.Login;
 using Moongate.Network.UO.Types.Login;
+using Moongate.Server.Data.Config;
 using Moongate.Server.Interfaces.Network;
 using Moongate.UO.Domain.Interfaces.Services;
 
@@ -18,6 +19,9 @@ public class LoginHandler : PacketHandlerBase<LoginSeedPacket>, IPacketHandler<A
 {
     private readonly IUserService _userService;
 
+
+    private readonly ServerConfig  _serverConfig;
+
     private readonly ISessionService _sessionService;
 
     private readonly Serilog.ILogger _logger = Serilog.Log.ForContext<LoginHandler>();
@@ -27,11 +31,13 @@ public class LoginHandler : PacketHandlerBase<LoginSeedPacket>, IPacketHandler<A
         INetworkSessionManager sessions,
         IPlayerSessionService playerSessionService,
         IUserService userService,
-        ISessionService sessionService
+        ISessionService sessionService,
+        ServerConfig serverConfig
     ) : base(eventBus, sessions, playerSessionService)
     {
         _userService = userService;
         _sessionService = sessionService;
+        _serverConfig = serverConfig;
     }
 
     public override Task HandleAsync(PacketContext<LoginSeedPacket> context, CancellationToken cancellationToken = default)
@@ -81,11 +87,13 @@ public class LoginHandler : PacketHandlerBase<LoginSeedPacket>, IPacketHandler<A
 
                 _logger.Information("User {@User} autheticated, level: {@Level}", userEntity.Username, userEntity.Level);
 
+                PlayerSessions.Authenticate(context.SessionId, userEntity.Id, userEntity.Username, DateTimeOffset.Now);
+
                 var serverListPacket = new ServerListPacket(
                     new GameServerEntry()
                     {
                         Index = 0,
-                        ServerName = "Moongate",
+                        ServerName = _serverConfig.ServerName,
                         IpAddress = gameSession.ServerEndPoint.Address,
                     }
                 );

@@ -24,7 +24,7 @@ public interface IPlayerSessionService
     /// <param name="username">Authenticated username.</param>
     /// <param name="authenticatedAt">Authentication timestamp.</param>
     /// <returns>The updated player session.</returns>
-    PlayerSession Authenticate(long sessionId, string userId, string username, DateTimeOffset authenticatedAt);
+    PlayerSession Authenticate(long sessionId, Serial userId, string username, DateTimeOffset authenticatedAt);
 
     /// <summary>
     /// Marks a player session as disconnected and removes mobile indexes.

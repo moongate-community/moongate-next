@@ -31,9 +31,8 @@ public sealed class PlayerSessionService
         }
     }
 
-    public PlayerSession Authenticate(long sessionId, string userId, string username, DateTimeOffset authenticatedAt)
+    public PlayerSession Authenticate(long sessionId, Serial userId, string username, DateTimeOffset authenticatedAt)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(userId);
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
 
         lock (_sync)
