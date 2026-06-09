@@ -61,6 +61,22 @@ public sealed class AuthTokenServiceTests
                 )
             );
 
+        public async ValueTask<UserEntity?> LoginAsync(
+            string username,
+            string password,
+            CancellationToken cancellationToken = default
+        )
+        {
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            {
+                return null;
+            }
+
+            var user = await GetByUsernameAsync(username, cancellationToken);
+
+            return user is not null && user.IsActive && HashUtils.VerifyPassword(password, user.Password) ? user : null;
+        }
+
         public ValueTask<PagedResult<UserEntity>> ListAsync(
             PageRequest request,
             CancellationToken cancellationToken = default
