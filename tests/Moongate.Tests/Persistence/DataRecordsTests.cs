@@ -30,22 +30,4 @@ public class DataRecordsTests
         Assert.Equal(JournalEntityOperationType.Upsert, back.Operation);
         Assert.Equal(new byte[] { 1, 2, 3 }, back.Payload);
     }
-
-    [Fact]
-    public void WorldSnapshot_RoundTrips()
-    {
-        var snapshot = new WorldSnapshot
-        {
-            CreatedUnixMilliseconds = 999,
-            LastSequenceId = 5,
-            EntityBuckets = [new() { TypeId = 1, TypeName = "Test", SchemaVersion = 2, Payload = [9] }]
-        };
-
-        var bytes = MessagePackSerializer.Serialize(snapshot, _options);
-        var back = MessagePackSerializer.Deserialize<WorldSnapshot>(bytes, _options);
-
-        Assert.Equal(5, back.LastSequenceId);
-        Assert.Single(back.EntityBuckets);
-        Assert.Equal("Test", back.EntityBuckets[0].TypeName);
-    }
 }

@@ -10,7 +10,7 @@ public class PersistenceConfigTests
         var config = new PersistenceConfig();
 
         Assert.Equal(TimeSpan.FromSeconds(300), config.AutosaveInterval);
-        Assert.Equal("world.snapshot.bin", config.SnapshotFileName);
+        Assert.Equal(".snapshot.bin", config.SnapshotFileSuffix);
         Assert.Equal("world.journal.bin", config.JournalFileName);
         Assert.True(config.EnableFileLock);
     }

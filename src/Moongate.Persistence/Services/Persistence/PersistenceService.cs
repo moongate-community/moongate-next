@@ -52,7 +52,7 @@ public sealed class PersistenceService : IPersistenceService, IMetricProvider, I
         _eventBus = eventBus;
         _registrations = registrations;
         _journal = new(Path.Combine(saveDirectory, config.JournalFileName), config.EnableFileLock);
-        _snapshot = new(Path.Combine(saveDirectory, config.SnapshotFileName));
+        _snapshot = new(saveDirectory, config.SnapshotFileSuffix);
 
         timerService?.RegisterTimer(
             "world_save",
@@ -106,22 +106,35 @@ public sealed class PersistenceService : IPersistenceService, IMetricProvider, I
 
     public async ValueTask InitializeAsync(CancellationToken cancellationToken = default)
     {
-        var snapshot = await _snapshot.LoadAsync(cancellationToken);
+        var loaded = new List<PersistedBucket>();
+        long snapshotSequenceId = 0;
+
+        foreach (var descriptor in _registry.GetRegisteredDescriptors())
+        {
+            var persisted = await _snapshot.LoadBucketAsync(descriptor.TypeName, cancellationToken);
+
+            if (persisted is not null)
+            {
+                loaded.Add(persisted);
+
+                if (persisted.LastSequenceId > snapshotSequenceId)
+                {
+                    snapshotSequenceId = persisted.LastSequenceId;
+                }
+            }
+        }
 
         lock (_stateStore.SyncRoot)
         {
             _stateStore.ClearBuckets();
             _stateStore.LastSequenceId = 0;
 
-            if (snapshot is not null)
+            foreach (var persisted in loaded)
             {
-                foreach (var bucket in snapshot.EntityBuckets)
-                {
-                    Applier(bucket.TypeId).LoadBucket(_stateStore, bucket);
-                }
-
-                _stateStore.LastSequenceId = snapshot.LastSequenceId;
+                Applier(persisted.Bucket.TypeId).LoadBucket(_stateStore, persisted.Bucket);
             }
+
+            _stateStore.LastSequenceId = snapshotSequenceId;
         }
 
         var entries = await _journal.ReadAllAsync(cancellationToken);
@@ -154,41 +167,51 @@ public sealed class PersistenceService : IPersistenceService, IMetricProvider, I
             var startedAt = DateTimeOffset.UtcNow;
             await PublishSnapshotEventAsync(new SnapshotSaveStartedEvent(startedAt), cancellationToken);
 
-            WorldSnapshot snapshot;
+            long lastSequenceId;
+            List<(string TypeName, EntitySnapshotBucket? Bucket)> captured;
 
             lock (_stateStore.SyncRoot)
             {
-                var buckets = _registry.GetRegisteredDescriptors()
-                                       .Select(d => Applier(d.TypeId).CaptureBucket(_stateStore))
-                                       .Where(b => b is not null)
-                                       .Select(b => b!)
-                                       .ToArray();
-
-                snapshot = new()
-                {
-                    CreatedUnixMilliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-                    LastSequenceId = _stateStore.LastSequenceId,
-                    EntityBuckets = buckets
-                };
+                lastSequenceId = _stateStore.LastSequenceId;
+                captured = _registry.GetRegisteredDescriptors()
+                                    .Select(d => (d.TypeName, Bucket: Applier(d.TypeId).CaptureBucket(_stateStore)))
+                                    .ToList();
             }
 
-            await _snapshot.SaveAsync(snapshot, cancellationToken);
-            await _journal.TrimThroughSequenceAsync(snapshot.LastSequenceId, cancellationToken);
+            var typesWritten = 0;
 
+            foreach (var (typeName, bucket) in captured)
+            {
+                if (bucket is not null)
+                {
+                    await _snapshot.SaveBucketAsync(bucket, lastSequenceId, cancellationToken);
+                    typesWritten++;
+                }
+                else
+                {
+                    // An emptied type must drop its snapshot file; otherwise the trimmed journal can
+                    // no longer override it and the deleted entities would resurrect on reload.
+                    await _snapshot.DeleteBucketAsync(typeName, cancellationToken);
+                }
+            }
+
+            await _journal.TrimThroughSequenceAsync(lastSequenceId, cancellationToken);
+
+            var createdUnixMilliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             var completedAt = DateTimeOffset.UtcNow;
+
             await PublishSnapshotEventAsync(
-                new SnapshotSaveCompletedEvent(
-                    snapshot.LastSequenceId,
-                    snapshot.EntityBuckets.Length,
-                    startedAt,
-                    completedAt
-                ),
+                new SnapshotSaveCompletedEvent(lastSequenceId, typesWritten, startedAt, completedAt),
                 cancellationToken
             );
 
             Interlocked.Increment(ref _snapshotsWritten);
-            Interlocked.Exchange(ref _lastSnapshotUnixMilliseconds, snapshot.CreatedUnixMilliseconds);
-            _logger.Information("Snapshot written LastSequenceId={LastSequenceId}", snapshot.LastSequenceId);
+            Interlocked.Exchange(ref _lastSnapshotUnixMilliseconds, createdUnixMilliseconds);
+            _logger.Information(
+                "Snapshot written LastSequenceId={LastSequenceId} Types={Types}",
+                lastSequenceId,
+                typesWritten
+            );
         }
         finally
         {
