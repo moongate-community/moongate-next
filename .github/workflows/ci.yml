@@ -38,6 +38,9 @@ jobs:
       - name: Build
         run: dotnet build Moongate.slnx --configuration Release --no-restore
 
+      - name: Prepare default UO client directory
+        run: mkdir -p ~/uo
+
       - name: Test
         run: dotnet test Moongate.slnx --configuration Release --no-build --logger "trx;LogFileName=test-results.trx"
 
