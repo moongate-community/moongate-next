@@ -31,8 +31,8 @@ public sealed class PerTypeSnapshotTests : IDisposable
         await first.StopAsync(CancellationToken.None);
 
         // One file per registered type — no single mega file.
-        Assert.True(File.Exists(Path.Combine(_dir, "TestPlayer.snapshot.bin")));
-        Assert.True(File.Exists(Path.Combine(_dir, "TestItem.snapshot.bin")));
+        Assert.True(File.Exists(Path.Combine(_dir, "test_player.snapshot.bin")));
+        Assert.True(File.Exists(Path.Combine(_dir, "test_item.snapshot.bin")));
         Assert.False(File.Exists(Path.Combine(_dir, "world.snapshot.bin")));
 
         var second = NewService();
@@ -75,7 +75,7 @@ public sealed class PerTypeSnapshotTests : IDisposable
         await first.StopAsync(CancellationToken.None);
 
         // The emptied type's snapshot file must be gone so it cannot resurrect on reload.
-        Assert.False(File.Exists(Path.Combine(_dir, "TestPlayer.snapshot.bin")));
+        Assert.False(File.Exists(Path.Combine(_dir, "test_player.snapshot.bin")));
 
         var second = NewService();
         await second.StartAsync(CancellationToken.None);
