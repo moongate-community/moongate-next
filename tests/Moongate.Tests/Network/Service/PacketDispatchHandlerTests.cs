@@ -76,9 +76,10 @@ public class PacketDispatchHandlerTests
         public BaseHandler(
             IEventBusService eventBus,
             INetworkSessionManager sessions,
+            IPlayerSessionService playerSessions,
             BaseHandlerProbe probe
         )
-            : base(eventBus, sessions)
+            : base(eventBus, sessions, playerSessions)
         {
             _probe = probe;
         }

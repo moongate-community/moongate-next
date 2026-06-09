@@ -1,5 +1,6 @@
 using Moongate.Abstractions.Data.Network;
 using Moongate.Abstractions.Interfaces.Network;
+using Moongate.Abstractions.Interfaces.Player;
 using Moongate.Abstractions.Interfaces.Services;
 
 namespace Moongate.Abstractions.Network;
@@ -21,13 +22,17 @@ public abstract class PacketHandlerBase<TPacket> : IPacketHandler<TPacket>
     /// </summary>
     protected INetworkSessionManager Sessions { get; }
 
-    protected PacketHandlerBase(IEventBusService eventBus, INetworkSessionManager sessions)
+    protected IPlayerSessionService PlayerSessions { get; }
+
+    protected PacketHandlerBase(IEventBusService eventBus, INetworkSessionManager sessions, IPlayerSessionService playerSessions)
     {
         ArgumentNullException.ThrowIfNull(eventBus);
         ArgumentNullException.ThrowIfNull(sessions);
+        ArgumentNullException.ThrowIfNull(playerSessions);
 
         EventBus = eventBus;
         Sessions = sessions;
+        PlayerSessions = playerSessions;
     }
 
     public abstract Task HandleAsync(
