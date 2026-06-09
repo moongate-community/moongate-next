@@ -1,5 +1,10 @@
-import { type FormEvent, useState } from "react";
+import { type FormEvent, Suspense, lazy, useState } from "react";
 import { LogIn, Shield, Sparkles } from "lucide-react";
+
+// Lazy so three.js/vanta load only when the admin login renders, not in the initial bundle.
+const VantaBackground = lazy(() =>
+  import("./VantaBackground").then((module) => ({ default: module.VantaBackground }))
+);
 
 type LoginSection = "admin" | "player";
 
@@ -31,6 +36,11 @@ export function LoginView({ onLogin }: LoginViewProps) {
 
   return (
     <main className={`login-screen ${isAdmin ? "admin-login-screen" : "player-login-screen"}`}>
+      {isAdmin ? (
+        <Suspense fallback={null}>
+          <VantaBackground />
+        </Suspense>
+      ) : null}
       <section className={`login-panel ${isAdmin ? "admin-login-panel" : "player-login-panel"}`}>
         <img src="/images/moongate_logo.png" alt="Moongate" className="login-logo" />
         <div className="login-mode-switch" role="tablist" aria-label="Login type">
