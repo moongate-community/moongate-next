@@ -17,6 +17,7 @@ using Moongate.Server.Extensions.Persistence;
 using Moongate.Server.Extensions.Plugins;
 using Moongate.Server.Extensions.Scripting;
 using Moongate.Server.Extensions.Seed;
+using Moongate.Server.Extensions.Sessions;
 using Moongate.Server.Extensions.Timing;
 using Moongate.Server.Extensions.UoData;
 using Moongate.Server.Extensions.Users;
@@ -80,6 +81,9 @@ internal static class BootstrapRegistrationExtensions
         container.AddMoongatePacketHandlers();
         container.AddMoongateCommands();
         container.AddMetricProvider<NetworkService>();
+
+        // Login-to-game-server redirect handoff bridge.
+        container.AddMoongateGameLoginHandoff();
 
         // Lua scripting engine (priority 30).
         container.AddMoongateLuaScripting(directories);
