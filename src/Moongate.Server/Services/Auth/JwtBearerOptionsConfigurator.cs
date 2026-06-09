@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Moongate.Server.Data.Config;
@@ -52,5 +53,37 @@ public sealed class JwtBearerOptionsConfigurator : IConfigureNamedOptions<JwtBea
             NameClaimType = ClaimTypes.Name,
             RoleClaimType = ClaimTypes.Role
         };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var token = ResolveWebSocketToken(context.HttpContext.Request.Query, context.HttpContext.Request.Path);
+
+                if (token is not null)
+                {
+                    context.Token = token;
+                }
+
+                return Task.CompletedTask;
+            }
+        };
+    }
+
+    /// <summary>
+    /// Pulls the bearer token from the <c>access_token</c> query string for SignalR WebSocket
+    /// requests to the console hub (browsers can't set the Authorization header on a WS handshake).
+    /// Returns null for any other path or when the token is absent.
+    /// </summary>
+    internal static string? ResolveWebSocketToken(IQueryCollection query, PathString path)
+    {
+        string? token = query["access_token"];
+
+        if (!string.IsNullOrEmpty(token) && path.StartsWithSegments("/hubs/console"))
+        {
+            return token;
+        }
+
+        return null;
     }
 }
