@@ -43,9 +43,17 @@ public sealed class LootTableBootService : IMoongateService
         if (_lootService is LootService lootService)
         {
             lootService.SetRegistry(new LootTableRegistry(tables, _templates.GetAll()));
+
+            _logger.Information("Loot table registry ready with {Count} tables", tables.Count);
+
+            return Task.CompletedTask;
         }
 
-        _logger.Information("Loot table registry ready with {Count} tables", tables.Count);
+        _logger.Warning(
+            "Loot service implementation {Type} does not accept a registry; {Count} validated tables were not published",
+            _lootService.GetType().Name,
+            tables.Count
+        );
 
         return Task.CompletedTask;
     }
