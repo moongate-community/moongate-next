@@ -3,6 +3,7 @@ import type { ItemTemplateDetail } from "../../../types/itemTemplates";
 import { DefinitionList } from "../DefinitionList";
 import { HueSwatch } from "./HueSwatch";
 import { ItemImageCell } from "./ItemImageCell";
+import { RarityBadge } from "./RarityBadge";
 
 type ItemTemplateDetailPanelProps = {
   template: ItemTemplateDetail | null;
@@ -60,7 +61,7 @@ export function ItemTemplateDetailPanel({ template, loading, error }: ItemTempla
             { term: "Script", value: template.scriptId || "-", mono: true },
             { term: "Visibility", value: template.visibility },
             { term: "Layer", value: template.layer ?? "-" },
-            { term: "Rarity", value: template.rarity },
+            { term: "Rarity", value: <RarityBadge rarity={template.rarity} mode="detail" /> },
             { term: "Amount", value: String(template.amount), mono: true },
             { term: "Weight", value: String(template.weight), mono: true },
             { term: "Movable", value: template.isMovable ? "Yes" : "No" },

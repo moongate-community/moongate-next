@@ -1,18 +1,12 @@
 import type { ItemTemplateSummary } from "../../../types/itemTemplates";
 import { HueSwatch } from "./HueSwatch";
 import { ItemImageCell } from "./ItemImageCell";
+import { RarityBadge } from "./RarityBadge";
 
 type ItemTemplateTableProps = {
   templates: ItemTemplateSummary[];
   selectedId: string | null;
   onSelect: (template: ItemTemplateSummary) => void;
-};
-
-const rarityClass: Record<string, string> = {
-  Common: "bg-muted text-fg-muted",
-  Uncommon: "bg-info/10 text-info",
-  Rare: "bg-warning/10 text-warning",
-  None: "bg-muted text-fg-muted"
 };
 
 export function ItemTemplateTable({ templates, selectedId, onSelect }: ItemTemplateTableProps) {
@@ -57,9 +51,7 @@ export function ItemTemplateTable({ templates, selectedId, onSelect }: ItemTempl
                 <HueSwatch hue={template.hue} />
               </td>
               <td className="px-3 py-2">
-                <span className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-semibold ${rarityClass[template.rarity] ?? rarityClass.None}`}>
-                  {template.rarity}
-                </span>
+                <RarityBadge rarity={template.rarity} />
               </td>
               <td className="px-3 py-2 text-xs text-fg-muted">{template.layer ?? "-"}</td>
               <td className="px-3 py-2">

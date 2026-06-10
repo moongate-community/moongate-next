@@ -1,13 +1,12 @@
 import { Suspense, lazy, useCallback, useEffect, useMemo, useState } from "react";
 import { AdminDashboardHeader } from "../components/admin/AdminDashboardHeader";
-import { AdminMetricStrip } from "../components/admin/AdminMetricStrip";
 import { AdminPersistencePanel } from "../components/admin/AdminPersistencePanel";
 import { AdminRuntimePanel } from "../components/admin/AdminRuntimePanel";
 import { AdminSecurityPanel } from "../components/admin/AdminSecurityPanel";
 import { ConsolePanel } from "../components/admin/ConsolePanel";
 import { ItemTemplateCatalogPanel } from "../components/admin/itemTemplates/ItemTemplateCatalogPanel";
 import { UserManagementPanel } from "../components/admin/users/UserManagementPanel";
-import { buildMetricCards, buildRuntimeServices } from "../data/adminDashboard";
+import { buildRuntimeServices } from "../data/adminDashboard";
 import { getAdminRuntimeSnapshot, getOfflineSnapshot } from "../lib/adminClient";
 import { me } from "../lib/authClient";
 import type { AdminMetricHistoryPoint, AdminNavId, AdminRuntimeSnapshot } from "../types/admin";
@@ -67,7 +66,6 @@ export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, 
     return () => window.clearInterval(timer);
   }, [activeView, refresh]);
 
-  const metrics = useMemo(() => buildMetricCards(snapshot, metricHistory), [snapshot, metricHistory]);
   const services = useMemo(() => buildRuntimeServices(snapshot), [snapshot]);
 
   if (activeView === "console") {
@@ -77,7 +75,6 @@ export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, 
   return (
     <section className="grid gap-6 px-5 py-6 md:px-7">
       <AdminDashboardHeader snapshot={snapshot} loading={loading} onRefresh={refresh} />
-      <AdminMetricStrip metrics={metrics} />
 
       <div className="grid min-w-0 gap-4">
         {(activeView === "overview" || activeView === "runtime") && <AdminRuntimePanel services={services} />}
