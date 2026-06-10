@@ -9,11 +9,19 @@
     <ItemGroup>
         <ProjectReference Include="..\Moongate.Network\Moongate.Network.csproj"/>
         <ProjectReference Include="..\Moongate.Abstractions\Moongate.Abstractions.csproj"/>
+        <ProjectReference Include="..\Moongate.UO.Data\Moongate.UO.Data.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
         <Folder Include="Data\"/>
         <Folder Include="Packets\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.301">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      </PackageReference>
     </ItemGroup>
 
 </Project>

@@ -13,4 +13,11 @@
         <ProjectReference Include="..\..\src\Moongate.Scripting.Lua\Moongate.Scripting.Lua.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Update="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.301">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      </PackageReference>
+    </ItemGroup>
+
 </Project>
