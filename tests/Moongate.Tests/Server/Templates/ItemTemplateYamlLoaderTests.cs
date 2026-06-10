@@ -441,6 +441,25 @@ public class ItemTemplateYamlLoaderTests
     }
 
     [Fact]
+    public void LoadAll_ReservedIsMovableParamKey_Throws()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "reserved.yaml",
+            """
+            item_templates:
+                - id: shirt
+                  params:
+                      is_movable: { type: String, value: "true" }
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var exception = Assert.Throws<InvalidOperationException>(() => loader.LoadAll());
+        Assert.Contains("is_movable", exception.Message);
+    }
+
+    [Fact]
     public void ParseLong_DecimalAndHex_Parse()
     {
         Assert.Equal(33, ItemTemplateYamlLoader.ParseLong("33"));

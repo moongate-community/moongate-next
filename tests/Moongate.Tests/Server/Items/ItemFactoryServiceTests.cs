@@ -1,5 +1,6 @@
 using Moongate.Core.Geometry;
 using Moongate.Core.Ids;
+using Moongate.Core.Types;
 using Moongate.Server.Services.Items;
 using Moongate.Server.Services.Templates;
 using Moongate.UO.Data.Entities.Items;
@@ -90,9 +91,10 @@ public sealed class ItemFactoryServiceTests
             Weight = 1,
             Amount = 1,
             IsStackable = false,
-            GumpId = null,
+            GumpId = 0x3C,
             ScriptId = "shirt_script",
-            Rarity = ItemRarity.Common
+            Rarity = ItemRarity.Common,
+            Visibility = UserLevelType.GameMaster
         };
         var items = new FakeItemService();
         var factory = new ItemFactoryService(NewRegistry(template), items);
@@ -106,8 +108,10 @@ public sealed class ItemFactoryServiceTests
         Assert.Equal(1, entity.Weight);
         Assert.Equal(1, entity.Amount);
         Assert.False(entity.IsStackable);
+        Assert.Equal(0x3C, entity.GumpId);
         Assert.Equal("shirt_script", entity.ScriptId);
         Assert.Equal(ItemRarity.Common, entity.Rarity);
+        Assert.Equal(UserLevelType.GameMaster, entity.Visibility);
         Assert.Single(items.Created);
     }
 
