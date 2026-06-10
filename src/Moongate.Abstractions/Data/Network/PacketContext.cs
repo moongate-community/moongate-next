@@ -13,18 +13,19 @@ public sealed class PacketContext<TPacket>
     private readonly Func<IReadOnlyCollection<long>> _sessionIds;
 
     public PacketContext(
-        long sessionId,
+        IGameSession session,
         TPacket packet,
         DateTimeOffset receivedAt,
         Func<long, IGameNetworkPacket, CancellationToken, Task> send,
         Func<IReadOnlyCollection<long>> sessionIds
     )
     {
+        ArgumentNullException.ThrowIfNull(session);
         ArgumentNullException.ThrowIfNull(packet);
         ArgumentNullException.ThrowIfNull(send);
         ArgumentNullException.ThrowIfNull(sessionIds);
 
-        SessionId = sessionId;
+        Session = session;
         Packet = packet;
         ReceivedAt = receivedAt;
         _send = send;
@@ -32,9 +33,14 @@ public sealed class PacketContext<TPacket>
     }
 
     /// <summary>
+    /// Handler-safe view of the session that sent the inbound packet (endpoints, seed, transport toggles).
+    /// </summary>
+    public IGameSession Session { get; }
+
+    /// <summary>
     /// Session that sent the inbound packet.
     /// </summary>
-    public long SessionId { get; }
+    public long SessionId => Session.SessionId;
 
     /// <summary>
     /// Parsed inbound packet.

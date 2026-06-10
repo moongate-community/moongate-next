@@ -76,4 +76,18 @@ public sealed class SessionService : ISessionService, INetworkSessionManager
 
     public bool TryGet(long sessionId, out GameSession session)
         => _sessions.TryGetValue(sessionId, out session!);
+
+    public bool TryGetSession(long sessionId, out IGameSession session)
+    {
+        if (_sessions.TryGetValue(sessionId, out var found))
+        {
+            session = found;
+
+            return true;
+        }
+
+        session = null!;
+
+        return false;
+    }
 }

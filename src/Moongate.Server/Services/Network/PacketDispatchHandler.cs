@@ -55,10 +55,22 @@ public sealed class PacketDispatchHandler : ITickEventHandler<PacketReceivedEven
     private void Dispatch<TPacket>(PacketReceivedEvent evt)
         where TPacket : IGameNetworkPacket
     {
+        if (!_sessions.TryGetSession(evt.SessionId, out var session))
+        {
+            // The session disconnected between parse and dispatch; its packets are moot.
+            _logger.Debug(
+                "Dropping {Packet} for unknown session {SessionId}",
+                typeof(TPacket).Name,
+                evt.SessionId
+            );
+
+            return;
+        }
+
         var handlers = _serviceProvider.GetService<IEnumerable<IPacketHandler<TPacket>>>() ?? [];
 
         var context = new PacketContext<TPacket>(
-            evt.SessionId,
+            session,
             (TPacket)evt.Packet,
             evt.At,
             EnqueuePacketAsync,
