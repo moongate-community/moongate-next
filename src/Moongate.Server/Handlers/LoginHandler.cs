@@ -9,7 +9,6 @@ using Moongate.Network.UO.Packets.Incoming.Login;
 using Moongate.Network.UO.Packets.Outgoing.Login;
 using Moongate.Network.UO.Types.Login;
 using Moongate.Server.Data.Config;
-using Moongate.Server.Interfaces.Network;
 using Moongate.UO.Domain.Interfaces.Services;
 
 namespace Moongate.Server.Handlers;
@@ -19,10 +18,7 @@ public class LoginHandler : PacketHandlerBase<LoginSeedPacket>, IPacketHandler<A
 {
     private readonly IUserService _userService;
 
-
-    private readonly ServerConfig  _serverConfig;
-
-    private readonly ISessionService _sessionService;
+    private readonly ServerConfig _serverConfig;
 
     private readonly Serilog.ILogger _logger = Serilog.Log.ForContext<LoginHandler>();
 
@@ -31,12 +27,10 @@ public class LoginHandler : PacketHandlerBase<LoginSeedPacket>, IPacketHandler<A
         INetworkSessionManager sessions,
         IPlayerSessionService playerSessionService,
         IUserService userService,
-        ISessionService sessionService,
         ServerConfig serverConfig
     ) : base(eventBus, sessions, playerSessionService)
     {
         _userService = userService;
-        _sessionService = sessionService;
         _serverConfig = serverConfig;
     }
 
@@ -60,46 +54,45 @@ public class LoginHandler : PacketHandlerBase<LoginSeedPacket>, IPacketHandler<A
 
     public async Task HandleAsync(PacketContext<AccountLoginPacket> context, CancellationToken cancellationToken = default)
     {
-        if (PlayerSessions.TryGetBySessionId(context.SessionId, out var _))
+        if (!PlayerSessions.TryGetBySessionId(context.SessionId, out _) || context.Session.ServerEndPoint is null)
         {
-            if (_sessionService.TryGet(context.SessionId, out var gameSession))
-            {
-                var userEntity = await _userService.LoginAsync(
-                                     context.Packet.Account,
-                                     context.Packet.Password,
-                                     cancellationToken
-                                 );
-
-                if (userEntity == null)
-                {
-                    _logger.Warning("Failed login attempt for account {Account}", context.Packet.Account);
-                    await context.SendAsync(new LoginDeniedPacket(LoginDeniedReasonType.BadPassword), cancellationToken);
-
-                    return;
-                }
-
-                if (!userEntity.IsActive)
-                {
-                    await context.SendAsync(new LoginDeniedPacket(LoginDeniedReasonType.AccountBlocked), cancellationToken);
-
-                    return;
-                }
-
-                _logger.Information("User {@User} autheticated, level: {@Level}", userEntity.Username, userEntity.Level);
-
-                PlayerSessions.Authenticate(context.SessionId, userEntity.Id, userEntity.Username, DateTimeOffset.Now);
-
-                var serverListPacket = new ServerListPacket(
-                    new GameServerEntry()
-                    {
-                        Index = 0,
-                        ServerName = _serverConfig.ServerName,
-                        IpAddress = gameSession.ServerEndPoint.Address,
-                    }
-                );
-
-                await context.SendAsync(serverListPacket, cancellationToken);
-            }
+            return;
         }
+
+        var userEntity = await _userService.LoginAsync(
+                             context.Packet.Account,
+                             context.Packet.Password,
+                             cancellationToken
+                         );
+
+        if (userEntity == null)
+        {
+            _logger.Warning("Failed login attempt for account {Account}", context.Packet.Account);
+            await context.SendAsync(new LoginDeniedPacket(LoginDeniedReasonType.BadPassword), cancellationToken);
+
+            return;
+        }
+
+        if (!userEntity.IsActive)
+        {
+            await context.SendAsync(new LoginDeniedPacket(LoginDeniedReasonType.AccountBlocked), cancellationToken);
+
+            return;
+        }
+
+        _logger.Information("User {@User} autheticated, level: {@Level}", userEntity.Username, userEntity.Level);
+
+        PlayerSessions.Authenticate(context.SessionId, userEntity.Id, userEntity.Username, DateTimeOffset.Now);
+
+        var serverListPacket = new ServerListPacket(
+            new GameServerEntry()
+            {
+                Index = 0,
+                ServerName = _serverConfig.ServerName,
+                IpAddress = context.Session.ServerEndPoint.Address,
+            }
+        );
+
+        await context.SendAsync(serverListPacket, cancellationToken);
     }
 }

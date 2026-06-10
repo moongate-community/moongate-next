@@ -1,6 +1,8 @@
+using System.Net.Sockets;
 using DryIoc;
 using Moongate.Abstractions.Data.Network;
 using Moongate.Abstractions.Extensions.DryIoc;
+using Moongate.Network.Client;
 using Moongate.Abstractions.Interfaces.EventHandlers;
 using Moongate.Abstractions.Interfaces.Network;
 using Moongate.Abstractions.Interfaces.Player;
@@ -36,6 +38,18 @@ public class PacketDispatchHandlerTests
     {
         public Task HandleAsync(PacketContext<TestPacket> context, CancellationToken cancellationToken = default)
             => throw new InvalidOperationException("handler failed");
+    }
+
+    private sealed class SessionCapturingHandler : IPacketHandler<TestPacket>
+    {
+        public IGameSession? Session { get; private set; }
+
+        public Task HandleAsync(PacketContext<TestPacket> context, CancellationToken cancellationToken = default)
+        {
+            Session = context.Session;
+
+            return Task.CompletedTask;
+        }
     }
 
     private sealed class FakeServiceProvider : IServiceProvider
@@ -184,8 +198,11 @@ public class PacketDispatchHandlerTests
         container.AddPacketHandler<BaseHandler, TestPacket>();
 
         var bus = container.Resolve<IEventBusService>();
+        using var client = NewClient();
+        var sessionId = container.Resolve<SessionService>().GetOrCreate(client).SessionId;
+        bus.DrainTickEvents(10);
 
-        bus.Publish(new PacketReceivedEvent(10, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
+        bus.Publish(new PacketReceivedEvent(sessionId, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
         bus.DrainTickEvents(10);
 
         var probe = container.Resolve<BaseHandlerProbe>();
@@ -218,58 +235,98 @@ public class PacketDispatchHandlerTests
         container.AddPacketHandler<IntegrationHandler, TestPacket>();
 
         var bus = container.Resolve<IEventBusService>();
+        using var client = NewClient();
+        var sessionId = container.Resolve<SessionService>().GetOrCreate(client).SessionId;
+        bus.DrainTickEvents(10);
 
-        bus.Publish(new PacketReceivedEvent(10, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
+        bus.Publish(new PacketReceivedEvent(sessionId, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
         var processed = bus.DrainTickEvents(10);
 
         Assert.Equal(1, processed);
-        Assert.Equal(new long[] { 10 }, container.Resolve<IntegrationCapture>().SessionIds);
+        Assert.Equal(new long[] { sessionId }, container.Resolve<IntegrationCapture>().SessionIds);
     }
 
     [Fact]
     public void Handle_HandlerThrows_ContinuesWithRemainingHandlers()
     {
+        using var client = NewClient();
+        var sessions = new SessionService();
+        var sessionId = sessions.GetOrCreate(client).SessionId;
         var capturing = new CapturingHandler();
-        var dispatcher = NewDispatcher([new ThrowingHandler(), capturing]);
+        var dispatcher = NewDispatcher([new ThrowingHandler(), capturing], sessions);
 
-        dispatcher.Handle(new(10, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
+        dispatcher.Handle(new(sessionId, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
 
-        Assert.Equal(new long[] { 10 }, capturing.SessionIds);
+        Assert.Equal(new long[] { sessionId }, capturing.SessionIds);
     }
 
     [Fact]
     public void Handle_MatchingPacket_InvokesTypedHandler()
     {
+        using var client = NewClient();
+        var sessions = new SessionService();
+        var sessionId = sessions.GetOrCreate(client).SessionId;
         var handler = new CapturingHandler();
-        var dispatcher = NewDispatcher([handler]);
+        var dispatcher = NewDispatcher([handler], sessions);
 
-        dispatcher.Handle(new(10, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
+        dispatcher.Handle(new(sessionId, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
 
-        Assert.Equal(new long[] { 10 }, handler.SessionIds);
+        Assert.Equal(new long[] { sessionId }, handler.SessionIds);
     }
 
     [Fact]
     public void Handle_MultipleMatchingHandlers_InvokesAll()
     {
+        using var client = NewClient();
+        var sessions = new SessionService();
+        var sessionId = sessions.GetOrCreate(client).SessionId;
         var first = new CapturingHandler();
         var second = new CapturingHandler();
-        var dispatcher = NewDispatcher([first, second]);
+        var dispatcher = NewDispatcher([first, second], sessions);
 
-        dispatcher.Handle(new(10, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
+        dispatcher.Handle(new(sessionId, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
 
-        Assert.Equal(new long[] { 10 }, first.SessionIds);
-        Assert.Equal(new long[] { 10 }, second.SessionIds);
+        Assert.Equal(new long[] { sessionId }, first.SessionIds);
+        Assert.Equal(new long[] { sessionId }, second.SessionIds);
     }
 
     [Fact]
     public void Handle_NonMatchingPacket_DoesNotInvokeUnrelatedHandler()
     {
+        using var client = NewClient();
+        var sessions = new SessionService();
+        var sessionId = sessions.GetOrCreate(client).SessionId;
         var handler = new CapturingHandler();
-        var dispatcher = NewDispatcher([handler]);
+        var dispatcher = NewDispatcher([handler], sessions);
 
-        dispatcher.Handle(new(10, 0xA2, new OtherPacket(), DateTimeOffset.UtcNow));
+        dispatcher.Handle(new(sessionId, 0xA2, new OtherPacket(), DateTimeOffset.UtcNow));
 
         Assert.Empty(handler.SessionIds);
+    }
+
+    [Fact]
+    public void Handle_UnknownSession_SkipsDispatch()
+    {
+        var handler = new CapturingHandler();
+        var dispatcher = NewDispatcher([handler], new SessionService());
+
+        dispatcher.Handle(new(404, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
+
+        Assert.Empty(handler.SessionIds);
+    }
+
+    [Fact]
+    public void Handle_PassesGameSessionToContext()
+    {
+        using var client = NewClient();
+        var sessions = new SessionService();
+        var gameSession = sessions.GetOrCreate(client);
+        var handler = new SessionCapturingHandler();
+        var dispatcher = NewDispatcher([handler], sessions);
+
+        dispatcher.Handle(new(gameSession.SessionId, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
+
+        Assert.Same(gameSession, handler.Session);
     }
 
     [Fact]
@@ -286,10 +343,16 @@ public class PacketDispatchHandlerTests
         );
     }
 
-    private static PacketDispatchHandler NewDispatcher(IReadOnlyList<IPacketHandler<TestPacket>> handlers)
+    private static MoongateTCPClient NewClient()
+        => new(new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp));
+
+    private static PacketDispatchHandler NewDispatcher(
+        IReadOnlyList<IPacketHandler<TestPacket>> handlers,
+        SessionService sessions
+    )
         => new(
             new FakeServiceProvider(handlers),
             new OutgoingPacketQueue(),
-            new SessionService()
+            sessions
         );
 }

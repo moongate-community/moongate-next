@@ -1,6 +1,7 @@
 using Moongate.Abstractions.Data.Network;
 using Moongate.Network.Spans;
 using Moongate.Network.UO.Base;
+using Moongate.Tests.Support;
 
 namespace Moongate.Tests.Network.Service;
 
@@ -45,7 +46,7 @@ public class PacketContextTests
     {
         var exception = Record.Exception(
             () => new PacketContext<TestPacket>(
-                10,
+                new FakeGameSession { SessionId = 10 },
                 null!,
                 DateTimeOffset.UtcNow,
                 (_, _, _) => Task.CompletedTask,
@@ -54,6 +55,38 @@ public class PacketContextTests
         );
 
         Assert.IsType<ArgumentNullException>(exception);
+    }
+
+    [Fact]
+    public void Ctor_NullSession_Throws()
+    {
+        var exception = Record.Exception(
+            () => new PacketContext<TestPacket>(
+                null!,
+                new(0x01),
+                DateTimeOffset.UtcNow,
+                (_, _, _) => Task.CompletedTask,
+                () => []
+            )
+        );
+
+        Assert.IsType<ArgumentNullException>(exception);
+    }
+
+    [Fact]
+    public void Session_ExposesSessionAndDerivesSessionId()
+    {
+        var session = new FakeGameSession { SessionId = 42 };
+        var context = new PacketContext<TestPacket>(
+            session,
+            new(0x01),
+            DateTimeOffset.UtcNow,
+            (_, _, _) => Task.CompletedTask,
+            () => []
+        );
+
+        Assert.Same(session, context.Session);
+        Assert.Equal(42, context.SessionId);
     }
 
     [Fact]
@@ -79,7 +112,7 @@ public class PacketContextTests
 
     private static PacketContext<TestPacket> NewContext(long sessionId, long[] sessions, List<long> sent)
         => new(
-            sessionId,
+            new FakeGameSession { SessionId = sessionId },
             new(0x01),
             DateTimeOffset.UtcNow,
             (targetSessionId, _, _) =>

@@ -6,6 +6,7 @@ using Moongate.Abstractions.Types.Commands;
 using Moongate.Network.UO.Packets.Incoming.Speech;
 using Moongate.Server.Services.Commands;
 using Moongate.Server.Services.Player;
+using Moongate.Tests.Support;
 
 namespace Moongate.Tests.Server.Commands;
 
@@ -87,7 +88,7 @@ public sealed class SpeechCommandPacketHandlerTests
 
     private static PacketContext<UnicodeSpeechPacket> CreateUnicodeContext(string text)
         => new(
-            42,
+            new FakeGameSession { SessionId = 42 },
             new() { Text = text },
             DateTimeOffset.UtcNow,
             static (_, _, _) => Task.CompletedTask,

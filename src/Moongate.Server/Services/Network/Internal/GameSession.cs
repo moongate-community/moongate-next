@@ -10,7 +10,7 @@ namespace Moongate.Server.Services.Network.Internal;
 /// Minimal per-connection session: tracks the owning client and a pending byte buffer that the
 /// network parser accumulates into until full packets can be extracted.
 /// </summary>
-public sealed class GameSession
+public sealed class GameSession : IGameSession
 {
     private const int DefaultPacketBufferCapacity = 256;
 
