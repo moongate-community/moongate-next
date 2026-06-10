@@ -1,0 +1,76 @@
+spawn:
+    -   type: Spawner
+        guid: 7431d589-5e24-4f05-b479-30dc17c7e942
+        name: Spawner (306)
+        location:
+            - 1098
+            - 698
+            - -60
+        map: Ilshenar
+        count: 2
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 1
+        walking_range: 5
+        entries:
+            -   name: GolemController
+                max_count: 1
+                probability: 100
+            -   name: Golem
+                max_count: 1
+                probability: 100
+    -   type: Spawner
+        guid: 8ed26f0f-de07-4412-bc99-6cee204f1f40
+        name: Spawner (306)
+        location:
+            - 1072
+            - 651
+            - -60
+        map: Ilshenar
+        count: 1
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 6
+        walking_range: 6
+        entries:
+            -   name: JukaWarrior
+                max_count: 1
+                probability: 100
+    -   type: Spawner
+        guid: d7d89534-d330-4b6a-a6b0-83187bf9ff54
+        name: Spawner (306)
+        location:
+            - 1091
+            - 702
+            - -40
+        map: Ilshenar
+        count: 1
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 5
+        walking_range: 10
+        entries:
+            -   name: Golem
+                max_count: 1
+                probability: 100
+    -   type: Spawner
+        guid: e15d8287-9350-468d-8144-dd3baa906a53
+        name: Spawner (306)
+        location:
+            - 1086
+            - 702
+            - -60
+        map: Ilshenar
+        count: 2
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 5
+        walking_range: 5
+        entries:
+            -   name: GolemController
+                max_count: 2
+                probability: 100

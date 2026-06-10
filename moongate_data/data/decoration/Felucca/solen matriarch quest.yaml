@@ -1,0 +1,10 @@
+decoration:
+    -   type: Spawner
+        arguments: (Spawn = BlackSolenMatriarch; Count=1; HomeRange=14)
+        description: Black Solen Matriarch
+        item_id: 7955
+        placements:
+            -   location:
+                    - 5776
+                    - 1898
+                    - 22

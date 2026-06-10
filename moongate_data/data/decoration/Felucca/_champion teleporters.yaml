@@ -1,0 +1,236 @@
+decoration:
+    -   type: Teleporter
+        arguments: (PointDest = (5814, 3548, 0))
+        description: 'Teleporters # teleporter'
+        item_id: 7107
+        placements:
+            -   location:
+                    - 5443
+                    - 2325
+                    - 35
+    -   type: Teleporter
+        arguments: (PointDest = (5522, 3921, 37))
+        description: teleporter
+        item_id: 7107
+        placements:
+            -   location:
+                    - 5996
+                    - 2367
+                    - 45
+    -   type: Teleporter
+        arguments: (PointDest = (5958, 2345, 25))
+        description: teleporter
+        item_id: 7107
+        placements:
+            -   location:
+                    - 6053
+                    - 2407
+                    - 27
+    -   type: Teleporter
+        arguments: (PointDest = (6089, 2400, 24))
+        description: teleporter
+        item_id: 7107
+        placements:
+            -   location:
+                    - 6080
+                    - 2340
+                    - 26
+    -   type: Teleporter
+        arguments: (PointDest = (5972, 2418, 26))
+        description: teleporter
+        item_id: 7107
+        placements:
+            -   location:
+                    - 5503
+                    - 3971
+                    - 40
+    -   type: Teleporter
+        arguments: (PointDest = (5490, 2348, 20))
+        description: teleporter
+        item_id: 7107
+        placements:
+            -   location:
+                    - 5731
+                    - 3420
+                    - 14
+    -   type: Teleporter
+        arguments: (PointDest = (5606, 802, 60))
+        description: teleporter
+        item_id: 7107
+        placements:
+            -   location:
+                    - 5265
+                    - 683
+                    - 0
+    -   type: Teleporter
+        arguments: (PointDest = (5876, 1378, 0))
+        description: teleporter
+        item_id: 7107
+        placements:
+            -   location:
+                    - 5265
+                    - 669
+                    - 0
+    -   type: Teleporter
+        arguments: (PointDest = (5164, 1009, 0))
+        description: teleporter
+        item_id: 7107
+        placements:
+            -   location:
+                    - 5506
+                    - 814
+                    - 60
+    -   type: Teleporter
+        arguments: (PointDest = (5201, 1564, 0))
+        description: teleporter
+        item_id: 7107
+        placements:
+            -   location:
+                    - 5506
+                    - 817
+                    - 60
+    -   type: Teleporter
+        arguments: (PointDest = (5201, 1564, 0))
+        description: teleporter
+        item_id: 7107
+        placements:
+            -   location:
+                    - 5145
+                    - 973
+                    - 0
+    -   type: Teleporter
+        arguments: (PointDest = (5331, 707, 0))
+        description: teleporter
+        item_id: 7107
+        placements:
+            -   location:
+                    - 5140
+                    - 973
+                    - 0
+    -   type: Teleporter
+        arguments: (PointDest = (5606, 802, 60))
+        description: teleporter
+        item_id: 7107
+        placements:
+            -   location:
+                    - 5682
+                    - 1440
+                    - 0
+    -   type: Teleporter
+        arguments: (PointDest = (5164, 1009, 0))
+        description: teleporter
+        item_id: 7107
+        placements:
+            -   location:
+                    - 5682
+                    - 1437
+                    - 0
+    -   type: Teleporter
+        arguments: (PointDest = (5977, 169, 0))
+        description: teleporter
+        item_id: 7107
+        placements:
+            -   location:
+                    - 5905
+                    - 97
+                    - 0
+    -   type: Teleporter
+        arguments: (PointDest = (5876, 1378, 0))
+        description: teleporter
+        item_id: 7107
+        placements:
+            -   location:
+                    - 5360
+                    - 1540
+                    - 0
+    -   type: Teleporter
+        arguments: (PointDest = (5331, 707, 0))
+        description: teleporter
+        item_id: 7107
+        placements:
+            -   location:
+                    - 5356
+                    - 1540
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: 'Effects # sparkle'
+        item_id: 14170
+        placements:
+            -   location:
+                    - 5443
+                    - 2325
+                    - 34
+            -   location:
+                    - 5996
+                    - 2367
+                    - 45
+            -   location:
+                    - 6053
+                    - 2407
+                    - 27
+            -   location:
+                    - 6080
+                    - 2340
+                    - 26
+            -   location:
+                    - 5503
+                    - 3971
+                    - 40
+            -   location:
+                    - 5731
+                    - 3420
+                    - 14
+            -   location:
+                    - 5265
+                    - 683
+                    - 0
+            -   location:
+                    - 5265
+                    - 669
+                    - 0
+            -   location:
+                    - 5506
+                    - 814
+                    - 60
+            -   location:
+                    - 5506
+                    - 817
+                    - 60
+            -   location:
+                    - 5145
+                    - 973
+                    - 0
+            -   location:
+                    - 5140
+                    - 973
+                    - 0
+            -   location:
+                    - 5682
+                    - 1440
+                    - 0
+            -   location:
+                    - 5682
+                    - 1437
+                    - 0
+            -   location:
+                    - 5905
+                    - 97
+                    - 0
+            -   location:
+                    - 5360
+                    - 1540
+                    - 0
+            -   location:
+                    - 5356
+                    - 1540
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: sparkle
+        item_id: 14154
+        placements:
+            -   location:
+                    - 5682
+                    - 1437
+                    - 5

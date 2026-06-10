@@ -1,0 +1,365 @@
+decoration:
+    -   type: Teleporter
+        arguments: (PointDest = (2727, 2133, 5))
+        description: 'Teleporters #'
+        item_id: 7107
+        placements:
+            -   location:
+                    - 2618
+                    - 977
+                    - 5
+    -   type: Teleporter
+        arguments: (PointDest = (2618, 977, 5))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 2727
+                    - 2133
+                    - 5
+    -   type: Static
+        arguments: (Name = to the Mainland)
+        description: "Buc's Den # sign"
+        item_id: 3024
+        placements:
+            -   location:
+                    - 2728
+                    - 2133
+                    - 25
+    -   type: Static
+        arguments: ''
+        description: stone
+        item_id: 1822
+        placements:
+            -   location:
+                    - 2726
+                    - 2133
+                    - 0
+            -   location:
+                    - 2727
+                    - 2131
+                    - 0
+            -   location:
+                    - 2727
+                    - 2131
+                    - 5
+            -   location:
+                    - 2727
+                    - 2131
+                    - 10
+            -   location:
+                    - 2727
+                    - 2131
+                    - 15
+            -   location:
+                    - 2727
+                    - 2131
+                    - 20
+            -   location:
+                    - 2727
+                    - 2131
+                    - 25
+            -   location:
+                    - 2727
+                    - 2132
+                    - 0
+            -   location:
+                    - 2727
+                    - 2132
+                    - 30
+            -   location:
+                    - 2727
+                    - 2133
+                    - 0
+            -   location:
+                    - 2727
+                    - 2133
+                    - 30
+            -   location:
+                    - 2727
+                    - 2133
+                    - 35
+            -   location:
+                    - 2727
+                    - 2134
+                    - 0
+            -   location:
+                    - 2727
+                    - 2134
+                    - 30
+            -   location:
+                    - 2727
+                    - 2135
+                    - 0
+            -   location:
+                    - 2727
+                    - 2135
+                    - 5
+            -   location:
+                    - 2727
+                    - 2135
+                    - 10
+            -   location:
+                    - 2727
+                    - 2135
+                    - 15
+            -   location:
+                    - 2727
+                    - 2135
+                    - 20
+            -   location:
+                    - 2727
+                    - 2135
+                    - 25
+            -   location:
+                    - 2728
+                    - 2133
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 1823
+        placements:
+            -   location:
+                    - 2727
+                    - 2134
+                    - 35
+            -   location:
+                    - 2727
+                    - 2135
+                    - 30
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 1847
+        placements:
+            -   location:
+                    - 2727
+                    - 2131
+                    - 30
+            -   location:
+                    - 2727
+                    - 2132
+                    - 35
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 1952
+        placements:
+            -   location:
+                    - 2726
+                    - 2132
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 1953
+        placements:
+            -   location:
+                    - 2728
+                    - 2134
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 1954
+        placements:
+            -   location:
+                    - 2728
+                    - 2132
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 2010
+        placements:
+            -   location:
+                    - 2726
+                    - 2134
+                    - 0
+    -   type: Static
+        arguments: (Name = to Buccaneer's Den)
+        description: 'Mainland # sign'
+        item_id: 3023
+        placements:
+            -   location:
+                    - 2618
+                    - 978
+                    - 25
+    -   type: Static
+        arguments: ''
+        description: stone
+        item_id: 1955
+        placements:
+            -   location:
+                    - 2616
+                    - 977
+                    - 0
+            -   location:
+                    - 2616
+                    - 977
+                    - 5
+            -   location:
+                    - 2616
+                    - 977
+                    - 10
+            -   location:
+                    - 2616
+                    - 977
+                    - 15
+            -   location:
+                    - 2616
+                    - 977
+                    - 20
+            -   location:
+                    - 2616
+                    - 977
+                    - 25
+            -   location:
+                    - 2617
+                    - 977
+                    - 0
+            -   location:
+                    - 2617
+                    - 977
+                    - 30
+            -   location:
+                    - 2618
+                    - 977
+                    - 0
+            -   location:
+                    - 2618
+                    - 977
+                    - 30
+            -   location:
+                    - 2618
+                    - 977
+                    - 35
+            -   location:
+                    - 2619
+                    - 977
+                    - 0
+            -   location:
+                    - 2619
+                    - 977
+                    - 30
+            -   location:
+                    - 2620
+                    - 977
+                    - 0
+            -   location:
+                    - 2620
+                    - 977
+                    - 5
+            -   location:
+                    - 2620
+                    - 977
+                    - 10
+            -   location:
+                    - 2620
+                    - 977
+                    - 15
+            -   location:
+                    - 2620
+                    - 977
+                    - 20
+            -   location:
+                    - 2620
+                    - 977
+                    - 25
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 1956
+        placements:
+            -   location:
+                    - 2617
+                    - 978
+                    - 0
+            -   location:
+                    - 2618
+                    - 978
+                    - 0
+            -   location:
+                    - 2619
+                    - 978
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 1957
+        placements:
+            -   location:
+                    - 2619
+                    - 977
+                    - 35
+            -   location:
+                    - 2620
+                    - 977
+                    - 30
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 1958
+        placements:
+            -   location:
+                    - 2617
+                    - 976
+                    - 0
+            -   location:
+                    - 2618
+                    - 976
+                    - 0
+            -   location:
+                    - 2619
+                    - 976
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 1959
+        placements:
+            -   location:
+                    - 2616
+                    - 977
+                    - 30
+            -   location:
+                    - 2617
+                    - 977
+                    - 35
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 1960
+        placements:
+            -   location:
+                    - 2616
+                    - 976
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 1961
+        placements:
+            -   location:
+                    - 2620
+                    - 978
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 1962
+        placements:
+            -   location:
+                    - 2620
+                    - 976
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: stone stairs
+        item_id: 1963
+        placements:
+            -   location:
+                    - 2616
+                    - 978
+                    - 0

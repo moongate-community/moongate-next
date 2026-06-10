@@ -1,0 +1,9 @@
+item_templates:
+    - id: backpack
+      name: Backpack
+      item_id: 3701
+      weight: 3
+      is_movable: true
+      gump_id: 60
+      layer: Backpack
+      tags: [container]

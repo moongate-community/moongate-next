@@ -1,0 +1,62 @@
+decoration:
+    -   type: Spawner
+        arguments: (Spawn = ElwoodMcCarrin; Count=1; HomeRange=0)
+        description: Elwood McCarrin
+        item_id: 7955
+        placements:
+            -   location:
+                    - 3666
+                    - 2652
+                    - 0
+    -   type: Spawner
+        arguments: (Spawn = AlbertaGiacco; Count=1; HomeRange=0)
+        description: Alberta Giacco
+        item_id: 7955
+        placements:
+            -   location:
+                    - 2899
+                    - 709
+                    - 0
+    -   type: Spawner
+        arguments: (Spawn = GabrielPiete; Count=1; HomeRange=0)
+        description: Gabriel Piete
+        item_id: 7955
+        placements:
+            -   location:
+                    - 1443
+                    - 1557
+                    - 51
+    -   type: Spawner
+        arguments: (Spawn = Impresario; Count=1; HomeRange=0)
+        description: Impresario
+        item_id: 7955
+        placements:
+            -   location:
+                    - 1454
+                    - 1593
+                    - 20
+            -   location:
+                    - 3738
+                    - 1230
+                    - 0
+            -   location:
+                    - 3736
+                    - 1220
+                    - 2
+            -   location:
+                    - 1429
+                    - 4011
+                    - 0
+            -   location:
+                    - 1424
+                    - 4008
+                    - 0
+    -   type: Spawner
+        arguments: (Spawn = TomasONeerlan; Count=1; HomeRange=0)
+        description: Tomas O'Neerlan
+        item_id: 7955
+        placements:
+            -   location:
+                    - 1839
+                    - 2674
+                    - 0

@@ -10,17 +10,19 @@ type ItemTemplateCatalogPanelProps = {
   accessToken: string;
 };
 
-const PageSize = 50;
+const PAGE_SIZE = 50;
 
 const defaultFilters: ItemTemplateFilters = {
   page: 1,
-  pageSize: PageSize,
+  pageSize: PAGE_SIZE,
   search: "",
   tag: "",
   rarity: "",
   layer: "",
   abstract: "all"
 };
+
+const rarityOptions = ["None", "Common", "Uncommon", "Rare", "Epic", "Legendary"];
 
 export function ItemTemplateCatalogPanel({ accessToken }: ItemTemplateCatalogPanelProps) {
   const [filters, setFilters] = useState<ItemTemplateFilters>(defaultFilters);
@@ -99,47 +101,54 @@ export function ItemTemplateCatalogPanel({ accessToken }: ItemTemplateCatalogPan
         <button
           type="button"
           onClick={() => void load()}
-          className="inline-flex min-h-[34px] items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-[13px] font-semibold text-fg transition-colors duration-150 hover:bg-muted"
+          className="inline-flex min-h-[30px] items-center gap-1.5 rounded-md px-2.5 text-[13px] font-medium text-fg-muted transition-colors duration-150 hover:bg-muted hover:text-fg"
         >
-          <RefreshCw size={15} aria-hidden />
+          <RefreshCw size={14} aria-hidden />
           Refresh
         </button>
       }
     >
-      <div className="grid gap-4">
-        <div className="grid gap-3 xl:grid-cols-[minmax(240px,1fr)_160px_160px_160px_140px]">
+      <div className="grid gap-3">
+        <div className="grid gap-2 lg:grid-cols-[minmax(260px,1fr)_140px_140px_140px_128px]">
           <label className="relative">
-            <Search size={16} aria-hidden className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-fg-subtle" />
+            <Search size={15} aria-hidden className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-fg-subtle" />
             <input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder="Search id, name, comment, tag, script or item id…"
               aria-label="Search item templates"
-              className="h-10 w-full rounded-md border border-border bg-surface pl-9 pr-3 text-sm text-fg outline-none focus:border-accent"
+              className="h-8 w-full rounded-md border border-border bg-bg pl-8 pr-2.5 text-[13px] text-fg outline-none transition-colors placeholder:text-fg-subtle focus:border-border-strong focus:bg-surface"
             />
           </label>
           <input
             value={filters.tag}
             onChange={(event) => updateFilter("tag", event.target.value)}
             placeholder="Tag"
-            className="h-10 rounded-md border border-border bg-surface px-3 text-sm text-fg outline-none focus:border-accent"
+            className="h-8 rounded-md border border-border bg-bg px-2.5 text-[13px] text-fg outline-none transition-colors placeholder:text-fg-subtle focus:border-border-strong focus:bg-surface"
           />
-          <input
+          <select
             value={filters.rarity}
             onChange={(event) => updateFilter("rarity", event.target.value)}
-            placeholder="Rarity"
-            className="h-10 rounded-md border border-border bg-surface px-3 text-sm text-fg outline-none focus:border-accent"
-          />
+            aria-label="Filter item templates by rarity"
+            className="h-8 rounded-md border border-border bg-bg px-2.5 text-[13px] text-fg outline-none transition-colors focus:border-border-strong focus:bg-surface"
+          >
+            <option value="">All rarities</option>
+            {rarityOptions.map((rarity) => (
+              <option key={rarity} value={rarity}>
+                {rarity}
+              </option>
+            ))}
+          </select>
           <input
             value={filters.layer}
             onChange={(event) => updateFilter("layer", event.target.value)}
             placeholder="Layer"
-            className="h-10 rounded-md border border-border bg-surface px-3 text-sm text-fg outline-none focus:border-accent"
+            className="h-8 rounded-md border border-border bg-bg px-2.5 text-[13px] text-fg outline-none transition-colors placeholder:text-fg-subtle focus:border-border-strong focus:bg-surface"
           />
           <select
             value={filters.abstract}
             onChange={(event) => updateFilter("abstract", event.target.value as ItemTemplateFilters["abstract"])}
-            className="h-10 rounded-md border border-border bg-surface px-3 text-sm text-fg outline-none focus:border-accent"
+            className="h-8 rounded-md border border-border bg-bg px-2.5 text-[13px] text-fg outline-none transition-colors focus:border-border-strong focus:bg-surface"
           >
             <option value="all">All</option>
             <option value="false">Concrete</option>
@@ -147,24 +156,24 @@ export function ItemTemplateCatalogPanel({ accessToken }: ItemTemplateCatalogPan
           </select>
         </div>
 
-        {error && <p className="m-0 rounded-md bg-danger/10 p-3 text-[13px] font-semibold text-danger">{error}</p>}
+        {error && <p className="m-0 rounded-md bg-danger/10 p-3 text-[13px] font-medium text-danger">{error}</p>}
 
-        <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_360px]">
+        <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_340px]">
           <div className="min-w-0">
             {loading ? (
-              <p className="m-0 rounded-md bg-muted p-4 text-[13px] font-semibold text-fg-muted">Loading item templates…</p>
+              <p className="m-0 rounded-md bg-muted p-4 text-[13px] font-medium text-fg-muted">Loading item templates…</p>
             ) : (
               <ItemTemplateTable templates={templates} selectedId={selectedId} onSelect={selectTemplate} />
             )}
 
-            <div className="mt-4 flex items-center justify-between text-xs text-fg-muted">
+            <div className="mt-3 flex items-center justify-between text-xs text-fg-muted">
               <span className="font-mono">{totalCount} templates</span>
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   disabled={filters.page <= 1}
                   onClick={() => setFilters((current) => ({ ...current, page: Math.max(1, current.page - 1) }))}
-                  className="inline-flex min-h-[32px] items-center rounded-md border border-border bg-surface px-2.5 font-semibold text-fg transition-colors duration-150 hover:bg-muted disabled:opacity-50"
+                  className="inline-flex min-h-[28px] items-center rounded-md px-2 font-medium text-fg-muted transition-colors duration-150 hover:bg-muted hover:text-fg disabled:opacity-40"
                 >
                   Prev
                 </button>
@@ -175,7 +184,7 @@ export function ItemTemplateCatalogPanel({ accessToken }: ItemTemplateCatalogPan
                   type="button"
                   disabled={filters.page >= totalPages}
                   onClick={() => setFilters((current) => ({ ...current, page: Math.min(totalPages, current.page + 1) }))}
-                  className="inline-flex min-h-[32px] items-center rounded-md border border-border bg-surface px-2.5 font-semibold text-fg transition-colors duration-150 hover:bg-muted disabled:opacity-50"
+                  className="inline-flex min-h-[28px] items-center rounded-md px-2 font-medium text-fg-muted transition-colors duration-150 hover:bg-muted hover:text-fg disabled:opacity-40"
                 >
                   Next
                 </button>

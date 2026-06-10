@@ -1,0 +1,10 @@
+decoration:
+    -   type: Spawner
+        arguments: (Spawn = BlackAmbitiousSolenQueen; Count=1; HomeRange=14)
+        description: Black Ambitious Solen Queen
+        item_id: 7955
+        placements:
+            -   location:
+                    - 5790
+                    - 1983
+                    - 2

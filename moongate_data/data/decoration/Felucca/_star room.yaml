@@ -1,0 +1,73 @@
+decoration:
+    -   type: Teleporter
+        arguments: (PointDest = (5171, 1586, 0))
+        description: teleporter
+        item_id: 7107
+        placements:
+            -   location:
+                    - 5140
+                    - 1773
+                    - 0
+    -   type: Teleporter
+        arguments: (PointDest = (5143, 1774, 0); SoundID=0x1FE)
+        description: teleporter
+        item_id: 7107
+        placements:
+            -   location:
+                    - 5172
+                    - 1589
+                    - -4
+    -   type: ChampionSkullPlatform
+        arguments: ''
+        description: champion skull platform
+        item_id: 1
+        placements:
+            -   location:
+                    - 5140
+                    - 1761
+                    - 1
+    -   type: LocalizedStatic
+        arguments: (LabelNumber = 1049498; Light=Circle300)
+        description: dark moongate
+        item_id: 8147
+        placements:
+            -   location:
+                    - 5172
+                    - 1589
+                    - -4
+    -   type: Static
+        arguments: ''
+        description: music stand
+        item_id: 3770
+        placements:
+            -   location:
+                    - 5155
+                    - 1762
+                    - 1
+    -   type: Static
+        arguments: ''
+        description: music stand
+        item_id: 3771
+        placements:
+            -   location:
+                    - 5151
+                    - 1758
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: sheet music
+        item_id: 3775
+        placements:
+            -   location:
+                    - 5151
+                    - 1758
+                    - 0
+    -   type: PublicMoongate
+        arguments: ''
+        description: moongate
+        item_id: 3948
+        placements:
+            -   location:
+                    - 5153
+                    - 1760
+                    - 0

@@ -1,0 +1,2217 @@
+body:
+    -   id: 1
+        type: Monster
+    -   id: 2
+        type: Monster
+    -   id: 3
+        type: Monster
+    -   id: 4
+        type: Monster
+    -   id: 5
+        type: Animal
+    -   id: 6
+        type: Animal
+    -   id: 7
+        type: Monster
+    -   id: 8
+        type: Monster
+    -   id: 9
+        type: Monster
+    -   id: 10
+        type: Monster
+    -   id: 11
+        type: Monster
+    -   id: 12
+        type: Monster
+    -   id: 13
+        type: Monster
+    -   id: 14
+        type: Monster
+    -   id: 15
+        type: Monster
+    -   id: 16
+        type: Monster
+    -   id: 17
+        type: Monster
+    -   id: 18
+        type: Monster
+    -   id: 19
+        type: Monster
+    -   id: 20
+        type: Monster
+    -   id: 21
+        type: Monster
+    -   id: 22
+        type: Monster
+    -   id: 23
+        type: Animal
+    -   id: 24
+        type: Monster
+    -   id: 25
+        type: Animal
+    -   id: 26
+        type: Monster
+    -   id: 27
+        type: Animal
+    -   id: 28
+        type: Monster
+    -   id: 29
+        type: Animal
+    -   id: 30
+        type: Monster
+    -   id: 31
+        type: Monster
+    -   id: 33
+        type: Monster
+    -   id: 34
+        type: Animal
+    -   id: 35
+        type: Monster
+    -   id: 36
+        type: Monster
+    -   id: 37
+        type: Animal
+    -   id: 38
+        type: Monster
+    -   id: 39
+        type: Monster
+    -   id: 40
+        type: Monster
+    -   id: 41
+        type: Monster
+    -   id: 42
+        type: Monster
+    -   id: 43
+        type: Monster
+    -   id: 44
+        type: Monster
+    -   id: 45
+        type: Monster
+    -   id: 46
+        type: Monster
+    -   id: 47
+        type: Monster
+    -   id: 48
+        type: Monster
+    -   id: 49
+        type: Monster
+    -   id: 50
+        type: Monster
+    -   id: 51
+        type: Monster
+    -   id: 52
+        type: Animal
+    -   id: 53
+        type: Monster
+    -   id: 54
+        type: Monster
+    -   id: 55
+        type: Monster
+    -   id: 56
+        type: Monster
+    -   id: 57
+        type: Monster
+    -   id: 58
+        type: Monster
+    -   id: 59
+        type: Monster
+    -   id: 60
+        type: Monster
+    -   id: 61
+        type: Monster
+    -   id: 62
+        type: Monster
+    -   id: 63
+        type: Animal
+    -   id: 64
+        type: Animal
+    -   id: 65
+        type: Animal
+    -   id: 66
+        type: Monster
+    -   id: 67
+        type: Monster
+    -   id: 68
+        type: Monster
+    -   id: 69
+        type: Monster
+    -   id: 70
+        type: Monster
+    -   id: 71
+        type: Monster
+    -   id: 72
+        type: Monster
+    -   id: 73
+        type: Monster
+    -   id: 74
+        type: Monster
+    -   id: 75
+        type: Monster
+    -   id: 76
+        type: Monster
+    -   id: 77
+        type: Monster
+    -   id: 78
+        type: Monster
+    -   id: 79
+        type: Monster
+    -   id: 80
+        type: Monster
+    -   id: 81
+        type: Animal
+    -   id: 82
+        type: Monster
+    -   id: 83
+        type: Monster
+    -   id: 84
+        type: Monster
+    -   id: 85
+        type: Monster
+    -   id: 86
+        type: Monster
+    -   id: 87
+        type: Monster
+    -   id: 88
+        type: Animal
+    -   id: 89
+        type: Monster
+    -   id: 90
+        type: Monster
+    -   id: 91
+        type: Monster
+    -   id: 92
+        type: Monster
+    -   id: 93
+        type: Monster
+    -   id: 94
+        type: Monster
+    -   id: 96
+        type: Monster
+    -   id: 97
+        type: Animal
+    -   id: 98
+        type: Animal
+    -   id: 99
+        type: Animal
+    -   id: 100
+        type: Animal
+    -   id: 101
+        type: Monster
+    -   id: 102
+        type: Monster
+    -   id: 103
+        type: Monster
+    -   id: 104
+        type: Monster
+    -   id: 106
+        type: Monster
+    -   id: 107
+        type: Monster
+    -   id: 108
+        type: Monster
+    -   id: 109
+        type: Monster
+    -   id: 110
+        type: Monster
+    -   id: 111
+        type: Monster
+    -   id: 112
+        type: Monster
+    -   id: 113
+        type: Monster
+    -   id: 114
+        type: Animal
+    -   id: 115
+        type: Animal
+    -   id: 116
+        type: Animal
+    -   id: 117
+        type: Animal
+    -   id: 118
+        type: Animal
+    -   id: 119
+        type: Animal
+    -   id: 120
+        type: Animal
+    -   id: 121
+        type: Animal
+    -   id: 122
+        type: Animal
+    -   id: 123
+        type: Monster
+    -   id: 124
+        type: Monster
+    -   id: 125
+        type: Monster
+    -   id: 126
+        type: Monster
+    -   id: 127
+        type: Animal
+    -   id: 128
+        type: Monster
+    -   id: 129
+        type: Monster
+    -   id: 130
+        type: Monster
+    -   id: 131
+        type: Monster
+    -   id: 132
+        type: Animal
+    -   id: 133
+        type: Animal
+    -   id: 134
+        type: Animal
+    -   id: 135
+        type: Monster
+    -   id: 136
+        type: Monster
+    -   id: 137
+        type: Monster
+    -   id: 138
+        type: Monster
+    -   id: 139
+        type: Monster
+    -   id: 140
+        type: Monster
+    -   id: 141
+        type: Monster
+    -   id: 142
+        type: Monster
+    -   id: 143
+        type: Monster
+    -   id: 144
+        type: Sea
+    -   id: 145
+        type: Sea
+    -   id: 146
+        type: Monster
+    -   id: 147
+        type: Monster
+    -   id: 148
+        type: Monster
+    -   id: 149
+        type: Monster
+    -   id: 150
+        type: Sea
+    -   id: 151
+        type: Sea
+    -   id: 152
+        type: Monster
+    -   id: 153
+        type: Monster
+    -   id: 154
+        type: Monster
+    -   id: 155
+        type: Monster
+    -   id: 157
+        type: Monster
+    -   id: 158
+        type: Monster
+    -   id: 159
+        type: Monster
+    -   id: 160
+        type: Monster
+    -   id: 161
+        type: Monster
+    -   id: 162
+        type: Monster
+    -   id: 163
+        type: Monster
+    -   id: 164
+        type: Monster
+    -   id: 165
+        type: Monster
+    -   id: 166
+        type: Monster
+    -   id: 167
+        type: Animal
+    -   id: 168
+        type: Monster
+    -   id: 170
+        type: Animal
+    -   id: 171
+        type: Animal
+    -   id: 172
+        type: Monster
+    -   id: 173
+        type: Monster
+    -   id: 174
+        type: Monster
+    -   id: 175
+        type: Monster
+    -   id: 176
+        type: Monster
+    -   id: 177
+        type: Animal
+    -   id: 178
+        type: Animal
+    -   id: 179
+        type: Animal
+    -   id: 180
+        type: Monster
+    -   id: 181
+        type: Monster
+    -   id: 182
+        type: Monster
+    -   id: 183
+        type: Human
+    -   id: 184
+        type: Human
+    -   id: 185
+        type: Human
+    -   id: 186
+        type: Human
+    -   id: 187
+        type: Animal
+    -   id: 188
+        type: Animal
+    -   id: 189
+        type: Monster
+    -   id: 190
+        type: Animal
+    -   id: 191
+        type: Animal
+    -   id: 192
+        type: Animal
+    -   id: 193
+        type: Animal
+    -   id: 194
+        type: Animal
+    -   id: 195
+        type: Animal
+    -   id: 200
+        type: Animal
+    -   id: 201
+        type: Animal
+    -   id: 202
+        type: Animal
+    -   id: 203
+        type: Animal
+    -   id: 204
+        type: Animal
+    -   id: 205
+        type: Animal
+    -   id: 206
+        type: Monster
+    -   id: 207
+        type: Animal
+    -   id: 208
+        type: Animal
+    -   id: 209
+        type: Animal
+    -   id: 210
+        type: Animal
+    -   id: 211
+        type: Animal
+    -   id: 212
+        type: Animal
+    -   id: 213
+        type: Animal
+    -   id: 214
+        type: Animal
+    -   id: 215
+        type: Monster
+    -   id: 216
+        type: Animal
+    -   id: 217
+        type: Animal
+    -   id: 218
+        type: Animal
+    -   id: 219
+        type: Animal
+    -   id: 220
+        type: Animal
+    -   id: 221
+        type: Animal
+    -   id: 223
+        type: Animal
+    -   id: 225
+        type: Animal
+    -   id: 226
+        type: Animal
+    -   id: 228
+        type: Animal
+    -   id: 231
+        type: Animal
+    -   id: 232
+        type: Animal
+    -   id: 233
+        type: Animal
+    -   id: 234
+        type: Animal
+    -   id: 237
+        type: Animal
+    -   id: 238
+        type: Animal
+    -   id: 268
+        type: Equipment
+    -   id: 281
+        type: Equipment
+    -   id: 283
+        type: Equipment
+    -   id: 290
+        type: Animal
+    -   id: 291
+        type: Animal
+    -   id: 292
+        type: Animal
+    -   id: 300
+        type: Monster
+    -   id: 301
+        type: Monster
+    -   id: 302
+        type: Monster
+    -   id: 303
+        type: Monster
+    -   id: 304
+        type: Monster
+    -   id: 305
+        type: Monster
+    -   id: 306
+        type: Monster
+    -   id: 307
+        type: Monster
+    -   id: 308
+        type: Monster
+    -   id: 309
+        type: Monster
+    -   id: 310
+        type: Monster
+    -   id: 311
+        type: Monster
+    -   id: 312
+        type: Monster
+    -   id: 313
+        type: Monster
+    -   id: 314
+        type: Monster
+    -   id: 315
+        type: Monster
+    -   id: 316
+        type: Monster
+    -   id: 317
+        type: Monster
+    -   id: 318
+        type: Monster
+    -   id: 319
+        type: Monster
+    -   id: 349
+        type: Equipment
+    -   id: 400
+        type: Human
+    -   id: 401
+        type: Human
+    -   id: 402
+        type: Human
+    -   id: 403
+        type: Human
+    -   id: 404
+        type: Equipment
+    -   id: 405
+        type: Equipment
+    -   id: 406
+        type: Equipment
+    -   id: 407
+        type: Equipment
+    -   id: 408
+        type: Equipment
+    -   id: 409
+        type: Equipment
+    -   id: 410
+        type: Equipment
+    -   id: 411
+        type: Equipment
+    -   id: 412
+        type: Equipment
+    -   id: 413
+        type: Equipment
+    -   id: 414
+        type: Equipment
+    -   id: 415
+        type: Equipment
+    -   id: 416
+        type: Equipment
+    -   id: 417
+        type: Equipment
+    -   id: 418
+        type: Equipment
+    -   id: 419
+        type: Equipment
+    -   id: 430
+        type: Equipment
+    -   id: 431
+        type: Equipment
+    -   id: 434
+        type: Equipment
+    -   id: 435
+        type: Equipment
+    -   id: 447
+        type: Equipment
+    -   id: 448
+        type: Equipment
+    -   id: 449
+        type: Equipment
+    -   id: 455
+        type: Equipment
+    -   id: 465
+        type: Equipment
+    -   id: 466
+        type: Equipment
+    -   id: 468
+        type: Equipment
+    -   id: 469
+        type: Equipment
+    -   id: 476
+        type: Equipment
+    -   id: 477
+        type: Equipment
+    -   id: 479
+        type: Equipment
+    -   id: 480
+        type: Equipment
+    -   id: 481
+        type: Equipment
+    -   id: 482
+        type: Equipment
+    -   id: 483
+        type: Equipment
+    -   id: 484
+        type: Equipment
+    -   id: 485
+        type: Equipment
+    -   id: 486
+        type: Equipment
+    -   id: 490
+        type: Equipment
+    -   id: 492
+        type: Equipment
+    -   id: 500
+        type: Equipment
+    -   id: 501
+        type: Equipment
+    -   id: 502
+        type: Equipment
+    -   id: 503
+        type: Equipment
+    -   id: 504
+        type: Equipment
+    -   id: 505
+        type: Equipment
+    -   id: 521
+        type: Equipment
+    -   id: 523
+        type: Equipment
+    -   id: 525
+        type: Equipment
+    -   id: 527
+        type: Equipment
+    -   id: 528
+        type: Equipment
+    -   id: 529
+        type: Equipment
+    -   id: 530
+        type: Equipment
+    -   id: 531
+        type: Equipment
+    -   id: 538
+        type: Equipment
+    -   id: 540
+        type: Equipment
+    -   id: 541
+        type: Equipment
+    -   id: 542
+        type: Equipment
+    -   id: 543
+        type: Equipment
+    -   id: 544
+        type: Equipment
+    -   id: 545
+        type: Equipment
+    -   id: 546
+        type: Equipment
+    -   id: 548
+        type: Equipment
+    -   id: 549
+        type: Equipment
+    -   id: 550
+        type: Equipment
+    -   id: 554
+        type: Equipment
+    -   id: 555
+        type: Equipment
+    -   id: 556
+        type: Equipment
+    -   id: 557
+        type: Equipment
+    -   id: 560
+        type: Equipment
+    -   id: 561
+        type: Equipment
+    -   id: 562
+        type: Equipment
+    -   id: 563
+        type: Equipment
+    -   id: 564
+        type: Equipment
+    -   id: 565
+        type: Equipment
+    -   id: 566
+        type: Equipment
+    -   id: 574
+        type: Monster
+    -   id: 576
+        type: Equipment
+    -   id: 577
+        type: Equipment
+    -   id: 578
+        type: Equipment
+    -   id: 579
+        type: Equipment
+    -   id: 580
+        type: Equipment
+    -   id: 581
+        type: Equipment
+    -   id: 582
+        type: Equipment
+    -   id: 584
+        type: Equipment
+    -   id: 585
+        type: Equipment
+    -   id: 586
+        type: Equipment
+    -   id: 587
+        type: Equipment
+    -   id: 588
+        type: Equipment
+    -   id: 589
+        type: Equipment
+    -   id: 590
+        type: Equipment
+    -   id: 591
+        type: Equipment
+    -   id: 592
+        type: Equipment
+    -   id: 593
+        type: Equipment
+    -   id: 594
+        type: Equipment
+    -   id: 595
+        type: Equipment
+    -   id: 596
+        type: Equipment
+    -   id: 597
+        type: Equipment
+    -   id: 598
+        type: Equipment
+    -   id: 599
+        type: Equipment
+    -   id: 600
+        type: Equipment
+    -   id: 601
+        type: Equipment
+    -   id: 602
+        type: Equipment
+    -   id: 603
+        type: Equipment
+    -   id: 604
+        type: Equipment
+    -   id: 611
+        type: Equipment
+    -   id: 612
+        type: Equipment
+    -   id: 613
+        type: Equipment
+    -   id: 614
+        type: Equipment
+    -   id: 615
+        type: Equipment
+    -   id: 616
+        type: Equipment
+    -   id: 617
+        type: Equipment
+    -   id: 618
+        type: Equipment
+    -   id: 619
+        type: Equipment
+    -   id: 620
+        type: Equipment
+    -   id: 621
+        type: Equipment
+    -   id: 622
+        type: Equipment
+    -   id: 623
+        type: Equipment
+    -   id: 624
+        type: Equipment
+    -   id: 625
+        type: Equipment
+    -   id: 626
+        type: Equipment
+    -   id: 627
+        type: Equipment
+    -   id: 628
+        type: Equipment
+    -   id: 629
+        type: Equipment
+    -   id: 630
+        type: Equipment
+    -   id: 631
+        type: Equipment
+    -   id: 633
+        type: Equipment
+    -   id: 635
+        type: Equipment
+    -   id: 636
+        type: Equipment
+    -   id: 637
+        type: Equipment
+    -   id: 638
+        type: Equipment
+    -   id: 639
+        type: Equipment
+    -   id: 643
+        type: Equipment
+    -   id: 644
+        type: Equipment
+    -   id: 645
+        type: Equipment
+    -   id: 646
+        type: Equipment
+    -   id: 648
+        type: Equipment
+    -   id: 649
+        type: Equipment
+    -   id: 651
+        type: Equipment
+    -   id: 653
+        type: Equipment
+    -   id: 654
+        type: Equipment
+    -   id: 655
+        type: Equipment
+    -   id: 656
+        type: Equipment
+    -   id: 657
+        type: Equipment
+    -   id: 658
+        type: Equipment
+    -   id: 659
+        type: Equipment
+    -   id: 660
+        type: Equipment
+    -   id: 661
+        type: Equipment
+    -   id: 662
+        type: Equipment
+    -   id: 663
+        type: Equipment
+    -   id: 664
+        type: Equipment
+    -   id: 665
+        type: Equipment
+    -   id: 668
+        type: Equipment
+    -   id: 669
+        type: Equipment
+    -   id: 670
+        type: Equipment
+    -   id: 671
+        type: Equipment
+    -   id: 672
+        type: Equipment
+    -   id: 674
+        type: Equipment
+    -   id: 675
+        type: Equipment
+    -   id: 676
+        type: Equipment
+    -   id: 677
+        type: Equipment
+    -   id: 678
+        type: Equipment
+    -   id: 679
+        type: Equipment
+    -   id: 680
+        type: Equipment
+    -   id: 681
+        type: Equipment
+    -   id: 682
+        type: Equipment
+    -   id: 683
+        type: Equipment
+    -   id: 687
+        type: Equipment
+    -   id: 688
+        type: Equipment
+    -   id: 690
+        type: Equipment
+    -   id: 691
+        type: Equipment
+    -   id: 693
+        type: Equipment
+    -   id: 694
+        type: Human
+    -   id: 695
+        type: Human
+    -   id: 696
+        type: Equipment
+    -   id: 697
+        type: Equipment
+    -   id: 698
+        type: Equipment
+    -   id: 699
+        type: Equipment
+    -   id: 700
+        type: Equipment
+    -   id: 701
+        type: Equipment
+    -   id: 702
+        type: Equipment
+    -   id: 703
+        type: Equipment
+    -   id: 710
+        type: Equipment
+    -   id: 712
+        type: Equipment
+    -   id: 731
+        type: Equipment
+    -   id: 744
+        type: Human
+    -   id: 745
+        type: Human
+    -   id: 746
+        type: Monster
+    -   id: 747
+        type: Monster
+    -   id: 748
+        type: Monster
+    -   id: 749
+        type: Monster
+    -   id: 750
+        type: Human
+    -   id: 751
+        type: Human
+    -   id: 752
+        type: Monster
+    -   id: 753
+        type: Monster
+    -   id: 754
+        type: Monster
+    -   id: 755
+        type: Monster
+    -   id: 756
+        type: Monster
+    -   id: 757
+        type: Monster
+    -   id: 758
+        type: Monster
+    -   id: 759
+        type: Equipment
+    -   id: 760
+        type: Equipment
+    -   id: 761
+        type: Equipment
+    -   id: 762
+        type: Equipment
+    -   id: 763
+        type: Monster
+    -   id: 764
+        type: Monster
+    -   id: 765
+        type: Monster
+    -   id: 766
+        type: Monster
+    -   id: 767
+        type: Monster
+    -   id: 768
+        type: Monster
+    -   id: 769
+        type: Monster
+    -   id: 770
+        type: Monster
+    -   id: 771
+        type: Monster
+    -   id: 772
+        type: Monster
+    -   id: 773
+        type: Monster
+    -   id: 774
+        type: Monster
+    -   id: 775
+        type: Monster
+    -   id: 776
+        type: Monster
+    -   id: 777
+        type: Monster
+    -   id: 778
+        type: Monster
+    -   id: 779
+        type: Monster
+    -   id: 780
+        type: Monster
+    -   id: 781
+        type: Monster
+    -   id: 782
+        type: Monster
+    -   id: 783
+        type: Monster
+    -   id: 784
+        type: Monster
+    -   id: 785
+        type: Monster
+    -   id: 786
+        type: Monster
+    -   id: 787
+        type: Monster
+    -   id: 788
+        type: Monster
+    -   id: 789
+        type: Monster
+    -   id: 790
+        type: Monster
+    -   id: 791
+        type: Animal
+    -   id: 792
+        type: Monster
+    -   id: 793
+        type: Animal
+    -   id: 794
+        type: Animal
+    -   id: 795
+        type: Monster
+    -   id: 796
+        type: Monster
+    -   id: 797
+        type: Monster
+    -   id: 798
+        type: Monster
+    -   id: 799
+        type: Animal
+    -   id: 800
+        type: Equipment
+    -   id: 801
+        type: Equipment
+    -   id: 802
+        type: Equipment
+    -   id: 803
+        type: Equipment
+    -   id: 804
+        type: Monster
+    -   id: 805
+        type: Monster
+    -   id: 806
+        type: Monster
+    -   id: 807
+        type: Monster
+    -   id: 808
+        type: Monster
+    -   id: 820
+        type: Equipment
+    -   id: 824
+        type: Equipment
+    -   id: 825
+        type: Equipment
+    -   id: 827
+        type: Equipment
+    -   id: 828
+        type: Equipment
+    -   id: 846
+        type: Equipment
+    -   id: 848
+        type: Equipment
+    -   id: 900
+        type: Equipment
+    -   id: 901
+        type: Equipment
+    -   id: 902
+        type: Equipment
+    -   id: 903
+        type: Equipment
+    -   id: 904
+        type: Equipment
+    -   id: 905
+        type: Equipment
+    -   id: 906
+        type: Equipment
+    -   id: 909
+        type: Equipment
+    -   id: 910
+        type: Equipment
+    -   id: 911
+        type: Equipment
+    -   id: 912
+        type: Equipment
+    -   id: 913
+        type: Equipment
+    -   id: 921
+        type: Equipment
+    -   id: 922
+        type: Equipment
+    -   id: 923
+        type: Equipment
+    -   id: 924
+        type: Equipment
+    -   id: 925
+        type: Equipment
+    -   id: 926
+        type: Equipment
+    -   id: 927
+        type: Equipment
+    -   id: 928
+        type: Equipment
+    -   id: 929
+        type: Equipment
+    -   id: 930
+        type: Equipment
+    -   id: 931
+        type: Equipment
+    -   id: 932
+        type: Equipment
+    -   id: 933
+        type: Equipment
+    -   id: 934
+        type: Equipment
+    -   id: 935
+        type: Equipment
+    -   id: 936
+        type: Equipment
+    -   id: 937
+        type: Equipment
+    -   id: 938
+        type: Equipment
+    -   id: 939
+        type: Equipment
+    -   id: 971
+        type: Equipment
+    -   id: 972
+        type: Equipment
+    -   id: 973
+        type: Equipment
+    -   id: 980
+        type: Equipment
+    -   id: 981
+        type: Equipment
+    -   id: 982
+        type: Equipment
+    -   id: 983
+        type: Equipment
+    -   id: 984
+        type: Equipment
+    -   id: 985
+        type: Equipment
+    -   id: 986
+        type: Equipment
+    -   id: 987
+        type: Human
+    -   id: 988
+        type: Human
+    -   id: 990
+        type: Human
+    -   id: 991
+        type: Human
+    -   id: 992
+        type: Equipment
+    -   id: 993
+        type: Equipment
+    -   id: 994
+        type: Human
+    -   id: 998
+        type: Monster
+    -   id: 999
+        type: Monster
+    -   id: 1268
+        type: Equipment
+    -   id: 1281
+        type: Equipment
+    -   id: 1283
+        type: Equipment
+    -   id: 1325
+        type: Equipment
+    -   id: 1349
+        type: Equipment
+    -   id: 1404
+        type: Equipment
+    -   id: 1405
+        type: Equipment
+    -   id: 1406
+        type: Equipment
+    -   id: 1407
+        type: Equipment
+    -   id: 1408
+        type: Equipment
+    -   id: 1409
+        type: Equipment
+    -   id: 1410
+        type: Equipment
+    -   id: 1411
+        type: Equipment
+    -   id: 1412
+        type: Equipment
+    -   id: 1413
+        type: Equipment
+    -   id: 1414
+        type: Equipment
+    -   id: 1415
+        type: Equipment
+    -   id: 1416
+        type: Equipment
+    -   id: 1417
+        type: Equipment
+    -   id: 1418
+        type: Equipment
+    -   id: 1419
+        type: Equipment
+    -   id: 1430
+        type: Equipment
+    -   id: 1431
+        type: Equipment
+    -   id: 1434
+        type: Equipment
+    -   id: 1435
+        type: Equipment
+    -   id: 1447
+        type: Equipment
+    -   id: 1448
+        type: Equipment
+    -   id: 1449
+        type: Equipment
+    -   id: 1455
+        type: Equipment
+    -   id: 1465
+        type: Equipment
+    -   id: 1466
+        type: Equipment
+    -   id: 1468
+        type: Equipment
+    -   id: 1469
+        type: Equipment
+    -   id: 1476
+        type: Equipment
+    -   id: 1477
+        type: Equipment
+    -   id: 1479
+        type: Equipment
+    -   id: 1480
+        type: Equipment
+    -   id: 1481
+        type: Equipment
+    -   id: 1482
+        type: Equipment
+    -   id: 1483
+        type: Equipment
+    -   id: 1484
+        type: Equipment
+    -   id: 1485
+        type: Equipment
+    -   id: 1486
+        type: Equipment
+    -   id: 1490
+        type: Equipment
+    -   id: 1492
+        type: Equipment
+    -   id: 1521
+        type: Equipment
+    -   id: 1523
+        type: Equipment
+    -   id: 1525
+        type: Equipment
+    -   id: 1527
+        type: Equipment
+    -   id: 1528
+        type: Equipment
+    -   id: 1529
+        type: Equipment
+    -   id: 1530
+        type: Equipment
+    -   id: 1531
+        type: Equipment
+    -   id: 1538
+        type: Equipment
+    -   id: 1540
+        type: Equipment
+    -   id: 1542
+        type: Equipment
+    -   id: 1543
+        type: Equipment
+    -   id: 1544
+        type: Equipment
+    -   id: 1545
+        type: Equipment
+    -   id: 1546
+        type: Equipment
+    -   id: 1548
+        type: Equipment
+    -   id: 1549
+        type: Equipment
+    -   id: 1550
+        type: Equipment
+    -   id: 1554
+        type: Equipment
+    -   id: 1555
+        type: Equipment
+    -   id: 1556
+        type: Equipment
+    -   id: 1557
+        type: Equipment
+    -   id: 1560
+        type: Equipment
+    -   id: 1561
+        type: Equipment
+    -   id: 1562
+        type: Equipment
+    -   id: 1563
+        type: Equipment
+    -   id: 1564
+        type: Equipment
+    -   id: 1565
+        type: Equipment
+    -   id: 1566
+        type: Equipment
+    -   id: 1672
+        type: Equipment
+    -   id: 1674
+        type: Equipment
+    -   id: 1675
+        type: Equipment
+    -   id: 1676
+        type: Equipment
+    -   id: 1677
+        type: Equipment
+    -   id: 1678
+        type: Equipment
+    -   id: 1679
+        type: Equipment
+    -   id: 1680
+        type: Equipment
+    -   id: 1681
+        type: Equipment
+    -   id: 1682
+        type: Equipment
+    -   id: 1683
+        type: Equipment
+    -   id: 1684
+        type: Equipment
+    -   id: 1685
+        type: Equipment
+    -   id: 1686
+        type: Equipment
+    -   id: 1687
+        type: Equipment
+    -   id: 1688
+        type: Equipment
+    -   id: 1690
+        type: Equipment
+    -   id: 1691
+        type: Equipment
+    -   id: 1692
+        type: Equipment
+    -   id: 1693
+        type: Equipment
+    -   id: 1694
+        type: Equipment
+    -   id: 1695
+        type: Equipment
+    -   id: 1696
+        type: Equipment
+    -   id: 1697
+        type: Equipment
+    -   id: 1698
+        type: Equipment
+    -   id: 1699
+        type: Equipment
+    -   id: 1700
+        type: Equipment
+    -   id: 1701
+        type: Equipment
+    -   id: 1702
+        type: Equipment
+    -   id: 1703
+        type: Equipment
+    -   id: 1710
+        type: Equipment
+    -   id: 1712
+        type: Equipment
+    -   id: 1713
+        type: Equipment
+    -   id: 1715
+        type: Equipment
+    -   id: 1716
+        type: Equipment
+    -   id: 1720
+        type: Equipment
+    -   id: 1721
+        type: Equipment
+    -   id: 1722
+        type: Equipment
+    -   id: 1723
+        type: Equipment
+    -   id: 1724
+        type: Equipment
+    -   id: 1725
+        type: Equipment
+    -   id: 1726
+        type: Equipment
+    -   id: 1727
+        type: Equipment
+    -   id: 1728
+        type: Equipment
+    -   id: 1729
+        type: Equipment
+    -   id: 1730
+        type: Equipment
+    -   id: 1731
+        type: Equipment
+    -   id: 1732
+        type: Equipment
+    -   id: 1733
+        type: Equipment
+    -   id: 1734
+        type: Equipment
+    -   id: 1735
+        type: Equipment
+    -   id: 1736
+        type: Equipment
+    -   id: 1740
+        type: Equipment
+    -   id: 1742
+        type: Equipment
+    -   id: 1743
+        type: Equipment
+    -   id: 1759
+        type: Equipment
+    -   id: 1761
+        type: Equipment
+    -   id: 1762
+        type: Equipment
+    -   id: 1900
+        type: Equipment
+    -   id: 1901
+        type: Equipment
+    -   id: 1902
+        type: Equipment
+    -   id: 1903
+        type: Equipment
+    -   id: 1909
+        type: Equipment
+    -   id: 1910
+        type: Equipment
+    -   id: 1911
+        type: Equipment
+    -   id: 1912
+        type: Equipment
+    -   id: 1913
+        type: Equipment
+    -   id: 1921
+        type: Equipment
+    -   id: 1922
+        type: Equipment
+    -   id: 1923
+        type: Equipment
+    -   id: 1924
+        type: Equipment
+    -   id: 1925
+        type: Equipment
+    -   id: 1926
+        type: Equipment
+    -   id: 1927
+        type: Equipment
+    -   id: 1928
+        type: Equipment
+    -   id: 1929
+        type: Equipment
+    -   id: 1971
+        type: Equipment
+    -   id: 1973
+        type: Equipment
+    -   id: 242
+        type: Monster
+    -   id: 247
+        type: Monster
+    -   id: 240
+        type: Monster
+    -   id: 252
+        type: Monster
+    -   id: 241
+        type: Monster
+    -   id: 244
+        type: Monster
+    -   id: 255
+        type: Monster
+    -   id: 253
+        type: Monster
+    -   id: 245
+        type: Monster
+    -   id: 250
+        type: Monster
+    -   id: 251
+        type: Monster
+    -   id: 249
+        type: Monster
+    -   id: 254
+        type: Animal
+    -   id: 243
+        type: Animal
+    -   id: 246
+        type: Animal
+    -   id: 248
+        type: Animal
+    -   id: 196
+        type: Monster
+    -   id: 199
+        type: Monster
+    -   id: 169
+        type: Animal
+    -   id: 425
+        type: Equipment
+    -   id: 426
+        type: Equipment
+    -   id: 423
+        type: Equipment
+    -   id: 424
+        type: Equipment
+    -   id: 442
+        type: Equipment
+    -   id: 443
+        type: Equipment
+    -   id: 444
+        type: Equipment
+    -   id: 445
+        type: Equipment
+    -   id: 446
+        type: Equipment
+    -   id: 450
+        type: Equipment
+    -   id: 451
+        type: Equipment
+    -   id: 456
+        type: Equipment
+    -   id: 457
+        type: Equipment
+    -   id: 458
+        type: Equipment
+    -   id: 459
+        type: Equipment
+    -   id: 460
+        type: Equipment
+    -   id: 461
+        type: Equipment
+    -   id: 462
+        type: Equipment
+    -   id: 463
+        type: Equipment
+    -   id: 464
+        type: Equipment
+    -   id: 467
+        type: Equipment
+    -   id: 470
+        type: Equipment
+    -   id: 471
+        type: Equipment
+    -   id: 472
+        type: Equipment
+    -   id: 473
+        type: Equipment
+    -   id: 474
+        type: Equipment
+    -   id: 478
+        type: Equipment
+    -   id: 487
+        type: Equipment
+    -   id: 488
+        type: Equipment
+    -   id: 489
+        type: Equipment
+    -   id: 491
+        type: Equipment
+    -   id: 506
+        type: Equipment
+    -   id: 512
+        type: Equipment
+    -   id: 513
+        type: Equipment
+    -   id: 514
+        type: Equipment
+    -   id: 516
+        type: Equipment
+    -   id: 517
+        type: Equipment
+    -   id: 518
+        type: Equipment
+    -   id: 519
+        type: Equipment
+    -   id: 520
+        type: Equipment
+    -   id: 526
+        type: Equipment
+    -   id: 532
+        type: Equipment
+    -   id: 533
+        type: Equipment
+    -   id: 534
+        type: Equipment
+    -   id: 535
+        type: Equipment
+    -   id: 536
+        type: Equipment
+    -   id: 537
+        type: Equipment
+    -   id: 539
+        type: Equipment
+    -   id: 547
+        type: Equipment
+    -   id: 551
+        type: Equipment
+    -   id: 552
+        type: Equipment
+    -   id: 553
+        type: Equipment
+    -   id: 558
+        type: Equipment
+    -   id: 559
+        type: Equipment
+    -   id: 567
+        type: Equipment
+    -   id: 568
+        type: Equipment
+    -   id: 569
+        type: Equipment
+    -   id: 570
+        type: Equipment
+    -   id: 571
+        type: Equipment
+    -   id: 572
+        type: Equipment
+    -   id: 575
+        type: Equipment
+    -   id: 583
+        type: Equipment
+    -   id: 809
+        type: Equipment
+    -   id: 810
+        type: Equipment
+    -   id: 811
+        type: Equipment
+    -   id: 812
+        type: Equipment
+    -   id: 813
+        type: Equipment
+    -   id: 814
+        type: Equipment
+    -   id: 815
+        type: Equipment
+    -   id: 816
+        type: Equipment
+    -   id: 817
+        type: Equipment
+    -   id: 818
+        type: Equipment
+    -   id: 819
+        type: Equipment
+    -   id: 821
+        type: Equipment
+    -   id: 822
+        type: Equipment
+    -   id: 823
+        type: Equipment
+    -   id: 833
+        type: Equipment
+    -   id: 834
+        type: Equipment
+    -   id: 835
+        type: Equipment
+    -   id: 836
+        type: Equipment
+    -   id: 837
+        type: Equipment
+    -   id: 838
+        type: Equipment
+    -   id: 839
+        type: Equipment
+    -   id: 840
+        type: Equipment
+    -   id: 841
+        type: Equipment
+    -   id: 842
+        type: Equipment
+    -   id: 942
+        type: Equipment
+    -   id: 943
+        type: Equipment
+    -   id: 944
+        type: Equipment
+    -   id: 945
+        type: Equipment
+    -   id: 946
+        type: Equipment
+    -   id: 947
+        type: Equipment
+    -   id: 948
+        type: Equipment
+    -   id: 950
+        type: Equipment
+    -   id: 951
+        type: Equipment
+    -   id: 952
+        type: Equipment
+    -   id: 953
+        type: Equipment
+    -   id: 954
+        type: Equipment
+    -   id: 955
+        type: Equipment
+    -   id: 956
+        type: Equipment
+    -   id: 957
+        type: Equipment
+    -   id: 958
+        type: Equipment
+    -   id: 959
+        type: Equipment
+    -   id: 960
+        type: Equipment
+    -   id: 961
+        type: Equipment
+    -   id: 962
+        type: Equipment
+    -   id: 963
+        type: Equipment
+    -   id: 964
+        type: Equipment
+    -   id: 965
+        type: Equipment
+    -   id: 966
+        type: Equipment
+    -   id: 967
+        type: Equipment
+    -   id: 968
+        type: Equipment
+    -   id: 969
+        type: Equipment
+    -   id: 974
+        type: Equipment
+    -   id: 975
+        type: Equipment
+    -   id: 976
+        type: Equipment
+    -   id: 977
+        type: Equipment
+    -   id: 920
+        type: Equipment
+    -   id: 907
+        type: Equipment
+    -   id: 908
+        type: Equipment
+    -   id: 914
+        type: Equipment
+    -   id: 915
+        type: Equipment
+    -   id: 941
+        type: Equipment
+    -   id: 896
+        type: Equipment
+    -   id: 897
+        type: Equipment
+    -   id: 898
+        type: Equipment
+    -   id: 899
+        type: Equipment
+    -   id: 886
+        type: Equipment
+    -   id: 916
+        type: Equipment
+    -   id: 917
+        type: Equipment
+    -   id: 918
+        type: Equipment
+    -   id: 919
+        type: Equipment
+    -   id: 978
+        type: Equipment
+    -   id: 979
+        type: Equipment
+    -   id: 995
+        type: Equipment
+    -   id: 996
+        type: Equipment
+    -   id: 989
+        type: Equipment
+    -   id: 997
+        type: Equipment
+    -   id: 890
+        type: Equipment
+    -   id: 891
+        type: Equipment
+    -   id: 892
+        type: Equipment
+    -   id: 893
+        type: Equipment
+    -   id: 894
+        type: Equipment
+    -   id: 895
+        type: Equipment
+    -   id: 889
+        type: Equipment
+    -   id: 605
+        type: Human
+    -   id: 606
+        type: Human
+    -   id: 607
+        type: Human
+    -   id: 608
+        type: Human
+    -   id: 256
+        type: Monster
+    -   id: 257
+        type: Monster
+    -   id: 258
+        type: Monster
+    -   id: 259
+        type: Monster
+    -   id: 260
+        type: Monster
+    -   id: 261
+        type: Monster
+    -   id: 262
+        type: Monster
+    -   id: 263
+        type: Monster
+    -   id: 264
+        type: Monster
+    -   id: 265
+        type: Monster
+    -   id: 266
+        type: Monster
+    -   id: 267
+        type: Monster
+    -   id: 269
+        type: Monster
+    -   id: 270
+        type: Monster
+    -   id: 271
+        type: Monster
+    -   id: 272
+        type: Monster
+    -   id: 273
+        type: Monster
+    -   id: 276
+        type: Animal
+    -   id: 277
+        type: Animal
+    -   id: 278
+        type: Animal
+    -   id: 279
+        type: Animal
+    -   id: 280
+        type: Monster
+    -   id: 281
+        type: Monster
+    -   id: 282
+        type: Animal
+    -   id: 283
+        type: Animal
+    -   id: 284
+        type: Animal
+    -   id: 285
+        type: Monster
+    -   id: 689
+        type: Monster
+    -   id: 704
+        type: Monster
+    -   id: 197
+        type: Monster
+    -   id: 198
+        type: Monster
+    -   id: 666
+        type: Human
+    -   id: 667
+        type: Human
+    -   id: 713
+        type: Monster
+    -   id: 714
+        type: Monster
+    -   id: 715
+        type: Monster
+    -   id: 716
+        type: Monster
+    -   id: 717
+        type: Monster
+    -   id: 718
+        type: Monster
+    -   id: 719
+        type: Monster
+    -   id: 720
+        type: Monster
+    -   id: 721
+        type: Monster
+    -   id: 722
+        type: Monster
+    -   id: 723
+        type: Monster
+    -   id: 724
+        type: Monster
+    -   id: 725
+        type: Monster
+    -   id: 726
+        type: Monster
+    -   id: 727
+        type: Monster
+    -   id: 728
+        type: Monster
+    -   id: 729
+        type: Monster
+    -   id: 730
+        type: Monster
+    -   id: 732
+        type: Monster
+    -   id: 733
+        type: Monster
+    -   id: 734
+        type: Monster
+    -   id: 735
+        type: Monster
+    -   id: 736
+        type: Monster
+    -   id: 737
+        type: Monster
+    -   id: 738
+        type: Monster
+    -   id: 739
+        type: Monster
+    -   id: 293
+        type: Monster
+    -   id: 286
+        type: Monster
+    -   id: 287
+        type: Monster
+    -   id: 692
+        type: Monster
+    -   id: 830
+        type: Monster
+    -   id: 829
+        type: Monster
+    -   id: 741
+        type: Monster
+    -   id: 826
+        type: Monster
+    -   id: 740
+        type: Monster
+    -   id: 742
+        type: Monster
+    -   id: 743
+        type: Monster
+    -   id: 334
+        type: Monster
+    -   id: 832
+        type: Monster
+    -   id: 831
+        type: Monster
+    -   id: 585
+        type: Equipment
+    -   id: 586
+        type: Equipment
+    -   id: 587
+        type: Equipment
+    -   id: 588
+        type: Equipment
+    -   id: 589
+        type: Equipment
+    -   id: 590
+        type: Equipment
+    -   id: 591
+        type: Equipment
+    -   id: 592
+        type: Equipment
+    -   id: 593
+        type: Equipment
+    -   id: 594
+        type: Equipment
+    -   id: 595
+        type: Equipment
+    -   id: 596
+        type: Equipment
+    -   id: 597
+        type: Equipment
+    -   id: 598
+        type: Equipment
+    -   id: 599
+        type: Equipment
+    -   id: 600
+        type: Equipment
+    -   id: 601
+        type: Equipment
+    -   id: 602
+        type: Equipment
+    -   id: 603
+        type: Equipment
+    -   id: 604
+        type: Equipment
+    -   id: 609
+        type: Equipment
+    -   id: 610
+        type: Equipment
+    -   id: 654
+        type: Equipment
+    -   id: 655
+        type: Equipment
+    -   id: 656
+        type: Equipment
+    -   id: 657
+        type: Equipment
+    -   id: 658
+        type: Equipment
+    -   id: 659
+        type: Equipment
+    -   id: 660
+        type: Equipment
+    -   id: 661
+        type: Equipment
+    -   id: 663
+        type: Equipment
+    -   id: 664
+        type: Equipment
+    -   id: 662
+        type: Equipment
+    -   id: 668
+        type: Equipment
+    -   id: 669
+        type: Equipment
+    -   id: 670
+        type: Equipment
+    -   id: 672
+        type: Equipment
+    -   id: 673
+        type: Equipment
+    -   id: 674
+        type: Equipment
+    -   id: 675
+        type: Equipment
+    -   id: 676
+        type: Equipment
+    -   id: 677
+        type: Equipment
+    -   id: 678
+        type: Equipment
+    -   id: 690
+        type: Equipment
+    -   id: 693
+        type: Equipment
+    -   id: 671
+        type: Equipment
+    -   id: 691
+        type: Equipment
+    -   id: 320
+        type: Equipment
+    -   id: 321
+        type: Equipment
+    -   id: 322
+        type: Equipment
+    -   id: 323
+        type: Equipment
+    -   id: 324
+        type: Equipment
+    -   id: 325
+        type: Equipment
+    -   id: 326
+        type: Equipment
+    -   id: 327
+        type: Equipment
+    -   id: 328
+        type: Equipment
+    -   id: 329
+        type: Equipment
+    -   id: 330
+        type: Equipment
+    -   id: 331
+        type: Equipment
+    -   id: 332
+        type: Equipment
+    -   id: 333
+        type: Equipment
+    -   id: 335
+        type: Equipment
+    -   id: 336
+        type: Equipment
+    -   id: 337
+        type: Equipment
+    -   id: 338
+        type: Equipment
+    -   id: 339
+        type: Equipment
+    -   id: 340
+        type: Equipment
+    -   id: 341
+        type: Equipment
+    -   id: 342
+        type: Equipment
+    -   id: 343
+        type: Equipment
+    -   id: 344
+        type: Equipment
+    -   id: 483
+        type: Equipment
+    -   id: 485
+        type: Equipment
+    -   id: 843
+        type: Equipment
+    -   id: 499
+        type: Equipment
+    -   id: 696
+        type: Equipment
+    -   id: 697
+        type: Equipment
+    -   id: 698
+        type: Equipment
+    -   id: 699
+        type: Equipment
+    -   id: 769
+        type: Equipment
+    -   id: 541
+        type: Equipment
+    -   id: 795
+        type: Equipment
+    -   id: 632
+        type: Equipment
+    -   id: 707
+        type: Equipment
+    -   id: 475
+        type: Equipment
+    -   id: 647
+        type: Equipment
+    -   id: 650
+        type: Equipment
+    -   id: 652
+        type: Equipment
+    -   id: 665
+        type: Equipment
+    -   id: 547
+        type: Equipment
+    -   id: 809
+        type: Equipment
+    -   id: 810
+        type: Equipment
+    -   id: 811
+        type: Equipment
+    -   id: 407
+        type: Equipment
+    -   id: 708
+        type: Equipment
+    -   id: 534
+        type: Equipment
+    -   id: 427
+        type: Equipment
+    -   id: 428
+        type: Equipment
+    -   id: 705
+        type: Equipment
+    -   id: 509
+        type: Equipment
+    -   id: 885
+        type: Equipment
+    -   id: 865
+        type: Equipment
+    -   id: 510
+        type: Equipment
+    -   id: 436
+        type: Equipment
+    -   id: 437
+        type: Equipment
+    -   id: 438
+        type: Equipment
+    -   id: 439
+        type: Equipment
+    -   id: 432
+        type: Equipment
+    -   id: 433
+        type: Equipment
+    -   id: 1026
+        type: Monster
+    -   id: 1069
+        type: Animal
+    -   id: 1244
+        type: Monster
+    -   id: 1245
+        type: Monster
+    -   id: 1246
+        type: Monster
+    -   id: 1247
+        type: Monster
+    -   id: 1248
+        type: Monster
+    -   id: 1253
+        type: Human
+    -   id: 1254
+        type: Animal
+    -   id: 1255
+        type: Equipment
+    -   id: 1285
+        type: Animal
+    -   id: 1286
+        type: Animal
+    -   id: 1287
+        type: Animal
+    -   id: 1288
+        type: Animal
+    -   id: 1289
+        type: Animal
+    -   id: 1290
+        type: Animal
+    -   id: 1291
+        type: Animal
+    -   id: 1292
+        type: Animal
+    -   id: 1293
+        type: Animal
+    -   id: 1294
+        type: Animal
+    -   id: 1261
+        type: Equipment
+    -   id: 1262
+        type: Equipment
+    -   id: 1263
+        type: Equipment
+    -   id: 1265
+        type: Equipment
+    -   id: 1267
+        type: Equipment
+    -   id: 1269
+        type: Equipment
+    -   id: 1271
+        type: Equipment
+    -   id: 1273
+        type: Equipment
+    -   id: 1275
+        type: Equipment
+    -   id: 1278
+        type: Equipment
+    -   id: 1279
+        type: Equipment
+    -   id: 1281
+        type: Equipment
+    -   id: 1284
+        type: Equipment
+    -   id: 1295
+        type: Equipment
+    -   id: 1296
+        type: Equipment
+    -   id: 1297
+        type: Equipment
+    -   id: 1298
+        type: Equipment
+    -   id: 1299
+        type: Equipment
+    -   id: 1300
+        type: Equipment
+    -   id: 1301
+        type: Equipment
+    -   id: 1302
+        type: Equipment
+    -   id: 1303
+        type: Equipment
+    -   id: 1304
+        type: Equipment
+    -   id: 1305
+        type: Equipment
+    -   id: 1306
+        type: Equipment
+    -   id: 1307
+        type: Equipment

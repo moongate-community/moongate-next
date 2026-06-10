@@ -1,0 +1,47 @@
+item_templates:
+    - id: base_weapon
+      is_abstract: true
+      weight: 4
+      is_movable: true
+      tags: [weapon]
+    - id: katana
+      base_item: base_weapon
+      item_id: 5119
+      layer: OneHanded
+    - id: kryss
+      base_item: base_weapon
+      item_id: 5121
+      weight: 2
+      layer: OneHanded
+    - id: mace
+      base_item: base_weapon
+      item_id: 3932
+      weight: 7
+      layer: OneHanded
+    - id: battle_axe
+      base_item: base_weapon
+      item_id: 3911
+      weight: 8
+      layer: TwoHanded
+    - id: halberd
+      base_item: base_weapon
+      item_id: 5182
+      weight: 16
+      layer: TwoHanded
+    - id: spear
+      base_item: base_weapon
+      item_id: 3938
+      weight: 7
+      layer: TwoHanded
+    - id: bow
+      base_item: base_weapon
+      item_id: 5042
+      weight: 6
+      layer: TwoHanded
+      tags: [weapon, ranged]
+    - id: crossbow
+      base_item: base_weapon
+      item_id: 3920
+      weight: 7
+      layer: TwoHanded
+      tags: [weapon, ranged]

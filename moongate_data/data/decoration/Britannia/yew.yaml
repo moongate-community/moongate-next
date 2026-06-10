@@ -1,0 +1,202 @@
+decoration:
+    -   type: AnkhNorth
+        arguments: ''
+        description: ankh
+        item_id: 4
+        placements:
+            -   location:
+                    - 634
+                    - 816
+                    - 0
+    -   type: MyStory
+        arguments: ''
+        description: book
+        item_id: 4079
+        placements:
+            -   location:
+                    - 337
+                    - 875
+                    - 0
+    -   type: TaleOfThreeTribes
+        arguments: ''
+        description: book
+        item_id: 4079
+        placements:
+            -   location:
+                    - 472
+                    - 840
+                    - 0
+    -   type: TamingDragons
+        arguments: ''
+        description: book
+        item_id: 4079
+        placements:
+            -   location:
+                    - 624
+                    - 836
+                    - 0
+    -   type: RegardingLlamas
+        arguments: ''
+        description: book
+        item_id: 4079
+        placements:
+            -   location:
+                    - 624
+                    - 842
+                    - 0
+    -   type: QuestOfVirtues
+        arguments: ''
+        description: book
+        item_id: 4079
+        placements:
+            -   location:
+                    - 627
+                    - 841
+                    - 0
+    -   type: DeceitDungeonOfHorror
+        arguments: ''
+        description: book
+        item_id: 4079
+        placements:
+            -   location:
+                    - 641
+                    - 852
+                    - 0
+    -   type: WildGirlOfTheForest
+        arguments: ''
+        description: book
+        item_id: 4080
+        placements:
+            -   location:
+                    - 337
+                    - 873
+                    - 0
+    -   type: VirtueBook
+        arguments: ''
+        description: book
+        item_id: 4080
+        placements:
+            -   location:
+                    - 337
+                    - 875
+                    - 20
+    -   type: LifeOfATravellingMinstrel
+        arguments: ''
+        description: book
+        item_id: 4080
+        placements:
+            -   location:
+                    - 338
+                    - 884
+                    - 20
+    -   type: RedBook
+        arguments: ''
+        description: book
+        item_id: 4081
+        placements:
+            -   location:
+                    - 336
+                    - 877
+                    - 6
+            -   location:
+                    - 337
+                    - 883
+                    - 20
+            -   location:
+                    - 338
+                    - 873
+                    - 20
+            -   location:
+                    - 476
+                    - 840
+                    - 0
+            -   location:
+                    - 625
+                    - 852
+                    - 0
+            -   location:
+                    - 628
+                    - 836
+                    - 0
+            -   location:
+                    - 640
+                    - 819
+                    - 26
+            -   location:
+                    - 641
+                    - 849
+                    - 0
+            -   location:
+                    - 643
+                    - 850
+                    - 6
+    -   type: BlueBook
+        arguments: ''
+        description: book
+        item_id: 4082
+        placements:
+            -   location:
+                    - 337
+                    - 873
+                    - 20
+            -   location:
+                    - 339
+                    - 883
+                    - 0
+            -   location:
+                    - 625
+                    - 832
+                    - 0
+            -   location:
+                    - 628
+                    - 848
+                    - 0
+            -   location:
+                    - 630
+                    - 819
+                    - 26
+    -   type: MajorTradeAssociation
+        arguments: ''
+        description: book
+        item_id: 4084
+        placements:
+            -   location:
+                    - 336
+                    - 877
+                    - 26
+    -   type: ChildrenTalesVol2
+        arguments: ''
+        description: book
+        item_id: 4084
+        placements:
+            -   location:
+                    - 338
+                    - 873
+                    - 0
+    -   type: TheFight
+        arguments: ''
+        description: book
+        item_id: 4084
+        placements:
+            -   location:
+                    - 473
+                    - 842
+                    - 0
+    -   type: EthicalHedonism
+        arguments: ''
+        description: book
+        item_id: 4084
+        placements:
+            -   location:
+                    - 562
+                    - 810
+                    - 4
+    -   type: GrammarOfOrcish
+        arguments: ''
+        description: book
+        item_id: 4084
+        placements:
+            -   location:
+                    - 631
+                    - 819
+                    - 26

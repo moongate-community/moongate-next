@@ -1,0 +1,549 @@
+decoration:
+    -   type: MetalDoor
+        arguments: (Facing = WestCW; Hue=0x835)
+        description: metal door
+        item_id: 1653
+        placements:
+            -   location:
+                    - 856
+                    - 677
+                    - -40
+    -   type: MetalDoor
+        arguments: (Facing = EastCCW; Hue=0x835)
+        description: metal door
+        item_id: 1655
+        placements:
+            -   location:
+                    - 853
+                    - 672
+                    - -40
+    -   type: Static
+        arguments: (Facing = EastCW; Hue=0x835)
+        description: metal door
+        item_id: 1659
+        placements:
+            -   location:
+                    - 856
+                    - 606
+                    - -40
+            -   location:
+                    - 859
+                    - 611
+                    - -40
+    -   type: BarredMetalDoor2
+        arguments: (Facing = WestCW; Hue=0x835)
+        description: barred metal door
+        item_id: 8173
+        placements:
+            -   location:
+                    - 892
+                    - 674
+                    - -40
+    -   type: BarredMetalDoor2
+        arguments: (Facing = SouthCW; Hue=0x835)
+        description: barred metal door
+        item_id: 8181
+        placements:
+            -   location:
+                    - 896
+                    - 657
+                    - -40
+            -   location:
+                    - 896
+                    - 662
+                    - -40
+            -   location:
+                    - 896
+                    - 667
+                    - -40
+    -   type: MetalChest
+        arguments: ''
+        description: metal chest
+        item_id: 2475
+        placements:
+            -   location:
+                    - 848
+                    - 719
+                    - 0
+            -   location:
+                    - 850
+                    - 719
+                    - 0
+            -   location:
+                    - 854
+                    - 607
+                    - -40
+            -   location:
+                    - 854
+                    - 607
+                    - -35
+            -   location:
+                    - 857
+                    - 670
+                    - -40
+    -   type: MetalGoldenChest
+        arguments: ''
+        description: metal chest
+        item_id: 3648
+        placements:
+            -   location:
+                    - 828
+                    - 725
+                    - 0
+            -   location:
+                    - 844
+                    - 717
+                    - 0
+            -   location:
+                    - 852
+                    - 608
+                    - -40
+            -   location:
+                    - 852
+                    - 609
+                    - -40
+            -   location:
+                    - 852
+                    - 609
+                    - -36
+            -   location:
+                    - 852
+                    - 609
+                    - -32
+            -   location:
+                    - 852
+                    - 611
+                    - -40
+            -   location:
+                    - 852
+                    - 611
+                    - -36
+            -   location:
+                    - 852
+                    - 613
+                    - -40
+            -   location:
+                    - 852
+                    - 613
+                    - -36
+            -   location:
+                    - 852
+                    - 675
+                    - -40
+            -   location:
+                    - 852
+                    - 675
+                    - -36
+            -   location:
+                    - 852
+                    - 676
+                    - -40
+            -   location:
+                    - 852
+                    - 676
+                    - -36
+    -   type: MetalGoldenChest
+        arguments: ''
+        description: metal chest
+        item_id: 3649
+        placements:
+            -   location:
+                    - 832
+                    - 712
+                    - 0
+            -   location:
+                    - 856
+                    - 670
+                    - -40
+            -   location:
+                    - 856
+                    - 670
+                    - -36
+            -   location:
+                    - 856
+                    - 670
+                    - -32
+            -   location:
+                    - 858
+                    - 670
+                    - -40
+            -   location:
+                    - 858
+                    - 670
+                    - -36
+    -   type: MetalChest
+        arguments: ''
+        description: metal chest
+        item_id: 3708
+        placements:
+            -   location:
+                    - 852
+                    - 612
+                    - -40
+            -   location:
+                    - 852
+                    - 675
+                    - -32
+    -   type: Static
+        arguments: ''
+        description: skinning knife
+        item_id: 3781
+        placements:
+            -   location:
+                    - 864
+                    - 583
+                    - -34
+    -   type: AnvilSouthAddon
+        arguments: ''
+        description: anvil
+        item_id: 4016
+        placements:
+            -   location:
+                    - 786
+                    - 662
+                    - 0
+            -   location:
+                    - 786
+                    - 671
+                    - 0
+            -   location:
+                    - 791
+                    - 662
+                    - 0
+            -   location:
+                    - 791
+                    - 671
+                    - 0
+            -   location:
+                    - 796
+                    - 662
+                    - 0
+            -   location:
+                    - 796
+                    - 671
+                    - 0
+    -   type: SpinningWheelEastAddon
+        arguments: ''
+        description: spinning wheel
+        item_id: 4121
+        placements:
+            -   location:
+                    - 893
+                    - 620
+                    - -40
+            -   location:
+                    - 893
+                    - 622
+                    - -40
+            -   location:
+                    - 893
+                    - 624
+                    - -40
+    -   type: LoomEastAddon
+        arguments: ''
+        description: upright loom
+        item_id: 4192
+        placements:
+            -   location:
+                    - 893
+                    - 617
+                    - -40
+            -   location:
+                    - 893
+                    - 626
+                    - -40
+    -   type: Static
+        arguments: ''
+        description: lever
+        item_id: 4243
+        placements:
+            -   location:
+                    - 760
+                    - 645
+                    - 10
+    -   type: Static
+        arguments: ''
+        description: butcher knife
+        item_id: 5111
+        placements:
+            -   location:
+                    - 864
+                    - 582
+                    - -34
+    -   type: Static
+        arguments: (Hue = 0x44E)
+        description: platemail arms
+        item_id: 5143
+        placements:
+            -   location:
+                    - 768
+                    - 631
+                    - 5
+    -   type: Static
+        arguments: ''
+        description: map
+        item_id: 5355
+        placements:
+            -   location:
+                    - 876
+                    - 661
+                    - -34
+    -   type: Static
+        arguments: ''
+        description: bellows
+        item_id: 6534
+        placements:
+            -   location:
+                    - 786
+                    - 659
+                    - 0
+            -   location:
+                    - 786
+                    - 668
+                    - 0
+            -   location:
+                    - 791
+                    - 659
+                    - 0
+            -   location:
+                    - 791
+                    - 668
+                    - 0
+            -   location:
+                    - 796
+                    - 659
+                    - 0
+            -   location:
+                    - 796
+                    - 668
+                    - 0
+    -   type: Static
+        arguments: (Light = Circle300)
+        description: forge
+        item_id: 6538
+        placements:
+            -   location:
+                    - 786
+                    - 660
+                    - 0
+            -   location:
+                    - 786
+                    - 669
+                    - 0
+            -   location:
+                    - 791
+                    - 660
+                    - 0
+            -   location:
+                    - 791
+                    - 669
+                    - 0
+            -   location:
+                    - 796
+                    - 660
+                    - 0
+            -   location:
+                    - 796
+                    - 669
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: forge
+        item_id: 6542
+        placements:
+            -   location:
+                    - 786
+                    - 661
+                    - 0
+            -   location:
+                    - 786
+                    - 670
+                    - 0
+            -   location:
+                    - 791
+                    - 661
+                    - 0
+            -   location:
+                    - 791
+                    - 670
+                    - 0
+            -   location:
+                    - 796
+                    - 661
+                    - 0
+            -   location:
+                    - 796
+                    - 670
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: bellows
+        item_id: 6546
+        placements:
+            -   location:
+                    - 786
+                    - 665
+                    - 0
+            -   location:
+                    - 786
+                    - 674
+                    - 0
+            -   location:
+                    - 791
+                    - 665
+                    - 0
+            -   location:
+                    - 791
+                    - 674
+                    - 0
+            -   location:
+                    - 796
+                    - 665
+                    - 0
+            -   location:
+                    - 796
+                    - 674
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: forge
+        item_id: 6550
+        placements:
+            -   location:
+                    - 786
+                    - 664
+                    - 0
+            -   location:
+                    - 786
+                    - 673
+                    - 0
+            -   location:
+                    - 791
+                    - 664
+                    - 0
+            -   location:
+                    - 791
+                    - 673
+                    - 0
+            -   location:
+                    - 796
+                    - 664
+                    - 0
+            -   location:
+                    - 796
+                    - 673
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: forge
+        item_id: 6554
+        placements:
+            -   location:
+                    - 786
+                    - 663
+                    - 0
+            -   location:
+                    - 786
+                    - 672
+                    - 0
+            -   location:
+                    - 791
+                    - 663
+                    - 0
+            -   location:
+                    - 791
+                    - 672
+                    - 0
+            -   location:
+                    - 796
+                    - 663
+                    - 0
+            -   location:
+                    - 796
+                    - 672
+                    - 0
+    -   type: Static
+        arguments: (Hue = 0x44E)
+        description: heater shield
+        item_id: 7030
+        placements:
+            -   location:
+                    - 766
+                    - 630
+                    - 6
+    -   type: Static
+        arguments: (Hue = 0x44E)
+        description: heater shield
+        item_id: 7031
+        placements:
+            -   location:
+                    - 768
+                    - 630
+                    - 5
+    -   type: Static
+        arguments: ''
+        description: Bell of Courage
+        item_id: 7186
+        placements:
+            -   location:
+                    - 846
+                    - 601
+                    - -34
+            -   location:
+                    - 846
+                    - 682
+                    - -34
+    -   type: Static
+        arguments: (Hue = 0x96E)
+        description: brain
+        item_id: 7408
+        placements:
+            -   location:
+                    - 771
+                    - 631
+                    - 11
+    -   type: Static
+        arguments: (Hue = 0x451)
+        description: table leg
+        item_id: 7805
+        placements:
+            -   location:
+                    - 766
+                    - 631
+                    - 6
+    -   type: Static
+        arguments: (Hue = 0x44E)
+        description: barrel staves
+        item_id: 7857
+        placements:
+            -   location:
+                    - 775
+                    - 632
+                    - -1
+    -   type: Static
+        arguments: (Hue = 0x44E)
+        description: barrel staves
+        item_id: 7858
+        placements:
+            -   location:
+                    - 773
+                    - 632
+                    - -1
+    -   type: Static
+        arguments: (Hue = 0x44E)
+        description: barrel staves
+        item_id: 7859
+        placements:
+            -   location:
+                    - 767
+                    - 631
+                    - 2
+    -   type: Static
+        arguments: (Hue = 0x451)
+        description: statue
+        item_id: 7960
+        placements:
+            -   location:
+                    - 767
+                    - 630
+                    - 6

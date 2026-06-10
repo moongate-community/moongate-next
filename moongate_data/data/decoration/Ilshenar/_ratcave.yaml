@@ -1,0 +1,198 @@
+decoration:
+    -   type: MediumCrate
+        arguments: ''
+        description: crate
+        item_id: 3646
+        placements:
+            -   location:
+                    - 1307
+                    - 1568
+                    - 0
+            -   location:
+                    - 1307
+                    - 1528
+                    - -25
+    -   type: LargeCrate
+        arguments: ''
+        description: crate
+        item_id: 3644
+        placements:
+            -   location:
+                    - 1307
+                    - 1568
+                    - -3
+            -   location:
+                    - 1308
+                    - 1569
+                    - -3
+            -   location:
+                    - 1307
+                    - 1527
+                    - -28
+            -   location:
+                    - 1307
+                    - 1528
+                    - -28
+            -   location:
+                    - 1308
+                    - 1528
+                    - -28
+    -   type: SmallCrate
+        arguments: ''
+        description: crate
+        item_id: 3710
+        placements:
+            -   location:
+                    - 1308
+                    - 1568
+                    - -3
+            -   location:
+                    - 1308
+                    - 1528
+                    - -25
+    -   type: SmallCrate
+        arguments: ''
+        description: small crate
+        item_id: 2473
+        placements:
+            -   location:
+                    - 1308
+                    - 1569
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: iron ore
+        item_id: 6583
+        placements:
+            -   location:
+                    - 1284
+                    - 1538
+                    - -3
+    -   type: MetalGoldenChest
+        arguments: ''
+        description: metal chest
+        item_id: 3648
+        placements:
+            -   location:
+                    - 1165
+                    - 1513
+                    - -68
+            -   location:
+                    - 1170
+                    - 1508
+                    - -68
+    -   type: MetalChest
+        arguments: ''
+        description: metal chest
+        item_id: 2475
+        placements:
+            -   location:
+                    - 1173
+                    - 1504
+                    - -68
+    -   type: WoodenChest
+        arguments: ''
+        description: wooden chest
+        item_id: 3650
+        placements:
+            -   location:
+                    - 1169
+                    - 1516
+                    - -68
+    -   type: MetalGoldenChest
+        arguments: ''
+        description: metal chest
+        item_id: 3649
+        placements:
+            -   location:
+                    - 1171
+                    - 1518
+                    - -68
+    -   type: Static
+        arguments: ''
+        description: crumbling floor
+        item_id: 4549
+        placements:
+            -   location:
+                    - 1183
+                    - 1477
+                    - -36
+            -   location:
+                    - 1188
+                    - 1504
+                    - -62
+            -   location:
+                    - 1198
+                    - 1473
+                    - -23
+            -   location:
+                    - 1199
+                    - 1513
+                    - -44
+            -   location:
+                    - 1197
+                    - 1546
+                    - -26
+            -   location:
+                    - 1200
+                    - 1530
+                    - -25
+            -   location:
+                    - 1208
+                    - 1502
+                    - -28
+            -   location:
+                    - 1219
+                    - 1517
+                    - -25
+            -   location:
+                    - 1231
+                    - 1529
+                    - -25
+            -   location:
+                    - 1232
+                    - 1472
+                    - -22
+            -   location:
+                    - 1244
+                    - 1474
+                    - -22
+            -   location:
+                    - 1241
+                    - 1504
+                    - -25
+    -   type: MediumCrate
+        arguments: ''
+        description: crate
+        item_id: 3647
+        placements:
+            -   location:
+                    - 1281
+                    - 1494
+                    - 15
+            -   location:
+                    - 1307
+                    - 1527
+                    - -25
+            -   location:
+                    - 1309
+                    - 1528
+                    - -28
+    -   type: LargeCrate
+        arguments: ''
+        description: crate
+        item_id: 3645
+        placements:
+            -   location:
+                    - 1281
+                    - 1494
+                    - 12
+    -   type: WoodenChest
+        arguments: ''
+        description: wooden chest
+        item_id: 3651
+        placements:
+            -   location:
+                    - 1283
+                    - 1492
+                    - 12

@@ -1,0 +1,19 @@
+item_templates:
+    - id: base_food
+      is_abstract: true
+      weight: 1
+      is_stackable: true
+      is_movable: true
+      tags: [food]
+    - id: apple
+      base_item: base_food
+      item_id: 2512
+    - id: bread_loaf
+      base_item: base_food
+      item_id: 4155
+    - id: cheese_wheel
+      base_item: base_food
+      item_id: 2430
+    - id: cooked_bird
+      base_item: base_food
+      item_id: 2487

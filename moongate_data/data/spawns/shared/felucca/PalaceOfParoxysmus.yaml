@@ -1,0 +1,433 @@
+spawn:
+    -   type: Spawner
+        guid: 04a75e0b-4499-4fe6-8bd6-49e3dbf0d528
+        name: Spawner (215)
+        location:
+            - 6416
+            - 447
+            - -40
+        map: Felucca
+        count: 15
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 20
+        walking_range: 20
+        entries:
+            -   name: PlagueBeast
+                max_count: 8
+                probability: 100
+            -   name: PlagueSpawn
+                max_count: 8
+                probability: 100
+            -   name: AcidElemental
+                max_count: 7
+                probability: 100
+            -   name: CorrosiveSlime
+                max_count: 7
+                probability: 100
+    -   type: Spawner
+        guid: 04cc01ab-f7da-4992-8913-4db4ea63149e
+        name: Spawner (215)
+        location:
+            - 6298
+            - 395
+            - 60
+        map: Felucca
+        count: 2
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 8
+        walking_range: 8
+        entries:
+            -   name: EarthElemental
+                max_count: 2
+                probability: 100
+            -   name: CorrosiveSlime
+                max_count: 2
+                probability: 100
+    -   type: Spawner
+        guid: 3a0d9e92-6661-4ad8-a38e-dcf7516e05de
+        name: Spawner (215)
+        location:
+            - 6354
+            - 455
+            - -40
+        map: Felucca
+        count: 10
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 20
+        walking_range: 20
+        entries:
+            -   name: PlagueBeast
+                max_count: 5
+                probability: 100
+            -   name: CorrosiveSlime
+                max_count: 5
+                probability: 100
+            -   name: PoisonElemental
+                max_count: 5
+                probability: 100
+            -   name: PlagueSpawn
+                max_count: 5
+                probability: 100
+    -   type: Spawner
+        guid: 5a586bde-b6a0-4f4d-b147-1e1886aae735
+        name: Spawner (215)
+        location:
+            - 6384
+            - 580
+            - -50
+        map: Felucca
+        count: 31
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 30
+        walking_range: 30
+        entries:
+            -   name: InterredGrizzle
+                max_count: 4
+                probability: 100
+            -   name: CorrosiveSlime
+                max_count: 4
+                probability: 100
+            -   name: PoisonElemental
+                max_count: 3
+                probability: 100
+            -   name: Balron
+                max_count: 9
+                probability: 100
+            -   name: Succubus
+                max_count: 9
+                probability: 100
+            -   name: Daemon
+                max_count: 9
+                probability: 100
+            -   name: PlagueBeastLord
+                max_count: 11
+                probability: 100
+            -   name: PlagueBeast
+                max_count: 11
+                probability: 100
+            -   name: PlagueSpawn
+                max_count: 11
+                probability: 100
+    -   type: Spawner
+        guid: 5ef37566-7b9c-47fb-a88c-d6c0177d92f3
+        name: Spawner (215)
+        location:
+            - 6418
+            - 358
+            - -40
+        map: Felucca
+        count: 22
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 25
+        walking_range: 25
+        entries:
+            -   name: PlagueSpawn
+                max_count: 12
+                probability: 100
+            -   name: PlagueBeast
+                max_count: 12
+                probability: 100
+            -   name: AcidElemental
+                max_count: 12
+                probability: 100
+            -   name: CorrosiveSlime
+                max_count: 12
+                probability: 100
+            -   name: PoisonElemental
+                max_count: 12
+                probability: 100
+            -   name: PlagueSpawn
+                max_count: 2
+                probability: 100
+            -   name: PlagueBeast
+                max_count: 2
+                probability: 100
+            -   name: AcidElemental
+                max_count: 2
+                probability: 100
+            -   name: CorrosiveSlime
+                max_count: 2
+                probability: 100
+            -   name: PoisonElemental
+                max_count: 2
+                probability: 100
+    -   type: Spawner
+        guid: 604b87ed-6718-4802-b1b6-f572ed7d9935
+        name: Spawner (215)
+        location:
+            - 6295
+            - 616
+            - -50
+        map: Felucca
+        count: 27
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 50
+        walking_range: 50
+        entries:
+            -   name: Daemon
+                max_count: 6
+                probability: 100
+            -   name: Succubus
+                max_count: 6
+                probability: 100
+            -   name: InterredGrizzle
+                max_count: 6
+                probability: 100
+            -   name: PoisonElemental
+                max_count: 6
+                probability: 100
+            -   name: PlagueBeast
+                max_count: 6
+                probability: 100
+            -   name: PlagueSpawn
+                max_count: 6
+                probability: 100
+            -   name: CorrosiveSlime
+                max_count: 3
+                probability: 100
+            -   name: Putrefier
+                max_count: 3
+                probability: 100
+            -   name: PlagueBeastLord
+                max_count: 3
+                probability: 100
+    -   type: Spawner
+        guid: 74269ae8-5e94-4496-ad04-611e81b14168
+        name: Spawner (215)
+        location:
+            - 6404
+            - 378
+            - -40
+        map: Felucca
+        count: 4
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 18
+        walking_range: 18
+        entries:
+            -   name: AcidElemental
+                max_count: 2
+                probability: 100
+            -   name: PlagueSpawn
+                max_count: 2
+                probability: 100
+            -   name: AcidElemental
+                max_count: 1
+                probability: 100
+            -   name: PlagueSpawn
+                max_count: 1
+                probability: 100
+    -   type: Spawner
+        guid: 9c1149a5-ac2a-42e6-b6e2-296e6ca05602
+        name: Spawner (215)
+        location:
+            - 6249
+            - 352
+            - 60
+        map: Felucca
+        count: 9
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 15
+        walking_range: 15
+        entries:
+            -   name: AcidElemental
+                max_count: 6
+                probability: 100
+            -   name: EarthElemental
+                max_count: 6
+                probability: 100
+            -   name: CorrosiveSlime
+                max_count: 6
+                probability: 100
+            -   name: AcidElemental
+                max_count: 1
+                probability: 100
+            -   name: EarthElemental
+                max_count: 1
+                probability: 100
+            -   name: CorrosiveSlime
+                max_count: 1
+                probability: 100
+    -   type: Spawner
+        guid: ad3fbc20-7914-4651-a7c1-994d9b88ed22
+        name: Spawner (215)
+        location:
+            - 6466
+            - 543
+            - -50
+        map: Felucca
+        count: 22
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 30
+        walking_range: 30
+        entries:
+            -   name: Balron
+                max_count: 6
+                probability: 100
+            -   name: Succubus
+                max_count: 6
+                probability: 100
+            -   name: Daemon
+                max_count: 6
+                probability: 100
+            -   name: CorrosiveSlime
+                max_count: 3
+                probability: 100
+            -   name: PlagueBeastLord
+                max_count: 8
+                probability: 100
+            -   name: PlagueBeast
+                max_count: 8
+                probability: 100
+            -   name: PlagueSpawn
+                max_count: 8
+                probability: 100
+            -   name: InterredGrizzle
+                max_count: 5
+                probability: 100
+            -   name: PoisonElemental
+                max_count: 5
+                probability: 100
+    -   type: Spawner
+        guid: af6ef316-bb00-417f-852c-14e9c98ca74c
+        name: Spawner (215)
+        location:
+            - 6285
+            - 353
+            - 60
+        map: Felucca
+        count: 1
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 5
+        walking_range: 5
+        entries:
+            -   name: PoisonElemental
+                max_count: 1
+                probability: 100
+    -   type: Spawner
+        guid: b7da2a27-b13e-4113-b8c8-e5f2e7ac2e3a
+        name: Spawner (215)
+        location:
+            - 6292
+            - 462
+            - -50
+        map: Felucca
+        count: 18
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 40
+        walking_range: 40
+        entries:
+            -   name: ChaosDaemon
+                max_count: 7
+                probability: 100
+            -   name: Moloch
+                max_count: 7
+                probability: 100
+            -   name: Succubus
+                max_count: 7
+                probability: 100
+            -   name: Daemon
+                max_count: 7
+                probability: 100
+            -   name: Balron
+                max_count: 4
+                probability: 100
+    -   type: Spawner
+        guid: bbed003d-43d6-4690-b93e-763f42a4187f
+        name: Spawner (215)
+        location:
+            - 6353
+            - 400
+            - 60
+        map: Felucca
+        count: 4
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 10
+        walking_range: 10
+        entries:
+            -   name: EarthElemental
+                max_count: 4
+                probability: 100
+            -   name: CorrosiveSlime
+                max_count: 4
+                probability: 100
+    -   type: Spawner
+        guid: d3ba2375-fc73-4996-9f54-3a09dc39c653
+        name: Spawner (215)
+        location:
+            - 6319
+            - 348
+            - 60
+        map: Felucca
+        count: 9
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 20
+        walking_range: 20
+        entries:
+            -   name: EarthElemental
+                max_count: 5
+                probability: 100
+            -   name: CorrosiveSlime
+                max_count: 5
+                probability: 100
+            -   name: AcidElemental
+                max_count: 5
+                probability: 100
+            -   name: PlagueSpawn
+                max_count: 5
+                probability: 100
+            -   name: EarthElemental
+                max_count: 1
+                probability: 100
+            -   name: CorrosiveSlime
+                max_count: 1
+                probability: 100
+            -   name: AcidElemental
+                max_count: 1
+                probability: 100
+            -   name: PlagueSpawn
+                max_count: 1
+                probability: 100
+    -   type: Spawner
+        guid: e695b242-221c-49b5-853a-9e943afe8355
+        name: Spawner (215)
+        location:
+            - 6328
+            - 517
+            - -50
+        map: Felucca
+        count: 4
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 10
+        walking_range: 10
+        entries:
+            -   name: PoisonElemental
+                max_count: 4
+                probability: 100

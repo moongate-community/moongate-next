@@ -1,0 +1,219 @@
+decoration:
+    -   type: Static
+        arguments: ''
+        description: wooden logs
+        item_id: 1289
+        placements:
+            -   location:
+                    - 5620
+                    - 66
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: wooden logs
+        item_id: 1290
+        placements:
+            -   location:
+                    - 5546
+                    - 12
+                    - 0
+            -   location:
+                    - 5546
+                    - 13
+                    - 0
+            -   location:
+                    - 5546
+                    - 14
+                    - 0
+            -   location:
+                    - 5548
+                    - 14
+                    - 0
+            -   location:
+                    - 5553
+                    - 14
+                    - 0
+            -   location:
+                    - 5555
+                    - 12
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: stone pavers
+        item_id: 1310
+        placements:
+            -   location:
+                    - 5443
+                    - 179
+                    - 22
+            -   location:
+                    - 5444
+                    - 179
+                    - 22
+    -   type: Static
+        arguments: ''
+        description: stone pavers
+        item_id: 1311
+        placements:
+            -   location:
+                    - 5574
+                    - 199
+                    - 22
+    -   type: Static
+        arguments: ''
+        description: stone
+        item_id: 1822
+        placements:
+            -   location:
+                    - 5513
+                    - 9
+                    - 0
+            -   location:
+                    - 5514
+                    - 10
+                    - 0
+            -   location:
+                    - 5490
+                    - 19
+                    - -30
+    -   type: Static
+        arguments: ''
+        description: suspension bridge
+        item_id: 2032
+        placements:
+            -   location:
+                    - 5617
+                    - 70
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: suspension bridge
+        item_id: 2063
+        placements:
+            -   location:
+                    - 5552
+                    - 15
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: water
+        item_id: 6039
+        placements:
+            -   location:
+                    - 5546
+                    - 15
+                    - -5
+            -   location:
+                    - 5548
+                    - 15
+                    - -5
+            -   location:
+                    - 5549
+                    - 15
+                    - -5
+            -   location:
+                    - 5550
+                    - 13
+                    - -5
+            -   location:
+                    - 5554
+                    - 10
+                    - -5
+            -   location:
+                    - 5617
+                    - 57
+                    - -5
+            -   location:
+                    - 5617
+                    - 64
+                    - -5
+            -   location:
+                    - 5620
+                    - 66
+                    - -5
+            -   location:
+                    - 5621
+                    - 67
+                    - -5
+            -   location:
+                    - 5672
+                    - 43
+                    - -5
+            -   location:
+                    - 5436
+                    - 168
+                    - -5
+    -   type: Static
+        arguments: ''
+        description: wooden planks
+        item_id: 1225
+        placements:
+            -   location:
+                    - 5460
+                    - 185
+                    - 0
+            -   location:
+                    - 5460
+                    - 186
+                    - 0
+            -   location:
+                    - 5460
+                    - 187
+                    - 0
+            -   location:
+                    - 5460
+                    - 188
+                    - 0
+            -   location:
+                    - 5456
+                    - 185
+                    - 0
+            -   location:
+                    - 5456
+                    - 186
+                    - 0
+            -   location:
+                    - 5456
+                    - 187
+                    - 0
+            -   location:
+                    - 5456
+                    - 188
+                    - 0
+    -   type: Static
+        arguments: (Light = Circle300)
+        description: moongate
+        item_id: 8148
+        placements:
+            -   location:
+                    - 5490
+                    - 19
+                    - -24
+            -   location:
+                    - 5514
+                    - 10
+                    - 6
+            -   location:
+                    - 5604
+                    - 102
+                    - 6
+            -   location:
+                    - 5514
+                    - 147
+                    - 26
+            -   location:
+                    - 5538
+                    - 170
+                    - 6
+            -   location:
+                    - 5513
+                    - 176
+                    - 6
+            -   location:
+                    - 5507
+                    - 162
+                    - 6
+            -   location:
+                    - 5875
+                    - 19
+                    - -4

@@ -1,0 +1,349 @@
+decoration:
+    -   type: Static
+        arguments: ''
+        description: pedestal
+        item_id: 7978
+        placements:
+            -   location:
+                    - 467
+                    - 92
+                    - -1
+    -   type: Static
+        arguments: (Hue = 0x482)
+        description: alchemical symbol
+        item_id: 6173
+        placements:
+            -   location:
+                    - 468
+                    - 92
+                    - -1
+    -   type: Static
+        arguments: (Hue = 0x3FD)
+        description: alchemical symbol
+        item_id: 6177
+        placements:
+            -   location:
+                    - 469
+                    - 92
+                    - -1
+    -   type: Static
+        arguments: (Hue = 0x66D)
+        description: alchemical symbol
+        item_id: 6181
+        placements:
+            -   location:
+                    - 470
+                    - 92
+                    - -1
+    -   type: MetalDoor
+        arguments: (Facing = SouthCW)
+        description: metal door
+        item_id: 1661
+        placements:
+            -   location:
+                    - 269
+                    - 74
+                    - -1
+            -   location:
+                    - 278
+                    - 96
+                    - -1
+            -   location:
+                    - 334
+                    - 15
+                    - -1
+            -   location:
+                    - 344
+                    - 15
+                    - -1
+    -   type: MetalDoor
+        arguments: (Facing = NorthCCW)
+        description: metal door
+        item_id: 1663
+        placements:
+            -   location:
+                    - 269
+                    - 73
+                    - -1
+            -   location:
+                    - 278
+                    - 95
+                    - -1
+            -   location:
+                    - 334
+                    - 14
+                    - -1
+            -   location:
+                    - 344
+                    - 14
+                    - -1
+    -   type: MetalDoor
+        arguments: (Facing = WestCW)
+        description: metal door
+        item_id: 1653
+        placements:
+            -   location:
+                    - 308
+                    - 88
+                    - -1
+    -   type: MetalDoor
+        arguments: (Facing = EastCCW)
+        description: metal door
+        item_id: 1655
+        placements:
+            -   location:
+                    - 309
+                    - 88
+                    - -1
+    -   type: Static
+        arguments: (Hue = 0x83E)
+        description: lever
+        item_id: 4236
+        placements:
+            -   location:
+                    - 307
+                    - 143
+                    - 5
+    -   type: Static
+        arguments: (Hue = 0x83F)
+        description: lever
+        item_id: 4245
+        placements:
+            -   location:
+                    - 308
+                    - 143
+                    - 5
+    -   type: Static
+        arguments: (Hue = 0x843)
+        description: lever
+        item_id: 4245
+        placements:
+            -   location:
+                    - 309
+                    - 143
+                    - 5
+            -   location:
+                    - 308
+                    - 146
+                    - 8
+    -   type: Static
+        arguments: (Hue = 0x845)
+        description: lever
+        item_id: 4243
+        placements:
+            -   location:
+                    - 310
+                    - 143
+                    - 5
+    -   type: Static
+        arguments: (Hue = 0x83D)
+        description: lever
+        item_id: 4236
+        placements:
+            -   location:
+                    - 307
+                    - 144
+                    - 5
+    -   type: Static
+        arguments: (Hue = 0x83E)
+        description: lever
+        item_id: 4238
+        placements:
+            -   location:
+                    - 307
+                    - 145
+                    - 5
+            -   location:
+                    - 311
+                    - 144
+                    - 9
+    -   type: Static
+        arguments: (Hue = 0x835)
+        description: lever
+        item_id: 4243
+        placements:
+            -   location:
+                    - 309
+                    - 146
+                    - 8
+    -   type: Static
+        arguments: (Hue = 0x83B)
+        description: lever
+        item_id: 4243
+        placements:
+            -   location:
+                    - 310
+                    - 146
+                    - 8
+    -   type: Static
+        arguments: (Hue = 0x845)
+        description: lever
+        item_id: 4236
+        placements:
+            -   location:
+                    - 311
+                    - 145
+                    - 9
+    -   type: FireColumnTrap
+        arguments: (Hue = 0x455)
+        description: crumbling floor
+        item_id: 4549
+        placements:
+            -   location:
+                    - 2347
+                    - 1264
+                    - -110
+            -   location:
+                    - 2347
+                    - 1271
+                    - -110
+            -   location:
+                    - 2340
+                    - 1272
+                    - -110
+            -   location:
+                    - 2340
+                    - 1264
+                    - -110
+    -   type: MetalDoor
+        arguments: (Hue = 0x455; Facing=SouthCCW)
+        description: metal door
+        item_id: 1665
+        placements:
+            -   location:
+                    - 2333
+                    - 1269
+                    - -110
+    -   type: MetalDoor
+        arguments: (Hue = 0x455; Facing=NorthCW)
+        description: metal door
+        item_id: 1663
+        placements:
+            -   location:
+                    - 2333
+                    - 1268
+                    - -110
+    -   type: SpikeTrap
+        arguments: ''
+        description: floor spikes
+        item_id: 4512
+        placements:
+            -   location:
+                    - 378
+                    - 140
+                    - 1
+            -   location:
+                    - 378
+                    - 139
+                    - 2
+            -   location:
+                    - 379
+                    - 140
+                    - -1
+            -   location:
+                    - 384
+                    - 138
+                    - 4
+            -   location:
+                    - 385
+                    - 138
+                    - -2
+    -   type: IronGate
+        arguments: (Facing = SouthCW)
+        description: iron gate
+        item_id: 2092
+        placements:
+            -   location:
+                    - 351
+                    - 40
+                    - -1
+    -   type: Static
+        arguments: ''
+        description: switch
+        item_id: 4239
+        placements:
+            -   location:
+                    - 351
+                    - 47
+                    - 10
+    -   type: Static
+        arguments: ''
+        description: skinning knife
+        item_id: 3780
+        placements:
+            -   location:
+                    - 445
+                    - 15
+                    - 5
+            -   location:
+                    - 445
+                    - 15
+                    - 6
+            -   location:
+                    - 453
+                    - 15
+                    - 5
+            -   location:
+                    - 452
+                    - 16
+                    - 5
+    -   type: Static
+        arguments: ''
+        description: skinning knife
+        item_id: 3781
+        placements:
+            -   location:
+                    - 444
+                    - 16
+                    - 5
+            -   location:
+                    - 449
+                    - 16
+                    - 5
+            -   location:
+                    - 449
+                    - 16
+                    - 6
+    -   type: SpikeTrap
+        arguments: ''
+        description: floor spikes
+        item_id: 4506
+        placements:
+            -   location:
+                    - 379
+                    - 139
+                    - 0
+            -   location:
+                    - 383
+                    - 138
+                    - 3
+            -   location:
+                    - 383
+                    - 140
+                    - -2
+            -   location:
+                    - 386
+                    - 144
+                    - -1
+    -   type: Static
+        arguments: ''
+        description: empty tub
+        item_id: 3715
+        placements:
+            -   location:
+                    - 385
+                    - 28
+                    - -1
+            -   location:
+                    - 387
+                    - 28
+                    - -1
+    -   type: IronGateShort
+        arguments: (Facing = WestCW)
+        description: iron gate
+        item_id: 2124
+        placements:
+            -   location:
+                    - 391
+                    - 29
+                    - -1

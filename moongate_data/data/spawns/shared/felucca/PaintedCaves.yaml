@@ -1,0 +1,61 @@
+spawn:
+    -   type: Spawner
+        guid: 2733b112-93bf-47cc-b071-02e87c3150ab
+        name: Spawner (214)
+        location:
+            - 6279
+            - 879
+            - -1
+        map: Felucca
+        count: 9
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 30
+        walking_range: 30
+        entries:
+            -   name: Cat
+                max_count: 6
+                probability: 100
+            -   name: Dog
+                max_count: 6
+                probability: 100
+            -   name: Rat
+                max_count: 6
+                probability: 100
+            -   name: Cat
+                max_count: 1
+                probability: 100
+            -   name: Dog
+                max_count: 1
+                probability: 100
+            -   name: Rat
+                max_count: 1
+                probability: 100
+    -   type: Spawner
+        guid: bc6475e8-885e-4e5e-bf83-49c3e408ac06
+        name: Spawner (214)
+        location:
+            - 6275
+            - 879
+            - -2
+        map: Felucca
+        count: 12
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 30
+        walking_range: 30
+        entries:
+            -   name: Troglodyte
+                max_count: 3
+                probability: 100
+            -   name: Grobu
+                max_count: 3
+                probability: 100
+            -   name: Lurg
+                max_count: 3
+                probability: 100
+            -   name: GiantRat
+                max_count: 3
+                probability: 100

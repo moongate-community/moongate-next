@@ -1,0 +1,256 @@
+decoration:
+    -   type: SpinningWheelSouthAddon
+        arguments: ''
+        description: spinning wheel
+        item_id: 4117
+        placements:
+            -   location:
+                    - 2088
+                    - 1318
+                    - -80
+    -   type: LoomEastAddon
+        arguments: ''
+        description: upright loom
+        item_id: 4192
+        placements:
+            -   location:
+                    - 2088
+                    - 1326
+                    - -80
+            -   location:
+                    - 2088
+                    - 1329
+                    - -80
+    -   type: StrongWoodDoor
+        arguments: (Hue = 0x497; Facing=EastCW)
+        description: wooden door
+        item_id: 1771
+        placements:
+            -   location:
+                    - 2038
+                    - 1320
+                    - -85
+            -   location:
+                    - 2041
+                    - 1321
+                    - -85
+    -   type: StoneOvenEastAddon
+        arguments: (Hue = 0x44E)
+        description: oven
+        item_id: 2348
+        placements:
+            -   location:
+                    - 2015
+                    - 1360
+                    - -90
+    -   type: TrainingDummy
+        arguments: (Hue = 0x44F)
+        description: training dummy
+        item_id: 4212
+        placements:
+            -   location:
+                    - 1961
+                    - 1339
+                    - -75
+            -   location:
+                    - 1977
+                    - 1307
+                    - -75
+    -   type: WoodenBench
+        arguments: (Hue = 0x1A)
+        description: wooden bench
+        item_id: 2861
+        placements:
+            -   location:
+                    - 2040
+                    - 1326
+                    - -65
+    -   type: StrongWoodDoor
+        arguments: (Hue = 0x497; Facing=NorthCCW)
+        description: wooden door
+        item_id: 1775
+        placements:
+            -   location:
+                    - 2036
+                    - 1317
+                    - -85
+            -   location:
+                    - 2036
+                    - 1323
+                    - -65
+    -   type: Barrel
+        arguments: (Hue = 0x497)
+        description: barrel
+        item_id: 3703
+        placements:
+            -   location:
+                    - 2059
+                    - 1281
+                    - -80
+            -   location:
+                    - 2059
+                    - 1280
+                    - -80
+            -   location:
+                    - 2061
+                    - 1290
+                    - -80
+            -   location:
+                    - 2062
+                    - 1291
+                    - -80
+    -   type: MetalGoldenChest
+        arguments: (Hue = 0x497)
+        description: metal chest
+        item_id: 3648
+        placements:
+            -   location:
+                    - 1975
+                    - 1365
+                    - -74
+            -   location:
+                    - 1975
+                    - 1366
+                    - -74
+            -   location:
+                    - 2034
+                    - 1321
+                    - -65
+    -   type: Static
+        arguments: (Hue = 0x497)
+        description: barrel
+        item_id: 4014
+        placements:
+            -   location:
+                    - 1975
+                    - 1369
+                    - -80
+            -   location:
+                    - 1975
+                    - 1370
+                    - -80
+            -   location:
+                    - 1975
+                    - 1370
+                    - -73
+            -   location:
+                    - 1991
+                    - 1315
+                    - -90
+            -   location:
+                    - 2013
+                    - 1365
+                    - -90
+            -   location:
+                    - 2013
+                    - 1366
+                    - -90
+            -   location:
+                    - 2014
+                    - 1366
+                    - -90
+    -   type: Static
+        arguments: (Hue = 0x451)
+        description: stone wall
+        item_id: 90
+        placements:
+            -   location:
+                    - 1994
+                    - 1325
+                    - -90
+    -   type: Drawer
+        arguments: (Hue = 0x497)
+        description: chest of drawers
+        item_id: 2604
+        placements:
+            -   location:
+                    - 2035
+                    - 1311
+                    - -65
+            -   location:
+                    - 2041
+                    - 1311
+                    - -65
+    -   type: MetalGoldenChest
+        arguments: (Hue = 0x497)
+        description: metal chest
+        item_id: 3649
+        placements:
+            -   location:
+                    - 2033
+                    - 1313
+                    - -65
+            -   location:
+                    - 2039
+                    - 1313
+                    - -65
+    -   type: StrongWoodDoor
+        arguments: (Hue = 0x497; Facing=WestCW)
+        description: wooden door
+        item_id: 1765
+        placements:
+            -   location:
+                    - 2035
+                    - 1315
+                    - -65
+            -   location:
+                    - 2040
+                    - 1315
+                    - -65
+    -   type: Drawer
+        arguments: (Hue = 0x497)
+        description: chest of drawers
+        item_id: 2612
+        placements:
+            -   location:
+                    - 2032
+                    - 1323
+                    - -65
+    -   type: MetalChest
+        arguments: (Hue = 0x455)
+        description: metal chest
+        item_id: 2475
+        placements:
+            -   location:
+                    - 2042
+                    - 1339
+                    - -80
+            -   location:
+                    - 2043
+                    - 1339
+                    - -80
+            -   location:
+                    - 2048
+                    - 1344
+                    - -80
+            -   location:
+                    - 2048
+                    - 1344
+                    - -76
+    -   type: Static
+        arguments: ''
+        description: cleaver
+        item_id: 3779
+        placements:
+            -   location:
+                    - 2066
+                    - 1372
+                    - -74
+    -   type: Static
+        arguments: ''
+        description: bottles of liquor
+        item_id: 2462
+        placements:
+            -   location:
+                    - 2028
+                    - 1354
+                    - -81
+    -   type: Static
+        arguments: ''
+        description: butcher knife
+        item_id: 5111
+        placements:
+            -   location:
+                    - 2070
+                    - 1370
+                    - -74

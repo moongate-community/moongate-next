@@ -16,7 +16,7 @@ namespace Moongate.Server.Services.Templates;
 /// </summary>
 /// <remarks>
 /// Inheritance uses default-value sentinels: a child field at its default
-/// (0, false, empty, None) inherits the parent value, so a child cannot
+/// (0, false, empty, Common rarity) inherits the parent value, so a child cannot
 /// explicitly re-state a default over a non-default parent value
 /// (e.g. <c>hue: 0</c> over a parent's <c>hue: 7</c>, or <c>amount: 1</c>
 /// over a parent's <c>amount: 5</c>). Deliberate KISS tradeoff; if explicit
@@ -181,7 +181,7 @@ public sealed class ItemTemplateYamlLoader
         child.GumpId ??= parent.GumpId;
         child.Layer ??= parent.Layer;
 
-        if (child.Rarity == ItemRarity.None)
+        if (child.Rarity == ItemRarity.Common)
         {
             child.Rarity = parent.Rarity;
         }

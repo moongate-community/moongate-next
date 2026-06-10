@@ -68,7 +68,7 @@ public sealed class ItemTemplateDefinitionTests
         Assert.Equal(0, template.ItemId);
         Assert.Null(template.Layer);
         Assert.Null(template.GumpId);
-        Assert.Equal(ItemRarity.None, template.Rarity);
+        Assert.Equal(ItemRarity.Common, template.Rarity);
         Assert.Empty(template.Tags);
         Assert.Empty(template.Params);
     }

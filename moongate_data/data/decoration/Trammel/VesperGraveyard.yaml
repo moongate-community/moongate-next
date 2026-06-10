@@ -1,0 +1,19 @@
+decoration:
+    -   type: IronGateShort
+        arguments: (Facing = NorthCCW)
+        description: Iron Gate right
+        item_id: 2134
+        placements:
+            -   location:
+                    - 2783
+                    - 867
+                    - 0
+    -   type: IronGateShort
+        arguments: (Facing = SouthCW)
+        description: Iron Gate left
+        item_id: 2132
+        placements:
+            -   location:
+                    - 2783
+                    - 868
+                    - 0

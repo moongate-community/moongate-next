@@ -41,16 +41,16 @@ export function AppShell({
   const { theme, toggleTheme } = useTheme();
 
   const columns = isSidebarCollapsed
-    ? "md:grid-cols-[76px_minmax(0,1fr)]"
-    : "md:grid-cols-[248px_minmax(0,1fr)]";
+    ? "md:grid-cols-[68px_minmax(0,1fr)]"
+    : "md:grid-cols-[238px_minmax(0,1fr)]";
 
   return (
     <div className={`grid min-h-screen grid-cols-1 ${columns} bg-bg text-fg transition-[grid-template-columns] duration-200 ease-out`}>
-      <aside className="z-20 flex flex-col gap-5 border-b border-border bg-surface px-3 py-3 md:sticky md:top-0 md:z-10 md:h-screen md:gap-6 md:border-b-0 md:border-r md:px-3 md:py-5">
-        <div className={`flex items-center gap-2.5 ${isSidebarCollapsed ? "md:justify-center md:px-0" : "justify-between px-2"}`}>
+      <aside className="z-20 flex flex-col gap-3 border-b border-border bg-surface-raised px-2 py-2 md:sticky md:top-0 md:z-10 md:h-screen md:border-b-0 md:border-r md:px-2 md:py-3">
+        <div className={`flex h-10 items-center gap-2 ${isSidebarCollapsed ? "md:justify-center md:px-0" : "justify-between px-1.5"}`}>
           <div className={`flex min-w-0 items-center gap-2.5 ${isSidebarCollapsed ? "md:justify-center" : ""}`}>
-            <img src="/images/moongate_logo.png" alt="Moongate" className="h-9 w-9 shrink-0 object-contain" />
-            <span className={`truncate text-[17px] font-bold tracking-tight text-fg ${isSidebarCollapsed ? "md:hidden" : ""}`}>
+            <img src="/images/moongate_logo.png" alt="Moongate" className="h-7 w-7 shrink-0 object-contain" />
+            <span className={`truncate text-sm font-semibold tracking-tight text-fg ${isSidebarCollapsed ? "md:hidden" : ""}`}>
               Moongate
             </span>
           </div>
@@ -61,16 +61,16 @@ export function AppShell({
             aria-controls="portal-side-nav"
             aria-label={isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             title={isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-            className="hidden h-8 w-8 items-center justify-center rounded-md text-fg-subtle transition-colors duration-150 hover:bg-muted hover:text-fg md:inline-flex"
+            className="hidden h-7 w-7 items-center justify-center rounded-md text-fg-subtle transition-colors duration-150 hover:bg-muted hover:text-fg md:inline-flex"
           >
-            {isSidebarCollapsed ? <PanelLeftOpen size={17} aria-hidden /> : <PanelLeftClose size={17} aria-hidden />}
+            {isSidebarCollapsed ? <PanelLeftOpen size={16} aria-hidden /> : <PanelLeftClose size={16} aria-hidden />}
           </button>
         </div>
 
         <nav
           id="portal-side-nav"
           aria-label={`${section} navigation`}
-          className="flex flex-row gap-1.5 overflow-x-auto pb-0.5 md:flex-col md:overflow-visible md:pb-0"
+          className="flex flex-row gap-1 overflow-x-auto pb-0.5 md:flex-col md:overflow-visible md:pb-0"
         >
           {items.map((item) => {
             const isActive = activeItemId === item.id;
@@ -85,14 +85,14 @@ export function AppShell({
                 aria-current={isActive ? "page" : undefined}
                 title={collapsed ? item.label : undefined}
                 className={[
-                  "group relative flex min-h-[38px] shrink-0 items-center gap-2.5 rounded-md px-2.5 text-sm font-medium transition-[color,background-color,transform] duration-150 active:scale-[0.98]",
+                  "group relative flex min-h-[34px] shrink-0 items-center gap-2 rounded-md px-2 text-[13px] font-medium transition-colors duration-150",
                   collapsed ? "md:justify-center md:px-0" : "",
                   isActive
-                    ? "bg-muted text-fg before:absolute before:left-0 before:top-1/2 before:h-5 before:w-[3px] before:-translate-y-1/2 before:rounded-full before:bg-accent before:content-['']"
+                    ? "bg-surface text-fg shadow-card"
                     : "text-fg-muted hover:bg-muted hover:text-fg"
                 ].join(" ")}
               >
-                <item.icon size={18} aria-hidden className="shrink-0" />
+                <item.icon size={16} aria-hidden className="shrink-0" />
                 <span className={collapsed ? "md:hidden" : ""}>{item.label}</span>
               </button>
             );
@@ -101,14 +101,14 @@ export function AppShell({
       </aside>
 
       <main className="min-w-0">
-        <header className="sticky top-0 z-10 flex min-h-[70px] items-center justify-between gap-4 border-b border-border bg-bg/85 px-5 backdrop-blur-md md:px-7">
+        <header className="sticky top-0 z-10 flex min-h-[52px] items-center justify-end gap-3 border-b border-border bg-bg/90 px-4 backdrop-blur-md md:px-6">
           <div className="flex min-w-0 items-center gap-3">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-accent/10 text-xs font-bold text-accent">
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted text-[11px] font-semibold text-fg-muted">
               {initialsOf(user.username)}
             </div>
-            <div className="grid min-w-0 gap-0.5">
-              <strong className="truncate text-sm font-semibold leading-tight text-fg">{user.username}</strong>
-              <span className="truncate text-xs font-medium text-fg-muted">{user.level}</span>
+            <div className="hidden min-w-0 gap-0.5 sm:grid">
+              <strong className="truncate text-[13px] font-medium leading-tight text-fg">{user.username}</strong>
+              <span className="truncate text-[11px] font-medium text-fg-subtle">{user.level}</span>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -118,9 +118,9 @@ export function AppShell({
               onClick={onLogout}
               aria-label="Logout"
               title="Logout"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-surface text-fg-muted transition-[color,background-color,transform] duration-150 hover:bg-muted hover:text-fg active:scale-[0.96]"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-fg-muted transition-colors duration-150 hover:bg-muted hover:text-fg"
             >
-              <LogOut size={18} aria-hidden />
+              <LogOut size={16} aria-hidden />
             </button>
           </div>
         </header>

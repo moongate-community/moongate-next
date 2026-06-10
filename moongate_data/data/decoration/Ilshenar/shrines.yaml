@@ -1,0 +1,68 @@
+decoration:
+    -   type: AnkhWest
+        arguments: ''
+        description: Compassion
+        item_id: 3
+        placements:
+            -   location:
+                    - 1209
+                    - 476
+                    - -14
+    -   type: AnkhNorth
+        arguments: ''
+        description: Honesty
+        item_id: 4
+        placements:
+            -   location:
+                    - 718
+                    - 1350
+                    - -55
+    -   type: AnkhWest
+        arguments: ''
+        description: Humility
+        item_id: 3
+        placements:
+            -   location:
+                    - 286
+                    - 1013
+                    - 5
+    -   type: AnkhNorth
+        arguments: ''
+        description: Justice
+        item_id: 4
+        placements:
+            -   location:
+                    - 986
+                    - 996
+                    - -22
+    -   type: AnkhWest
+        arguments: ''
+        description: Sacrifice
+        item_id: 3
+        placements:
+            -   location:
+                    - 1170
+                    - 1287
+                    - -30
+    -   type: AnkhWest
+        arguments: ''
+        description: Spirituality
+        item_id: 3
+        placements:
+            -   location:
+                    - 1525
+                    - 1340
+                    - 4
+    -   type: AnkhNorth
+        arguments: ''
+        description: Valor
+        item_id: 4
+        placements:
+            -   location:
+                    - 524
+                    - 211
+                    - -49
+            -   location:
+                    - 532
+                    - 211
+                    - -44
