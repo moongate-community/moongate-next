@@ -63,6 +63,9 @@
         <EmbeddedResource Include="Assets\data\**\*.yaml">
             <LogicalName>Moongate.Server.Assets.data/%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
         </EmbeddedResource>
+        <EmbeddedResource Include="Assets\templates\**\*.yaml">
+            <LogicalName>Moongate.Server.Assets.templates/%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
+        </EmbeddedResource>
     </ItemGroup>
 
 </Project>

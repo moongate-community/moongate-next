@@ -1,0 +1,19 @@
+item_templates:
+    - id: gold_coin
+      name: Gold Coin
+      item_id: 3821
+      is_stackable: true
+      is_movable: true
+      tags: [currency]
+    - id: candle
+      name: Candle
+      item_id: 2600
+      weight: 1
+      is_movable: true
+      tags: [light]
+    - id: spellbook
+      name: Spellbook
+      item_id: 3834
+      weight: 1
+      is_movable: true
+      tags: [magic]
