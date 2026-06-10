@@ -1,3 +1,10 @@
+# [0.1.0-develop.4](https://github.com/moongate-community/moongate-next/compare/v0.1.0-develop.3...v0.1.0-develop.4) (2026-06-10)
+
+
+### Features
+
+* **network:** add UO transport compression middleware and GameSession.EnableCompression ([ea98ddd](https://github.com/moongate-community/moongate-next/commit/ea98dddf5487bb070e609d8905009cf824414f7c))
+
 # [0.1.0-develop.3](https://github.com/moongate-community/moongate-next/compare/v0.1.0-develop.2...v0.1.0-develop.3) (2026-06-09)
 
 
