@@ -61,7 +61,7 @@ public sealed class StarterLoadoutService : IStarterLoadoutService
 
         if (!string.IsNullOrWhiteSpace(definition.BackpackTemplate))
         {
-            loadout.Backpack = Resolve(new LoadoutItemEntry { Template = definition.BackpackTemplate });
+            loadout.Backpack = Resolve(new() { Template = definition.BackpackTemplate });
         }
 
         AppendSection(loadout, definition.Base);
@@ -103,7 +103,10 @@ public sealed class StarterLoadoutService : IStarterLoadoutService
 
         if (loadout.Backpack is not null && loadout.Backpack.Layer is { } backpackLayer)
         {
-            backpackEntity = await _itemFactory.Value.CreateFromTemplateAsync(loadout.Backpack.Template.Id, cancellationToken);
+            backpackEntity = await _itemFactory.Value.CreateFromTemplateAsync(
+                                 loadout.Backpack.Template.Id,
+                                 cancellationToken
+                             );
 
             // Set before EquipAsync: the mobile upsert inside it persists the reference.
             mobile.BackpackId = backpackEntity.Id;
@@ -125,7 +128,7 @@ public sealed class StarterLoadoutService : IStarterLoadoutService
             {
                 PacketHueSource.Shirt => shirtHue,
                 PacketHueSource.Pants => pantsHue,
-                _ => (short)0
+                _                     => (short)0
             };
 
             // EquipAsync upserts the item, persisting the hue/amount mutations.
@@ -197,11 +200,9 @@ public sealed class StarterLoadoutService : IStarterLoadoutService
     {
         if (!_templates.TryGet(entry.Template, out var template))
         {
-            throw new InvalidOperationException(
-                $"Starter loadout references unknown item template '{entry.Template}'."
-            );
+            throw new InvalidOperationException($"Starter loadout references unknown item template '{entry.Template}'.");
         }
 
-        return new StarterLoadoutItem(template, entry.Amount ?? template.Amount, entry.PacketHue, template.Layer);
+        return new(template, entry.Amount ?? template.Amount, entry.PacketHue, template.Layer);
     }
 }

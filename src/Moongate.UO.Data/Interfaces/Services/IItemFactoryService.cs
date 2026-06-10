@@ -18,5 +18,9 @@ public interface IItemFactoryService
     /// the given id, overriding the stack amount; throws when the template is
     /// unknown or abstract.
     /// </summary>
-    ValueTask<ItemEntity> CreateFromTemplateAsync(string templateId, int amount, CancellationToken cancellationToken = default);
+    ValueTask<ItemEntity> CreateFromTemplateAsync(
+        string templateId,
+        int amount,
+        CancellationToken cancellationToken = default
+    );
 }

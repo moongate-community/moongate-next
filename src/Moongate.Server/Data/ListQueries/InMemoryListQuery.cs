@@ -42,6 +42,5 @@ public static class InMemoryListQuery
         Func<T, IEnumerable<string?>> searchableFields
     )
         => searchableFields(item)
-           .Any(field => !string.IsNullOrWhiteSpace(field)
-                         && field.Contains(search, StringComparison.OrdinalIgnoreCase));
+            .Any(field => !string.IsNullOrWhiteSpace(field) && field.Contains(search, StringComparison.OrdinalIgnoreCase));
 }

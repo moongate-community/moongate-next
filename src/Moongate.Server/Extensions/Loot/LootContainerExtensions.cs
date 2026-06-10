@@ -27,9 +27,7 @@ public static class LootContainerExtensions
         container.RegisterInstance<IEnhancedRandom>(BuiltInRng.Generator, IfAlreadyRegistered.Keep);
         container.Register<ILootService, LootService>(Reuse.Singleton);
         container.RegisterDelegate(
-            static resolver => new LootTableYamlLoader(
-                resolver.Resolve<DirectoriesConfig>()[DirectoryType.Templates_Loot]
-            ),
+            static resolver => new LootTableYamlLoader(resolver.Resolve<DirectoriesConfig>()[DirectoryType.Templates_Loot]),
             Reuse.Singleton
         );
         container.AddMoongateHosting();

@@ -51,9 +51,9 @@ public static class PacketHandlerContainerExtensions
 
             foreach (var handlerType in handlerTypes)
             {
-                if (handlerType.IsAbstract
-                    || !handlerType.IsClass
-                    || !handlerType.IsDefined(typeof(RegisterPacketHandlerAttribute), inherit: false))
+                if (handlerType.IsAbstract ||
+                    !handlerType.IsClass ||
+                    !handlerType.IsDefined(typeof(RegisterPacketHandlerAttribute), inherit: false))
                 {
                     continue;
                 }

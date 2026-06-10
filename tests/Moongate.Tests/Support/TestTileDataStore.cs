@@ -8,9 +8,7 @@ public sealed class TestTileDataStore : ITileDataStore
 {
     private readonly Dictionary<int, ItemData> _items = [];
 
-    public TestTileDataStore()
-    {
-    }
+    public TestTileDataStore() { }
 
     public TestTileDataStore(params (int Id, string Name)[] items)
     {

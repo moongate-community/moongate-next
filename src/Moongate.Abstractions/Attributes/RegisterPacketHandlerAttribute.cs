@@ -4,7 +4,5 @@ namespace Moongate.Abstractions.Attributes;
 /// Opt-in marker: a packet-handler class carrying this attribute is auto-discovered at boot and
 /// registered for every <c>IPacketHandler&lt;&gt;</c> interface it implements.
 /// </summary>
-[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-public sealed class RegisterPacketHandlerAttribute : Attribute
-{
-}
+[AttributeUsage(AttributeTargets.Class, Inherited = false)]
+public sealed class RegisterPacketHandlerAttribute : Attribute { }

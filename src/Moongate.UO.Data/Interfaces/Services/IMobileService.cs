@@ -2,7 +2,6 @@ using Moongate.Core.Ids;
 using Moongate.UO.Data.Data.Mobiles;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Entities.Mobiles;
-using Moongate.UO.Data.Types;
 using Moongate.UO.Data.Types.Items;
 using Moongate.UO.Data.Types.Skills;
 
@@ -39,7 +38,10 @@ public interface IMobileService
     ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default);
 
     /// <summary>Returns all mobiles belonging to the given account serial.</summary>
-    ValueTask<IReadOnlyList<MobileEntity>> GetByAccountIdAsync(Serial accountId, CancellationToken cancellationToken = default);
+    ValueTask<IReadOnlyList<MobileEntity>> GetByAccountIdAsync(
+        Serial accountId,
+        CancellationToken cancellationToken = default
+    );
 
     /// <summary>
     /// Returns the mobile's skill entry, or a fresh default entry when not yet trained.

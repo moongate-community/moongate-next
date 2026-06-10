@@ -4,7 +4,6 @@ using Moongate.Server.Services.Items;
 using Moongate.UO.Data.Data.Tiles;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Interfaces.Tiles;
-using Moongate.UO.Data.Types;
 using Moongate.UO.Data.Types.Properties;
 using Moongate.UO.Data.Types.Tiles;
 

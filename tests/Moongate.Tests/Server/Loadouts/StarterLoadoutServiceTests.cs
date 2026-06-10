@@ -6,7 +6,6 @@ using Moongate.UO.Data.Data.Mobiles;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Entities.Mobiles;
 using Moongate.UO.Data.Interfaces.Services;
-using Moongate.UO.Data.Templates.Items;
 using Moongate.UO.Data.Templates.Loadouts;
 using Moongate.UO.Data.Types.Items;
 using Moongate.UO.Data.Types.Loadouts;
@@ -47,7 +46,7 @@ public sealed class StarterLoadoutServiceTests
 
             var item = new ItemEntity
             {
-                Id = new Serial(_next++),
+                Id = new(_next++),
                 Name = template.Name,
                 ItemId = template.ItemId,
                 Amount = amount < 0 ? template.Amount : amount
@@ -170,12 +169,12 @@ public sealed class StarterLoadoutServiceTests
         var registry = new ItemTemplateService();
         registry.UpsertRange(
             [
-                new ItemTemplateDefinition { Id = "backpack", Name = "Backpack", ItemId = 3701, Layer = ItemLayerType.Backpack },
-                new ItemTemplateDefinition { Id = "gold_coin", Name = "Gold", ItemId = 3821, IsStackable = true },
-                new ItemTemplateDefinition { Id = "dagger", Name = "Dagger", ItemId = 3922, Layer = ItemLayerType.OneHanded },
-                new ItemTemplateDefinition { Id = "plain_shirt", Name = "Shirt", ItemId = 5399, Layer = ItemLayerType.Shirt },
-                new ItemTemplateDefinition { Id = "plain_pants", Name = "Pants", ItemId = 5433, Layer = ItemLayerType.Pants },
-                new ItemTemplateDefinition { Id = "broadsword", Name = "Broadsword", ItemId = 3934, Layer = ItemLayerType.OneHanded }
+                new() { Id = "backpack", Name = "Backpack", ItemId = 3701, Layer = ItemLayerType.Backpack },
+                new() { Id = "gold_coin", Name = "Gold", ItemId = 3821, IsStackable = true },
+                new() { Id = "dagger", Name = "Dagger", ItemId = 3922, Layer = ItemLayerType.OneHanded },
+                new() { Id = "plain_shirt", Name = "Shirt", ItemId = 5399, Layer = ItemLayerType.Shirt },
+                new() { Id = "plain_pants", Name = "Pants", ItemId = 5433, Layer = ItemLayerType.Pants },
+                new() { Id = "broadsword", Name = "Broadsword", ItemId = 3934, Layer = ItemLayerType.OneHanded }
             ]
         );
 
@@ -185,19 +184,19 @@ public sealed class StarterLoadoutServiceTests
     private static StarterLoadoutDefinition NewDefinition()
     {
         var definition = new StarterLoadoutDefinition { BackpackTemplate = "backpack" };
-        definition.Base.BackpackItems.Add(new LoadoutItemEntry { Template = "gold_coin", Amount = 1000 });
-        definition.Base.BackpackItems.Add(new LoadoutItemEntry { Template = "dagger" });
-        definition.Races["human"] = new LoadoutSection
+        definition.Base.BackpackItems.Add(new() { Template = "gold_coin", Amount = 1000 });
+        definition.Base.BackpackItems.Add(new() { Template = "dagger" });
+        definition.Races["human"] = new()
         {
             EquipItems =
             [
-                new LoadoutItemEntry { Template = "plain_shirt", PacketHue = PacketHueSource.Shirt },
-                new LoadoutItemEntry { Template = "plain_pants", PacketHue = PacketHueSource.Pants }
+                new() { Template = "plain_shirt", PacketHue = PacketHueSource.Shirt },
+                new() { Template = "plain_pants", PacketHue = PacketHueSource.Pants }
             ]
         };
-        definition.Professions["warrior"] = new LoadoutSection
+        definition.Professions["warrior"] = new()
         {
-            BackpackItems = [new LoadoutItemEntry { Template = "broadsword" }]
+            BackpackItems = [new() { Template = "broadsword" }]
         };
 
         return definition;
@@ -212,9 +211,9 @@ public sealed class StarterLoadoutServiceTests
         var items = new FakeItemService();
         var service = new StarterLoadoutService(
             templates,
-            new Lazy<IItemFactoryService>(() => factory),
-            new Lazy<IMobileService>(() => mobiles),
-            new Lazy<IItemService>(() => items)
+            new(() => factory),
+            new(() => mobiles),
+            new(() => items)
         );
         service.SetDefinition(definition);
 
@@ -296,7 +295,7 @@ public sealed class StarterLoadoutServiceTests
     public async Task ApplyAsync_EquipsBackpackAndSetsBackpackId()
     {
         var (service, factory, mobiles, _) = NewService(NewDefinition());
-        var mobile = new MobileEntity { Id = new Serial(1) };
+        var mobile = new MobileEntity { Id = new(1) };
         var loadout = service.Compose(0, null);
 
         await service.ApplyAsync(mobile, loadout, 0, 0);
@@ -310,7 +309,7 @@ public sealed class StarterLoadoutServiceTests
     public async Task ApplyAsync_EquipsItemsOnTemplateLayers()
     {
         var (service, _, mobiles, _) = NewService(NewDefinition());
-        var mobile = new MobileEntity { Id = new Serial(1) };
+        var mobile = new MobileEntity { Id = new(1) };
         var loadout = service.Compose(0, null);
 
         await service.ApplyAsync(mobile, loadout, 0, 0);
@@ -323,7 +322,7 @@ public sealed class StarterLoadoutServiceTests
     public async Task ApplyAsync_AppliesPacketHuesOnlyToDeclaredEntries()
     {
         var (service, factory, _, _) = NewService(NewDefinition());
-        var mobile = new MobileEntity { Id = new Serial(1) };
+        var mobile = new MobileEntity { Id = new(1) };
         var loadout = service.Compose(0, null);
 
         await service.ApplyAsync(mobile, loadout, shirtHue: 33, pantsHue: 44);
@@ -340,7 +339,7 @@ public sealed class StarterLoadoutServiceTests
     public async Task ApplyAsync_ZeroPacketHue_KeepsTemplateHue()
     {
         var (service, factory, _, _) = NewService(NewDefinition());
-        var mobile = new MobileEntity { Id = new Serial(1) };
+        var mobile = new MobileEntity { Id = new(1) };
         var loadout = service.Compose(0, null);
 
         await service.ApplyAsync(mobile, loadout, shirtHue: 0, pantsHue: 0);
@@ -353,7 +352,7 @@ public sealed class StarterLoadoutServiceTests
     public async Task ApplyAsync_AddsBackpackItemsToBackpackWithAmounts()
     {
         var (service, factory, _, items) = NewService(NewDefinition());
-        var mobile = new MobileEntity { Id = new Serial(1) };
+        var mobile = new MobileEntity { Id = new(1) };
         var loadout = service.Compose(0, "warrior");
 
         await service.ApplyAsync(mobile, loadout, 0, 0);
@@ -369,7 +368,7 @@ public sealed class StarterLoadoutServiceTests
     public async Task ApplyAsync_EmptyLoadout_DoesNothing()
     {
         var (service, factory, mobiles, items) = NewService(null);
-        var mobile = new MobileEntity { Id = new Serial(1) };
+        var mobile = new MobileEntity { Id = new(1) };
 
         await service.ApplyAsync(mobile, service.Compose(0, null), 0, 0);
 

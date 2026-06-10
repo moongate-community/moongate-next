@@ -67,9 +67,7 @@ public class PacketHandlerRegistrationTests
     }
 
     [RegisterPacketHandler]
-    private sealed class MarkedNoInterfaceHandler
-    {
-    }
+    private sealed class MarkedNoInterfaceHandler { }
 
     [Fact]
     public void AddPacketHandlers_MarkedHandler_RegistersIt()

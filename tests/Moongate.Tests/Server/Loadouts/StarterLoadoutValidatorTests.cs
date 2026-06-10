@@ -38,14 +38,14 @@ public sealed class StarterLoadoutValidatorTests
     private static StarterLoadoutDefinition ValidDefinition()
     {
         var definition = new StarterLoadoutDefinition { BackpackTemplate = "backpack" };
-        definition.Base.BackpackItems.Add(new LoadoutItemEntry { Template = "gold_coin", Amount = 1000 });
-        definition.Races["human"] = new LoadoutSection
+        definition.Base.BackpackItems.Add(new() { Template = "gold_coin", Amount = 1000 });
+        definition.Races["human"] = new()
         {
-            EquipItems = [new LoadoutItemEntry { Template = "plain_shirt", PacketHue = PacketHueSource.Shirt }]
+            EquipItems = [new() { Template = "plain_shirt", PacketHue = PacketHueSource.Shirt }]
         };
-        definition.Professions["warrior"] = new LoadoutSection
+        definition.Professions["warrior"] = new()
         {
-            BackpackItems = [new LoadoutItemEntry { Template = "broadsword" }]
+            BackpackItems = [new() { Template = "broadsword" }]
         };
 
         return definition;
@@ -61,15 +61,13 @@ public sealed class StarterLoadoutValidatorTests
 
     [Fact]
     public void Validate_ValidDefinition_DoesNotThrow()
-    {
-        StarterLoadoutValidator.Validate(ValidDefinition(), SourceFile, ValidTemplates(), NewProfessions("Warrior"));
-    }
+        => StarterLoadoutValidator.Validate(ValidDefinition(), SourceFile, ValidTemplates(), NewProfessions("Warrior"));
 
     [Fact]
     public void Validate_UnknownTemplate_Throws()
     {
         var definition = ValidDefinition();
-        definition.Base.BackpackItems.Add(new LoadoutItemEntry { Template = "does_not_exist" });
+        definition.Base.BackpackItems.Add(new() { Template = "does_not_exist" });
 
         var exception = Assert.Throws<InvalidOperationException>(
             () => StarterLoadoutValidator.Validate(definition, SourceFile, ValidTemplates(), NewProfessions("Warrior"))
@@ -83,7 +81,7 @@ public sealed class StarterLoadoutValidatorTests
         var templates = ValidTemplates();
         templates.UpsertRange([Template("base_clothing", isAbstract: true)]);
         var definition = ValidDefinition();
-        definition.Base.BackpackItems.Add(new LoadoutItemEntry { Template = "base_clothing" });
+        definition.Base.BackpackItems.Add(new() { Template = "base_clothing" });
 
         var exception = Assert.Throws<InvalidOperationException>(
             () => StarterLoadoutValidator.Validate(definition, SourceFile, templates, NewProfessions("Warrior"))
@@ -97,7 +95,7 @@ public sealed class StarterLoadoutValidatorTests
         var templates = ValidTemplates();
         templates.UpsertRange([Template("no_layer_item")]);
         var definition = ValidDefinition();
-        definition.Base.EquipItems.Add(new LoadoutItemEntry { Template = "no_layer_item" });
+        definition.Base.EquipItems.Add(new() { Template = "no_layer_item" });
 
         var exception = Assert.Throws<InvalidOperationException>(
             () => StarterLoadoutValidator.Validate(definition, SourceFile, templates, NewProfessions("Warrior"))
@@ -110,9 +108,7 @@ public sealed class StarterLoadoutValidatorTests
     public void Validate_PacketHueOnBackpackItem_Throws()
     {
         var definition = ValidDefinition();
-        definition.Base.BackpackItems.Add(
-            new LoadoutItemEntry { Template = "gold_coin", PacketHue = PacketHueSource.Shirt }
-        );
+        definition.Base.BackpackItems.Add(new() { Template = "gold_coin", PacketHue = PacketHueSource.Shirt });
 
         var exception = Assert.Throws<InvalidOperationException>(
             () => StarterLoadoutValidator.Validate(definition, SourceFile, ValidTemplates(), NewProfessions("Warrior"))
@@ -124,7 +120,7 @@ public sealed class StarterLoadoutValidatorTests
     public void Validate_AmountBelowOne_Throws()
     {
         var definition = ValidDefinition();
-        definition.Base.BackpackItems.Add(new LoadoutItemEntry { Template = "gold_coin", Amount = 0 });
+        definition.Base.BackpackItems.Add(new() { Template = "gold_coin", Amount = 0 });
 
         Assert.Throws<InvalidOperationException>(
             () => StarterLoadoutValidator.Validate(definition, SourceFile, ValidTemplates(), NewProfessions("Warrior"))
@@ -135,7 +131,7 @@ public sealed class StarterLoadoutValidatorTests
     public void Validate_UnknownRaceKey_Throws()
     {
         var definition = ValidDefinition();
-        definition.Races["dwarf"] = new LoadoutSection();
+        definition.Races["dwarf"] = new();
 
         var exception = Assert.Throws<InvalidOperationException>(
             () => StarterLoadoutValidator.Validate(definition, SourceFile, ValidTemplates(), NewProfessions("Warrior"))
@@ -147,7 +143,7 @@ public sealed class StarterLoadoutValidatorTests
     public void Validate_UnknownProfessionKey_Throws()
     {
         var definition = ValidDefinition();
-        definition.Professions["pirate"] = new LoadoutSection();
+        definition.Professions["pirate"] = new();
 
         var exception = Assert.Throws<InvalidOperationException>(
             () => StarterLoadoutValidator.Validate(definition, SourceFile, ValidTemplates(), NewProfessions("Warrior"))
@@ -161,7 +157,7 @@ public sealed class StarterLoadoutValidatorTests
         var templates = ValidTemplates();
         templates.UpsertRange([Template("fancy_shirt", ItemLayerType.Shirt)]);
         var definition = ValidDefinition();
-        definition.Professions["warrior"].EquipItems.Add(new LoadoutItemEntry { Template = "fancy_shirt" });
+        definition.Professions["warrior"].EquipItems.Add(new() { Template = "fancy_shirt" });
 
         var exception = Assert.Throws<InvalidOperationException>(
             () => StarterLoadoutValidator.Validate(definition, SourceFile, templates, NewProfessions("Warrior"))
@@ -201,7 +197,7 @@ public sealed class StarterLoadoutValidatorTests
     public void Validate_EmptyTemplateId_Throws()
     {
         var definition = ValidDefinition();
-        definition.Base.BackpackItems.Add(new LoadoutItemEntry { Template = "" });
+        definition.Base.BackpackItems.Add(new() { Template = "" });
 
         Assert.Throws<InvalidOperationException>(
             () => StarterLoadoutValidator.Validate(definition, SourceFile, ValidTemplates(), NewProfessions("Warrior"))

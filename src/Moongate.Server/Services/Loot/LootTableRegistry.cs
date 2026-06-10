@@ -23,7 +23,7 @@ public sealed class LootTableRegistry
         ArgumentNullException.ThrowIfNull(tables);
         ArgumentNullException.ThrowIfNull(templates);
 
-        _byId = new Dictionary<string, LootTableDefinition>(StringComparer.OrdinalIgnoreCase);
+        _byId = new(StringComparer.OrdinalIgnoreCase);
 
         foreach (var table in tables)
         {

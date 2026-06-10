@@ -34,11 +34,13 @@ public sealed record ItemTemplateDetail(
         var summary = ItemTemplateSummary.FromDefinition(template, hues);
         var parameters = template.Params
                                  .OrderBy(static pair => pair.Key, StringComparer.OrdinalIgnoreCase)
-                                 .Select(static pair => new ItemTemplateParamSummary(
-                                             pair.Key,
-                                             pair.Value.Type.ToString(),
-                                             pair.Value.Value
-                                         ))
+                                 .Select(
+                                     static pair => new ItemTemplateParamSummary(
+                                         pair.Key,
+                                         pair.Value.Type.ToString(),
+                                         pair.Value.Value
+                                     )
+                                 )
                                  .ToArray();
 
         return new(

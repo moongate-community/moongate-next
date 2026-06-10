@@ -2,12 +2,12 @@ using System.Net.Sockets;
 using DryIoc;
 using Moongate.Abstractions.Data.Network;
 using Moongate.Abstractions.Extensions.DryIoc;
-using Moongate.Network.Client;
 using Moongate.Abstractions.Interfaces.EventHandlers;
 using Moongate.Abstractions.Interfaces.Network;
 using Moongate.Abstractions.Interfaces.Player;
 using Moongate.Abstractions.Interfaces.Services;
 using Moongate.Abstractions.Network;
+using Moongate.Network.Client;
 using Moongate.Network.Spans;
 using Moongate.Network.UO.Base;
 using Moongate.Network.UO.Registry;
@@ -243,7 +243,7 @@ public class PacketDispatchHandlerTests
         var processed = bus.DrainTickEvents(10);
 
         Assert.Equal(1, processed);
-        Assert.Equal(new long[] { sessionId }, container.Resolve<IntegrationCapture>().SessionIds);
+        Assert.Equal(new[] { sessionId }, container.Resolve<IntegrationCapture>().SessionIds);
     }
 
     [Fact]
@@ -257,7 +257,7 @@ public class PacketDispatchHandlerTests
 
         dispatcher.Handle(new(sessionId, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
 
-        Assert.Equal(new long[] { sessionId }, capturing.SessionIds);
+        Assert.Equal(new[] { sessionId }, capturing.SessionIds);
     }
 
     [Fact]
@@ -271,7 +271,7 @@ public class PacketDispatchHandlerTests
 
         dispatcher.Handle(new(sessionId, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
 
-        Assert.Equal(new long[] { sessionId }, handler.SessionIds);
+        Assert.Equal(new[] { sessionId }, handler.SessionIds);
     }
 
     [Fact]
@@ -286,8 +286,8 @@ public class PacketDispatchHandlerTests
 
         dispatcher.Handle(new(sessionId, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
 
-        Assert.Equal(new long[] { sessionId }, first.SessionIds);
-        Assert.Equal(new long[] { sessionId }, second.SessionIds);
+        Assert.Equal(new[] { sessionId }, first.SessionIds);
+        Assert.Equal(new[] { sessionId }, second.SessionIds);
     }
 
     [Fact]
@@ -308,7 +308,7 @@ public class PacketDispatchHandlerTests
     public void Handle_UnknownSession_SkipsDispatch()
     {
         var handler = new CapturingHandler();
-        var dispatcher = NewDispatcher([handler], new SessionService());
+        var dispatcher = NewDispatcher([handler], new());
 
         dispatcher.Handle(new(404, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
 

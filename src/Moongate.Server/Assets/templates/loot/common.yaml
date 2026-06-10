@@ -1,19 +1,19 @@
 loot_tables:
-  - id: poor
-    content:
-      - item: gold_coin
-        amount: { min: 1, max: 25 }
-      - category: food
-        chance: 0.5
-  - id: common
-    content:
-      - item: gold_coin
-        amount: { min: 10, max: 100 }
-      - pick_one_of:
-          - category: food
-          - category: reagent
-            weight: 2
-      - category: armor
-        chance: 0.25
-      - category: weapon
-        chance: 0.25
+    -   id: poor
+        content:
+            -   item: gold_coin
+                amount: { min: 1, max: 25 }
+            -   category: food
+                chance: 0.5
+    -   id: common
+        content:
+            -   item: gold_coin
+                amount: { min: 10, max: 100 }
+            -   pick_one_of:
+                    -   category: food
+                    -   category: reagent
+                        weight: 2
+            -   category: armor
+                chance: 0.25
+            -   category: weapon
+                chance: 0.25

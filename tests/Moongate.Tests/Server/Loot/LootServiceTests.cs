@@ -3,7 +3,6 @@ using Moongate.Server.Services.Loot;
 using Moongate.Server.Services.Templates;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Interfaces.Services;
-using Moongate.UO.Data.Templates.Items;
 using Moongate.UO.Data.Templates.Loot;
 using ShaiRandom.Generators;
 
@@ -42,7 +41,7 @@ public sealed class LootServiceTests
 
             var item = new ItemEntity
             {
-                Id = new Serial(_next++),
+                Id = new(_next++),
                 ItemId = template.ItemId,
                 Amount = amount,
                 IsStackable = template.IsStackable
@@ -59,11 +58,11 @@ public sealed class LootServiceTests
         var registry = new ItemTemplateService();
         registry.UpsertRange(
             [
-                new ItemTemplateDefinition { Id = "gold_coin", ItemId = 3821, IsStackable = true, Tags = ["currency"] },
-                new ItemTemplateDefinition { Id = "apple", ItemId = 2512, Tags = ["food"] },
-                new ItemTemplateDefinition { Id = "bread_loaf", ItemId = 4155, Tags = ["food"] },
-                new ItemTemplateDefinition { Id = "leather_cap", ItemId = 7609, Tags = ["armor"] },
-                new ItemTemplateDefinition { Id = "dagger", ItemId = 3922, Tags = ["weapon"] }
+                new() { Id = "gold_coin", ItemId = 3821, IsStackable = true, Tags = ["currency"] },
+                new() { Id = "apple", ItemId = 2512, Tags = ["food"] },
+                new() { Id = "bread_loaf", ItemId = 4155, Tags = ["food"] },
+                new() { Id = "leather_cap", ItemId = 7609, Tags = ["armor"] },
+                new() { Id = "dagger", ItemId = 3922, Tags = ["weapon"] }
             ]
         );
 
@@ -75,10 +74,10 @@ public sealed class LootServiceTests
         var factory = new FakeItemFactory(templates);
         var service = new LootService(
             templates,
-            new Lazy<IItemFactoryService>(() => factory),
+            new(() => factory),
             new MizuchiRandom(seed, 1UL)
         );
-        service.SetRegistry(new LootTableRegistry(tables, templates.GetAll()));
+        service.SetRegistry(new(tables, templates.GetAll()));
 
         return service;
     }
@@ -118,7 +117,7 @@ public sealed class LootServiceTests
         var service = NewService(
             templates,
             7UL,
-            Table("t", new LootNode { Item = "gold_coin", Amount = new LootAmount(1, 100) })
+            Table("t", new LootNode { Item = "gold_coin", Amount = new(1, 100) })
         );
 
         var items = await service.GenerateAsync("t");
@@ -135,7 +134,7 @@ public sealed class LootServiceTests
         var service = NewService(
             templates,
             3UL,
-            Table("t", new LootNode { Item = "apple", Amount = new LootAmount(3, 3) })
+            Table("t", new LootNode { Item = "apple", Amount = new(3, 3) })
         );
 
         var items = await service.GenerateAsync("t");
@@ -190,7 +189,7 @@ public sealed class LootServiceTests
         var templates = Templates();
         var pick = new LootNode
         {
-            PickOneOf = [new LootNode { Item = "apple" }, new LootNode { Item = "dagger" }]
+            PickOneOf = [new() { Item = "apple" }, new() { Item = "dagger" }]
         };
         var service = NewService(templates, 11UL, Table("t", pick));
 
@@ -209,8 +208,8 @@ public sealed class LootServiceTests
             {
                 PickOneOf =
                 [
-                    new LootNode { Item = "apple", Weight = 1 },
-                    new LootNode { Item = "dagger", Weight = 9 }
+                    new() { Item = "apple", Weight = 1 },
+                    new() { Item = "dagger", Weight = 9 }
                 ]
             };
             var service = NewService(templates, seed, Table("t", pick));

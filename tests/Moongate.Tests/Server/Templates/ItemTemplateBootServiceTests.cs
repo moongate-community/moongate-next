@@ -1,6 +1,5 @@
 using Moongate.Server.Services.Templates;
 using Moongate.Tests.Support;
-using Moongate.UO.Data.Templates.Items;
 
 namespace Moongate.Tests.Server.Templates;
 
@@ -20,7 +19,7 @@ public sealed class ItemTemplateBootServiceTests
             """
         );
         var registry = new ItemTemplateService();
-        var bootService = new ItemTemplateBootService(new ItemTemplateYamlLoader(dir.Path), registry);
+        var bootService = new ItemTemplateBootService(new(dir.Path), registry);
 
         await bootService.StartAsync(CancellationToken.None);
 
@@ -40,7 +39,7 @@ public sealed class ItemTemplateBootServiceTests
                   base_item: missing
             """
         );
-        var bootService = new ItemTemplateBootService(new ItemTemplateYamlLoader(dir.Path), new ItemTemplateService());
+        var bootService = new ItemTemplateBootService(new(dir.Path), new ItemTemplateService());
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => bootService.StartAsync(CancellationToken.None));
     }
@@ -57,8 +56,8 @@ public sealed class ItemTemplateBootServiceTests
             """
         );
         var registry = new ItemTemplateService();
-        registry.UpsertRange([new ItemTemplateDefinition { Id = "stale" }]);
-        var bootService = new ItemTemplateBootService(new ItemTemplateYamlLoader(dir.Path), registry);
+        registry.UpsertRange([new() { Id = "stale" }]);
+        var bootService = new ItemTemplateBootService(new(dir.Path), registry);
 
         await bootService.StartAsync(CancellationToken.None);
 

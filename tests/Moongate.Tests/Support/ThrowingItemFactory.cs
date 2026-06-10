@@ -11,6 +11,10 @@ public sealed class ThrowingItemFactory : IItemFactoryService
     public ValueTask<ItemEntity> CreateFromTemplateAsync(string templateId, CancellationToken cancellationToken = default)
         => throw new NotSupportedException();
 
-    public ValueTask<ItemEntity> CreateFromTemplateAsync(string templateId, int amount, CancellationToken cancellationToken = default)
+    public ValueTask<ItemEntity> CreateFromTemplateAsync(
+        string templateId,
+        int amount,
+        CancellationToken cancellationToken = default
+    )
         => throw new NotSupportedException();
 }

@@ -6,7 +6,6 @@ using Moongate.Server.Services.Templates;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Templates.Items;
-using Moongate.UO.Data.Types;
 using Moongate.UO.Data.Types.Items;
 using Moongate.UO.Data.Types.Properties;
 
@@ -24,7 +23,7 @@ public sealed class ItemFactoryServiceTests
         {
             if (!item.Id.IsValid)
             {
-                item.Id = new Serial(_next++);
+                item.Id = new(_next++);
             }
 
             Created.Add(item);
@@ -165,12 +164,12 @@ public sealed class ItemFactoryServiceTests
             Id = "shirt",
             IsMovable = true
         };
-        template.Params["dyeable"] = new ItemTemplateParamDefinition
+        template.Params["dyeable"] = new()
         {
             Type = ItemTemplateParamType.String,
             Value = "true"
         };
-        template.Params["charges"] = new ItemTemplateParamDefinition
+        template.Params["charges"] = new()
         {
             Type = ItemTemplateParamType.Integer,
             Value = "0x10"
@@ -193,8 +192,8 @@ public sealed class ItemFactoryServiceTests
         var factory = new ItemFactoryService(NewRegistry(), new FakeItemService());
 
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(
-            () => factory.CreateFromTemplateAsync("missing").AsTask()
-        );
+                            () => factory.CreateFromTemplateAsync("missing").AsTask()
+                        );
         Assert.Contains("missing", exception.Message);
     }
 
@@ -209,8 +208,8 @@ public sealed class ItemFactoryServiceTests
         var factory = new ItemFactoryService(NewRegistry(template), new FakeItemService());
 
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(
-            () => factory.CreateFromTemplateAsync("base_clothing").AsTask()
-        );
+                            () => factory.CreateFromTemplateAsync("base_clothing").AsTask()
+                        );
         Assert.Contains("abstract", exception.Message);
     }
 }

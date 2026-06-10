@@ -2,7 +2,6 @@ using Moongate.Server.FileLoaders;
 using Moongate.UO.Data.Entities.Mobiles;
 using Moongate.UO.Data.Races;
 using Moongate.UO.Data.Races.Base;
-using Moongate.UO.Data.Types;
 using Moongate.UO.Data.Types.Mobiles;
 
 namespace Moongate.Tests.UO.Data.Races;

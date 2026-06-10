@@ -10,8 +10,8 @@ namespace Moongate.Server.Services.Loot;
 public static class LootYaml
 {
     public static IDeserializer Deserializer { get; } = new DeserializerBuilder()
-        .WithNamingConvention(UnderscoredNamingConvention.Instance)
-        .WithTypeConverter(new LootAmountYamlConverter())
-        .IgnoreUnmatchedProperties()
-        .Build();
+                                                        .WithNamingConvention(UnderscoredNamingConvention.Instance)
+                                                        .WithTypeConverter(new LootAmountYamlConverter())
+                                                        .IgnoreUnmatchedProperties()
+                                                        .Build();
 }

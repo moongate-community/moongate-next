@@ -87,9 +87,7 @@ public static class StarterLoadoutValidator
         {
             if (!knownNames.Contains(key))
             {
-                throw new InvalidOperationException(
-                    $"Starter loadout '{sourceFile}' has unknown profession key '{key}'."
-                );
+                throw new InvalidOperationException($"Starter loadout '{sourceFile}' has unknown profession key '{key}'.");
             }
         }
     }
@@ -220,9 +218,9 @@ public static class StarterLoadoutValidator
             backpackLayer = backpackTemplate.Layer;
         }
 
-        foreach (var raceKey in definition.Races.Keys.Prepend<string?>(null))
+        foreach (var raceKey in definition.Races.Keys.Prepend(null))
         {
-            foreach (var professionKey in definition.Professions.Keys.Prepend<string?>(null))
+            foreach (var professionKey in definition.Professions.Keys.Prepend(null))
             {
                 var seen = new Dictionary<ItemLayerType, string>();
 

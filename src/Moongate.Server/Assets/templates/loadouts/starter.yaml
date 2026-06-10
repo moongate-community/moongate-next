@@ -2,33 +2,33 @@ starter_loadout:
     backpack_template: backpack
     base:
         backpack_items:
-            - template: gold_coin
-              amount: 1000
-            - template: dagger
-            - template: candle
+            -   template: gold_coin
+                amount: 1000
+            -   template: dagger
+            -   template: candle
     races:
         human:
             equip_items:
-                - template: plain_shirt
-                  packet_hue: Shirt
-                - template: plain_pants
-                  packet_hue: Pants
-                - template: leather_shoes
+                -   template: plain_shirt
+                    packet_hue: Shirt
+                -   template: plain_pants
+                    packet_hue: Pants
+                -   template: leather_shoes
         elf:
             equip_items:
-                - template: plain_shirt
-                  packet_hue: Shirt
-                - template: plain_pants
-                  packet_hue: Pants
-                - template: leather_shoes
+                -   template: plain_shirt
+                    packet_hue: Shirt
+                -   template: plain_pants
+                    packet_hue: Pants
+                -   template: leather_shoes
         gargoyle:
             equip_items:
-                - template: plain_robe
-                  packet_hue: Shirt
+                -   template: plain_robe
+                    packet_hue: Shirt
     professions:
         warrior:
             backpack_items:
-                - template: broadsword
+                -   template: broadsword
         mage:
             backpack_items:
-                - template: spellbook
+                -   template: spellbook

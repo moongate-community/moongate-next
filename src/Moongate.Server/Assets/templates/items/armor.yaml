@@ -1,55 +1,55 @@
 item_templates:
-    - id: base_leather_armor
-      is_abstract: true
-      weight: 2
-      is_movable: true
-      value:
-          buy: 35
-          sell: 17
-      tags: [armor, leather]
-    - id: leather_cap
-      base_item: base_leather_armor
-      item_id: 7609
-      layer: Helm
-    - id: leather_gorget
-      base_item: base_leather_armor
-      item_id: 5063
-      layer: Neck
-    - id: leather_chest
-      base_item: base_leather_armor
-      item_id: 5068
-      weight: 6
-      layer: InnerTorso
-    - id: leather_sleeves
-      base_item: base_leather_armor
-      item_id: 5069
-      layer: Arms
-    - id: leather_gloves
-      base_item: base_leather_armor
-      item_id: 5062
-      weight: 1
-      layer: Gloves
-    - id: leather_leggings
-      base_item: base_leather_armor
-      item_id: 5067
-      weight: 4
-      layer: Pants
-    - id: wooden_shield
-      item_id: 7034
-      weight: 5
-      is_movable: true
-      layer: TwoHanded
-      value:
-          buy: 40
-          sell: 20
-      tags: [armor, shield]
-    - id: bronze_shield
-      item_id: 7026
-      weight: 6
-      is_movable: true
-      layer: TwoHanded
-      rarity: Uncommon
-      value:
-          buy: 80
-          sell: 40
-      tags: [armor, shield]
+    -   id: base_leather_armor
+        is_abstract: true
+        weight: 2
+        is_movable: true
+        value:
+            buy: 35
+            sell: 17
+        tags: [ armor, leather ]
+    -   id: leather_cap
+        base_item: base_leather_armor
+        item_id: 7609
+        layer: Helm
+    -   id: leather_gorget
+        base_item: base_leather_armor
+        item_id: 5063
+        layer: Neck
+    -   id: leather_chest
+        base_item: base_leather_armor
+        item_id: 5068
+        weight: 6
+        layer: InnerTorso
+    -   id: leather_sleeves
+        base_item: base_leather_armor
+        item_id: 5069
+        layer: Arms
+    -   id: leather_gloves
+        base_item: base_leather_armor
+        item_id: 5062
+        weight: 1
+        layer: Gloves
+    -   id: leather_leggings
+        base_item: base_leather_armor
+        item_id: 5067
+        weight: 4
+        layer: Pants
+    -   id: wooden_shield
+        item_id: 7034
+        weight: 5
+        is_movable: true
+        layer: TwoHanded
+        value:
+            buy: 40
+            sell: 20
+        tags: [ armor, shield ]
+    -   id: bronze_shield
+        item_id: 7026
+        weight: 6
+        is_movable: true
+        layer: TwoHanded
+        rarity: Uncommon
+        value:
+            buy: 80
+            sell: 40
+        tags: [ armor, shield ]

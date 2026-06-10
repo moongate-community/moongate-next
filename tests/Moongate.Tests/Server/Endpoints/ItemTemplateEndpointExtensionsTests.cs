@@ -71,16 +71,9 @@ public sealed class ItemTemplateEndpointExtensionsTests
         Assert.Equal(["crate_base", "longsword"], ok.Value.Items.Select(static item => item.Id));
     }
 
-    [Theory]
-    [InlineData("long", "longsword")]
-    [InlineData("Sharp", "longsword")]
-    [InlineData("weapon", "longsword")]
-    [InlineData("combat_script", "longsword")]
-    [InlineData("3937", "longsword")]
-    [InlineData("0x0F61", "longsword")]
-    [InlineData("0xF61", "longsword")]
-    [InlineData("125", "longsword")]
-    [InlineData("55", "longsword")]
+    [Theory, InlineData("long", "longsword"), InlineData("Sharp", "longsword"), InlineData("weapon", "longsword"),
+     InlineData("combat_script", "longsword"), InlineData("3937", "longsword"), InlineData("0x0F61", "longsword"),
+     InlineData("0xF61", "longsword"), InlineData("125", "longsword"), InlineData("55", "longsword")]
     public void HandleList_SearchesApprovedFields(string search, string expectedId)
     {
         var result = ItemTemplateEndpointExtensions.HandleList(

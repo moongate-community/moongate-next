@@ -24,7 +24,11 @@ public abstract class PacketHandlerBase<TPacket> : IPacketHandler<TPacket>
 
     protected IPlayerSessionService PlayerSessions { get; }
 
-    protected PacketHandlerBase(IEventBusService eventBus, INetworkSessionManager sessions, IPlayerSessionService playerSessions)
+    protected PacketHandlerBase(
+        IEventBusService eventBus,
+        INetworkSessionManager sessions,
+        IPlayerSessionService playerSessions
+    )
     {
         ArgumentNullException.ThrowIfNull(eventBus);
         ArgumentNullException.ThrowIfNull(sessions);

@@ -101,7 +101,7 @@ public sealed class ItemTemplateYamlLoader
 
                 // YamlDotNet replaces the pre-initialized dictionary, dropping its
                 // case-insensitive comparer; rebuild so param keys stay case-insensitive.
-                template.Params = new Dictionary<string, ItemTemplateParamDefinition>(
+                template.Params = new(
                     template.Params ?? new Dictionary<string, ItemTemplateParamDefinition>(),
                     StringComparer.OrdinalIgnoreCase
                 );

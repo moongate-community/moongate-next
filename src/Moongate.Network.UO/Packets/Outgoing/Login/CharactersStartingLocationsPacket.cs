@@ -57,6 +57,7 @@ public class CharactersStartingLocationsPacket : BaseGameNetworkPacket
             if (Characters[i] is not null)
             {
                 highestSlot = i;
+
                 break;
             }
         }
@@ -82,6 +83,7 @@ public class CharactersStartingLocationsPacket : BaseGameNetworkPacket
             if (character is null)
             {
                 writer.Clear(CharacterEntry.Length);
+
                 continue;
             }
 

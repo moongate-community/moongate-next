@@ -1,55 +1,55 @@
 item_templates:
-    - id: tongs
-      item_id: 4027
-      weight: 2
-      is_movable: true
-      value:
-          buy: 25
-          sell: 12
-      tags: [tool, blacksmith]
-    - id: smith_hammer
-      item_id: 5091
-      weight: 8
-      is_movable: true
-      layer: OneHanded
-      value:
-          buy: 20
-          sell: 10
-      tags: [tool, blacksmith]
-    - id: sewing_kit
-      item_id: 3997
-      weight: 2
-      is_movable: true
-      value:
-          buy: 18
-          sell: 9
-      tags: [tool, tailor]
-    - id: fishing_pole
-      item_id: 3520
-      weight: 8
-      is_movable: true
-      layer: TwoHanded
-      tags: [tool, fishing]
-    - id: pickaxe
-      item_id: 3718
-      weight: 11
-      is_movable: true
-      layer: OneHanded
-      value:
-          buy: 35
-          sell: 17
-      tags: [tool, mining]
-    - id: shovel
-      item_id: 3897
-      weight: 5
-      is_movable: true
-      value:
-          buy: 15
-          sell: 7
-      tags: [tool, mining]
-    - id: hatchet
-      item_id: 3907
-      weight: 4
-      is_movable: true
-      layer: OneHanded
-      tags: [tool, lumberjack]
+    -   id: tongs
+        item_id: 4027
+        weight: 2
+        is_movable: true
+        value:
+            buy: 25
+            sell: 12
+        tags: [ tool, blacksmith ]
+    -   id: smith_hammer
+        item_id: 5091
+        weight: 8
+        is_movable: true
+        layer: OneHanded
+        value:
+            buy: 20
+            sell: 10
+        tags: [ tool, blacksmith ]
+    -   id: sewing_kit
+        item_id: 3997
+        weight: 2
+        is_movable: true
+        value:
+            buy: 18
+            sell: 9
+        tags: [ tool, tailor ]
+    -   id: fishing_pole
+        item_id: 3520
+        weight: 8
+        is_movable: true
+        layer: TwoHanded
+        tags: [ tool, fishing ]
+    -   id: pickaxe
+        item_id: 3718
+        weight: 11
+        is_movable: true
+        layer: OneHanded
+        value:
+            buy: 35
+            sell: 17
+        tags: [ tool, mining ]
+    -   id: shovel
+        item_id: 3897
+        weight: 5
+        is_movable: true
+        value:
+            buy: 15
+            sell: 7
+        tags: [ tool, mining ]
+    -   id: hatchet
+        item_id: 3907
+        weight: 4
+        is_movable: true
+        layer: OneHanded
+        tags: [ tool, lumberjack ]

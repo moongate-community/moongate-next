@@ -277,7 +277,9 @@ public sealed class UserServiceTests : IDisposable
     public async Task LoginAsync_InactiveUser_ReturnsNull()
     {
         var access = new FakeUserAccess();
-        access.Add(new(new(1), "Arthorius", "art@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, false));
+        access.Add(
+            new(new(1), "Arthorius", "art@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, false)
+        );
         var service = new UserService(access, new CapturingEventBusService());
 
         Assert.Null(await service.LoginAsync("Arthorius", "secret"));
@@ -291,10 +293,7 @@ public sealed class UserServiceTests : IDisposable
         Assert.Null(await service.LoginAsync("ghost", "secret"));
     }
 
-    [Theory]
-    [InlineData("", "secret")]
-    [InlineData("Arthorius", "")]
-    [InlineData("   ", "secret")]
+    [Theory, InlineData("", "secret"), InlineData("Arthorius", ""), InlineData("   ", "secret")]
     public async Task LoginAsync_BlankInput_ReturnsNull(string username, string password)
     {
         var access = new FakeUserAccess();

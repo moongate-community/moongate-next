@@ -1,8 +1,6 @@
 using Moongate.Server.Services.Loot;
 using Moongate.Server.Services.Templates;
 using Moongate.Tests.Support;
-using Moongate.UO.Data.Interfaces.Services;
-using Moongate.UO.Data.Templates.Items;
 using ShaiRandom.Generators;
 
 namespace Moongate.Tests.Server.Loot;
@@ -12,7 +10,7 @@ public sealed class LootTableBootServiceTests
     private static ItemTemplateService Templates()
     {
         var registry = new ItemTemplateService();
-        registry.UpsertRange([new ItemTemplateDefinition { Id = "gold_coin", ItemId = 3821, IsStackable = true }]);
+        registry.UpsertRange([new() { Id = "gold_coin", ItemId = 3821, IsStackable = true }]);
 
         return registry;
     }
@@ -20,7 +18,7 @@ public sealed class LootTableBootServiceTests
     private static LootService NewLootService(ItemTemplateService templates)
         => new(
             templates,
-            new Lazy<IItemFactoryService>(static () => throw new NotSupportedException()),
+            new(static () => throw new NotSupportedException()),
             new MizuchiRandom(1UL, 1UL)
         );
 
@@ -31,7 +29,7 @@ public sealed class LootTableBootServiceTests
         dir.WriteFile("common.yaml", "loot_tables:\n  - id: common\n    content:\n      - item: gold_coin\n");
         var templates = Templates();
         var loot = NewLootService(templates);
-        var bootService = new LootTableBootService(new LootTableYamlLoader(dir.Path), loot, templates);
+        var bootService = new LootTableBootService(new(dir.Path), loot, templates);
 
         await bootService.StartAsync(CancellationToken.None);
 
@@ -44,7 +42,7 @@ public sealed class LootTableBootServiceTests
         using var dir = new TempTemplateDirectory();
         dir.WriteFile("bad.yaml", "loot_tables:\n  - id: t\n    content:\n      - item: does_not_exist\n");
         var templates = Templates();
-        var bootService = new LootTableBootService(new LootTableYamlLoader(dir.Path), NewLootService(templates), templates);
+        var bootService = new LootTableBootService(new(dir.Path), NewLootService(templates), templates);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => bootService.StartAsync(CancellationToken.None));
     }
@@ -55,7 +53,7 @@ public sealed class LootTableBootServiceTests
         using var dir = new TempTemplateDirectory();
         var templates = Templates();
         var loot = NewLootService(templates);
-        var bootService = new LootTableBootService(new LootTableYamlLoader(dir.Path), loot, templates);
+        var bootService = new LootTableBootService(new(dir.Path), loot, templates);
 
         await bootService.StartAsync(CancellationToken.None);
 

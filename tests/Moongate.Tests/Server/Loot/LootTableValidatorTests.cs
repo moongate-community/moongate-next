@@ -1,6 +1,5 @@
 using Moongate.Server.Services.Loot;
 using Moongate.Server.Services.Templates;
-using Moongate.UO.Data.Templates.Items;
 using Moongate.UO.Data.Templates.Loot;
 
 namespace Moongate.Tests.Server.Loot;
@@ -12,10 +11,10 @@ public sealed class LootTableValidatorTests
         var registry = new ItemTemplateService();
         registry.UpsertRange(
             [
-                new ItemTemplateDefinition { Id = "gold_coin", ItemId = 3821, IsStackable = true, Tags = ["currency"] },
-                new ItemTemplateDefinition { Id = "apple", ItemId = 2512, Tags = ["food"] },
-                new ItemTemplateDefinition { Id = "leather_cap", ItemId = 7609, Tags = ["armor"] },
-                new ItemTemplateDefinition { Id = "base_armor", ItemId = 0, IsAbstract = true, Tags = ["armor"] }
+                new() { Id = "gold_coin", ItemId = 3821, IsStackable = true, Tags = ["currency"] },
+                new() { Id = "apple", ItemId = 2512, Tags = ["food"] },
+                new() { Id = "leather_cap", ItemId = 7609, Tags = ["armor"] },
+                new() { Id = "base_armor", ItemId = 0, IsAbstract = true, Tags = ["armor"] }
             ]
         );
 
@@ -35,8 +34,8 @@ public sealed class LootTableValidatorTests
         {
             Table(
                 "common",
-                Item("gold_coin", new LootAmount(1, 100)),
-                new LootNode { PickOneOf = [Item("apple"), new LootNode { Category = "armor", Weight = 2 }] },
+                Item("gold_coin", new(1, 100)),
+                new LootNode { PickOneOf = [Item("apple"), new() { Category = "armor", Weight = 2 }] },
                 new LootNode { Category = "food", Chance = 0.5 }
             )
         };
@@ -84,7 +83,7 @@ public sealed class LootTableValidatorTests
     public void Validate_CategoryMatchingOnlyAbstract_Throws()
     {
         var registry = new ItemTemplateService();
-        registry.UpsertRange([new ItemTemplateDefinition { Id = "base_only", IsAbstract = true, Tags = ["ghost"] }]);
+        registry.UpsertRange([new() { Id = "base_only", IsAbstract = true, Tags = ["ghost"] }]);
         var tables = new List<LootTableDefinition> { Table("t", new LootNode { Category = "ghost" }) };
 
         Assert.Throws<InvalidOperationException>(() => LootTableValidator.Validate(tables, registry));
@@ -125,7 +124,7 @@ public sealed class LootTableValidatorTests
     [Fact]
     public void Validate_AmountMinGreaterThanMax_Throws()
     {
-        var tables = new List<LootTableDefinition> { Table("t", Item("gold_coin", new LootAmount(5, 1))) };
+        var tables = new List<LootTableDefinition> { Table("t", Item("gold_coin", new(5, 1))) };
 
         Assert.Throws<InvalidOperationException>(() => LootTableValidator.Validate(tables, Templates()));
     }
@@ -133,7 +132,7 @@ public sealed class LootTableValidatorTests
     [Fact]
     public void Validate_NegativeAmount_Throws()
     {
-        var tables = new List<LootTableDefinition> { Table("t", Item("gold_coin", new LootAmount(-1, 5))) };
+        var tables = new List<LootTableDefinition> { Table("t", Item("gold_coin", new(-1, 5))) };
 
         Assert.Throws<InvalidOperationException>(() => LootTableValidator.Validate(tables, Templates()));
     }
@@ -141,7 +140,7 @@ public sealed class LootTableValidatorTests
     [Fact]
     public void Validate_WeightBelowOne_Throws()
     {
-        var pick = new LootNode { PickOneOf = [new LootNode { Item = "apple", Weight = 0 }] };
+        var pick = new LootNode { PickOneOf = [new() { Item = "apple", Weight = 0 }] };
         var tables = new List<LootTableDefinition> { Table("t", pick) };
 
         Assert.Throws<InvalidOperationException>(() => LootTableValidator.Validate(tables, Templates()));

@@ -1,10 +1,7 @@
-using Moongate.Server.Data.World;
 using Moongate.Server.Services.Loadouts;
 using Moongate.Server.Services.Templates;
 using Moongate.Server.Services.World;
 using Moongate.Tests.Support;
-using Moongate.UO.Data.Interfaces.Services;
-using Moongate.UO.Data.Templates.Items;
 using Moongate.UO.Data.Types.Items;
 
 namespace Moongate.Tests.Server.Loadouts;
@@ -16,8 +13,8 @@ public sealed class StarterLoadoutBootServiceTests
         var registry = new ItemTemplateService();
         registry.UpsertRange(
             [
-                new ItemTemplateDefinition { Id = "backpack", Name = "Backpack", ItemId = 3701, Layer = ItemLayerType.Backpack },
-                new ItemTemplateDefinition { Id = "gold_coin", Name = "Gold", ItemId = 3821, IsStackable = true }
+                new() { Id = "backpack", Name = "Backpack", ItemId = 3701, Layer = ItemLayerType.Backpack },
+                new() { Id = "gold_coin", Name = "Gold", ItemId = 3821, IsStackable = true }
             ]
         );
 
@@ -27,7 +24,7 @@ public sealed class StarterLoadoutBootServiceTests
     private static ProfessionDataService NewProfessions()
     {
         var service = new ProfessionDataService();
-        service.SetProfessions([new ProfessionEntry("Warrior", "Warrior", 0, 0, 0, true, 0, "Profession", [], [])]);
+        service.SetProfessions([new("Warrior", "Warrior", 0, 0, 0, true, 0, "Profession", [], [])]);
 
         return service;
     }
@@ -35,9 +32,9 @@ public sealed class StarterLoadoutBootServiceTests
     private static StarterLoadoutService NewLoadoutService(ItemTemplateService templates)
         => new(
             templates,
-            new Lazy<IItemFactoryService>(static () => new ThrowingItemFactory()),
-            new Lazy<IMobileService>(static () => new ThrowingMobileService()),
-            new Lazy<IItemService>(static () => new ThrowingItemService())
+            new(static () => new ThrowingItemFactory()),
+            new(static () => new ThrowingMobileService()),
+            new(static () => new ThrowingItemService())
         );
 
     [Fact]
@@ -58,7 +55,7 @@ public sealed class StarterLoadoutBootServiceTests
         var templates = NewTemplates();
         var loadouts = NewLoadoutService(templates);
         var bootService = new StarterLoadoutBootService(
-            new StarterLoadoutYamlLoader(dir.Path),
+            new(dir.Path),
             loadouts,
             templates,
             NewProfessions()
@@ -87,7 +84,7 @@ public sealed class StarterLoadoutBootServiceTests
         );
         var templates = NewTemplates();
         var bootService = new StarterLoadoutBootService(
-            new StarterLoadoutYamlLoader(dir.Path),
+            new(dir.Path),
             NewLoadoutService(templates),
             templates,
             NewProfessions()
@@ -103,7 +100,7 @@ public sealed class StarterLoadoutBootServiceTests
         var templates = NewTemplates();
         var loadouts = NewLoadoutService(templates);
         var bootService = new StarterLoadoutBootService(
-            new StarterLoadoutYamlLoader(dir.Path),
+            new(dir.Path),
             loadouts,
             templates,
             NewProfessions()

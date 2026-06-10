@@ -3,7 +3,6 @@ using Moongate.Persistence.Interfaces.Persistence;
 using Moongate.Server.Services.Mobiles;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Entities.Mobiles;
-using Moongate.UO.Data.Types;
 using Moongate.UO.Data.Types.Items;
 using Moongate.UO.Data.Types.Skills;
 
@@ -246,7 +245,7 @@ public sealed class MobileServiceTests
     {
         var service = new MobileService(new FakeMobileAccess(), new FakeItemAccess());
 
-        var result = await service.GetByAccountIdAsync(new Serial(999));
+        var result = await service.GetByAccountIdAsync(new(999));
 
         Assert.Empty(result);
     }

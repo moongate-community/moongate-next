@@ -4,7 +4,6 @@ using Moongate.Network.UO.Base;
 using Moongate.Network.UO.Data.Login;
 using Moongate.Network.UO.Types.Packets;
 using Moongate.UO.Data.Races.Base;
-using Moongate.UO.Data.Types;
 using Moongate.UO.Data.Types.Expansions;
 using Moongate.UO.Data.Types.Mobiles;
 using Moongate.UO.Data.Types.Skills;
@@ -100,8 +99,8 @@ public class CharacterCreationPacket : BaseGameNetworkPacket
         StartingCityIndex = reader.ReadInt16();
         var cities = StartingCities.AvailableStartingCities;
         StartingCity = StartingCityIndex >= 0 && StartingCityIndex < cities.Length
-            ? cities[StartingCityIndex]
-            : null;
+                           ? cities[StartingCityIndex]
+                           : null;
 
         reader.ReadBytes(2);
         Slot = reader.ReadInt16();
@@ -122,31 +121,38 @@ public class CharacterCreationPacket : BaseGameNetworkPacket
             case 2:
                 gender = GenderType.Male;
                 raceIndex = 0; // Human
+
                 return true;
             case 1:
             case 3:
                 gender = GenderType.Female;
                 raceIndex = 0; // Human
+
                 return true;
             case 4:
                 gender = GenderType.Male;
                 raceIndex = 1; // Elf
+
                 return true;
             case 5:
                 gender = GenderType.Female;
                 raceIndex = 1; // Elf
+
                 return true;
             case 6:
                 gender = GenderType.Male;
                 raceIndex = 2; // Gargoyle
+
                 return true;
             case 7:
                 gender = GenderType.Female;
                 raceIndex = 2; // Gargoyle
+
                 return true;
             default:
                 gender = default;
                 raceIndex = -1;
+
                 return false;
         }
     }

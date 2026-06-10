@@ -58,7 +58,11 @@ public sealed class AdminUserEndpointExtensionsTests
                 )
             );
 
-        public ValueTask<UserEntity?> LoginAsync(string username, string password, CancellationToken cancellationToken = default)
+        public ValueTask<UserEntity?> LoginAsync(
+            string username,
+            string password,
+            CancellationToken cancellationToken = default
+        )
             => throw new NotSupportedException();
 
         public ValueTask<PagedResult<UserEntity>> ListAsync(

@@ -3,7 +3,6 @@ using Moongate.Core.Ids;
 using Moongate.Persistence.Data;
 using Moongate.Persistence.Services.Persistence;
 using Moongate.UO.Data.Entities.Mobiles;
-using Moongate.UO.Data.Types;
 using Moongate.UO.Data.Types.Items;
 using Moongate.UO.Data.Types.Mobiles;
 using Moongate.UO.Data.Types.Properties;

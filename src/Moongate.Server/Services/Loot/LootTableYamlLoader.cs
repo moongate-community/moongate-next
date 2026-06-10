@@ -79,9 +79,7 @@ public sealed class LootTableYamlLoader
 
             if (node is null)
             {
-                throw new InvalidOperationException(
-                    $"Loot table file '{file}' has an empty node entry in '{context}'."
-                );
+                throw new InvalidOperationException($"Loot table file '{file}' has an empty node entry in '{context}'.");
             }
 
             if (node.PickOneOf is not null)

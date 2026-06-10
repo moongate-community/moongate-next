@@ -71,7 +71,7 @@ public sealed class StarterLoadoutYamlLoader
 
     private static LoadoutSection NormalizeSection(LoadoutSection? section, string sectionName, string filePath)
     {
-        section ??= new LoadoutSection();
+        section ??= new();
         section.BackpackItems ??= [];
         section.EquipItems ??= [];
 

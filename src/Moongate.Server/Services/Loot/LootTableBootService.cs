@@ -42,7 +42,7 @@ public sealed class LootTableBootService : IMoongateService
 
         if (_lootService is LootService lootService)
         {
-            lootService.SetRegistry(new LootTableRegistry(tables, _templates.GetAll()));
+            lootService.SetRegistry(new(tables, _templates.GetAll()));
 
             _logger.Information("Loot table registry ready with {Count} tables", tables.Count);
 

@@ -1,4 +1,3 @@
-using Moongate.UO.Data.Types;
 using Moongate.UO.Data.Types.Properties;
 
 namespace Moongate.UO.Data.Data;

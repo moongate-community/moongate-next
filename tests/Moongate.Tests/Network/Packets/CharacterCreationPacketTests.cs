@@ -1,5 +1,6 @@
+using System.Text;
 using Moongate.Network.UO.Packets.Incoming.Login;
-using Moongate.UO.Data.Types;
+using Moongate.Network.UO.Registry;
 using Moongate.UO.Data.Types.Mobiles;
 using Moongate.UO.Data.Types.Skills;
 
@@ -49,13 +50,21 @@ public sealed class CharacterCreationPacketTests
         buf[0] = 0xF8;
 
         // 0xEDEDEDED
-        buf[1] = 0xED; buf[2] = 0xED; buf[3] = 0xED; buf[4] = 0xED;
+        buf[1] = 0xED;
+        buf[2] = 0xED;
+        buf[3] = 0xED;
+        buf[4] = 0xED;
+
         // 0xFFFFFFFF
-        buf[5] = 0xFF; buf[6] = 0xFF; buf[7] = 0xFF; buf[8] = 0xFF;
+        buf[5] = 0xFF;
+        buf[6] = 0xFF;
+        buf[7] = 0xFF;
+        buf[8] = 0xFF;
+
         // 0x00
         buf[9] = 0x00;
 
-        var nameBytes = System.Text.Encoding.ASCII.GetBytes(name.PadRight(30, '\0'));
+        var nameBytes = Encoding.ASCII.GetBytes(name.PadRight(30, '\0'));
         Array.Copy(nameBytes, 0, buf, 10, Math.Min(nameBytes.Length, 30));
 
         // professionId at byte 54
@@ -179,9 +188,9 @@ public sealed class CharacterCreationPacketTests
     [Fact]
     public void PacketTable_Includes_0xF8()
     {
-        var registry = new Moongate.Network.UO.Registry.PacketRegistry();
+        var registry = new PacketRegistry();
 
-        Moongate.Network.UO.Registry.PacketTable.Register(registry);
+        PacketTable.Register(registry);
 
         Assert.True(registry.TryGetDescriptor(0xF8, out _));
         Assert.True(registry.TryCreatePacket(0xF8, out var p));

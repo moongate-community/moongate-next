@@ -7,7 +7,7 @@ namespace Moongate.Tests.Server.Loot;
 public sealed class LootTableRegistryTests
 {
     private static LootTableDefinition Table(string id)
-        => new() { Id = id, Content = [new LootNode { Item = "apple" }] };
+        => new() { Id = id, Content = [new() { Item = "apple" }] };
 
     private static ItemTemplateDefinition Tmpl(string id, bool isAbstract, params string[] tags)
         => new() { Id = id, IsAbstract = isAbstract, Tags = [.. tags] };
