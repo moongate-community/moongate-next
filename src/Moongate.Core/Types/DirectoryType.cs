@@ -7,8 +7,8 @@ public enum DirectoryType
 {
     Data,
     Templates,
-    Template_Items,
-    Template_Mobiles,
+    Templates_Items,
+    Templates_Mobiles,
     Scripts,
     Save,
     Images,

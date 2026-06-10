@@ -26,7 +26,7 @@ public static class TemplateContainerExtensions
         container.Register<IItemTemplateService, ItemTemplateService>(Reuse.Singleton);
         container.RegisterDelegate(
             static resolver => new ItemTemplateYamlLoader(
-                resolver.Resolve<DirectoriesConfig>()[DirectoryType.Template_Items]
+                resolver.Resolve<DirectoriesConfig>()[DirectoryType.Templates_Items]
             ),
             Reuse.Singleton
         );
