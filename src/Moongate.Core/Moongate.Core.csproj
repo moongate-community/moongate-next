@@ -18,6 +18,10 @@
         <PackageReference Include="ShaiRandom" Version="0.0.2"/>
         <PackageReference Include="YamlDotNet" Version="18.0.0"/>
         <PackageReference Include="ZLinq" Version="1.5.6"/>
+        <PackageReference Update="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.301">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
 
     </ItemGroup>
 

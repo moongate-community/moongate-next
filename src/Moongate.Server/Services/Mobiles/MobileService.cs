@@ -83,6 +83,18 @@ public sealed class MobileService : IMobileService
     public ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
         => _mobiles.GetByIdAsync(id, cancellationToken);
 
+    public ValueTask<IReadOnlyList<MobileEntity>> GetByAccountIdAsync(
+        Serial accountId,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = _mobiles.Query()
+                             .Where(m => m.AccountId == accountId)
+                             .ToList();
+
+        return ValueTask.FromResult<IReadOnlyList<MobileEntity>>(result);
+    }
+
     public SkillEntry GetSkill(MobileEntity mobile, UOSkillName skill)
     {
         ArgumentNullException.ThrowIfNull(mobile);

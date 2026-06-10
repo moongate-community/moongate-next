@@ -221,6 +221,36 @@ public sealed class MobileServiceTests
     }
 
     [Fact]
+    public async Task GetByAccountIdAsync_ReturnsOnlyMobilesForThatAccount()
+    {
+        var mobiles = new FakeMobileAccess();
+        var service = new MobileService(mobiles, new FakeItemAccess());
+
+        var accountA = new Serial(100);
+        var accountB = new Serial(200);
+
+        var m1 = await service.CreateAsync(new() { AccountId = accountA, Name = "Alice" });
+        var m2 = await service.CreateAsync(new() { AccountId = accountA, Name = "Bob" });
+        await service.CreateAsync(new() { AccountId = accountB, Name = "Charlie" });
+
+        var result = await service.GetByAccountIdAsync(accountA);
+
+        Assert.Equal(2, result.Count);
+        Assert.Contains(result, m => m.Id == m1.Id);
+        Assert.Contains(result, m => m.Id == m2.Id);
+    }
+
+    [Fact]
+    public async Task GetByAccountIdAsync_NoMobiles_ReturnsEmpty()
+    {
+        var service = new MobileService(new FakeMobileAccess(), new FakeItemAccess());
+
+        var result = await service.GetByAccountIdAsync(new Serial(999));
+
+        Assert.Empty(result);
+    }
+
+    [Fact]
     public async Task UnequipAsync_RemovesLayer_AndClearsItemBackReference()
     {
         var mobiles = new FakeMobileAccess();
