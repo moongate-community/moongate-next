@@ -56,35 +56,58 @@ public sealed class StarterLoadoutYamlLoader
             return null;
         }
 
-        return Normalize(table.StarterLoadout);
+        return Normalize(table.StarterLoadout, filePath);
     }
 
-    private static StarterLoadoutDefinition Normalize(StarterLoadoutDefinition definition)
+    private static StarterLoadoutDefinition Normalize(StarterLoadoutDefinition definition, string filePath)
     {
         definition.BackpackTemplate ??= "";
-        definition.Base = NormalizeSection(definition.Base);
-        definition.Races = NormalizeSections(definition.Races);
-        definition.Professions = NormalizeSections(definition.Professions);
+        definition.Base = NormalizeSection(definition.Base, "base", filePath);
+        definition.Races = NormalizeSections(definition.Races, "races", filePath);
+        definition.Professions = NormalizeSections(definition.Professions, "professions", filePath);
 
         return definition;
     }
 
-    private static LoadoutSection NormalizeSection(LoadoutSection? section)
+    private static LoadoutSection NormalizeSection(LoadoutSection? section, string sectionName, string filePath)
     {
         section ??= new LoadoutSection();
         section.BackpackItems ??= [];
         section.EquipItems ??= [];
 
+        // A bare "-" list entry deserializes to a null element; reject it with
+        // context instead of letting the validator hit a NullReferenceException.
+        if (section.BackpackItems.Any(static entry => entry is null) ||
+            section.EquipItems.Any(static entry => entry is null))
+        {
+            throw new InvalidOperationException(
+                $"Starter loadout '{filePath}' section '{sectionName}' contains an empty list entry."
+            );
+        }
+
         return section;
     }
 
-    private static Dictionary<string, LoadoutSection> NormalizeSections(Dictionary<string, LoadoutSection>? sections)
+    private static Dictionary<string, LoadoutSection> NormalizeSections(
+        Dictionary<string, LoadoutSection>? sections,
+        string groupName,
+        string filePath
+    )
     {
         var normalized = new Dictionary<string, LoadoutSection>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var (key, section) in sections ?? new Dictionary<string, LoadoutSection>())
         {
-            normalized[key] = NormalizeSection(section);
+            // YamlDotNet deserializes into a case-sensitive dictionary, so case
+            // duplicates would silently last-write-win here; fail fast instead.
+            if (normalized.ContainsKey(key))
+            {
+                throw new InvalidOperationException(
+                    $"Starter loadout '{filePath}' has case-duplicate {groupName} key '{key}'."
+                );
+            }
+
+            normalized[key] = NormalizeSection(section, $"{groupName}/{key}", filePath);
         }
 
         return normalized;

@@ -108,6 +108,50 @@ public sealed class StarterLoadoutYamlLoaderTests
     }
 
     [Fact]
+    public void Load_NullListEntry_ThrowsWithSectionContext()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            StarterLoadoutYamlLoader.StarterLoadoutFileName,
+            """
+            starter_loadout:
+                base:
+                    backpack_items:
+                        - template: gold_coin
+                        -
+            """
+        );
+        var loader = new StarterLoadoutYamlLoader(dir.Path);
+
+        var exception = Assert.Throws<InvalidOperationException>(() => loader.Load());
+        Assert.Contains("base", exception.Message);
+        Assert.Contains("empty list entry", exception.Message);
+    }
+
+    [Fact]
+    public void Load_CaseDuplicateSectionKeys_Throws()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            StarterLoadoutYamlLoader.StarterLoadoutFileName,
+            """
+            starter_loadout:
+                races:
+                    human:
+                        equip_items:
+                            - template: plain_shirt
+                    Human:
+                        equip_items:
+                            - template: plain_pants
+            """
+        );
+        var loader = new StarterLoadoutYamlLoader(dir.Path);
+
+        var exception = Assert.Throws<InvalidOperationException>(() => loader.Load());
+        Assert.Contains("Human", exception.Message);
+    }
+
+    [Fact]
     public void Load_MalformedYaml_ThrowsWithFilePath()
     {
         using var dir = new TempTemplateDirectory();
