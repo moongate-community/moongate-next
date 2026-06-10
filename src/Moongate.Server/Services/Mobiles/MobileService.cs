@@ -80,9 +80,6 @@ public sealed class MobileService : IMobileService
         return true;
     }
 
-    public ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
-        => _mobiles.GetByIdAsync(id, cancellationToken);
-
     public ValueTask<IReadOnlyList<MobileEntity>> GetByAccountIdAsync(
         Serial accountId,
         CancellationToken cancellationToken = default
@@ -94,6 +91,9 @@ public sealed class MobileService : IMobileService
 
         return ValueTask.FromResult<IReadOnlyList<MobileEntity>>(result);
     }
+
+    public ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
+        => _mobiles.GetByIdAsync(id, cancellationToken);
 
     public SkillEntry GetSkill(MobileEntity mobile, UOSkillName skill)
     {

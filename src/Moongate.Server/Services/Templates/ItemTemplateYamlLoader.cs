@@ -201,6 +201,29 @@ public sealed class ItemTemplateYamlLoader
         child.Params = MergeParams(parent.Params, child.Params);
     }
 
+    private void ApplyTileDataNameFallbacks(List<ItemTemplateDefinition> templates)
+    {
+        if (_tileData is null)
+        {
+            return;
+        }
+
+        foreach (var template in templates)
+        {
+            if (!string.IsNullOrWhiteSpace(template.Name) || template.ItemId == 0)
+            {
+                continue;
+            }
+
+            var itemName = _tileData.GetItem(template.ItemId).Name;
+
+            if (!string.IsNullOrWhiteSpace(itemName))
+            {
+                template.Name = itemName;
+            }
+        }
+    }
+
     private static ItemTemplateParamDefinition CloneParam(ItemTemplateParamDefinition param)
         => new()
         {
@@ -279,29 +302,6 @@ public sealed class ItemTemplateYamlLoader
         }
 
         states[template.Id] = ResolveState.Done;
-    }
-
-    private void ApplyTileDataNameFallbacks(List<ItemTemplateDefinition> templates)
-    {
-        if (_tileData is null)
-        {
-            return;
-        }
-
-        foreach (var template in templates)
-        {
-            if (!string.IsNullOrWhiteSpace(template.Name) || template.ItemId == 0)
-            {
-                continue;
-            }
-
-            var itemName = _tileData.GetItem(template.ItemId).Name;
-
-            if (!string.IsNullOrWhiteSpace(itemName))
-            {
-                template.Name = itemName;
-            }
-        }
     }
 
     private static void ValidateParams(

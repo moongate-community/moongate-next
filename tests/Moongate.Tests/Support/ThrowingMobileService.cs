@@ -30,13 +30,13 @@ public sealed class ThrowingMobileService : IMobileService
     )
         => throw new NotSupportedException();
 
-    public ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
-        => throw new NotSupportedException();
-
     public ValueTask<IReadOnlyList<MobileEntity>> GetByAccountIdAsync(
         Serial accountId,
         CancellationToken cancellationToken = default
     )
+        => throw new NotSupportedException();
+
+    public ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
         => throw new NotSupportedException();
 
     public SkillEntry GetSkill(MobileEntity mobile, UOSkillName skill)

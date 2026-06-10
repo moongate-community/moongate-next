@@ -8,6 +8,111 @@ namespace Moongate.Tests.Network.Packets;
 
 public sealed class CharacterCreationPacketTests
 {
+    [Fact]
+    public void PacketTable_Includes_0xF8()
+    {
+        var registry = new PacketRegistry();
+
+        PacketTable.Register(registry);
+
+        Assert.True(registry.TryGetDescriptor(0xF8, out _));
+        Assert.True(registry.TryCreatePacket(0xF8, out var p));
+        Assert.Equal((byte)0xF8, p?.OpCode);
+    }
+
+    [Fact]
+    public void TryParse_FemaleElfGender()
+    {
+        var packet = new CharacterCreationPacket();
+
+        packet.TryParse(BuildPacket(genderRace: 5));
+
+        Assert.Equal(GenderType.Female, packet.Gender);
+        Assert.Equal(1, packet.RaceIndex);
+    }
+
+    [Fact]
+    public void TryParse_InvalidGenderRaceByte_ReturnsFalse()
+    {
+        var packet = new CharacterCreationPacket();
+
+        Assert.False(packet.TryParse(BuildPacket(genderRace: 0xFF)));
+    }
+
+    [Fact]
+    public void TryParse_MaleGargoyleGender()
+    {
+        var packet = new CharacterCreationPacket();
+
+        packet.TryParse(BuildPacket(genderRace: 6));
+
+        Assert.Equal(GenderType.Male, packet.Gender);
+        Assert.Equal(2, packet.RaceIndex);
+    }
+
+    [Fact]
+    public void TryParse_MaleHumanGender()
+    {
+        var packet = new CharacterCreationPacket();
+
+        packet.TryParse(BuildPacket(genderRace: 0));
+
+        Assert.Equal(GenderType.Male, packet.Gender);
+        Assert.Equal(0, packet.RaceIndex);
+    }
+
+    [Fact]
+    public void TryParse_ParsesCharacterName()
+    {
+        var packet = new CharacterCreationPacket();
+
+        packet.TryParse(BuildPacket("Aldric"));
+
+        Assert.Equal("Aldric", packet.CharacterName);
+    }
+
+    [Fact]
+    public void TryParse_ParsesFirstSkill()
+    {
+        var packet = new CharacterCreationPacket();
+
+        packet.TryParse(BuildPacket());
+
+        Assert.Equal(4, packet.Skills.Count);
+        Assert.Equal(UOSkillName.Magery, packet.Skills[0].Skill);
+        Assert.Equal(50, packet.Skills[0].Value);
+    }
+
+    [Fact]
+    public void TryParse_ParsesProfessionId()
+    {
+        var packet = new CharacterCreationPacket();
+
+        packet.TryParse(BuildPacket(profId: 3));
+
+        Assert.Equal(3, packet.ProfessionId);
+    }
+
+    [Fact]
+    public void TryParse_ParsesStats()
+    {
+        var packet = new CharacterCreationPacket();
+
+        packet.TryParse(BuildPacket(str: 45, dex: 35, intel: 10));
+
+        Assert.Equal(45, packet.Strength);
+        Assert.Equal(35, packet.Dexterity);
+        Assert.Equal(10, packet.Intelligence);
+    }
+
+    [Fact]
+    public void TryParse_ValidPacket_ReturnsTrue()
+    {
+        var packet = new CharacterCreationPacket();
+
+        Assert.True(packet.TryParse(BuildPacket()));
+    }
+
     // Minimal valid 0xF8 payload (106 bytes total including opcode).
     // Layout per UO protocol docs:
     //   [0]      opcode 0xF8
@@ -90,110 +195,5 @@ public sealed class CharacterCreationPacketTests
         buf[97] = (byte)(slot & 0xFF);
 
         return buf;
-    }
-
-    [Fact]
-    public void TryParse_ValidPacket_ReturnsTrue()
-    {
-        var packet = new CharacterCreationPacket();
-
-        Assert.True(packet.TryParse(BuildPacket()));
-    }
-
-    [Fact]
-    public void TryParse_ParsesCharacterName()
-    {
-        var packet = new CharacterCreationPacket();
-
-        packet.TryParse(BuildPacket(name: "Aldric"));
-
-        Assert.Equal("Aldric", packet.CharacterName);
-    }
-
-    [Fact]
-    public void TryParse_ParsesStats()
-    {
-        var packet = new CharacterCreationPacket();
-
-        packet.TryParse(BuildPacket(str: 45, dex: 35, intel: 10));
-
-        Assert.Equal(45, packet.Strength);
-        Assert.Equal(35, packet.Dexterity);
-        Assert.Equal(10, packet.Intelligence);
-    }
-
-    [Fact]
-    public void TryParse_MaleHumanGender()
-    {
-        var packet = new CharacterCreationPacket();
-
-        packet.TryParse(BuildPacket(genderRace: 0));
-
-        Assert.Equal(GenderType.Male, packet.Gender);
-        Assert.Equal(0, packet.RaceIndex);
-    }
-
-    [Fact]
-    public void TryParse_FemaleElfGender()
-    {
-        var packet = new CharacterCreationPacket();
-
-        packet.TryParse(BuildPacket(genderRace: 5));
-
-        Assert.Equal(GenderType.Female, packet.Gender);
-        Assert.Equal(1, packet.RaceIndex);
-    }
-
-    [Fact]
-    public void TryParse_MaleGargoyleGender()
-    {
-        var packet = new CharacterCreationPacket();
-
-        packet.TryParse(BuildPacket(genderRace: 6));
-
-        Assert.Equal(GenderType.Male, packet.Gender);
-        Assert.Equal(2, packet.RaceIndex);
-    }
-
-    [Fact]
-    public void TryParse_ParsesProfessionId()
-    {
-        var packet = new CharacterCreationPacket();
-
-        packet.TryParse(BuildPacket(profId: 3));
-
-        Assert.Equal(3, packet.ProfessionId);
-    }
-
-    [Fact]
-    public void TryParse_ParsesFirstSkill()
-    {
-        var packet = new CharacterCreationPacket();
-
-        packet.TryParse(BuildPacket());
-
-        Assert.Equal(4, packet.Skills.Count);
-        Assert.Equal(UOSkillName.Magery, packet.Skills[0].Skill);
-        Assert.Equal(50, packet.Skills[0].Value);
-    }
-
-    [Fact]
-    public void TryParse_InvalidGenderRaceByte_ReturnsFalse()
-    {
-        var packet = new CharacterCreationPacket();
-
-        Assert.False(packet.TryParse(BuildPacket(genderRace: 0xFF)));
-    }
-
-    [Fact]
-    public void PacketTable_Includes_0xF8()
-    {
-        var registry = new PacketRegistry();
-
-        PacketTable.Register(registry);
-
-        Assert.True(registry.TryGetDescriptor(0xF8, out _));
-        Assert.True(registry.TryCreatePacket(0xF8, out var p));
-        Assert.Equal((byte)0xF8, p?.OpCode);
     }
 }

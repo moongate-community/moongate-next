@@ -14,6 +14,9 @@ public sealed record HueSummary(
     IReadOnlyList<HueColorSummary> Colors
 )
 {
+    public static string FormatHue(int value)
+        => $"0x{value.ToString("X3", CultureInfo.InvariantCulture)}";
+
     public static HueSummary FromValue(int value, IHueStore hues)
     {
         ArgumentNullException.ThrowIfNull(hues);
@@ -40,7 +43,4 @@ public sealed record HueSummary(
 
         return new(value, FormatHue(value), hue.Name, false, true, colors);
     }
-
-    public static string FormatHue(int value)
-        => $"0x{value.ToString("X3", CultureInfo.InvariantCulture)}";
 }

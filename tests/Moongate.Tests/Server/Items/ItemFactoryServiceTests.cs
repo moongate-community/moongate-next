@@ -19,6 +19,17 @@ public sealed class ItemFactoryServiceTests
 
         public List<ItemEntity> Created { get; } = [];
 
+        public ValueTask<bool> AddItemAsync(
+            ItemEntity container,
+            ItemEntity child,
+            Point2D position,
+            CancellationToken cancellationToken = default
+        )
+            => throw new NotSupportedException();
+
+        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
+            => throw new NotSupportedException();
+
         public ValueTask<ItemEntity> CreateAsync(ItemEntity item, CancellationToken cancellationToken = default)
         {
             if (!item.Id.IsValid)
@@ -30,17 +41,6 @@ public sealed class ItemFactoryServiceTests
 
             return ValueTask.FromResult(item);
         }
-
-        public ValueTask<bool> AddItemAsync(
-            ItemEntity container,
-            ItemEntity child,
-            Point2D position,
-            CancellationToken cancellationToken = default
-        )
-            => throw new NotSupportedException();
-
-        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
 
         public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
             => throw new NotSupportedException();
@@ -71,25 +71,41 @@ public sealed class ItemFactoryServiceTests
             => throw new NotSupportedException();
     }
 
-    private static ItemTemplateService NewRegistry(params ItemTemplateDefinition[] templates)
+    [Fact]
+    public async Task CreateFromTemplateAsync_AbstractTemplate_Throws()
     {
-        var registry = new ItemTemplateService();
-        registry.UpsertRange(templates);
+        var template = new ItemTemplateDefinition
+        {
+            Id = "base_clothing",
+            IsAbstract = true
+        };
+        var factory = new ItemFactoryService(NewRegistry(template), new FakeItemService());
 
-        return registry;
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+                            () => factory.CreateFromTemplateAsync("base_clothing").AsTask()
+                        );
+        Assert.Contains("abstract", exception.Message);
     }
 
     [Fact]
-    public async Task CreateFromTemplateAsync_WithAmount_SetsAmountOnEntity()
+    public async Task CreateFromTemplateAsync_AppliesRarityMultiplierToValue()
     {
-        var template = new ItemTemplateDefinition { Id = "gold_coin", ItemId = 3821, IsStackable = true };
-        var items = new FakeItemService();
-        var factory = new ItemFactoryService(NewRegistry(template), items);
+        var template = new ItemTemplateDefinition
+        {
+            Id = "rare_katana",
+            Rarity = ItemRarity.Rare,
+            Value = new()
+            {
+                Buy = 25,
+                Sell = 10
+            }
+        };
+        var factory = new ItemFactoryService(NewRegistry(template), new FakeItemService());
 
-        var entity = await factory.CreateFromTemplateAsync("gold_coin", 250);
+        var entity = await factory.CreateFromTemplateAsync("rare_katana");
 
-        Assert.Equal(250, entity.Amount);
-        Assert.True(entity.Id.IsValid);
+        Assert.Equal(38, entity.BuyValue);
+        Assert.Equal(15, entity.SellValue);
     }
 
     [Fact]
@@ -136,24 +152,27 @@ public sealed class ItemFactoryServiceTests
     }
 
     [Fact]
-    public async Task CreateFromTemplateAsync_AppliesRarityMultiplierToValue()
+    public async Task CreateFromTemplateAsync_UnknownTemplate_Throws()
     {
-        var template = new ItemTemplateDefinition
-        {
-            Id = "rare_katana",
-            Rarity = ItemRarity.Rare,
-            Value = new()
-            {
-                Buy = 25,
-                Sell = 10
-            }
-        };
-        var factory = new ItemFactoryService(NewRegistry(template), new FakeItemService());
+        var factory = new ItemFactoryService(NewRegistry(), new FakeItemService());
 
-        var entity = await factory.CreateFromTemplateAsync("rare_katana");
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+                            () => factory.CreateFromTemplateAsync("missing").AsTask()
+                        );
+        Assert.Contains("missing", exception.Message);
+    }
 
-        Assert.Equal(38, entity.BuyValue);
-        Assert.Equal(15, entity.SellValue);
+    [Fact]
+    public async Task CreateFromTemplateAsync_WithAmount_SetsAmountOnEntity()
+    {
+        var template = new ItemTemplateDefinition { Id = "gold_coin", ItemId = 3821, IsStackable = true };
+        var items = new FakeItemService();
+        var factory = new ItemFactoryService(NewRegistry(template), items);
+
+        var entity = await factory.CreateFromTemplateAsync("gold_coin", 250);
+
+        Assert.Equal(250, entity.Amount);
+        Assert.True(entity.Id.IsValid);
     }
 
     [Fact]
@@ -186,30 +205,11 @@ public sealed class ItemFactoryServiceTests
         Assert.Equal(16L, entity.CustomProperties["charges"].IntegerValue);
     }
 
-    [Fact]
-    public async Task CreateFromTemplateAsync_UnknownTemplate_Throws()
+    private static ItemTemplateService NewRegistry(params ItemTemplateDefinition[] templates)
     {
-        var factory = new ItemFactoryService(NewRegistry(), new FakeItemService());
+        var registry = new ItemTemplateService();
+        registry.UpsertRange(templates);
 
-        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
-                            () => factory.CreateFromTemplateAsync("missing").AsTask()
-                        );
-        Assert.Contains("missing", exception.Message);
-    }
-
-    [Fact]
-    public async Task CreateFromTemplateAsync_AbstractTemplate_Throws()
-    {
-        var template = new ItemTemplateDefinition
-        {
-            Id = "base_clothing",
-            IsAbstract = true
-        };
-        var factory = new ItemFactoryService(NewRegistry(template), new FakeItemService());
-
-        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
-                            () => factory.CreateFromTemplateAsync("base_clothing").AsTask()
-                        );
-        Assert.Contains("abstract", exception.Message);
+        return registry;
     }
 }

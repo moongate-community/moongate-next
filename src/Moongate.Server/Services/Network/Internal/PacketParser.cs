@@ -148,6 +148,23 @@ internal sealed class PacketParser
         }
     }
 
+    private static int? ResolvePacketLength(List<byte> pendingBytes, PacketDescriptor descriptor)
+    {
+        if (descriptor.Sizing == PacketSizing.Fixed)
+        {
+            return descriptor.Length;
+        }
+
+        if (pendingBytes.Count < 3)
+        {
+            return null;
+        }
+
+        Span<byte> lengthBuffer = [pendingBytes[1], pendingBytes[2]];
+
+        return BinaryPrimitives.ReadUInt16BigEndian(lengthBuffer);
+    }
+
     private static bool TryConsumeSeed(List<byte> pendingBytes, PacketStreamState state)
     {
         if (pendingBytes[0] == LoginSeedOpCode)
@@ -170,22 +187,5 @@ internal sealed class PacketParser
         pendingBytes.RemoveRange(0, 4);
 
         return true;
-    }
-
-    private static int? ResolvePacketLength(List<byte> pendingBytes, PacketDescriptor descriptor)
-    {
-        if (descriptor.Sizing == PacketSizing.Fixed)
-        {
-            return descriptor.Length;
-        }
-
-        if (pendingBytes.Count < 3)
-        {
-            return null;
-        }
-
-        Span<byte> lengthBuffer = [pendingBytes[1], pendingBytes[2]];
-
-        return BinaryPrimitives.ReadUInt16BigEndian(lengthBuffer);
     }
 }

@@ -6,6 +6,26 @@ namespace Moongate.Tests.UO.Data.Templates.Loot;
 public sealed class LootTableDefinitionTests
 {
     [Fact]
+    public void Deserialize_FixedAmount_MapsMinEqualsMax()
+    {
+        const string yaml =
+            """
+            loot_tables:
+              - id: t
+                content:
+                  - item: gold_coin
+                    amount: 7
+            """;
+
+        var table = LootYaml.Deserializer.Deserialize<LootTableTable>(yaml);
+
+        var amount = table.LootTables[0].Content[0].Amount;
+        Assert.NotNull(amount);
+        Assert.Equal(7, amount.Min);
+        Assert.Equal(7, amount.Max);
+    }
+
+    [Fact]
     public void Deserialize_FullSchema_MapsTree()
     {
         const string yaml =
@@ -50,26 +70,6 @@ public sealed class LootTableDefinitionTests
         Assert.NotNull(reagent.Amount);
         Assert.Equal(2, reagent.Amount.Min);
         Assert.Equal(2, reagent.Amount.Max);
-    }
-
-    [Fact]
-    public void Deserialize_FixedAmount_MapsMinEqualsMax()
-    {
-        const string yaml =
-            """
-            loot_tables:
-              - id: t
-                content:
-                  - item: gold_coin
-                    amount: 7
-            """;
-
-        var table = LootYaml.Deserializer.Deserialize<LootTableTable>(yaml);
-
-        var amount = table.LootTables[0].Content[0].Amount;
-        Assert.NotNull(amount);
-        Assert.Equal(7, amount.Min);
-        Assert.Equal(7, amount.Max);
     }
 
     [Fact]

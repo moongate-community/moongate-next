@@ -17,6 +17,14 @@ public sealed class TempTemplateDirectory : IDisposable
         Directory.CreateDirectory(Path);
     }
 
+    public void Dispose()
+    {
+        if (Directory.Exists(Path))
+        {
+            Directory.Delete(Path, true);
+        }
+    }
+
     public void WriteFile(string fileName, string yaml)
     {
         var fullPath = System.IO.Path.Combine(Path, fileName);
@@ -28,13 +36,5 @@ public sealed class TempTemplateDirectory : IDisposable
         }
 
         File.WriteAllText(fullPath, yaml);
-    }
-
-    public void Dispose()
-    {
-        if (Directory.Exists(Path))
-        {
-            Directory.Delete(Path, true);
-        }
     }
 }

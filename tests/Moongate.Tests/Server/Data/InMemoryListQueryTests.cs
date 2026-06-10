@@ -8,28 +8,6 @@ public sealed class InMemoryListQueryTests
     private sealed record Entry(string Id, string Name, string Tag, bool Enabled);
 
     [Fact]
-    public void Apply_SearchesConfiguredFields_CaseInsensitive()
-    {
-        var entries = new[]
-        {
-            new Entry("alpha", "Iron Sword", "weapon", true),
-            new Entry("beta", "Cotton Shirt", "clothing", true),
-            new Entry("gamma", "Wooden Crate", "container", false)
-        };
-
-        var result = InMemoryListQuery.Apply(
-            entries,
-            PageRequest.Normalize(1, 20, "sWoRd"),
-            entry => [entry.Id, entry.Name, entry.Tag],
-            []
-        );
-
-        var item = Assert.Single(result.Items);
-        Assert.Equal("alpha", item.Id);
-        Assert.Equal(1, result.TotalCount);
-    }
-
-    [Fact]
     public void Apply_ComposesFiltersBeforePaging()
     {
         var entries = new[]
@@ -69,5 +47,27 @@ public sealed class InMemoryListQueryTests
         Assert.Equal(2, result.PageSize);
         Assert.Equal(5, result.TotalCount);
         Assert.Equal(["id-3", "id-4"], result.Items.Select(static entry => entry.Id));
+    }
+
+    [Fact]
+    public void Apply_SearchesConfiguredFields_CaseInsensitive()
+    {
+        var entries = new[]
+        {
+            new Entry("alpha", "Iron Sword", "weapon", true),
+            new Entry("beta", "Cotton Shirt", "clothing", true),
+            new Entry("gamma", "Wooden Crate", "container", false)
+        };
+
+        var result = InMemoryListQuery.Apply(
+            entries,
+            PageRequest.Normalize(1, 20, "sWoRd"),
+            entry => [entry.Id, entry.Name, entry.Tag],
+            []
+        );
+
+        var item = Assert.Single(result.Items);
+        Assert.Equal("alpha", item.Id);
+        Assert.Equal(1, result.TotalCount);
     }
 }

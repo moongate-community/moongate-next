@@ -55,6 +55,20 @@ public static class ItemTemplateEndpointExtensions
         return endpoints;
     }
 
+    internal static IResult HandleDetail(
+        IItemTemplateService templates,
+        IHueStore hues,
+        string id
+    )
+    {
+        ArgumentNullException.ThrowIfNull(templates);
+        ArgumentNullException.ThrowIfNull(hues);
+
+        return templates.TryGet(id, out var template)
+                   ? TypedResults.Ok(ItemTemplateDetail.FromDefinition(template, hues))
+                   : TypedResults.NotFound();
+    }
+
     internal static IResult HandleList(
         IItemTemplateService templates,
         IHueStore hues,
@@ -120,20 +134,6 @@ public static class ItemTemplateEndpointExtensions
         var result = InMemoryListQuery.Apply(ordered, request, SearchFields, filters);
 
         return TypedResults.Ok(result.Select(template => ItemTemplateSummary.FromDefinition(template, hues)));
-    }
-
-    internal static IResult HandleDetail(
-        IItemTemplateService templates,
-        IHueStore hues,
-        string id
-    )
-    {
-        ArgumentNullException.ThrowIfNull(templates);
-        ArgumentNullException.ThrowIfNull(hues);
-
-        return templates.TryGet(id, out var template)
-                   ? TypedResults.Ok(ItemTemplateDetail.FromDefinition(template, hues))
-                   : TypedResults.NotFound();
     }
 
     private static IEnumerable<string?> SearchFields(ItemTemplateDefinition template)

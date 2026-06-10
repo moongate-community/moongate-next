@@ -61,6 +61,17 @@ public sealed class AuthTokenServiceTests
                 )
             );
 
+        public ValueTask<PagedResult<UserEntity>> ListAsync(
+            PageRequest request,
+            CancellationToken cancellationToken = default
+        )
+        {
+            var all = _users.Values.OrderBy(u => u.Username, StringComparer.OrdinalIgnoreCase).ToList();
+            var items = all.Skip((request.Page - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+            return ValueTask.FromResult(new PagedResult<UserEntity>(items, request.Page, request.PageSize, all.Count));
+        }
+
         public async ValueTask<UserEntity?> LoginAsync(
             string username,
             string password,
@@ -75,17 +86,6 @@ public sealed class AuthTokenServiceTests
             var user = await GetByUsernameAsync(username, cancellationToken);
 
             return user is not null && user.IsActive && HashUtils.VerifyPassword(password, user.Password) ? user : null;
-        }
-
-        public ValueTask<PagedResult<UserEntity>> ListAsync(
-            PageRequest request,
-            CancellationToken cancellationToken = default
-        )
-        {
-            var all = _users.Values.OrderBy(u => u.Username, StringComparer.OrdinalIgnoreCase).ToList();
-            var items = all.Skip((request.Page - 1) * request.PageSize).Take(request.PageSize).ToList();
-
-            return ValueTask.FromResult(new PagedResult<UserEntity>(items, request.Page, request.PageSize, all.Count));
         }
 
         public ValueTask<bool> ResetPasswordAsync(

@@ -25,19 +25,6 @@ public static class BundledDataAssetsBootstrapper
         );
     }
 
-    public static int EnsureTemplateAssets(string destinationDirectory, ILogger logger)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(destinationDirectory);
-        ArgumentNullException.ThrowIfNull(logger);
-
-        return EnsureDataAssets(
-            typeof(BundledDataAssetsBootstrapper).Assembly,
-            TemplatesResourcePrefix,
-            destinationDirectory,
-            logger
-        );
-    }
-
     public static int EnsureDataAssets(
         Assembly assembly,
         string resourcePrefix,
@@ -86,6 +73,19 @@ public static class BundledDataAssetsBootstrapper
         );
 
         return copied;
+    }
+
+    public static int EnsureTemplateAssets(string destinationDirectory, ILogger logger)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(destinationDirectory);
+        ArgumentNullException.ThrowIfNull(logger);
+
+        return EnsureDataAssets(
+            typeof(BundledDataAssetsBootstrapper).Assembly,
+            TemplatesResourcePrefix,
+            destinationDirectory,
+            logger
+        );
     }
 
     private static IReadOnlyList<string> GetDataResourceNames(Assembly assembly, string normalizedPrefix)

@@ -66,24 +66,6 @@ public sealed class MoongateBootstrapTests : IDisposable
         Assert.Equal(11, descriptor.Priority);
     }
 
-    private void WriteTestConfig(MoongateBootstrapContext context)
-    {
-        var uoDirectory = Path.Combine(_root, "uo-client");
-        Directory.CreateDirectory(uoDirectory);
-        TileDataFixture.Write(uoDirectory, [], []);
-
-        var configPath = Path.Combine(context.Directories[DirectoryType.Config], "moongate.yaml");
-        var config = new Dictionary<string, object?>
-        {
-            ["uo"] = new UoConfig
-            {
-                ClientFilesDirectory = uoDirectory
-            }
-        };
-
-        File.WriteAllText(configPath, ConfigYamlOptions.Serializer.Serialize(config));
-    }
-
     [Fact]
     public void CreateContext_ResolvesDirectoriesAndRegistersPackets()
     {
@@ -117,5 +99,23 @@ public sealed class MoongateBootstrapTests : IDisposable
         Assert.True(options.Debug);
         Assert.False(options.ShowHeader);
         Assert.Equal(_root, options.RootDirectory);
+    }
+
+    private void WriteTestConfig(MoongateBootstrapContext context)
+    {
+        var uoDirectory = Path.Combine(_root, "uo-client");
+        Directory.CreateDirectory(uoDirectory);
+        TileDataFixture.Write(uoDirectory, [], []);
+
+        var configPath = Path.Combine(context.Directories[DirectoryType.Config], "moongate.yaml");
+        var config = new Dictionary<string, object?>
+        {
+            ["uo"] = new UoConfig
+            {
+                ClientFilesDirectory = uoDirectory
+            }
+        };
+
+        File.WriteAllText(configPath, ConfigYamlOptions.Serializer.Serialize(config));
     }
 }

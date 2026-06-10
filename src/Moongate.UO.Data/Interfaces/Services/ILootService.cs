@@ -7,12 +7,12 @@ namespace Moongate.UO.Data.Interfaces.Services;
 /// </summary>
 public interface ILootService
 {
-    /// <summary>True when a loot table with the given id is registered.</summary>
-    bool Has(string lootTableId);
-
     /// <summary>
     /// Resolves the loot table into a list of persisted item entities.
     /// Throws when the loot table id is unknown.
     /// </summary>
     ValueTask<IReadOnlyList<ItemEntity>> GenerateAsync(string lootTableId, CancellationToken cancellationToken = default);
+
+    /// <summary>True when a loot table with the given id is registered.</summary>
+    bool Has(string lootTableId);
 }

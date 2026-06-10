@@ -5,14 +5,6 @@ namespace Moongate.Tests.Network.Pipeline;
 
 public class CompressionMiddlewareTests
 {
-    private static byte[] Decompress(ReadOnlyMemory<byte> compressed)
-    {
-        var output = new byte[NetworkCompression.BufferSize];
-        var length = NetworkCompression.Decompress(compressed.Span, output);
-
-        return output[..length];
-    }
-
     [Fact]
     public async Task ProcessAsync_Inbound_IsPassthrough()
     {
@@ -22,6 +14,16 @@ public class CompressionMiddlewareTests
         var result = await middleware.ProcessAsync(null, data);
 
         Assert.Equal(data, result.ToArray());
+    }
+
+    [Fact]
+    public async Task ProcessSendAsync_EmptyPayload_ReturnsEmpty()
+    {
+        var middleware = new CompressionMiddleware();
+
+        var compressed = await middleware.ProcessSendAsync(null, ReadOnlyMemory<byte>.Empty);
+
+        Assert.True(compressed.IsEmpty);
     }
 
     [Fact]
@@ -51,13 +53,11 @@ public class CompressionMiddlewareTests
         Assert.Equal(data, Decompress(compressed));
     }
 
-    [Fact]
-    public async Task ProcessSendAsync_EmptyPayload_ReturnsEmpty()
+    private static byte[] Decompress(ReadOnlyMemory<byte> compressed)
     {
-        var middleware = new CompressionMiddleware();
+        var output = new byte[NetworkCompression.BufferSize];
+        var length = NetworkCompression.Decompress(compressed.Span, output);
 
-        var compressed = await middleware.ProcessSendAsync(null, ReadOnlyMemory<byte>.Empty);
-
-        Assert.True(compressed.IsEmpty);
+        return output[..length];
     }
 }

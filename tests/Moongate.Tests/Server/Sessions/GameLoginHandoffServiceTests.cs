@@ -9,6 +9,20 @@ public sealed class GameLoginHandoffServiceTests
     private static readonly DateTimeOffset FixedNow = new(2026, 6, 9, 12, 0, 0, TimeSpan.Zero);
 
     [Fact]
+    public void PruneExpired_RemovesExpiredEntries()
+    {
+        var now = FixedNow;
+        var service = new GameLoginHandoffService(now: () => now);
+        service.Store(0x00000003, ClientType.Classic, null);
+        Assert.Equal(1, service.Count);
+
+        now = FixedNow.AddMinutes(6);
+        service.PruneExpired();
+
+        Assert.Equal(0, service.Count);
+    }
+
+    [Fact]
     public void Store_ThenTryConsume_ReturnsHandoff()
     {
         var service = new GameLoginHandoffService(now: () => FixedNow);
@@ -21,6 +35,18 @@ public sealed class GameLoginHandoffServiceTests
         Assert.Equal(0xAABBCCDDu, handoff.SessionKey);
         Assert.Equal(ClientType.Classic, handoff.ClientType);
         Assert.Equal(version, handoff.ClientVersion);
+    }
+
+    [Fact]
+    public void TryConsume_Expired_ReturnsFalse()
+    {
+        var now = FixedNow;
+        var service = new GameLoginHandoffService(now: () => now);
+        service.Store(0x00000002, ClientType.Classic, null);
+
+        now = FixedNow.AddMinutes(6);
+
+        Assert.False(service.TryConsume(0x00000002, out _));
     }
 
     [Fact]
@@ -39,31 +65,5 @@ public sealed class GameLoginHandoffServiceTests
         var service = new GameLoginHandoffService(now: () => FixedNow);
 
         Assert.False(service.TryConsume(0xDEADBEEF, out _));
-    }
-
-    [Fact]
-    public void TryConsume_Expired_ReturnsFalse()
-    {
-        var now = FixedNow;
-        var service = new GameLoginHandoffService(now: () => now);
-        service.Store(0x00000002, ClientType.Classic, null);
-
-        now = FixedNow.AddMinutes(6);
-
-        Assert.False(service.TryConsume(0x00000002, out _));
-    }
-
-    [Fact]
-    public void PruneExpired_RemovesExpiredEntries()
-    {
-        var now = FixedNow;
-        var service = new GameLoginHandoffService(now: () => now);
-        service.Store(0x00000003, ClientType.Classic, null);
-        Assert.Equal(1, service.Count);
-
-        now = FixedNow.AddMinutes(6);
-        service.PruneExpired();
-
-        Assert.Equal(0, service.Count);
     }
 }

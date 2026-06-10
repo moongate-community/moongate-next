@@ -7,35 +7,6 @@ namespace Moongate.Tests.Server.Loot;
 
 public sealed class LootTableBootServiceTests
 {
-    private static ItemTemplateService Templates()
-    {
-        var registry = new ItemTemplateService();
-        registry.UpsertRange([new() { Id = "gold_coin", ItemId = 3821, IsStackable = true }]);
-
-        return registry;
-    }
-
-    private static LootService NewLootService(ItemTemplateService templates)
-        => new(
-            templates,
-            new(static () => throw new NotSupportedException()),
-            new MizuchiRandom(1UL, 1UL)
-        );
-
-    [Fact]
-    public async Task StartAsync_ValidFile_PopulatesService()
-    {
-        using var dir = new TempTemplateDirectory();
-        dir.WriteFile("common.yaml", "loot_tables:\n  - id: common\n    content:\n      - item: gold_coin\n");
-        var templates = Templates();
-        var loot = NewLootService(templates);
-        var bootService = new LootTableBootService(new(dir.Path), loot, templates);
-
-        await bootService.StartAsync(CancellationToken.None);
-
-        Assert.True(loot.Has("common"));
-    }
-
     [Fact]
     public async Task StartAsync_InvalidFile_Throws()
     {
@@ -58,5 +29,34 @@ public sealed class LootTableBootServiceTests
         await bootService.StartAsync(CancellationToken.None);
 
         Assert.False(loot.Has("anything"));
+    }
+
+    [Fact]
+    public async Task StartAsync_ValidFile_PopulatesService()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile("common.yaml", "loot_tables:\n  - id: common\n    content:\n      - item: gold_coin\n");
+        var templates = Templates();
+        var loot = NewLootService(templates);
+        var bootService = new LootTableBootService(new(dir.Path), loot, templates);
+
+        await bootService.StartAsync(CancellationToken.None);
+
+        Assert.True(loot.Has("common"));
+    }
+
+    private static LootService NewLootService(ItemTemplateService templates)
+        => new(
+            templates,
+            new(static () => throw new NotSupportedException()),
+            new MizuchiRandom(1UL, 1UL)
+        );
+
+    private static ItemTemplateService Templates()
+    {
+        var registry = new ItemTemplateService();
+        registry.UpsertRange([new() { Id = "gold_coin", ItemId = 3821, IsStackable = true }]);
+
+        return registry;
     }
 }

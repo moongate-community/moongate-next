@@ -53,7 +53,7 @@ public static class PacketHandlerContainerExtensions
             {
                 if (handlerType.IsAbstract ||
                     !handlerType.IsClass ||
-                    !handlerType.IsDefined(typeof(RegisterPacketHandlerAttribute), inherit: false))
+                    !handlerType.IsDefined(typeof(RegisterPacketHandlerAttribute), false))
                 {
                     continue;
                 }

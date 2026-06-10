@@ -54,73 +54,31 @@ public static class StarterLoadoutValidator
         }
     }
 
-    private static void ValidateRaceKeys(StarterLoadoutDefinition definition, string sourceFile)
-    {
-        foreach (var key in definition.Races.Keys)
-        {
-            if (!ValidRaceKeys.Contains(key, StringComparer.OrdinalIgnoreCase))
-            {
-                throw new InvalidOperationException(
-                    $"Starter loadout '{sourceFile}' has unknown race key '{key}' (valid: human, elf, gargoyle)."
-                );
-            }
-        }
-    }
-
-    private static void ValidateProfessionKeys(
-        StarterLoadoutDefinition definition,
-        string sourceFile,
-        IProfessionDataService professions
-    )
-    {
-        if (definition.Professions.Count == 0)
-        {
-            return;
-        }
-
-        var knownNames = new HashSet<string>(
-            professions.GetAllProfessions().Select(static profession => profession.Name),
-            StringComparer.OrdinalIgnoreCase
-        );
-
-        foreach (var key in definition.Professions.Keys)
-        {
-            if (!knownNames.Contains(key))
-            {
-                throw new InvalidOperationException($"Starter loadout '{sourceFile}' has unknown profession key '{key}'.");
-            }
-        }
-    }
-
-    private static void ValidateSection(
-        string sectionName,
+    private static void CheckSectionLayers(
         LoadoutSection section,
+        string sectionName,
+        string? raceKey,
+        string? professionKey,
+        Dictionary<ItemLayerType, string> seen,
         string sourceFile,
         IItemTemplateService templates
     )
     {
         foreach (var entry in section.EquipItems)
         {
-            var template = ResolveTemplate(entry, sectionName, sourceFile, templates);
+            if (!templates.TryGet(entry.Template, out var template) || template.Layer is not { } entryLayer)
+            {
+                continue;
+            }
 
-            if (template.Layer is null)
+            if (seen.TryGetValue(entryLayer, out var previous))
             {
                 throw new InvalidOperationException(
-                    $"Starter loadout '{sourceFile}' section '{sectionName}' equips template '{template.Id}' which has no layer."
+                    $"Starter loadout '{sourceFile}' layer conflict on {entryLayer} for race '{raceKey ?? "-"}' + profession '{professionKey ?? "-"}': '{sectionName}/{entry.Template}' collides with {previous}."
                 );
             }
-        }
 
-        foreach (var entry in section.BackpackItems)
-        {
-            ResolveTemplate(entry, sectionName, sourceFile, templates);
-
-            if (entry.PacketHue != PacketHueSource.None)
-            {
-                throw new InvalidOperationException(
-                    $"Starter loadout '{sourceFile}' section '{sectionName}' backpack item '{entry.Template}' declares packet_hue (equip entries only)."
-                );
-            }
+            seen[entryLayer] = $"'{sectionName}/{entry.Template}'";
         }
     }
 
@@ -260,31 +218,73 @@ public static class StarterLoadoutValidator
         }
     }
 
-    private static void CheckSectionLayers(
-        LoadoutSection section,
+    private static void ValidateProfessionKeys(
+        StarterLoadoutDefinition definition,
+        string sourceFile,
+        IProfessionDataService professions
+    )
+    {
+        if (definition.Professions.Count == 0)
+        {
+            return;
+        }
+
+        var knownNames = new HashSet<string>(
+            professions.GetAllProfessions().Select(static profession => profession.Name),
+            StringComparer.OrdinalIgnoreCase
+        );
+
+        foreach (var key in definition.Professions.Keys)
+        {
+            if (!knownNames.Contains(key))
+            {
+                throw new InvalidOperationException($"Starter loadout '{sourceFile}' has unknown profession key '{key}'.");
+            }
+        }
+    }
+
+    private static void ValidateRaceKeys(StarterLoadoutDefinition definition, string sourceFile)
+    {
+        foreach (var key in definition.Races.Keys)
+        {
+            if (!ValidRaceKeys.Contains(key, StringComparer.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    $"Starter loadout '{sourceFile}' has unknown race key '{key}' (valid: human, elf, gargoyle)."
+                );
+            }
+        }
+    }
+
+    private static void ValidateSection(
         string sectionName,
-        string? raceKey,
-        string? professionKey,
-        Dictionary<ItemLayerType, string> seen,
+        LoadoutSection section,
         string sourceFile,
         IItemTemplateService templates
     )
     {
         foreach (var entry in section.EquipItems)
         {
-            if (!templates.TryGet(entry.Template, out var template) || template.Layer is not { } entryLayer)
-            {
-                continue;
-            }
+            var template = ResolveTemplate(entry, sectionName, sourceFile, templates);
 
-            if (seen.TryGetValue(entryLayer, out var previous))
+            if (template.Layer is null)
             {
                 throw new InvalidOperationException(
-                    $"Starter loadout '{sourceFile}' layer conflict on {entryLayer} for race '{raceKey ?? "-"}' + profession '{professionKey ?? "-"}': '{sectionName}/{entry.Template}' collides with {previous}."
+                    $"Starter loadout '{sourceFile}' section '{sectionName}' equips template '{template.Id}' which has no layer."
                 );
             }
+        }
 
-            seen[entryLayer] = $"'{sectionName}/{entry.Template}'";
+        foreach (var entry in section.BackpackItems)
+        {
+            ResolveTemplate(entry, sectionName, sourceFile, templates);
+
+            if (entry.PacketHue != PacketHueSource.None)
+            {
+                throw new InvalidOperationException(
+                    $"Starter loadout '{sourceFile}' section '{sectionName}' backpack item '{entry.Template}' declares packet_hue (equip entries only)."
+                );
+            }
         }
     }
 }

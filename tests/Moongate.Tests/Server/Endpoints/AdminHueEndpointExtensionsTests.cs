@@ -24,15 +24,6 @@ public sealed class AdminHueEndpointExtensionsTests
     }
 
     [Fact]
-    public void HandleGetHue_Zero_ReturnsNone()
-    {
-        var result = AdminHueEndpointExtensions.HandleGetHue(new FakeHueStore(), 0);
-
-        var ok = Assert.IsType<Ok<HueSummary>>(result);
-        Assert.True(ok.Value!.IsNone);
-    }
-
-    [Fact]
     public void HandleGetHue_KnownHue_ReturnsColors()
     {
         var store = new FakeHueStore();
@@ -51,5 +42,14 @@ public sealed class AdminHueEndpointExtensionsTests
         var result = AdminHueEndpointExtensions.HandleGetHue(new FakeHueStore(), 99);
 
         Assert.IsType<NotFound>(result);
+    }
+
+    [Fact]
+    public void HandleGetHue_Zero_ReturnsNone()
+    {
+        var result = AdminHueEndpointExtensions.HandleGetHue(new FakeHueStore(), 0);
+
+        var ok = Assert.IsType<Ok<HueSummary>>(result);
+        Assert.True(ok.Value!.IsNone);
     }
 }

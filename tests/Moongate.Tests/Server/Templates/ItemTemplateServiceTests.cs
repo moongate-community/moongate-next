@@ -5,8 +5,26 @@ namespace Moongate.Tests.Server.Templates;
 
 public sealed class ItemTemplateServiceTests
 {
-    private static ItemTemplateDefinition NewTemplate(string id)
-        => new() { Id = id, Name = id };
+    [Fact]
+    public void Clear_RemovesAllTemplates()
+    {
+        var service = new ItemTemplateService();
+        service.UpsertRange([NewTemplate("a"), NewTemplate("b")]);
+
+        service.Clear();
+
+        Assert.Equal(0, service.Count);
+        Assert.Empty(service.GetAll());
+    }
+
+    [Fact]
+    public void GetAll_ReturnsAllRegisteredTemplates()
+    {
+        var service = new ItemTemplateService();
+        service.UpsertRange([NewTemplate("a"), NewTemplate("b")]);
+
+        Assert.Equal(2, service.GetAll().Count);
+    }
 
     [Fact]
     public void TryGet_IsCaseInsensitive()
@@ -40,24 +58,6 @@ public sealed class ItemTemplateServiceTests
         Assert.Equal("Replaced", definition!.Name);
     }
 
-    [Fact]
-    public void Clear_RemovesAllTemplates()
-    {
-        var service = new ItemTemplateService();
-        service.UpsertRange([NewTemplate("a"), NewTemplate("b")]);
-
-        service.Clear();
-
-        Assert.Equal(0, service.Count);
-        Assert.Empty(service.GetAll());
-    }
-
-    [Fact]
-    public void GetAll_ReturnsAllRegisteredTemplates()
-    {
-        var service = new ItemTemplateService();
-        service.UpsertRange([NewTemplate("a"), NewTemplate("b")]);
-
-        Assert.Equal(2, service.GetAll().Count);
-    }
+    private static ItemTemplateDefinition NewTemplate(string id)
+        => new() { Id = id, Name = id };
 }

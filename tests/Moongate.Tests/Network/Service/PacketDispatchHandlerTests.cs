@@ -305,17 +305,6 @@ public class PacketDispatchHandlerTests
     }
 
     [Fact]
-    public void Handle_UnknownSession_SkipsDispatch()
-    {
-        var handler = new CapturingHandler();
-        var dispatcher = NewDispatcher([handler], new());
-
-        dispatcher.Handle(new(404, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
-
-        Assert.Empty(handler.SessionIds);
-    }
-
-    [Fact]
     public void Handle_PassesGameSessionToContext()
     {
         using var client = NewClient();
@@ -327,6 +316,17 @@ public class PacketDispatchHandlerTests
         dispatcher.Handle(new(gameSession.SessionId, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
 
         Assert.Same(gameSession, handler.Session);
+    }
+
+    [Fact]
+    public void Handle_UnknownSession_SkipsDispatch()
+    {
+        var handler = new CapturingHandler();
+        var dispatcher = NewDispatcher([handler], new());
+
+        dispatcher.Handle(new(404, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
+
+        Assert.Empty(handler.SessionIds);
     }
 
     [Fact]

@@ -6,41 +6,39 @@ namespace Moongate.Tests.Server.Loot;
 
 public sealed class LootTableValidatorTests
 {
-    private static ItemTemplateService Templates()
+    [Fact]
+    public void Validate_AbstractItem_Throws()
     {
-        var registry = new ItemTemplateService();
-        registry.UpsertRange(
-            [
-                new() { Id = "gold_coin", ItemId = 3821, IsStackable = true, Tags = ["currency"] },
-                new() { Id = "apple", ItemId = 2512, Tags = ["food"] },
-                new() { Id = "leather_cap", ItemId = 7609, Tags = ["armor"] },
-                new() { Id = "base_armor", ItemId = 0, IsAbstract = true, Tags = ["armor"] }
-            ]
-        );
+        var tables = new List<LootTableDefinition> { Table("t", Item("base_armor")) };
 
-        return registry;
+        var exception = Assert.Throws<InvalidOperationException>(() => LootTableValidator.Validate(tables, Templates()));
+        Assert.Contains("abstract", exception.Message);
     }
 
-    private static LootTableDefinition Table(string id, params LootNode[] content)
-        => new() { Id = id, Content = [.. content] };
+    [Fact]
+    public void Validate_AmountMinGreaterThanMax_Throws()
+    {
+        var tables = new List<LootTableDefinition> { Table("t", Item("gold_coin", new(5, 1))) };
 
-    private static LootNode Item(string template, LootAmount? amount = null, double chance = 1.0)
-        => new() { Item = template, Amount = amount, Chance = chance };
+        Assert.Throws<InvalidOperationException>(() => LootTableValidator.Validate(tables, Templates()));
+    }
 
     [Fact]
-    public void Validate_Valid_DoesNotThrow()
+    public void Validate_CategoryMatchingOnlyAbstract_Throws()
     {
-        var tables = new List<LootTableDefinition>
-        {
-            Table(
-                "common",
-                Item("gold_coin", new(1, 100)),
-                new LootNode { PickOneOf = [Item("apple"), new() { Category = "armor", Weight = 2 }] },
-                new LootNode { Category = "food", Chance = 0.5 }
-            )
-        };
+        var registry = new ItemTemplateService();
+        registry.UpsertRange([new() { Id = "base_only", IsAbstract = true, Tags = ["ghost"] }]);
+        var tables = new List<LootTableDefinition> { Table("t", new LootNode { Category = "ghost" }) };
 
-        LootTableValidator.Validate(tables, Templates());
+        Assert.Throws<InvalidOperationException>(() => LootTableValidator.Validate(tables, registry));
+    }
+
+    [Fact]
+    public void Validate_ChanceOutOfRange_Throws()
+    {
+        var tables = new List<LootTableDefinition> { Table("t", Item("apple", chance: 1.5)) };
+
+        Assert.Throws<InvalidOperationException>(() => LootTableValidator.Validate(tables, Templates()));
     }
 
     [Fact]
@@ -53,24 +51,6 @@ public sealed class LootTableValidatorTests
     }
 
     [Fact]
-    public void Validate_UnknownItem_Throws()
-    {
-        var tables = new List<LootTableDefinition> { Table("t", Item("does_not_exist")) };
-
-        var exception = Assert.Throws<InvalidOperationException>(() => LootTableValidator.Validate(tables, Templates()));
-        Assert.Contains("does_not_exist", exception.Message);
-    }
-
-    [Fact]
-    public void Validate_AbstractItem_Throws()
-    {
-        var tables = new List<LootTableDefinition> { Table("t", Item("base_armor")) };
-
-        var exception = Assert.Throws<InvalidOperationException>(() => LootTableValidator.Validate(tables, Templates()));
-        Assert.Contains("abstract", exception.Message);
-    }
-
-    [Fact]
     public void Validate_EmptyCategory_Throws()
     {
         var tables = new List<LootTableDefinition> { Table("t", new LootNode { Category = "nonexistent_tag" }) };
@@ -80,13 +60,27 @@ public sealed class LootTableValidatorTests
     }
 
     [Fact]
-    public void Validate_CategoryMatchingOnlyAbstract_Throws()
+    public void Validate_EmptyId_Throws()
     {
-        var registry = new ItemTemplateService();
-        registry.UpsertRange([new() { Id = "base_only", IsAbstract = true, Tags = ["ghost"] }]);
-        var tables = new List<LootTableDefinition> { Table("t", new LootNode { Category = "ghost" }) };
+        var tables = new List<LootTableDefinition> { Table("", Item("apple")) };
 
-        Assert.Throws<InvalidOperationException>(() => LootTableValidator.Validate(tables, registry));
+        Assert.Throws<InvalidOperationException>(() => LootTableValidator.Validate(tables, Templates()));
+    }
+
+    [Fact]
+    public void Validate_EmptyPickOneOf_Throws()
+    {
+        var tables = new List<LootTableDefinition> { Table("t", new LootNode { PickOneOf = [] }) };
+
+        Assert.Throws<InvalidOperationException>(() => LootTableValidator.Validate(tables, Templates()));
+    }
+
+    [Fact]
+    public void Validate_NegativeAmount_Throws()
+    {
+        var tables = new List<LootTableDefinition> { Table("t", Item("gold_coin", new(-1, 5))) };
+
+        Assert.Throws<InvalidOperationException>(() => LootTableValidator.Validate(tables, Templates()));
     }
 
     [Fact]
@@ -106,35 +100,28 @@ public sealed class LootTableValidatorTests
     }
 
     [Fact]
-    public void Validate_EmptyPickOneOf_Throws()
+    public void Validate_UnknownItem_Throws()
     {
-        var tables = new List<LootTableDefinition> { Table("t", new LootNode { PickOneOf = [] }) };
+        var tables = new List<LootTableDefinition> { Table("t", Item("does_not_exist")) };
 
-        Assert.Throws<InvalidOperationException>(() => LootTableValidator.Validate(tables, Templates()));
+        var exception = Assert.Throws<InvalidOperationException>(() => LootTableValidator.Validate(tables, Templates()));
+        Assert.Contains("does_not_exist", exception.Message);
     }
 
     [Fact]
-    public void Validate_ChanceOutOfRange_Throws()
+    public void Validate_Valid_DoesNotThrow()
     {
-        var tables = new List<LootTableDefinition> { Table("t", Item("apple", chance: 1.5)) };
+        var tables = new List<LootTableDefinition>
+        {
+            Table(
+                "common",
+                Item("gold_coin", new(1, 100)),
+                new LootNode { PickOneOf = [Item("apple"), new() { Category = "armor", Weight = 2 }] },
+                new LootNode { Category = "food", Chance = 0.5 }
+            )
+        };
 
-        Assert.Throws<InvalidOperationException>(() => LootTableValidator.Validate(tables, Templates()));
-    }
-
-    [Fact]
-    public void Validate_AmountMinGreaterThanMax_Throws()
-    {
-        var tables = new List<LootTableDefinition> { Table("t", Item("gold_coin", new(5, 1))) };
-
-        Assert.Throws<InvalidOperationException>(() => LootTableValidator.Validate(tables, Templates()));
-    }
-
-    [Fact]
-    public void Validate_NegativeAmount_Throws()
-    {
-        var tables = new List<LootTableDefinition> { Table("t", Item("gold_coin", new(-1, 5))) };
-
-        Assert.Throws<InvalidOperationException>(() => LootTableValidator.Validate(tables, Templates()));
+        LootTableValidator.Validate(tables, Templates());
     }
 
     [Fact]
@@ -146,11 +133,24 @@ public sealed class LootTableValidatorTests
         Assert.Throws<InvalidOperationException>(() => LootTableValidator.Validate(tables, Templates()));
     }
 
-    [Fact]
-    public void Validate_EmptyId_Throws()
-    {
-        var tables = new List<LootTableDefinition> { Table("", Item("apple")) };
+    private static LootNode Item(string template, LootAmount? amount = null, double chance = 1.0)
+        => new() { Item = template, Amount = amount, Chance = chance };
 
-        Assert.Throws<InvalidOperationException>(() => LootTableValidator.Validate(tables, Templates()));
+    private static LootTableDefinition Table(string id, params LootNode[] content)
+        => new() { Id = id, Content = [.. content] };
+
+    private static ItemTemplateService Templates()
+    {
+        var registry = new ItemTemplateService();
+        registry.UpsertRange(
+            [
+                new() { Id = "gold_coin", ItemId = 3821, IsStackable = true, Tags = ["currency"] },
+                new() { Id = "apple", ItemId = 2512, Tags = ["food"] },
+                new() { Id = "leather_cap", ItemId = 7609, Tags = ["armor"] },
+                new() { Id = "base_armor", ItemId = 0, IsAbstract = true, Tags = ["armor"] }
+            ]
+        );
+
+        return registry;
     }
 }

@@ -46,48 +46,6 @@ public sealed class StarterLoadoutService : IStarterLoadoutService
         _items = items;
     }
 
-    public void SetDefinition(StarterLoadoutDefinition? definition)
-        => _definition = definition;
-
-    public StarterLoadout Compose(int raceIndex, string? professionName)
-    {
-        var loadout = new StarterLoadout();
-        var definition = _definition;
-
-        if (definition is null)
-        {
-            return loadout;
-        }
-
-        if (!string.IsNullOrWhiteSpace(definition.BackpackTemplate))
-        {
-            loadout.Backpack = Resolve(new() { Template = definition.BackpackTemplate });
-        }
-
-        AppendSection(loadout, definition.Base);
-
-        var raceKey = raceIndex switch
-        {
-            0 => "human",
-            1 => "elf",
-            2 => "gargoyle",
-            _ => null
-        };
-
-        if (raceKey is not null && definition.Races.TryGetValue(raceKey, out var raceSection))
-        {
-            AppendSection(loadout, raceSection);
-        }
-
-        if (!string.IsNullOrWhiteSpace(professionName) &&
-            definition.Professions.TryGetValue(professionName, out var professionSection))
-        {
-            AppendSection(loadout, professionSection);
-        }
-
-        return loadout;
-    }
-
     public async ValueTask ApplyAsync(
         MobileEntity mobile,
         StarterLoadout loadout,
@@ -168,6 +126,61 @@ public sealed class StarterLoadoutService : IStarterLoadoutService
         }
     }
 
+    public StarterLoadout Compose(int raceIndex, string? professionName)
+    {
+        var loadout = new StarterLoadout();
+        var definition = _definition;
+
+        if (definition is null)
+        {
+            return loadout;
+        }
+
+        if (!string.IsNullOrWhiteSpace(definition.BackpackTemplate))
+        {
+            loadout.Backpack = Resolve(new() { Template = definition.BackpackTemplate });
+        }
+
+        AppendSection(loadout, definition.Base);
+
+        var raceKey = raceIndex switch
+        {
+            0 => "human",
+            1 => "elf",
+            2 => "gargoyle",
+            _ => null
+        };
+
+        if (raceKey is not null && definition.Races.TryGetValue(raceKey, out var raceSection))
+        {
+            AppendSection(loadout, raceSection);
+        }
+
+        if (!string.IsNullOrWhiteSpace(professionName) &&
+            definition.Professions.TryGetValue(professionName, out var professionSection))
+        {
+            AppendSection(loadout, professionSection);
+        }
+
+        return loadout;
+    }
+
+    public void SetDefinition(StarterLoadoutDefinition? definition)
+        => _definition = definition;
+
+    private void AppendSection(StarterLoadout loadout, LoadoutSection section)
+    {
+        foreach (var entry in section.EquipItems)
+        {
+            loadout.Equip.Add(Resolve(entry));
+        }
+
+        foreach (var entry in section.BackpackItems)
+        {
+            loadout.BackpackItems.Add(Resolve(entry));
+        }
+    }
+
     private async ValueTask EquipOrWarnAsync(
         MobileEntity mobile,
         ItemEntity item,
@@ -180,19 +193,6 @@ public sealed class StarterLoadoutService : IStarterLoadoutService
         if (!equipped)
         {
             _logger.Warning("Could not equip starter item {Item} on layer {Layer}", item.Id, layer);
-        }
-    }
-
-    private void AppendSection(StarterLoadout loadout, LoadoutSection section)
-    {
-        foreach (var entry in section.EquipItems)
-        {
-            loadout.Equip.Add(Resolve(entry));
-        }
-
-        foreach (var entry in section.BackpackItems)
-        {
-            loadout.BackpackItems.Add(Resolve(entry));
         }
     }
 

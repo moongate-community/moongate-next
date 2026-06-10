@@ -19,6 +19,9 @@ public sealed record ItemTemplateSummary(
     HueSummary Hue
 )
 {
+    public static string FormatItemId(int itemId)
+        => $"0x{itemId.ToString("X4", CultureInfo.InvariantCulture)}";
+
     public static ItemTemplateSummary FromDefinition(ItemTemplateDefinition template, IHueStore hues)
     {
         ArgumentNullException.ThrowIfNull(template);
@@ -40,9 +43,6 @@ public sealed record ItemTemplateSummary(
             HueSummary.FromValue(template.Hue, hues)
         );
     }
-
-    public static string FormatItemId(int itemId)
-        => $"0x{itemId.ToString("X4", CultureInfo.InvariantCulture)}";
 
     private static string FormatLayer(ItemLayerType layer)
         => layer switch

@@ -34,14 +34,14 @@ public interface IMobileService
         CancellationToken cancellationToken = default
     );
 
-    /// <summary>Gets a mobile by serial, or null when absent.</summary>
-    ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default);
-
     /// <summary>Returns all mobiles belonging to the given account serial.</summary>
     ValueTask<IReadOnlyList<MobileEntity>> GetByAccountIdAsync(
         Serial accountId,
         CancellationToken cancellationToken = default
     );
+
+    /// <summary>Gets a mobile by serial, or null when absent.</summary>
+    ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Returns the mobile's skill entry, or a fresh default entry when not yet trained.

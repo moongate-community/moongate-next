@@ -10,14 +10,11 @@ public sealed class ItemTemplateValueDefinition
 
     public int BaseSell => Sell ?? Buy / 2;
 
-    public decimal RarityMultiplier(ItemRarity rarity)
-        => rarity switch
+    public ItemTemplateValueDefinition Clone()
+        => new()
         {
-            ItemRarity.Uncommon  => 1.25m,
-            ItemRarity.Rare      => 1.5m,
-            ItemRarity.Epic      => 2.0m,
-            ItemRarity.Legendary => 3.0m,
-            _                    => 1.0m
+            Buy = Buy,
+            Sell = Sell
         };
 
     public int EffectiveBuy(ItemRarity rarity)
@@ -26,11 +23,14 @@ public sealed class ItemTemplateValueDefinition
     public int EffectiveSell(ItemRarity rarity)
         => ApplyMultiplier(BaseSell, RarityMultiplier(rarity));
 
-    public ItemTemplateValueDefinition Clone()
-        => new()
+    public decimal RarityMultiplier(ItemRarity rarity)
+        => rarity switch
         {
-            Buy = Buy,
-            Sell = Sell
+            ItemRarity.Uncommon  => 1.25m,
+            ItemRarity.Rare      => 1.5m,
+            ItemRarity.Epic      => 2.0m,
+            ItemRarity.Legendary => 3.0m,
+            _                    => 1.0m
         };
 
     private static int ApplyMultiplier(int value, decimal multiplier)

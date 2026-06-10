@@ -81,13 +81,11 @@ public class PacketHandlerRegistrationTests
     }
 
     [Fact]
-    public void AddPacketHandlers_UnmarkedHandler_IsSkipped()
+    public void AddPacketHandlers_MarkedWithoutInterface_Throws()
     {
         var container = new Container();
 
-        container.AddPacketHandlers([typeof(UnmarkedHandlerA)]);
-
-        Assert.Empty(container.ResolveMany<IPacketHandler<RegPacketA>>());
+        Assert.Throws<InvalidOperationException>(() => container.AddPacketHandlers([typeof(MarkedNoInterfaceHandler)]));
     }
 
     [Fact]
@@ -115,11 +113,13 @@ public class PacketHandlerRegistrationTests
     }
 
     [Fact]
-    public void AddPacketHandlers_MarkedWithoutInterface_Throws()
+    public void AddPacketHandlers_UnmarkedHandler_IsSkipped()
     {
         var container = new Container();
 
-        Assert.Throws<InvalidOperationException>(() => container.AddPacketHandlers([typeof(MarkedNoInterfaceHandler)]));
+        container.AddPacketHandlers([typeof(UnmarkedHandlerA)]);
+
+        Assert.Empty(container.ResolveMany<IPacketHandler<RegPacketA>>());
     }
 
     [Fact]

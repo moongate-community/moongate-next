@@ -7,6 +7,25 @@ namespace Moongate.Tests.UO.Data.Templates.Loadouts;
 public sealed class StarterLoadoutDefinitionTests
 {
     [Fact]
+    public void Deserialize_EntryDefaults_AmountNullAndPacketHueNone()
+    {
+        const string yaml =
+            """
+            starter_loadout:
+                base:
+                    equip_items:
+                        - template: leather_shoes
+            """;
+
+        var table = YamlUtils.Deserialize<StarterLoadoutTable>(yaml);
+
+        var entry = Assert.Single(table.StarterLoadout!.Base.EquipItems);
+        Assert.Equal("leather_shoes", entry.Template);
+        Assert.Null(entry.Amount);
+        Assert.Equal(PacketHueSource.None, entry.PacketHue);
+    }
+
+    [Fact]
     public void Deserialize_FullSchema_MapsAllFields()
     {
         const string yaml =
@@ -67,24 +86,5 @@ public sealed class StarterLoadoutDefinitionTests
         Assert.Empty(definition.Base.EquipItems);
         Assert.Empty(definition.Races);
         Assert.Empty(definition.Professions);
-    }
-
-    [Fact]
-    public void Deserialize_EntryDefaults_AmountNullAndPacketHueNone()
-    {
-        const string yaml =
-            """
-            starter_loadout:
-                base:
-                    equip_items:
-                        - template: leather_shoes
-            """;
-
-        var table = YamlUtils.Deserialize<StarterLoadoutTable>(yaml);
-
-        var entry = Assert.Single(table.StarterLoadout!.Base.EquipItems);
-        Assert.Equal("leather_shoes", entry.Template);
-        Assert.Null(entry.Amount);
-        Assert.Equal(PacketHueSource.None, entry.PacketHue);
     }
 }

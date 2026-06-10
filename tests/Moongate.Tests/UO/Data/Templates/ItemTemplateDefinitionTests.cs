@@ -7,6 +7,21 @@ namespace Moongate.Tests.UO.Data.Templates;
 public sealed class ItemTemplateDefinitionTests
 {
     [Fact]
+    public void Deserialize_AbstractTemplate_SetsIsAbstract()
+    {
+        const string yaml =
+            """
+            item_templates:
+                - id: base_clothing
+                  is_abstract: true
+            """;
+
+        var table = YamlUtils.Deserialize<ItemTemplateTable>(yaml);
+
+        Assert.True(Assert.Single(table.ItemTemplates).IsAbstract);
+    }
+
+    [Fact]
     public void Deserialize_FullTemplate_MapsAllFields()
     {
         const string yaml =
@@ -97,20 +112,5 @@ public sealed class ItemTemplateDefinitionTests
         Assert.NotNull(template.Value);
         Assert.Equal(25, template.Value.Buy);
         Assert.Equal(12, template.Value.BaseSell);
-    }
-
-    [Fact]
-    public void Deserialize_AbstractTemplate_SetsIsAbstract()
-    {
-        const string yaml =
-            """
-            item_templates:
-                - id: base_clothing
-                  is_abstract: true
-            """;
-
-        var table = YamlUtils.Deserialize<ItemTemplateTable>(yaml);
-
-        Assert.True(Assert.Single(table.ItemTemplates).IsAbstract);
     }
 }

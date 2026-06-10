@@ -6,12 +6,6 @@ namespace Moongate.Tests.Server.Loot;
 
 public sealed class LootTableRegistryTests
 {
-    private static LootTableDefinition Table(string id)
-        => new() { Id = id, Content = [new() { Item = "apple" }] };
-
-    private static ItemTemplateDefinition Tmpl(string id, bool isAbstract, params string[] tags)
-        => new() { Id = id, IsAbstract = isAbstract, Tags = [.. tags] };
-
     [Fact]
     public void TryGet_IsCaseInsensitive()
     {
@@ -30,6 +24,15 @@ public sealed class LootTableRegistryTests
     }
 
     [Fact]
+    public void TryGetByTag_IsCaseInsensitive()
+    {
+        var registry = new LootTableRegistry([], [Tmpl("apple", false, "Food")]);
+
+        Assert.True(registry.TryGetByTag("food", out var matches));
+        Assert.Single(matches);
+    }
+
+    [Fact]
     public void TryGetByTag_ReturnsOnlyConcreteTemplates()
     {
         var templates = new[] { Tmpl("leather_cap", false, "armor"), Tmpl("base_armor", true, "armor") };
@@ -41,19 +44,16 @@ public sealed class LootTableRegistryTests
     }
 
     [Fact]
-    public void TryGetByTag_IsCaseInsensitive()
-    {
-        var registry = new LootTableRegistry([], [Tmpl("apple", false, "Food")]);
-
-        Assert.True(registry.TryGetByTag("food", out var matches));
-        Assert.Single(matches);
-    }
-
-    [Fact]
     public void TryGetByTag_Unknown_ReturnsFalse()
     {
         var registry = new LootTableRegistry([], []);
 
         Assert.False(registry.TryGetByTag("nope", out _));
     }
+
+    private static LootTableDefinition Table(string id)
+        => new() { Id = id, Content = [new() { Item = "apple" }] };
+
+    private static ItemTemplateDefinition Tmpl(string id, bool isAbstract, params string[] tags)
+        => new() { Id = id, IsAbstract = isAbstract, Tags = [.. tags] };
 }

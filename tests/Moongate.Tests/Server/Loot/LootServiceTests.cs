@@ -53,44 +53,44 @@ public sealed class LootServiceTests
         }
     }
 
-    private static ItemTemplateService Templates()
+    [Fact]
+    public async Task GenerateAsync_Category_DrawsFromTag()
     {
-        var registry = new ItemTemplateService();
-        registry.UpsertRange(
-            [
-                new() { Id = "gold_coin", ItemId = 3821, IsStackable = true, Tags = ["currency"] },
-                new() { Id = "apple", ItemId = 2512, Tags = ["food"] },
-                new() { Id = "bread_loaf", ItemId = 4155, Tags = ["food"] },
-                new() { Id = "leather_cap", ItemId = 7609, Tags = ["armor"] },
-                new() { Id = "dagger", ItemId = 3922, Tags = ["weapon"] }
-            ]
-        );
-
-        return registry;
-    }
-
-    private static LootService NewService(ItemTemplateService templates, ulong seed, params LootTableDefinition[] tables)
-    {
-        var factory = new FakeItemFactory(templates);
-        var service = new LootService(
+        var templates = Templates();
+        var service = NewService(
             templates,
-            new(() => factory),
-            new MizuchiRandom(seed, 1UL)
+            9UL,
+            Table("t", new LootNode { Category = "food" })
         );
-        service.SetRegistry(new(tables, templates.GetAll()));
 
-        return service;
+        var item = Assert.Single(await service.GenerateAsync("t"));
+        Assert.Contains(item.ItemId, new[] { 2512, 4155 });
     }
-
-    private static LootTableDefinition Table(string id, params LootNode[] content)
-        => new() { Id = id, Content = [.. content] };
 
     [Fact]
-    public async Task GenerateAsync_UnknownTable_Throws()
+    public async Task GenerateAsync_ChanceOne_AlwaysIncludes()
     {
-        var service = NewService(Templates(), 1UL);
+        var templates = Templates();
+        var service = NewService(
+            templates,
+            5UL,
+            Table("t", new LootNode { Item = "apple", Chance = 1.0 })
+        );
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => service.GenerateAsync("missing").AsTask());
+        Assert.Single(await service.GenerateAsync("t"));
+    }
+
+    [Fact]
+    public async Task GenerateAsync_ChanceZero_ExcludesNode()
+    {
+        var templates = Templates();
+        var service = NewService(
+            templates,
+            5UL,
+            Table("t", new LootNode { Item = "apple", Chance = 0.0 })
+        );
+
+        Assert.Empty(await service.GenerateAsync("t"));
     }
 
     [Fact]
@@ -111,23 +111,6 @@ public sealed class LootServiceTests
     }
 
     [Fact]
-    public async Task GenerateAsync_StackableWithRange_OneEntityWithinBounds()
-    {
-        var templates = Templates();
-        var service = NewService(
-            templates,
-            7UL,
-            Table("t", new LootNode { Item = "gold_coin", Amount = new(1, 100) })
-        );
-
-        var items = await service.GenerateAsync("t");
-
-        var gold = Assert.Single(items);
-        Assert.Equal(3821, gold.ItemId);
-        Assert.InRange(gold.Amount, 1, 100);
-    }
-
-    [Fact]
     public async Task GenerateAsync_NonStackableWithCount_ProducesSeparateEntities()
     {
         var templates = Templates();
@@ -141,59 +124,6 @@ public sealed class LootServiceTests
 
         Assert.Equal(3, items.Count);
         Assert.All(items, i => Assert.Equal(1, i.Amount));
-    }
-
-    [Fact]
-    public async Task GenerateAsync_ChanceZero_ExcludesNode()
-    {
-        var templates = Templates();
-        var service = NewService(
-            templates,
-            5UL,
-            Table("t", new LootNode { Item = "apple", Chance = 0.0 })
-        );
-
-        Assert.Empty(await service.GenerateAsync("t"));
-    }
-
-    [Fact]
-    public async Task GenerateAsync_ChanceOne_AlwaysIncludes()
-    {
-        var templates = Templates();
-        var service = NewService(
-            templates,
-            5UL,
-            Table("t", new LootNode { Item = "apple", Chance = 1.0 })
-        );
-
-        Assert.Single(await service.GenerateAsync("t"));
-    }
-
-    [Fact]
-    public async Task GenerateAsync_Category_DrawsFromTag()
-    {
-        var templates = Templates();
-        var service = NewService(
-            templates,
-            9UL,
-            Table("t", new LootNode { Category = "food" })
-        );
-
-        var item = Assert.Single(await service.GenerateAsync("t"));
-        Assert.Contains(item.ItemId, new[] { 2512, 4155 });
-    }
-
-    [Fact]
-    public async Task GenerateAsync_PickOneOf_SelectsExactlyOne()
-    {
-        var templates = Templates();
-        var pick = new LootNode
-        {
-            PickOneOf = [new() { Item = "apple" }, new() { Item = "dagger" }]
-        };
-        var service = NewService(templates, 11UL, Table("t", pick));
-
-        Assert.Single(await service.GenerateAsync("t"));
     }
 
     [Fact]
@@ -224,5 +154,75 @@ public sealed class LootServiceTests
 
         // dagger weight 9 of 10 -> expect a strong majority across 200 seeded rolls.
         Assert.True(heavy > 140, $"expected dagger-heavy distribution, got {heavy}/200");
+    }
+
+    [Fact]
+    public async Task GenerateAsync_PickOneOf_SelectsExactlyOne()
+    {
+        var templates = Templates();
+        var pick = new LootNode
+        {
+            PickOneOf = [new() { Item = "apple" }, new() { Item = "dagger" }]
+        };
+        var service = NewService(templates, 11UL, Table("t", pick));
+
+        Assert.Single(await service.GenerateAsync("t"));
+    }
+
+    [Fact]
+    public async Task GenerateAsync_StackableWithRange_OneEntityWithinBounds()
+    {
+        var templates = Templates();
+        var service = NewService(
+            templates,
+            7UL,
+            Table("t", new LootNode { Item = "gold_coin", Amount = new(1, 100) })
+        );
+
+        var items = await service.GenerateAsync("t");
+
+        var gold = Assert.Single(items);
+        Assert.Equal(3821, gold.ItemId);
+        Assert.InRange(gold.Amount, 1, 100);
+    }
+
+    [Fact]
+    public async Task GenerateAsync_UnknownTable_Throws()
+    {
+        var service = NewService(Templates(), 1UL);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => service.GenerateAsync("missing").AsTask());
+    }
+
+    private static LootService NewService(ItemTemplateService templates, ulong seed, params LootTableDefinition[] tables)
+    {
+        var factory = new FakeItemFactory(templates);
+        var service = new LootService(
+            templates,
+            new(() => factory),
+            new MizuchiRandom(seed, 1UL)
+        );
+        service.SetRegistry(new(tables, templates.GetAll()));
+
+        return service;
+    }
+
+    private static LootTableDefinition Table(string id, params LootNode[] content)
+        => new() { Id = id, Content = [.. content] };
+
+    private static ItemTemplateService Templates()
+    {
+        var registry = new ItemTemplateService();
+        registry.UpsertRange(
+            [
+                new() { Id = "gold_coin", ItemId = 3821, IsStackable = true, Tags = ["currency"] },
+                new() { Id = "apple", ItemId = 2512, Tags = ["food"] },
+                new() { Id = "bread_loaf", ItemId = 4155, Tags = ["food"] },
+                new() { Id = "leather_cap", ItemId = 7609, Tags = ["armor"] },
+                new() { Id = "dagger", ItemId = 3922, Tags = ["weapon"] }
+            ]
+        );
+
+        return registry;
     }
 }

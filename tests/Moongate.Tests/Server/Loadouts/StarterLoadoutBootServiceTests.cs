@@ -8,66 +8,6 @@ namespace Moongate.Tests.Server.Loadouts;
 
 public sealed class StarterLoadoutBootServiceTests
 {
-    private static ItemTemplateService NewTemplates()
-    {
-        var registry = new ItemTemplateService();
-        registry.UpsertRange(
-            [
-                new() { Id = "backpack", Name = "Backpack", ItemId = 3701, Layer = ItemLayerType.Backpack },
-                new() { Id = "gold_coin", Name = "Gold", ItemId = 3821, IsStackable = true }
-            ]
-        );
-
-        return registry;
-    }
-
-    private static ProfessionDataService NewProfessions()
-    {
-        var service = new ProfessionDataService();
-        service.SetProfessions([new("Warrior", "Warrior", 0, 0, 0, true, 0, "Profession", [], [])]);
-
-        return service;
-    }
-
-    private static StarterLoadoutService NewLoadoutService(ItemTemplateService templates)
-        => new(
-            templates,
-            new(static () => new ThrowingItemFactory()),
-            new(static () => new ThrowingMobileService()),
-            new(static () => new ThrowingItemService())
-        );
-
-    [Fact]
-    public async Task StartAsync_ValidFile_PopulatesService()
-    {
-        using var dir = new TempTemplateDirectory();
-        dir.WriteFile(
-            StarterLoadoutYamlLoader.StarterLoadoutFileName,
-            """
-            starter_loadout:
-                backpack_template: backpack
-                base:
-                    backpack_items:
-                        - template: gold_coin
-                          amount: 500
-            """
-        );
-        var templates = NewTemplates();
-        var loadouts = NewLoadoutService(templates);
-        var bootService = new StarterLoadoutBootService(
-            new(dir.Path),
-            loadouts,
-            templates,
-            NewProfessions()
-        );
-
-        await bootService.StartAsync(CancellationToken.None);
-
-        var composed = loadouts.Compose(0, null);
-        Assert.False(composed.IsEmpty);
-        Assert.Single(composed.BackpackItems);
-    }
-
     [Fact]
     public async Task StartAsync_InvalidFile_Throws()
     {
@@ -109,5 +49,65 @@ public sealed class StarterLoadoutBootServiceTests
         await bootService.StartAsync(CancellationToken.None);
 
         Assert.True(loadouts.Compose(0, null).IsEmpty);
+    }
+
+    [Fact]
+    public async Task StartAsync_ValidFile_PopulatesService()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            StarterLoadoutYamlLoader.StarterLoadoutFileName,
+            """
+            starter_loadout:
+                backpack_template: backpack
+                base:
+                    backpack_items:
+                        - template: gold_coin
+                          amount: 500
+            """
+        );
+        var templates = NewTemplates();
+        var loadouts = NewLoadoutService(templates);
+        var bootService = new StarterLoadoutBootService(
+            new(dir.Path),
+            loadouts,
+            templates,
+            NewProfessions()
+        );
+
+        await bootService.StartAsync(CancellationToken.None);
+
+        var composed = loadouts.Compose(0, null);
+        Assert.False(composed.IsEmpty);
+        Assert.Single(composed.BackpackItems);
+    }
+
+    private static StarterLoadoutService NewLoadoutService(ItemTemplateService templates)
+        => new(
+            templates,
+            new(static () => new ThrowingItemFactory()),
+            new(static () => new ThrowingMobileService()),
+            new(static () => new ThrowingItemService())
+        );
+
+    private static ProfessionDataService NewProfessions()
+    {
+        var service = new ProfessionDataService();
+        service.SetProfessions([new("Warrior", "Warrior", 0, 0, 0, true, 0, "Profession", [], [])]);
+
+        return service;
+    }
+
+    private static ItemTemplateService NewTemplates()
+    {
+        var registry = new ItemTemplateService();
+        registry.UpsertRange(
+            [
+                new() { Id = "backpack", Name = "Backpack", ItemId = 3701, Layer = ItemLayerType.Backpack },
+                new() { Id = "gold_coin", Name = "Gold", ItemId = 3821, IsStackable = true }
+            ]
+        );
+
+        return registry;
     }
 }

@@ -251,59 +251,6 @@ public sealed class UserServiceTests : IDisposable
     }
 
     [Fact]
-    public async Task LoginAsync_ValidActiveCredentials_ReturnsUser()
-    {
-        var access = new FakeUserAccess();
-        access.Add(new(new(1), "Arthorius", "art@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, true));
-        var service = new UserService(access, new CapturingEventBusService());
-
-        var user = await service.LoginAsync("arthorius", "secret");
-
-        Assert.NotNull(user);
-        Assert.Equal(new(1), user!.Id);
-    }
-
-    [Fact]
-    public async Task LoginAsync_WrongPassword_ReturnsNull()
-    {
-        var access = new FakeUserAccess();
-        access.Add(new(new(1), "Arthorius", "art@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, true));
-        var service = new UserService(access, new CapturingEventBusService());
-
-        Assert.Null(await service.LoginAsync("Arthorius", "wrong"));
-    }
-
-    [Fact]
-    public async Task LoginAsync_InactiveUser_ReturnsNull()
-    {
-        var access = new FakeUserAccess();
-        access.Add(
-            new(new(1), "Arthorius", "art@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, false)
-        );
-        var service = new UserService(access, new CapturingEventBusService());
-
-        Assert.Null(await service.LoginAsync("Arthorius", "secret"));
-    }
-
-    [Fact]
-    public async Task LoginAsync_UnknownUsername_ReturnsNull()
-    {
-        var service = new UserService(new FakeUserAccess(), new CapturingEventBusService());
-
-        Assert.Null(await service.LoginAsync("ghost", "secret"));
-    }
-
-    [Theory, InlineData("", "secret"), InlineData("Arthorius", ""), InlineData("   ", "secret")]
-    public async Task LoginAsync_BlankInput_ReturnsNull(string username, string password)
-    {
-        var access = new FakeUserAccess();
-        access.Add(new(new(1), "Arthorius", "art@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, true));
-        var service = new UserService(access, new CapturingEventBusService());
-
-        Assert.Null(await service.LoginAsync(username, password));
-    }
-
-    [Fact]
     public async Task ListAsync_PaginatesAndReportsTotalOrderedByUsername()
     {
         var access = new FakeUserAccess();
@@ -333,6 +280,59 @@ public sealed class UserServiceTests : IDisposable
 
         Assert.Equal("Arthorius", Assert.Single(byName.Items).Username);
         Assert.Equal("Bob", Assert.Single(byEmail.Items).Username);
+    }
+
+    [Theory, InlineData("", "secret"), InlineData("Arthorius", ""), InlineData("   ", "secret")]
+    public async Task LoginAsync_BlankInput_ReturnsNull(string username, string password)
+    {
+        var access = new FakeUserAccess();
+        access.Add(new(new(1), "Arthorius", "art@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, true));
+        var service = new UserService(access, new CapturingEventBusService());
+
+        Assert.Null(await service.LoginAsync(username, password));
+    }
+
+    [Fact]
+    public async Task LoginAsync_InactiveUser_ReturnsNull()
+    {
+        var access = new FakeUserAccess();
+        access.Add(
+            new(new(1), "Arthorius", "art@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, false)
+        );
+        var service = new UserService(access, new CapturingEventBusService());
+
+        Assert.Null(await service.LoginAsync("Arthorius", "secret"));
+    }
+
+    [Fact]
+    public async Task LoginAsync_UnknownUsername_ReturnsNull()
+    {
+        var service = new UserService(new FakeUserAccess(), new CapturingEventBusService());
+
+        Assert.Null(await service.LoginAsync("ghost", "secret"));
+    }
+
+    [Fact]
+    public async Task LoginAsync_ValidActiveCredentials_ReturnsUser()
+    {
+        var access = new FakeUserAccess();
+        access.Add(new(new(1), "Arthorius", "art@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, true));
+        var service = new UserService(access, new CapturingEventBusService());
+
+        var user = await service.LoginAsync("arthorius", "secret");
+
+        Assert.NotNull(user);
+        Assert.Equal(new(1), user!.Id);
+    }
+
+    [Fact]
+    public async Task LoginAsync_WrongPassword_ReturnsNull()
+    {
+        var access = new FakeUserAccess();
+        access.Add(new(new(1), "Arthorius", "art@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, true));
+        var service = new UserService(access, new CapturingEventBusService());
+
+        Assert.Null(await service.LoginAsync("Arthorius", "wrong"));
     }
 
     [Fact]

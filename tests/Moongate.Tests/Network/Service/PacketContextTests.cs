@@ -74,22 +74,6 @@ public class PacketContextTests
     }
 
     [Fact]
-    public void Session_ExposesSessionAndDerivesSessionId()
-    {
-        var session = new FakeGameSession { SessionId = 42 };
-        var context = new PacketContext<TestPacket>(
-            session,
-            new(0x01),
-            DateTimeOffset.UtcNow,
-            (_, _, _) => Task.CompletedTask,
-            () => []
-        );
-
-        Assert.Same(session, context.Session);
-        Assert.Equal(42, context.SessionId);
-    }
-
-    [Fact]
     public async Task SendAsync_EnqueuesToCurrentSession()
     {
         var sent = new List<long>();
@@ -108,6 +92,22 @@ public class PacketContextTests
         var exception = await Record.ExceptionAsync(() => context.SendAsync<TestPacket>(null!));
 
         Assert.IsType<ArgumentNullException>(exception);
+    }
+
+    [Fact]
+    public void Session_ExposesSessionAndDerivesSessionId()
+    {
+        var session = new FakeGameSession { SessionId = 42 };
+        var context = new PacketContext<TestPacket>(
+            session,
+            new(0x01),
+            DateTimeOffset.UtcNow,
+            (_, _, _) => Task.CompletedTask,
+            () => []
+        );
+
+        Assert.Same(session, context.Session);
+        Assert.Equal(42, context.SessionId);
     }
 
     private static PacketContext<TestPacket> NewContext(long sessionId, long[] sessions, List<long> sent)

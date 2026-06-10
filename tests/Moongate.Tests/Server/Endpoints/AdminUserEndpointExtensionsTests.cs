@@ -58,13 +58,6 @@ public sealed class AdminUserEndpointExtensionsTests
                 )
             );
 
-        public ValueTask<UserEntity?> LoginAsync(
-            string username,
-            string password,
-            CancellationToken cancellationToken = default
-        )
-            => throw new NotSupportedException();
-
         public ValueTask<PagedResult<UserEntity>> ListAsync(
             PageRequest request,
             CancellationToken cancellationToken = default
@@ -75,6 +68,13 @@ public sealed class AdminUserEndpointExtensionsTests
 
             return ValueTask.FromResult(new PagedResult<UserEntity>(items, request.Page, request.PageSize, all.Count));
         }
+
+        public ValueTask<UserEntity?> LoginAsync(
+            string username,
+            string password,
+            CancellationToken cancellationToken = default
+        )
+            => throw new NotSupportedException();
 
         public ValueTask<bool> ResetPasswordAsync(
             Serial id,

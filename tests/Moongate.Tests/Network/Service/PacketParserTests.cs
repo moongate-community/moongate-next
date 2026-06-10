@@ -36,6 +36,22 @@ public class PacketParserTests
     }
 
     [Fact]
+    public void Append_LoginSeedOpcode_RecognizedAsPacketNotRawSeed()
+    {
+        var (parser, metrics, captured, pending) = Setup();
+        var state = new PacketStreamState();
+
+        // A lone 0xEF is recognized as the login-seed packet start: marked seed-consumed and left
+        // for normal framing (a known opcode awaiting more bytes), not eaten as a raw 4-byte seed.
+        parser.Append(pending, [0xEF], metrics, Capture(captured), state);
+
+        Assert.True(state.SeedConsumed);
+        Assert.Null(state.Seed);
+        Assert.Equal(1, pending.Count);
+        Assert.Empty(captured);
+    }
+
+    [Fact]
     public void Append_PartialFixedPacket_RetainsBytesAndDoesNotInvoke()
     {
         var (parser, metrics, captured, pending) = Setup();
@@ -59,6 +75,39 @@ public class PacketParserTests
         Assert.Empty(pending);
         Assert.Equal(1, metrics.ParseFailures);
         Assert.Equal(0, metrics.ParsedPackets);
+    }
+
+    [Fact]
+    public void Append_RawSeed_ConsumesFourBytesThenParsesFollowingPacket()
+    {
+        var (parser, metrics, captured, pending) = Setup();
+        var state = new PacketStreamState();
+
+        // Game-server reconnect: 4 raw seed bytes (0xDEADBEEF big-endian) then a fixed 0x06 packet.
+        parser.Append(pending, [0xDE, 0xAD, 0xBE, 0xEF, 0x06, 0, 0, 0, 0x2A], metrics, Capture(captured), state);
+
+        Assert.True(state.SeedConsumed);
+        Assert.Equal(0xDEADBEEFu, state.Seed);
+        Assert.Single(captured);
+        Assert.Empty(pending);
+    }
+
+    [Fact]
+    public void Append_RawSeedSplitAcrossCalls_WaitsThenConsumes()
+    {
+        var (parser, metrics, captured, pending) = Setup();
+        var state = new PacketStreamState();
+
+        parser.Append(pending, [0xDE, 0xAD], metrics, Capture(captured), state);
+
+        Assert.False(state.SeedConsumed);
+        Assert.Equal(2, pending.Count);
+
+        parser.Append(pending, [0xBE, 0xEF, 0x06, 0, 0, 0, 0x2A], metrics, Capture(captured), state);
+
+        Assert.True(state.SeedConsumed);
+        Assert.Equal(0xDEADBEEFu, state.Seed);
+        Assert.Single(captured);
     }
 
     [Fact]
@@ -169,55 +218,6 @@ public class PacketParserTests
 
         Assert.Empty(captured);
         Assert.Equal(2, pending.Count);
-    }
-
-    [Fact]
-    public void Append_RawSeed_ConsumesFourBytesThenParsesFollowingPacket()
-    {
-        var (parser, metrics, captured, pending) = Setup();
-        var state = new PacketStreamState();
-
-        // Game-server reconnect: 4 raw seed bytes (0xDEADBEEF big-endian) then a fixed 0x06 packet.
-        parser.Append(pending, [0xDE, 0xAD, 0xBE, 0xEF, 0x06, 0, 0, 0, 0x2A], metrics, Capture(captured), state);
-
-        Assert.True(state.SeedConsumed);
-        Assert.Equal(0xDEADBEEFu, state.Seed);
-        Assert.Single(captured);
-        Assert.Empty(pending);
-    }
-
-    [Fact]
-    public void Append_RawSeedSplitAcrossCalls_WaitsThenConsumes()
-    {
-        var (parser, metrics, captured, pending) = Setup();
-        var state = new PacketStreamState();
-
-        parser.Append(pending, [0xDE, 0xAD], metrics, Capture(captured), state);
-
-        Assert.False(state.SeedConsumed);
-        Assert.Equal(2, pending.Count);
-
-        parser.Append(pending, [0xBE, 0xEF, 0x06, 0, 0, 0, 0x2A], metrics, Capture(captured), state);
-
-        Assert.True(state.SeedConsumed);
-        Assert.Equal(0xDEADBEEFu, state.Seed);
-        Assert.Single(captured);
-    }
-
-    [Fact]
-    public void Append_LoginSeedOpcode_RecognizedAsPacketNotRawSeed()
-    {
-        var (parser, metrics, captured, pending) = Setup();
-        var state = new PacketStreamState();
-
-        // A lone 0xEF is recognized as the login-seed packet start: marked seed-consumed and left
-        // for normal framing (a known opcode awaiting more bytes), not eaten as a raw 4-byte seed.
-        parser.Append(pending, [0xEF], metrics, Capture(captured), state);
-
-        Assert.True(state.SeedConsumed);
-        Assert.Null(state.Seed);
-        Assert.Equal(1, pending.Count);
-        Assert.Empty(captured);
     }
 
     private static Action<byte, IGameNetworkPacket, byte[]> Capture(List<IGameNetworkPacket> sink)

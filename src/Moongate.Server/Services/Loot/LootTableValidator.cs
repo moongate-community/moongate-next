@@ -53,17 +53,47 @@ public static class LootTableValidator
         return tags;
     }
 
-    private static void ValidateNodes(
+    private static void ValidateAmount(string tableId, string context, LootAmount? amount)
+    {
+        if (amount is null)
+        {
+            return;
+        }
+
+        if (amount.Min < 0 || amount.Max < 0)
+        {
+            throw new InvalidOperationException(
+                $"Loot table '{tableId}' node '{context}' has negative amount ({amount.Min}..{amount.Max})."
+            );
+        }
+
+        if (amount.Min > amount.Max)
+        {
+            throw new InvalidOperationException(
+                $"Loot table '{tableId}' node '{context}' has amount min {amount.Min} greater than max {amount.Max}."
+            );
+        }
+    }
+
+    private static void ValidateItemTemplate(
         string tableId,
         string context,
-        IReadOnlyList<LootNode> nodes,
-        IItemTemplateService templates,
-        HashSet<string> concreteTags
+        string templateId,
+        IItemTemplateService templates
     )
     {
-        for (var i = 0; i < nodes.Count; i++)
+        if (!templates.TryGet(templateId, out var template))
         {
-            ValidateNode(tableId, $"{context}[{i}]", nodes[i], templates, concreteTags);
+            throw new InvalidOperationException(
+                $"Loot table '{tableId}' node '{context}' references unknown item template '{templateId}'."
+            );
+        }
+
+        if (template.IsAbstract)
+        {
+            throw new InvalidOperationException(
+                $"Loot table '{tableId}' node '{context}' references abstract item template '{templateId}'."
+            );
         }
     }
 
@@ -142,47 +172,17 @@ public static class LootTableValidator
         ValidateNodes(tableId, $"{context}/group", node.Group, templates, concreteTags);
     }
 
-    private static void ValidateAmount(string tableId, string context, LootAmount? amount)
-    {
-        if (amount is null)
-        {
-            return;
-        }
-
-        if (amount.Min < 0 || amount.Max < 0)
-        {
-            throw new InvalidOperationException(
-                $"Loot table '{tableId}' node '{context}' has negative amount ({amount.Min}..{amount.Max})."
-            );
-        }
-
-        if (amount.Min > amount.Max)
-        {
-            throw new InvalidOperationException(
-                $"Loot table '{tableId}' node '{context}' has amount min {amount.Min} greater than max {amount.Max}."
-            );
-        }
-    }
-
-    private static void ValidateItemTemplate(
+    private static void ValidateNodes(
         string tableId,
         string context,
-        string templateId,
-        IItemTemplateService templates
+        IReadOnlyList<LootNode> nodes,
+        IItemTemplateService templates,
+        HashSet<string> concreteTags
     )
     {
-        if (!templates.TryGet(templateId, out var template))
+        for (var i = 0; i < nodes.Count; i++)
         {
-            throw new InvalidOperationException(
-                $"Loot table '{tableId}' node '{context}' references unknown item template '{templateId}'."
-            );
-        }
-
-        if (template.IsAbstract)
-        {
-            throw new InvalidOperationException(
-                $"Loot table '{tableId}' node '{context}' references abstract item template '{templateId}'."
-            );
+            ValidateNode(tableId, $"{context}[{i}]", nodes[i], templates, concreteTags);
         }
     }
 }

@@ -49,105 +49,6 @@ public sealed class ItemTemplateEndpointExtensionsTests
     }
 
     [Fact]
-    public void HandleList_ReturnsPagedSummaries()
-    {
-        var templates = SeedTemplates();
-
-        var result = ItemTemplateEndpointExtensions.HandleList(
-            templates,
-            new FakeHueStore(),
-            page: 1,
-            pageSize: 2,
-            search: null,
-            tag: null,
-            rarity: null,
-            layer: null,
-            abstractText: null
-        );
-
-        var ok = Assert.IsType<Ok<PagedResult<ItemTemplateSummary>>>(result);
-        Assert.Equal(2, ok.Value!.Items.Count);
-        Assert.Equal(3, ok.Value.TotalCount);
-        Assert.Equal(["crate_base", "longsword"], ok.Value.Items.Select(static item => item.Id));
-    }
-
-    [Theory, InlineData("long", "longsword"), InlineData("Sharp", "longsword"), InlineData("weapon", "longsword"),
-     InlineData("combat_script", "longsword"), InlineData("3937", "longsword"), InlineData("0x0F61", "longsword"),
-     InlineData("0xF61", "longsword"), InlineData("125", "longsword"), InlineData("55", "longsword")]
-    public void HandleList_SearchesApprovedFields(string search, string expectedId)
-    {
-        var result = ItemTemplateEndpointExtensions.HandleList(
-            SeedTemplates(),
-            new FakeHueStore(),
-            page: 1,
-            pageSize: 20,
-            search,
-            tag: null,
-            rarity: null,
-            layer: null,
-            abstractText: null
-        );
-
-        var ok = Assert.IsType<Ok<PagedResult<ItemTemplateSummary>>>(result);
-        Assert.Equal(expectedId, Assert.Single(ok.Value!.Items).Id);
-    }
-
-    [Fact]
-    public void HandleList_AppliesStructuredFilters()
-    {
-        var result = ItemTemplateEndpointExtensions.HandleList(
-            SeedTemplates(),
-            new FakeHueStore(),
-            page: 1,
-            pageSize: 20,
-            search: null,
-            tag: "container",
-            rarity: "Rare",
-            layer: null,
-            abstractText: "true"
-        );
-
-        var ok = Assert.IsType<Ok<PagedResult<ItemTemplateSummary>>>(result);
-        Assert.Equal("crate_base", Assert.Single(ok.Value!.Items).Id);
-    }
-
-    [Fact]
-    public void HandleList_InvalidRarity_ReturnsBadRequest()
-    {
-        var result = ItemTemplateEndpointExtensions.HandleList(
-            SeedTemplates(),
-            new FakeHueStore(),
-            page: 1,
-            pageSize: 20,
-            search: null,
-            tag: null,
-            rarity: "Mythic",
-            layer: null,
-            abstractText: null
-        );
-
-        Assert.IsType<BadRequest<string>>(result);
-    }
-
-    [Fact]
-    public void HandleList_InvalidAbstract_ReturnsBadRequest()
-    {
-        var result = ItemTemplateEndpointExtensions.HandleList(
-            SeedTemplates(),
-            new FakeHueStore(),
-            page: 1,
-            pageSize: 20,
-            search: null,
-            tag: null,
-            rarity: null,
-            layer: null,
-            abstractText: "sometimes"
-        );
-
-        Assert.IsType<BadRequest<string>>(result);
-    }
-
-    [Fact]
     public void HandleDetail_ExistingTemplate_ReturnsDetail()
     {
         var result = ItemTemplateEndpointExtensions.HandleDetail(
@@ -172,6 +73,105 @@ public sealed class ItemTemplateEndpointExtensionsTests
         );
 
         Assert.IsType<NotFound>(result);
+    }
+
+    [Fact]
+    public void HandleList_AppliesStructuredFilters()
+    {
+        var result = ItemTemplateEndpointExtensions.HandleList(
+            SeedTemplates(),
+            new FakeHueStore(),
+            1,
+            20,
+            null,
+            "container",
+            "Rare",
+            null,
+            "true"
+        );
+
+        var ok = Assert.IsType<Ok<PagedResult<ItemTemplateSummary>>>(result);
+        Assert.Equal("crate_base", Assert.Single(ok.Value!.Items).Id);
+    }
+
+    [Fact]
+    public void HandleList_InvalidAbstract_ReturnsBadRequest()
+    {
+        var result = ItemTemplateEndpointExtensions.HandleList(
+            SeedTemplates(),
+            new FakeHueStore(),
+            1,
+            20,
+            null,
+            null,
+            null,
+            null,
+            "sometimes"
+        );
+
+        Assert.IsType<BadRequest<string>>(result);
+    }
+
+    [Fact]
+    public void HandleList_InvalidRarity_ReturnsBadRequest()
+    {
+        var result = ItemTemplateEndpointExtensions.HandleList(
+            SeedTemplates(),
+            new FakeHueStore(),
+            1,
+            20,
+            null,
+            null,
+            "Mythic",
+            null,
+            null
+        );
+
+        Assert.IsType<BadRequest<string>>(result);
+    }
+
+    [Fact]
+    public void HandleList_ReturnsPagedSummaries()
+    {
+        var templates = SeedTemplates();
+
+        var result = ItemTemplateEndpointExtensions.HandleList(
+            templates,
+            new FakeHueStore(),
+            1,
+            2,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+
+        var ok = Assert.IsType<Ok<PagedResult<ItemTemplateSummary>>>(result);
+        Assert.Equal(2, ok.Value!.Items.Count);
+        Assert.Equal(3, ok.Value.TotalCount);
+        Assert.Equal(["crate_base", "longsword"], ok.Value.Items.Select(static item => item.Id));
+    }
+
+    [Theory, InlineData("long", "longsword"), InlineData("Sharp", "longsword"), InlineData("weapon", "longsword"),
+     InlineData("combat_script", "longsword"), InlineData("3937", "longsword"), InlineData("0x0F61", "longsword"),
+     InlineData("0xF61", "longsword"), InlineData("125", "longsword"), InlineData("55", "longsword")]
+    public void HandleList_SearchesApprovedFields(string search, string expectedId)
+    {
+        var result = ItemTemplateEndpointExtensions.HandleList(
+            SeedTemplates(),
+            new FakeHueStore(),
+            1,
+            20,
+            search,
+            null,
+            null,
+            null,
+            null
+        );
+
+        var ok = Assert.IsType<Ok<PagedResult<ItemTemplateSummary>>>(result);
+        Assert.Equal(expectedId, Assert.Single(ok.Value!.Items).Id);
     }
 
     private static FakeTemplateService SeedTemplates()
