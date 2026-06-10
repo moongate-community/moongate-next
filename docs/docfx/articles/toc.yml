@@ -6,6 +6,12 @@
   href: runtime-api.md
 - name: Bundled data assets
   href: data-assets.md
+- name: Item templates
+  href: item-templates.md
+- name: Starter loadouts
+  href: starter-loadouts.md
+- name: Loot system
+  href: loot-system.md
 - name: Commands
   href: commands.md
 - name: Lua scripting

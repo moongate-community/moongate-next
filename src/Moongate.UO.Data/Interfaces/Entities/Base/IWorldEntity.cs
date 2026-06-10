@@ -23,7 +23,7 @@ public interface IWorldEntity
     /// <summary>World coordinates (x, y, z) of the entity on its map.</summary>
     Point3D Location { get; set; }
 
-    /// <summary>Color hue applied to the entity; <see cref="Ids.Hue.None" /> for default coloring.</summary>
+    /// <summary>Color hue applied to the entity; <see cref="Moongate.Core.Ids.Hue.None" /> for default coloring.</summary>
     Hue Hue { get; set; }
 
     /// <summary>Identifier of the map facet the entity belongs to; resolve the runtime map via a map service.</summary>

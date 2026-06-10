@@ -9,6 +9,8 @@ Moongate ships editable YAML reference data under `src/Moongate.Server/Assets`.
 - `Assets/data/uo_files/` contains static UO reference data used by UO data stores.
 - `Assets/data/` contains server world data such as locations, regions,
   teleporters, weather, containers, decorations, signs, doors, and spawns.
+- `Assets/templates/` contains bundled YAML templates for item templates,
+  starter loadouts, and loot tables.
 
 At startup, missing bundled YAML files are copied from embedded resources into
 the runtime data directory. Existing runtime files are never overwritten, so
