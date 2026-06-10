@@ -45,7 +45,8 @@ public sealed class ItemTemplateDefinition
 
     public string ScriptId { get; set; } = "";
 
-    public ItemRarity Rarity { get; set; } = ItemRarity.None;
+    /// <summary>Item rarity; templates default to Common.</summary>
+    public ItemRarity Rarity { get; set; } = ItemRarity.Common;
 
     public UserLevelType Visibility { get; set; }
 

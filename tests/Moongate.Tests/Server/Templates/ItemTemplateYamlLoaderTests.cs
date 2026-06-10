@@ -82,7 +82,7 @@ public class ItemTemplateYamlLoaderTests
                   hue: 7
                   comment: Base clothing note
                   script_id: clothing_script
-                  rarity: Common
+                  rarity: Uncommon
                   tags:
                       - clothing
                 - id: plain_shirt
@@ -102,7 +102,7 @@ public class ItemTemplateYamlLoaderTests
         Assert.Equal(7, shirt.Hue);
         Assert.Equal("Base clothing note", shirt.Comment);
         Assert.Equal("clothing_script", shirt.ScriptId);
-        Assert.Equal(ItemRarity.Common, shirt.Rarity);
+        Assert.Equal(ItemRarity.Uncommon, shirt.Rarity);
         Assert.Equal(["clothing"], shirt.Tags);
         Assert.Equal(5399, shirt.ItemId);
         Assert.Equal(ItemLayerType.Shirt, shirt.Layer);
