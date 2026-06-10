@@ -5,7 +5,6 @@ using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Templates.Items;
 using Moongate.UO.Data.Types;
-using Moongate.UO.Data.Types.Items;
 using Moongate.UO.Data.Types.Properties;
 
 namespace Moongate.Server.Services.Items;
@@ -88,27 +87,9 @@ public sealed class ItemFactoryService : IItemFactoryService
 
         foreach (var (key, param) in template.Params)
         {
-            item.CustomProperties[key] = ToCustomProperty(param);
+            item.CustomProperties[key] = TemplateParamConverter.ToCustomProperty(param);
         }
 
         return await _items.CreateAsync(item, cancellationToken);
-    }
-
-    private static CustomProperty ToCustomProperty(ItemTemplateParamDefinition param)
-    {
-        if (param.Type == ItemTemplateParamType.String)
-        {
-            return new CustomProperty
-            {
-                Type = CustomPropertyType.String,
-                StringValue = param.Value
-            };
-        }
-
-        return new CustomProperty
-        {
-            Type = CustomPropertyType.Integer,
-            IntegerValue = ItemTemplateYamlLoader.ParseLong(param.Value)
-        };
     }
 }
