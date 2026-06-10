@@ -250,6 +250,59 @@ public class ItemTemplateYamlLoaderTests
     }
 
     [Fact]
+    public void LoadAll_NullTemplateList_ReturnsEmptyList()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile("empty_list.yaml", "item_templates:");
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        Assert.Empty(loader.LoadAll());
+    }
+
+    [Fact]
+    public void LoadAll_NullParamsKey_LoadsWithEmptyParams()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "null_params.yaml",
+            """
+            item_templates:
+                - id: shirt
+                  params:
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var shirt = Assert.Single(loader.LoadAll());
+
+        Assert.Empty(shirt.Params);
+    }
+
+    [Fact]
+    public void LoadAll_NullTagsKey_LoadsWithEmptyTags()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "null_tags.yaml",
+            """
+            item_templates:
+                - id: parent_t
+                  is_abstract: true
+                  tags: [a]
+                - id: child_t
+                  base_item: parent_t
+                  tags:
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var templates = loader.LoadAll();
+
+        var child = templates.Single(t => t.Id == "child_t");
+        Assert.Equal(new[] { "a" }, child.Tags);
+    }
+
+    [Fact]
     public void LoadAll_DuplicateId_Throws()
     {
         using var dir = new TempTemplateDirectory();

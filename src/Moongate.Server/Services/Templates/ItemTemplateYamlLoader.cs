@@ -13,6 +13,14 @@ namespace Moongate.Server.Services.Templates;
 /// invalid file or template throws so the server fails fast at boot.
 /// A missing or empty directory is a warning, not an error.
 /// </summary>
+/// <remarks>
+/// Inheritance uses default-value sentinels: a child field at its default
+/// (0, false, empty, None) inherits the parent value, so a child cannot
+/// explicitly re-state a default over a non-default parent value
+/// (e.g. <c>hue: 0</c> over a parent's <c>hue: 7</c>, or <c>amount: 1</c>
+/// over a parent's <c>amount: 5</c>). Deliberate KISS tradeoff; if explicit
+/// overrides become necessary, switch the DTO fields to nullables.
+/// </remarks>
 public sealed class ItemTemplateYamlLoader
 {
     private enum ResolveState : byte
@@ -71,7 +79,10 @@ public sealed class ItemTemplateYamlLoader
                 throw new InvalidOperationException($"Failed to parse item template file '{file}'.", exception);
             }
 
-            foreach (var template in table.ItemTemplates)
+            // YamlDotNet overwrites pre-initialized collections with null when a
+            // key is present but empty; normalize so the loader keeps its
+            // contextual fail-fast errors instead of raw NullReferenceExceptions.
+            foreach (var template in table.ItemTemplates ?? [])
             {
                 if (string.IsNullOrWhiteSpace(template.Id))
                 {
@@ -88,9 +99,11 @@ public sealed class ItemTemplateYamlLoader
                 // YamlDotNet replaces the pre-initialized dictionary, dropping its
                 // case-insensitive comparer; rebuild so param keys stay case-insensitive.
                 template.Params = new Dictionary<string, ItemTemplateParamDefinition>(
-                    template.Params,
+                    template.Params ?? new Dictionary<string, ItemTemplateParamDefinition>(),
                     StringComparer.OrdinalIgnoreCase
                 );
+
+                template.Tags ??= [];
 
                 sources[template.Id] = file;
                 templates.Add(template);
