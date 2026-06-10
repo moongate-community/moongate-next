@@ -1,0 +1,397 @@
+using Moongate.Server.Services.Templates;
+using Moongate.Tests.Support;
+using Moongate.UO.Data.Types.Items;
+
+namespace Moongate.Tests.Server.Templates;
+
+public class ItemTemplateYamlLoaderTests
+{
+    [Fact]
+    public void LoadAll_MissingDirectory_ReturnsEmptyList()
+    {
+        var missingPath = Path.Combine(Path.GetTempPath(), "moongate-template-tests", Guid.NewGuid().ToString("N"));
+        var loader = new ItemTemplateYamlLoader(missingPath);
+
+        Assert.Empty(loader.LoadAll());
+    }
+
+    [Fact]
+    public void LoadAll_EmptyDirectory_ReturnsEmptyList()
+    {
+        using var dir = new TempTemplateDirectory();
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        Assert.Empty(loader.LoadAll());
+    }
+
+    [Fact]
+    public void LoadAll_SingleFile_LoadsTemplates()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "clothing.yaml",
+            """
+            item_templates:
+                - id: plain_shirt
+                  name: Shirt
+                  item_id: 5399
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var templates = loader.LoadAll();
+
+        var template = Assert.Single(templates);
+        Assert.Equal("plain_shirt", template.Id);
+        Assert.Equal(5399, template.ItemId);
+    }
+
+    [Fact]
+    public void LoadAll_Subdirectories_AreScannedRecursively()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            Path.Combine("base", "bases.yaml"),
+            """
+            item_templates:
+                - id: nested_template
+                  name: Nested
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var templates = loader.LoadAll();
+
+        var template = Assert.Single(templates);
+        Assert.Equal("nested_template", template.Id);
+    }
+
+    [Fact]
+    public void LoadAll_BaseItem_InheritsParentFields()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "clothing.yaml",
+            """
+            item_templates:
+                - id: base_clothing
+                  is_abstract: true
+                  name: Clothing
+                  weight: 2
+                  is_movable: true
+                  hue: 7
+                  script_id: clothing_script
+                  rarity: Common
+                  tags:
+                      - clothing
+                - id: plain_shirt
+                  base_item: base_clothing
+                  item_id: 5399
+                  layer: Shirt
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var templates = loader.LoadAll();
+
+        var shirt = templates.Single(template => template.Id == "plain_shirt");
+        Assert.Equal("Clothing", shirt.Name);
+        Assert.Equal(2, shirt.Weight);
+        Assert.True(shirt.IsMovable);
+        Assert.Equal(7, shirt.Hue);
+        Assert.Equal("clothing_script", shirt.ScriptId);
+        Assert.Equal(ItemRarity.Common, shirt.Rarity);
+        Assert.Equal(["clothing"], shirt.Tags);
+        Assert.Equal(5399, shirt.ItemId);
+        Assert.Equal(ItemLayerType.Shirt, shirt.Layer);
+        Assert.False(shirt.IsAbstract);
+    }
+
+    [Fact]
+    public void LoadAll_ChildValues_WinOverParent()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "clothing.yaml",
+            """
+            item_templates:
+                - id: base_clothing
+                  name: Clothing
+                  hue: 7
+                  weight: 2
+                - id: fancy_shirt
+                  base_item: base_clothing
+                  name: Fancy Shirt
+                  hue: 44
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var templates = loader.LoadAll();
+
+        var shirt = templates.Single(template => template.Id == "fancy_shirt");
+        Assert.Equal("Fancy Shirt", shirt.Name);
+        Assert.Equal(44, shirt.Hue);
+        Assert.Equal(2, shirt.Weight);
+    }
+
+    [Fact]
+    public void LoadAll_TwoLevelChain_ResolvesTransitively()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "chain.yaml",
+            """
+            item_templates:
+                - id: level0
+                  weight: 9
+                - id: level1
+                  base_item: level0
+                  name: MidName
+                - id: level2
+                  base_item: level1
+                  item_id: 100
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var templates = loader.LoadAll();
+
+        var leaf = templates.Single(template => template.Id == "level2");
+        Assert.Equal(9, leaf.Weight);
+        Assert.Equal("MidName", leaf.Name);
+        Assert.Equal(100, leaf.ItemId);
+    }
+
+    [Fact]
+    public void LoadAll_Params_MergeChildOverridesByKey()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "params.yaml",
+            """
+            item_templates:
+                - id: parent
+                  params:
+                      shared:
+                          type: String
+                          value: from_parent
+                      only_parent:
+                          type: String
+                          value: keep
+                - id: child
+                  base_item: parent
+                  params:
+                      shared:
+                          type: String
+                          value: from_child
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var templates = loader.LoadAll();
+
+        var child = templates.Single(template => template.Id == "child");
+        Assert.Equal("from_child", child.Params["shared"].Value);
+        Assert.Equal("keep", child.Params["only_parent"].Value);
+    }
+
+    [Fact]
+    public void LoadAll_Tags_InheritedOnlyWhenChildHasNone()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "tags.yaml",
+            """
+            item_templates:
+                - id: parent
+                  tags:
+                      - a
+                      - b
+                - id: child_with_tags
+                  base_item: parent
+                  tags:
+                      - own
+                - id: child_without_tags
+                  base_item: parent
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var templates = loader.LoadAll();
+
+        var withTags = templates.Single(template => template.Id == "child_with_tags");
+        var withoutTags = templates.Single(template => template.Id == "child_without_tags");
+        Assert.Equal(["own"], withTags.Tags);
+        Assert.Equal(["a", "b"], withoutTags.Tags);
+    }
+
+    [Fact]
+    public void LoadAll_ParamKeys_AreCaseInsensitiveAfterLoad()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "params.yaml",
+            """
+            item_templates:
+                - id: shirt
+                  params:
+                      dyeable:
+                          type: String
+                          value: "true"
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var templates = loader.LoadAll();
+
+        var shirt = Assert.Single(templates);
+        Assert.True(shirt.Params.ContainsKey("DYEABLE"));
+    }
+
+    [Fact]
+    public void LoadAll_DuplicateId_Throws()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "one.yaml",
+            """
+            item_templates:
+                - id: shirt
+            """
+        );
+        dir.WriteFile(
+            "two.yaml",
+            """
+            item_templates:
+                - id: SHIRT
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var exception = Assert.Throws<InvalidOperationException>(() => loader.LoadAll());
+
+        Assert.Contains("SHIRT", exception.Message);
+    }
+
+    [Fact]
+    public void LoadAll_EmptyId_Throws()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "bad.yaml",
+            """
+            item_templates:
+                - id: ""
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        Assert.Throws<InvalidOperationException>(() => loader.LoadAll());
+    }
+
+    [Fact]
+    public void LoadAll_UnknownBaseItem_Throws()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "bad.yaml",
+            """
+            item_templates:
+                - id: orphan
+                  base_item: does_not_exist
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var exception = Assert.Throws<InvalidOperationException>(() => loader.LoadAll());
+
+        Assert.Contains("does_not_exist", exception.Message);
+    }
+
+    [Fact]
+    public void LoadAll_CircularBaseItem_Throws()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "cycle.yaml",
+            """
+            item_templates:
+                - id: a
+                  base_item: b
+                - id: b
+                  base_item: a
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var exception = Assert.Throws<InvalidOperationException>(() => loader.LoadAll());
+
+        Assert.Contains("Circular", exception.Message);
+    }
+
+    [Fact]
+    public void LoadAll_MalformedYaml_Throws()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile("broken.yaml", "item_templates:\n  - id: [unclosed");
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var exception = Assert.Throws<InvalidOperationException>(() => loader.LoadAll());
+
+        Assert.Contains("broken.yaml", exception.Message);
+    }
+
+    [Fact]
+    public void LoadAll_InvalidIntegerParam_Throws()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "params.yaml",
+            """
+            item_templates:
+                - id: wand
+                  params:
+                      charges:
+                          type: Integer
+                          value: not_a_number
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var exception = Assert.Throws<InvalidOperationException>(() => loader.LoadAll());
+
+        Assert.Contains("charges", exception.Message);
+    }
+
+    [Fact]
+    public void LoadAll_HexParamValue_IsAccepted()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "params.yaml",
+            """
+            item_templates:
+                - id: shirt
+                  params:
+                      special_hue:
+                          type: Hue
+                          value: "0x21"
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var templates = loader.LoadAll();
+
+        var shirt = Assert.Single(templates);
+        Assert.Equal("0x21", shirt.Params["special_hue"].Value);
+    }
+
+    [Fact]
+    public void ParseLong_DecimalAndHex_Parse()
+    {
+        Assert.Equal(33, ItemTemplateYamlLoader.ParseLong("33"));
+        Assert.Equal(0x21, ItemTemplateYamlLoader.ParseLong("0x21"));
+        Assert.Equal(0x21, ItemTemplateYamlLoader.ParseLong("0X21"));
+    }
+}
