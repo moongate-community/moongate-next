@@ -1,0 +1,421 @@
+door:
+    -   category: 0
+        pieces:
+            - 1657
+            - 1659
+            - 1653
+            - 1655
+            - 1661
+            - 1663
+            - 1665
+            - 1667
+        feature_mask: 0
+        comment: Metal Door
+    -   category: 1
+        pieces:
+            - 8177
+            - 8179
+            - 8173
+            - 8175
+            - 8181
+            - 8183
+            - 8185
+            - 8187
+        feature_mask: 0
+        comment: Metal Gate
+    -   category: 2
+        pieces:
+            - 1689
+            - 1691
+            - 1685
+            - 1687
+            - 1693
+            - 1695
+            - 1697
+            - 1699
+        feature_mask: 0
+        comment: Rattan Door
+    -   category: 3
+        pieces:
+            - 1705
+            - 1707
+            - 1701
+            - 1703
+            - 1709
+            - 1711
+            - 1713
+            - 1715
+        feature_mask: 0
+        comment: Dark Wood Door
+    -   category: 4
+        pieces:
+            - 1721
+            - 1723
+            - 1717
+            - 1719
+            - 1725
+            - 1727
+            - 1729
+            - 1731
+        feature_mask: 0
+        comment: Wood Door
+    -   category: 5
+        pieces:
+            - 1753
+            - 1755
+            - 1749
+            - 1751
+            - 1757
+            - 1759
+            - 1761
+            - 1763
+        feature_mask: 0
+        comment: Light Wood Door
+    -   category: 6
+        pieces:
+            - 1769
+            - 1771
+            - 1765
+            - 1767
+            - 1773
+            - 1775
+            - 1777
+            - 1779
+        feature_mask: 0
+        comment: Wood and Metal Door
+    -   category: 7
+        pieces:
+            - 2088
+            - 2090
+            - 2084
+            - 2086
+            - 2092
+            - 2094
+            - 2096
+            - 2098
+        feature_mask: 0
+        comment: Tall Wrought Iron Gate
+    -   category: 8
+        pieces:
+            - 2109
+            - 2111
+            - 2105
+            - 2107
+            - 2113
+            - 2115
+            - 2117
+            - 2119
+        feature_mask: 0
+        comment: Light Wood Gate
+    -   category: 9
+        pieces:
+            - 2128
+            - 2130
+            - 2124
+            - 2126
+            - 2132
+            - 2134
+            - 2136
+            - 2138
+        feature_mask: 0
+        comment: Short Wrought Iron Gate
+    -   category: 10
+        pieces:
+            - 2154
+            - 2156
+            - 2150
+            - 2152
+            - 2158
+            - 2160
+            - 2162
+            - 2164
+        feature_mask: 0
+        comment: Dark Wood Gate
+    -   category: 11
+        pieces:
+            - 808
+            - 810
+            - 804
+            - 806
+            - 812
+            - 814
+            - 816
+            - 818
+        feature_mask: 0
+        comment: Weathered Stone Secret Door
+    -   category: 12
+        pieces:
+            - 824
+            - 826
+            - 820
+            - 822
+            - 828
+            - 830
+            - 832
+            - 834
+        feature_mask: 0
+        comment: Dark Wood Secret Door
+    -   category: 13
+        pieces:
+            - 840
+            - 842
+            - 836
+            - 838
+            - 844
+            - 846
+            - 848
+            - 850
+        feature_mask: 0
+        comment: Light Wood Secret Door
+    -   category: 14
+        pieces:
+            - 856
+            - 858
+            - 852
+            - 854
+            - 860
+            - 862
+            - 864
+            - 866
+        feature_mask: 0
+        comment: Grey Stone Secret Door
+    -   category: 15
+        pieces:
+            - 0
+            - 0
+            - 9251
+            - 0
+            - 0
+            - 9247
+            - 0
+            - 0
+        feature_mask: 64
+        comment: Japanese Doors
+    -   category: 16
+        pieces:
+            - 0
+            - 0
+            - 10767
+            - 10765
+            - 10771
+            - 10769
+            - 0
+            - 0
+        feature_mask: 64
+        comment: Sliding Doors 1
+    -   category: 17
+        pieces:
+            - 0
+            - 0
+            - 10759
+            - 10757
+            - 10763
+            - 10761
+            - 0
+            - 0
+        feature_mask: 64
+        comment: Sliding Doors 2
+    -   category: 18
+        pieces:
+            - 0
+            - 0
+            - 10775
+            - 10773
+            - 10779
+            - 10777
+            - 0
+            - 0
+        feature_mask: 64
+        comment: Sliding Doors 3
+    -   category: 19
+        pieces:
+            - 0
+            - 0
+            - 12718
+            - 12716
+            - 11592
+            - 11590
+            - 0
+            - 0
+        feature_mask: 128
+        comment: Elvan Wood Door
+    -   category: 20
+        pieces:
+            - 0
+            - 0
+            - 11621
+            - 12704
+            - 11619
+            - 12706
+            - 0
+            - 0
+        feature_mask: 128
+        comment: Elvan White Wooden Door 1
+    -   category: 21
+        pieces:
+            - 0
+            - 0
+            - 11625
+            - 12708
+            - 11623
+            - 12710
+            - 0
+            - 0
+        feature_mask: 128
+        comment: Elvan Ornate Door
+    -   category: 22
+        pieces:
+            - 0
+            - 0
+            - 11629
+            - 12714
+            - 11627
+            - 12712
+            - 0
+            - 0
+        feature_mask: 128
+        comment: Elvan Kia Wood Door 2
+    -   category: 23
+        pieces:
+            - 0
+            - 0
+            - 12260
+            - 12700
+            - 12258
+            - 12702
+            - 0
+            - 0
+        feature_mask: 128
+        comment: Elvan Moon Door
+    -   category: 24
+        pieces:
+            - 13951
+            - 13953
+            - 13947
+            - 13949
+            - 13955
+            - 13957
+            - 13959
+            - 13961
+        feature_mask: 512
+        comment: Crystal Door
+    -   category: 25
+        pieces:
+            - 13967
+            - 13969
+            - 13963
+            - 13965
+            - 13971
+            - 13973
+            - 13975
+            - 13977
+        feature_mask: 512
+        comment: Shadow Door
+    -   category: 26
+        pieces:
+            - 0
+            - 0
+            - 16539
+            - 16541
+            - 16543
+            - 16545
+            - 0
+            - 0
+        feature_mask: 65536
+        comment: Gargish Carved Green Door
+    -   category: 27
+        pieces:
+            - 0
+            - 0
+            - 16652
+            - 16654
+            - 16656
+            - 16658
+            - 0
+            - 0
+        feature_mask: 65536
+        comment: Gargish Brown Door
+    -   category: 28
+        pieces:
+            - 0
+            - 0
+            - 16834
+            - 16836
+            - 16838
+            - 16840
+            - 0
+            - 0
+        feature_mask: 65536
+        comment: Sun Door
+    -   category: 29
+        pieces:
+            - 0
+            - 0
+            - 16847
+            - 16849
+            - 16851
+            - 16853
+            - 0
+            - 0
+        feature_mask: 65536
+        comment: Gargish Grey Door
+    -   category: 30
+        pieces:
+            - 17262
+            - 17264
+            - 17266
+            - 17268
+            - 17270
+            - 17272
+            - 17274
+            - 17276
+        feature_mask: 65536
+        comment: Gargish Set Door
+    -   category: 31
+        pieces:
+            - 0
+            - 0
+            - 18141
+            - 18143
+            - 18145
+            - 18147
+            - 0
+            - 0
+        feature_mask: 65536
+        comment: Ruined Door
+    -   category: 32
+        pieces:
+            - 0
+            - 0
+            - 19746
+            - 19748
+            - 19750
+            - 19752
+            - 0
+            - 0
+        feature_mask: 65536
+        comment: Gargish Blue Door
+    -   category: 33
+        pieces:
+            - 20680
+            - 20682
+            - 20688
+            - 20690
+            - 20684
+            - 20686
+            - 20692
+            - 20694
+        feature_mask: 65536
+        comment: Gargish Red Doors
+    -   category: 34
+        pieces:
+            - 0
+            - 0
+            - 20802
+            - 20804
+            - 20806
+            - 20808
+            - 0
+            - 0
+        feature_mask: 65536
+        comment: Gargish Prison Door

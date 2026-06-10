@@ -1,0 +1,874 @@
+decoration:
+    -   type: Static
+        arguments: (Hue = 0x33)
+        description: tent wall
+        item_id: 747
+        placements:
+            -   location:
+                    - 2333
+                    - 1220
+                    - 0
+            -   location:
+                    - 2337
+                    - 1229
+                    - 0
+            -   location:
+                    - 2342
+                    - 1214
+                    - 0
+            -   location:
+                    - 2346
+                    - 1220
+                    - 0
+    -   type: Static
+        arguments: (Hue = 0x33)
+        description: tent wall
+        item_id: 748
+        placements:
+            -   location:
+                    - 2334
+                    - 1219
+                    - 0
+            -   location:
+                    - 2338
+                    - 1228
+                    - 0
+            -   location:
+                    - 2343
+                    - 1213
+                    - 0
+            -   location:
+                    - 2347
+                    - 1219
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: gruesome standard
+        item_id: 1055
+        placements:
+            -   location:
+                    - 2338
+                    - 1214
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: gruesome standard
+        item_id: 1056
+        placements:
+            -   location:
+                    - 2347
+                    - 1217
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: gruesome standard
+        item_id: 1064
+        placements:
+            -   location:
+                    - 2329
+                    - 1221
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: cauldron
+        item_id: 2420
+        placements:
+            -   location:
+                    - 2337
+                    - 1221
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: tray
+        item_id: 2450
+        placements:
+            -   location:
+                    - 2227
+                    - 1218
+                    - 6
+            -   location:
+                    - 2236
+                    - 1187
+                    - 6
+            -   location:
+                    - 2244
+                    - 1203
+                    - 6
+            -   location:
+                    - 2259
+                    - 1217
+                    - 6
+    -   type: BeverageBottle
+        arguments: (Content = Liquor)
+        description: bottle of liquor
+        item_id: 2459
+        placements:
+            -   location:
+                    - 2228
+                    - 1218
+                    - 6
+    -   type: Fork
+        arguments: ''
+        description: fork
+        item_id: 2467
+        placements:
+            -   location:
+                    - 2227
+                    - 1217
+                    - 6
+    -   type: Fork
+        arguments: ''
+        description: fork
+        item_id: 2468
+        placements:
+            -   location:
+                    - 2237
+                    - 1187
+                    - 6
+            -   location:
+                    - 2245
+                    - 1203
+                    - 6
+            -   location:
+                    - 2260
+                    - 1217
+                    - 6
+    -   type: Knife
+        arguments: ''
+        description: knife
+        item_id: 2469
+        placements:
+            -   location:
+                    - 2227
+                    - 1217
+                    - 6
+    -   type: Knife
+        arguments: ''
+        description: knife
+        item_id: 2470
+        placements:
+            -   location:
+                    - 2237
+                    - 1187
+                    - 6
+            -   location:
+                    - 2245
+                    - 1203
+                    - 6
+            -   location:
+                    - 2260
+                    - 1217
+                    - 6
+    -   type: FillableMetalBox
+        arguments: ''
+        description: metal box
+        item_id: 2472
+        placements:
+            -   location:
+                    - 2213
+                    - 1165
+                    - 6
+    -   type: Spoon
+        arguments: ''
+        description: spoon
+        item_id: 2498
+        placements:
+            -   location:
+                    - 2227
+                    - 1217
+                    - 6
+    -   type: Spoon
+        arguments: ''
+        description: spoon
+        item_id: 2499
+        placements:
+            -   location:
+                    - 2237
+                    - 1187
+                    - 7
+            -   location:
+                    - 2245
+                    - 1203
+                    - 7
+            -   location:
+                    - 2260
+                    - 1217
+                    - 7
+    -   type: BeverageBottle
+        arguments: (Content = Wine)
+        description: bottle of wine
+        item_id: 2503
+        placements:
+            -   location:
+                    - 2238
+                    - 1188
+                    - 6
+            -   location:
+                    - 2246
+                    - 1204
+                    - 6
+            -   location:
+                    - 2261
+                    - 1218
+                    - 6
+    -   type: Plate
+        arguments: ''
+        description: plate
+        item_id: 2519
+        placements:
+            -   location:
+                    - 2227
+                    - 1217
+                    - 6
+            -   location:
+                    - 2228
+                    - 1217
+                    - 6
+            -   location:
+                    - 2237
+                    - 1187
+                    - 6
+            -   location:
+                    - 2237
+                    - 1188
+                    - 6
+            -   location:
+                    - 2245
+                    - 1203
+                    - 6
+            -   location:
+                    - 2245
+                    - 1204
+                    - 6
+            -   location:
+                    - 2260
+                    - 1217
+                    - 6
+            -   location:
+                    - 2260
+                    - 1218
+                    - 6
+    -   type: Fork
+        arguments: ''
+        description: fork
+        item_id: 2548
+        placements:
+            -   location:
+                    - 2237
+                    - 1188
+                    - 6
+            -   location:
+                    - 2245
+                    - 1204
+                    - 6
+            -   location:
+                    - 2260
+                    - 1218
+                    - 6
+    -   type: Fork
+        arguments: ''
+        description: fork
+        item_id: 2549
+        placements:
+            -   location:
+                    - 2228
+                    - 1217
+                    - 6
+    -   type: Knife
+        arguments: ''
+        description: knife
+        item_id: 2550
+        placements:
+            -   location:
+                    - 2237
+                    - 1188
+                    - 6
+            -   location:
+                    - 2245
+                    - 1204
+                    - 6
+            -   location:
+                    - 2260
+                    - 1218
+                    - 6
+    -   type: Knife
+        arguments: ''
+        description: knife
+        item_id: 2551
+        placements:
+            -   location:
+                    - 2228
+                    - 1217
+                    - 6
+    -   type: Spoon
+        arguments: ''
+        description: spoon
+        item_id: 2552
+        placements:
+            -   location:
+                    - 2237
+                    - 1188
+                    - 6
+            -   location:
+                    - 2245
+                    - 1204
+                    - 6
+            -   location:
+                    - 2260
+                    - 1218
+                    - 6
+    -   type: Spoon
+        arguments: ''
+        description: spoon
+        item_id: 2553
+        placements:
+            -   location:
+                    - 2228
+                    - 1217
+                    - 6
+    -   type: CandleLarge
+        arguments: (Unlit)
+        description: candle
+        item_id: 2598
+        placements:
+            -   location:
+                    - 2228
+                    - 1216
+                    - 6
+    -   type: CandleLarge
+        arguments: ''
+        description: candle
+        item_id: 2842
+        placements:
+            -   location:
+                    - 2212
+                    - 1116
+                    - 26
+            -   location:
+                    - 2212
+                    - 1116
+                    - 46
+            -   location:
+                    - 2213
+                    - 1164
+                    - 6
+            -   location:
+                    - 2213
+                    - 1168
+                    - 6
+            -   location:
+                    - 2215
+                    - 1191
+                    - 6
+            -   location:
+                    - 2217
+                    - 1195
+                    - 6
+            -   location:
+                    - 2236
+                    - 1188
+                    - 6
+            -   location:
+                    - 2243
+                    - 1228
+                    - 6
+            -   location:
+                    - 2243
+                    - 1231
+                    - 6
+            -   location:
+                    - 2244
+                    - 1204
+                    - 6
+            -   location:
+                    - 2259
+                    - 1218
+                    - 6
+            -   location:
+                    - 2275
+                    - 1198
+                    - 6
+            -   location:
+                    - 2276
+                    - 1200
+                    - 26
+            -   location:
+                    - 2283
+                    - 1226
+                    - 6
+            -   location:
+                    - 2284
+                    - 1228
+                    - 26
+    -   type: WoodenChair
+        arguments: ''
+        description: chair
+        item_id: 2902
+        placements:
+            -   location:
+                    - 2211
+                    - 1115
+                    - 20
+            -   location:
+                    - 2212
+                    - 1166
+                    - 0
+            -   location:
+                    - 2242
+                    - 1229
+                    - 0
+            -   location:
+                    - 2275
+                    - 1199
+                    - 20
+            -   location:
+                    - 2283
+                    - 1227
+                    - 20
+    -   type: WoodenChair
+        arguments: ''
+        description: chair
+        item_id: 2903
+        placements:
+            -   location:
+                    - 2276
+                    - 1197
+                    - 0
+            -   location:
+                    - 2284
+                    - 1225
+                    - 0
+    -   type: WoodenChair
+        arguments: ''
+        description: chair
+        item_id: 2904
+        placements:
+            -   location:
+                    - 2213
+                    - 1115
+                    - 40
+    -   type: BambooChair
+        arguments: ''
+        description: chair
+        item_id: 2906
+        placements:
+            -   location:
+                    - 2226
+                    - 1217
+                    - 0
+    -   type: BambooChair
+        arguments: ''
+        description: chair
+        item_id: 2907
+        placements:
+            -   location:
+                    - 2237
+                    - 1186
+                    - 0
+            -   location:
+                    - 2245
+                    - 1202
+                    - 0
+            -   location:
+                    - 2260
+                    - 1216
+                    - 0
+    -   type: BambooChair
+        arguments: ''
+        description: chair
+        item_id: 2908
+        placements:
+            -   location:
+                    - 2214
+                    - 1192
+                    - 0
+            -   location:
+                    - 2237
+                    - 1189
+                    - 0
+            -   location:
+                    - 2245
+                    - 1205
+                    - 0
+            -   location:
+                    - 2260
+                    - 1219
+                    - 0
+    -   type: BambooChair
+        arguments: ''
+        description: chair
+        item_id: 2909
+        placements:
+            -   location:
+                    - 2229
+                    - 1217
+                    - 0
+    -   type: Static
+        arguments: (Light = Circle225)
+        description: campfire
+        item_id: 3555
+        placements:
+            -   location:
+                    - 2337
+                    - 1221
+                    - 0
+    -   type: FillableLargeCrate
+        arguments: ''
+        description: crate
+        item_id: 3644
+        placements:
+            -   location:
+                    - 2252
+                    - 1190
+                    - -2
+            -   location:
+                    - 2252
+                    - 1190
+                    - 1
+    -   type: MediumCrate
+        arguments: ''
+        description: crate
+        item_id: 3646
+        placements:
+            -   location:
+                    - 2252
+                    - 1190
+                    - 4
+            -   location:
+                    - 2253
+                    - 1190
+                    - -2
+    -   type: Static
+        arguments: ''
+        description: stump
+        item_id: 3673
+        placements:
+            -   location:
+                    - 2330
+                    - 1220
+                    - 0
+    -   type: FillableBarrel
+        arguments: ''
+        description: barrel
+        item_id: 3703
+        placements:
+            -   location:
+                    - 2251
+                    - 1189
+                    - -2
+            -   location:
+                    - 2251
+                    - 1189
+                    - 3
+            -   location:
+                    - 2251
+                    - 1190
+                    - -2
+            -   location:
+                    - 2252
+                    - 1189
+                    - -2
+            -   location:
+                    - 2259
+                    - 1188
+                    - -2
+            -   location:
+                    - 2259
+                    - 1188
+                    - 3
+            -   location:
+                    - 2259
+                    - 1189
+                    - -2
+            -   location:
+                    - 2259
+                    - 1189
+                    - 3
+            -   location:
+                    - 2259
+                    - 1190
+                    - -2
+            -   location:
+                    - 2260
+                    - 1188
+                    - -2
+            -   location:
+                    - 2260
+                    - 1188
+                    - 3
+            -   location:
+                    - 2260
+                    - 1189
+                    - -2
+            -   location:
+                    - 2260
+                    - 1189
+                    - 3
+            -   location:
+                    - 2260
+                    - 1190
+                    - -2
+    -   type: FillableMetalBox
+        arguments: ''
+        description: strong box
+        item_id: 3712
+        placements:
+            -   location:
+                    - 2212
+                    - 1191
+                    - 6
+            -   location:
+                    - 2240
+                    - 1231
+                    - 6
+    -   type: Static
+        arguments: ''
+        description: cleaver
+        item_id: 3779
+        placements:
+            -   location:
+                    - 2217
+                    - 1196
+                    - 6
+    -   type: Static
+        arguments: ''
+        description: skinning knife
+        item_id: 3781
+        placements:
+            -   location:
+                    - 2212
+                    - 1196
+                    - 6
+    -   type: Static
+        arguments: ''
+        description: executioner's axe
+        item_id: 3910
+        placements:
+            -   location:
+                    - 2331
+                    - 1219
+                    - 0
+    -   type: Static
+        arguments: (Light = Circle225)
+        description: fire pit
+        item_id: 4012
+        placements:
+            -   location:
+                    - 2337
+                    - 1221
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: book
+        item_id: 4029
+        placements:
+            -   location:
+                    - 2212
+                    - 1115
+                    - 26
+            -   location:
+                    - 2212
+                    - 1115
+                    - 46
+            -   location:
+                    - 2213
+                    - 1166
+                    - 6
+            -   location:
+                    - 2243
+                    - 1229
+                    - 6
+            -   location:
+                    - 2276
+                    - 1199
+                    - 26
+            -   location:
+                    - 2284
+                    - 1227
+                    - 26
+    -   type: Static
+        arguments: ''
+        description: book
+        item_id: 4030
+        placements:
+            -   location:
+                    - 2214
+                    - 1191
+                    - 6
+            -   location:
+                    - 2276
+                    - 1198
+                    - 6
+            -   location:
+                    - 2284
+                    - 1226
+                    - 6
+    -   type: Static
+        arguments: ''
+        description: pen and ink
+        item_id: 4031
+        placements:
+            -   location:
+                    - 2213
+                    - 1166
+                    - 6
+            -   location:
+                    - 2243
+                    - 1229
+                    - 6
+    -   type: Static
+        arguments: ''
+        description: pen and ink
+        item_id: 4032
+        placements:
+            -   location:
+                    - 2213
+                    - 1191
+                    - 6
+    -   type: Pitcher
+        arguments: ''
+        description: glass pitcher
+        item_id: 4086
+        placements:
+            -   location:
+                    - 2261
+                    - 1217
+                    - 6
+    -   type: Static
+        arguments: ''
+        description: garbage
+        item_id: 4334
+        placements:
+            -   location:
+                    - 2332
+                    - 1221
+                    - 0
+            -   location:
+                    - 2333
+                    - 1223
+                    - 0
+            -   location:
+                    - 2336
+                    - 1221
+                    - 1
+            -   location:
+                    - 2336
+                    - 1222
+                    - 0
+            -   location:
+                    - 2338
+                    - 1214
+                    - 0
+            -   location:
+                    - 2338
+                    - 1218
+                    - 0
+            -   location:
+                    - 2338
+                    - 1224
+                    - 0
+            -   location:
+                    - 2339
+                    - 1221
+                    - 2
+            -   location:
+                    - 2340
+                    - 1220
+                    - 0
+            -   location:
+                    - 2340
+                    - 1224
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: butcher knife
+        item_id: 5111
+        placements:
+            -   location:
+                    - 2212
+                    - 1195
+                    - 6
+    -   type: Static
+        arguments: ''
+        description: rope
+        item_id: 5370
+        placements:
+            -   location:
+                    - 2252
+                    - 1191
+                    - -2
+    -   type: Static
+        arguments: ''
+        description: water barrel
+        item_id: 5453
+        placements:
+            -   location:
+                    - 2281
+                    - 1183
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: skinned goat
+        item_id: 7816
+        placements:
+            -   location:
+                    - 2329
+                    - 1225
+                    - 3
+    -   type: Static
+        arguments: ''
+        description: skinned goat
+        item_id: 7817
+        placements:
+            -   location:
+                    - 2337
+                    - 1223
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: skinned deer
+        item_id: 7824
+        placements:
+            -   location:
+                    - 2342
+                    - 1221
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: skinned deer
+        item_id: 7825
+        placements:
+            -   location:
+                    - 2338
+                    - 1219
+                    - 0
+            -   location:
+                    - 2339
+                    - 1219
+                    - 0
+    -   type: Pitcher
+        arguments: (Content = Water)
+        description: pitcher of water
+        item_id: 8093
+        placements:
+            -   location:
+                    - 2238
+                    - 1187
+                    - 6
+            -   location:
+                    - 2246
+                    - 1203
+                    - 6
+            -   location:
+                    - 2261
+                    - 1217
+                    - 6
+    -   type: Pitcher
+        arguments: (Content = Water)
+        description: pitcher of water
+        item_id: 8094
+        placements:
+            -   location:
+                    - 2227
+                    - 1216
+                    - 6

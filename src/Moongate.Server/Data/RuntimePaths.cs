@@ -26,23 +26,26 @@ internal static class RuntimePaths
 
     public static string ResolveRootDirectory(string? commandLineRootDirectory)
     {
+        // Normalized so relative roots (e.g. MOONGATE_ROOT=../../moongate_data
+        // from launchSettings) resolve against the working directory once and
+        // logs always show an absolute path.
         if (!string.IsNullOrWhiteSpace(commandLineRootDirectory))
         {
-            return commandLineRootDirectory;
+            return Path.GetFullPath(commandLineRootDirectory);
         }
 
         var primaryRoot = Environment.GetEnvironmentVariable(RootEnvironmentVariable);
 
         if (!string.IsNullOrWhiteSpace(primaryRoot))
         {
-            return primaryRoot;
+            return Path.GetFullPath(primaryRoot);
         }
 
         var legacyRoot = Environment.GetEnvironmentVariable(LegacyRootEnvironmentVariable);
 
         if (!string.IsNullOrWhiteSpace(legacyRoot))
         {
-            return legacyRoot;
+            return Path.GetFullPath(legacyRoot);
         }
 
         return Path.Combine(Directory.GetCurrentDirectory(), DefaultRootDirectoryName);

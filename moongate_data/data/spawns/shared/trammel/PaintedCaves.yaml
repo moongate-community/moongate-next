@@ -1,0 +1,61 @@
+spawn:
+    -   type: Spawner
+        guid: 3cf3a839-be51-4f1c-8592-9a1f89b02b87
+        name: Spawner (114)
+        location:
+            - 6279
+            - 880
+            - 1
+        map: Trammel
+        count: 9
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 30
+        walking_range: 30
+        entries:
+            -   name: Cat
+                max_count: 6
+                probability: 100
+            -   name: Dog
+                max_count: 6
+                probability: 100
+            -   name: Rat
+                max_count: 6
+                probability: 100
+            -   name: Cat
+                max_count: 1
+                probability: 100
+            -   name: Dog
+                max_count: 1
+                probability: 100
+            -   name: Rat
+                max_count: 1
+                probability: 100
+    -   type: Spawner
+        guid: 67d9fa9b-5bc4-4f2b-8f19-fc31af6f2333
+        name: Spawner (114)
+        location:
+            - 6275
+            - 879
+            - -2
+        map: Trammel
+        count: 12
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 30
+        walking_range: 30
+        entries:
+            -   name: Troglodyte
+                max_count: 3
+                probability: 100
+            -   name: Grobu
+                max_count: 3
+                probability: 100
+            -   name: Lurg
+                max_count: 3
+                probability: 100
+            -   name: GiantRat
+                max_count: 3
+                probability: 100

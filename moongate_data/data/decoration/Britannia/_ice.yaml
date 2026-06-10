@@ -1,0 +1,471 @@
+decoration:
+    -   type: Static
+        arguments: ''
+        description: flag stones
+        item_id: 1278
+        placements:
+            -   location:
+                    - 5837
+                    - 330
+                    - 40
+            -   location:
+                    - 5838
+                    - 329
+                    - 40
+    -   type: SecretWoodenDoor
+        arguments: (Facing = EastCCW)
+        description: wooden wall
+        item_id: 822
+        placements:
+            -   location:
+                    - 5831
+                    - 367
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: wooden fence
+        item_id: 2148
+        placements:
+            -   location:
+                    - 5820
+                    - 357
+                    - 1
+            -   location:
+                    - 5836
+                    - 360
+                    - 6
+    -   type: MetalChest
+        arguments: ''
+        description: metal chest
+        item_id: 2475
+        placements:
+            -   location:
+                    - 5832
+                    - 240
+                    - -3
+            -   location:
+                    - 5750
+                    - 147
+                    - 9
+            -   location:
+                    - 5682
+                    - 181
+                    - -3
+            -   location:
+                    - 5763
+                    - 145
+                    - -3
+            -   location:
+                    - 5822
+                    - 359
+                    - -1
+    -   type: LargeCrate
+        arguments: ''
+        description: crate
+        item_id: 3644
+        placements:
+            -   location:
+                    - 5682
+                    - 332
+                    - 0
+            -   location:
+                    - 5681
+                    - 329
+                    - 0
+            -   location:
+                    - 5681
+                    - 330
+                    - 0
+            -   location:
+                    - 5681
+                    - 330
+                    - 3
+            -   location:
+                    - 5681
+                    - 331
+                    - 0
+            -   location:
+                    - 5681
+                    - 331
+                    - 3
+            -   location:
+                    - 5681
+                    - 332
+                    - 0
+            -   location:
+                    - 5681
+                    - 332
+                    - 3
+            -   location:
+                    - 5681
+                    - 333
+                    - 0
+            -   location:
+                    - 5682
+                    - 330
+                    - 0
+            -   location:
+                    - 5682
+                    - 331
+                    - 0
+    -   type: MediumCrate
+        arguments: ''
+        description: crate
+        item_id: 3646
+        placements:
+            -   location:
+                    - 5686
+                    - 321
+                    - 0
+            -   location:
+                    - 5686
+                    - 322
+                    - 0
+    -   type: FullBookcase
+        arguments: ''
+        description: bookcase
+        item_id: 2715
+        placements:
+            -   location:
+                    - 5658
+                    - 320
+                    - 0
+            -   location:
+                    - 5657
+                    - 320
+                    - 0
+            -   location:
+                    - 5659
+                    - 320
+                    - 0
+            -   location:
+                    - 5660
+                    - 320
+                    - 0
+            -   location:
+                    - 5661
+                    - 320
+                    - 0
+            -   location:
+                    - 5662
+                    - 320
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: wooden fence
+        item_id: 2147
+        placements:
+            -   location:
+                    - 5839
+                    - 349
+                    - 1
+            -   location:
+                    - 5823
+                    - 349
+                    - 1
+            -   location:
+                    - 5834
+                    - 345
+                    - 6
+    -   type: MetalGoldenChest
+        arguments: ''
+        description: metal chest
+        item_id: 3649
+        placements:
+            -   location:
+                    - 5717
+                    - 144
+                    - -16
+            -   location:
+                    - 5851
+                    - 227
+                    - 0
+            -   location:
+                    - 5701
+                    - 305
+                    - 0
+            -   location:
+                    - 5659
+                    - 302
+                    - 0
+            -   location:
+                    - 5661
+                    - 302
+                    - 0
+            -   location:
+                    - 5852
+                    - 231
+                    - -9
+            -   location:
+                    - 5687
+                    - 311
+                    - 0
+            -   location:
+                    - 5833
+                    - 247
+                    - -2
+            -   location:
+                    - 5688
+                    - 311
+                    - 0
+            -   location:
+                    - 5689
+                    - 311
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: palisade
+        item_id: 547
+        placements:
+            -   location:
+                    - 5843
+                    - 367
+                    - 0
+    -   type: MetalGoldenChest
+        arguments: ''
+        description: metal chest
+        item_id: 3648
+        placements:
+            -   location:
+                    - 5702
+                    - 306
+                    - 0
+            -   location:
+                    - 5727
+                    - 147
+                    - -2
+            -   location:
+                    - 5759
+                    - 144
+                    - -4
+            -   location:
+                    - 5753
+                    - 211
+                    - -7
+    -   type: WoodenChest
+        arguments: ''
+        description: wooden chest
+        item_id: 3650
+        placements:
+            -   location:
+                    - 5828
+                    - 364
+                    - 0
+            -   location:
+                    - 5832
+                    - 242
+                    - -4
+            -   location:
+                    - 5760
+                    - 187
+                    - -4
+            -   location:
+                    - 5656
+                    - 305
+                    - 0
+            -   location:
+                    - 5656
+                    - 307
+                    - 0
+            -   location:
+                    - 5768
+                    - 189
+                    - -5
+    -   type: Static
+        arguments: ''
+        description: death vortex
+        item_id: 14232
+        placements:
+            -   location:
+                    - 5673
+                    - 325
+                    - -3
+    -   type: WoodenChest
+        arguments: ''
+        description: wooden chest
+        item_id: 3651
+        placements:
+            -   location:
+                    - 5840
+                    - 357
+                    - 0
+            -   location:
+                    - 5770
+                    - 185
+                    - -1
+            -   location:
+                    - 5849
+                    - 233
+                    - -16
+            -   location:
+                    - 5840
+                    - 358
+                    - 1
+            -   location:
+                    - 5683
+                    - 188
+                    - -2
+    -   type: StrongWoodDoor
+        arguments: (Facing = WestCW)
+        description: wooden door
+        item_id: 1765
+        placements:
+            -   location:
+                    - 5831
+                    - 346
+                    - 15
+    -   type: SecretWoodenDoor
+        arguments: (Facing = WestCW)
+        description: wooden wall
+        item_id: 820
+        placements:
+            -   location:
+                    - 5830
+                    - 367
+                    - 0
+    -   type: FullBookcase
+        arguments: ''
+        description: bookcase
+        item_id: 2713
+        placements:
+            -   location:
+                    - 5656
+                    - 332
+                    - 0
+            -   location:
+                    - 5656
+                    - 329
+                    - 0
+            -   location:
+                    - 5656
+                    - 321
+                    - 0
+            -   location:
+                    - 5656
+                    - 323
+                    - 0
+            -   location:
+                    - 5656
+                    - 325
+                    - 0
+            -   location:
+                    - 5656
+                    - 327
+                    - 0
+    -   type: FullBookcase
+        arguments: ''
+        description: bookcase
+        item_id: 2714
+        placements:
+            -   location:
+                    - 5656
+                    - 328
+                    - 0
+            -   location:
+                    - 5656
+                    - 330
+                    - 0
+            -   location:
+                    - 5656
+                    - 331
+                    - 0
+            -   location:
+                    - 5656
+                    - 333
+                    - 0
+            -   location:
+                    - 5656
+                    - 322
+                    - 0
+            -   location:
+                    - 5656
+                    - 324
+                    - 0
+            -   location:
+                    - 5656
+                    - 326
+                    - 0
+    -   type: StrongWoodDoor
+        arguments: (Facing = EastCCW)
+        description: wooden door
+        item_id: 1767
+        placements:
+            -   location:
+                    - 5832
+                    - 346
+                    - 15
+    -   type: DarkWoodGate
+        arguments: (Facing = WestCW)
+        description: wooden gate
+        item_id: 2150
+        placements:
+            -   location:
+                    - 5839
+                    - 363
+                    - 0
+    -   type: DarkWoodGate
+        arguments: (Facing = EastCCW)
+        description: wooden gate
+        item_id: 2152
+        placements:
+            -   location:
+                    - 5840
+                    - 363
+                    - 0
+    -   type: Metalchest
+        arguments: ''
+        description: metal chest
+        item_id: 3708
+        placements:
+            -   location:
+                    - 5686
+                    - 312
+                    - 0
+            -   location:
+                    - 5686
+                    - 313
+                    - 0
+            -   location:
+                    - 5686
+                    - 314
+                    - 0
+            -   location:
+                    - 5756
+                    - 203
+                    - -2
+    -   type: SecretStoneDoor3
+        arguments: (Facing = WestCW; Hue=1109)
+        description: stone wall
+        item_id: 852
+        placements:
+            -   location:
+                    - 5687
+                    - 319
+                    - 0
+    -   type: SecretStoneDoor3
+        arguments: (Facing = EastCCW; Hue=1109)
+        description: stone wall
+        item_id: 854
+        placements:
+            -   location:
+                    - 5688
+                    - 319
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: palisade
+        item_id: 1060
+        placements:
+            -   location:
+                    - 5819
+                    - 361
+                    - 20
+    -   type: Static
+        arguments: ''
+        description: wood
+        item_id: 1848
+        placements:
+            -   location:
+                    - 5851
+                    - 233
+                    - -13

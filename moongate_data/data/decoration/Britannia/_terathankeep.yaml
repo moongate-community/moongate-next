@@ -1,0 +1,513 @@
+decoration:
+    -   type: Static
+        arguments: ''
+        description: tightrope
+        item_id: 10000
+        placements:
+            -   location:
+                    - 5158
+                    - 1708
+                    - 0
+            -   location:
+                    - 5153
+                    - 1708
+                    - 0
+            -   location:
+                    - 5151
+                    - 1708
+                    - 0
+            -   location:
+                    - 5156
+                    - 1708
+                    - 0
+    -   type: MetalDoor
+        arguments: (Facing = WestCW)
+        description: metal door
+        item_id: 1653
+        placements:
+            -   location:
+                    - 5349
+                    - 1560
+                    - 0
+            -   location:
+                    - 5337
+                    - 1560
+                    - 0
+    -   type: MetalGoldenChest
+        arguments: ''
+        description: metal chest
+        item_id: 3648
+        placements:
+            -   location:
+                    - 5363
+                    - 1708
+                    - -75
+    -   type: Static
+        arguments: ''
+        description: iron fence
+        item_id: 2081
+        placements:
+            -   location:
+                    - 5432
+                    - 3152
+                    - -55
+            -   location:
+                    - 5432
+                    - 3153
+                    - -55
+            -   location:
+                    - 5432
+                    - 3154
+                    - -55
+            -   location:
+                    - 5432
+                    - 3155
+                    - -55
+            -   location:
+                    - 5437
+                    - 3153
+                    - -55
+            -   location:
+                    - 5437
+                    - 3154
+                    - -55
+            -   location:
+                    - 5437
+                    - 3152
+                    - -55
+    -   type: Static
+        arguments: ''
+        description: iron fence
+        item_id: 2083
+        placements:
+            -   location:
+                    - 5433
+                    - 3155
+                    - -55
+            -   location:
+                    - 5434
+                    - 3155
+                    - -55
+            -   location:
+                    - 5435
+                    - 3155
+                    - -55
+            -   location:
+                    - 5436
+                    - 3155
+                    - -55
+    -   type: Static
+        arguments: ''
+        description: iron fence
+        item_id: 2121
+        placements:
+            -   location:
+                    - 5454
+                    - 3155
+                    - -53
+            -   location:
+                    - 5454
+                    - 3153
+                    - -55
+            -   location:
+                    - 5454
+                    - 3152
+                    - -55
+            -   location:
+                    - 5458
+                    - 3153
+                    - -55
+            -   location:
+                    - 5458
+                    - 3154
+                    - -55
+            -   location:
+                    - 5458
+                    - 3152
+                    - -55
+            -   location:
+                    - 5454
+                    - 3154
+                    - -53
+            -   location:
+                    - 5477
+                    - 3136
+                    - -60
+    -   type: Static
+        arguments: ''
+        description: iron fence
+        item_id: 2123
+        placements:
+            -   location:
+                    - 5455
+                    - 3151
+                    - -55
+            -   location:
+                    - 5456
+                    - 3151
+                    - -55
+            -   location:
+                    - 5458
+                    - 3151
+                    - -55
+            -   location:
+                    - 5457
+                    - 3155
+                    - -55
+            -   location:
+                    - 5456
+                    - 3155
+                    - -55
+            -   location:
+                    - 5455
+                    - 3155
+                    - -55
+            -   location:
+                    - 5434
+                    - 3151
+                    - -55
+            -   location:
+                    - 5433
+                    - 3151
+                    - -55
+            -   location:
+                    - 5472
+                    - 3141
+                    - -60
+            -   location:
+                    - 5437
+                    - 3151
+                    - -55
+            -   location:
+                    - 5436
+                    - 3151
+                    - -55
+            -   location:
+                    - 5435
+                    - 3151
+                    - -55
+            -   location:
+                    - 5457
+                    - 3151
+                    - -55
+    -   type: Static
+        arguments: ''
+        description: iron fence
+        item_id: 2082
+        placements:
+            -   location:
+                    - 5437
+                    - 3155
+                    - -55
+    -   type: Static
+        arguments: ''
+        description: iron fence
+        item_id: 2122
+        placements:
+            -   location:
+                    - 5476
+                    - 3138
+                    - -60
+            -   location:
+                    - 5475
+                    - 3139
+                    - -60
+            -   location:
+                    - 5474
+                    - 3140
+                    - -60
+            -   location:
+                    - 5473
+                    - 3141
+                    - -60
+            -   location:
+                    - 5458
+                    - 3155
+                    - -55
+            -   location:
+                    - 5477
+                    - 3137
+                    - -60
+    -   type: Metalchest
+        arguments: ''
+        description: metal chest
+        item_id: 3708
+        placements:
+            -   location:
+                    - 5337
+                    - 1549
+                    - 0
+            -   location:
+                    - 5349
+                    - 1551
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: brambles
+        item_id: 3391
+        placements:
+            -   location:
+                    - 5484
+                    - 3146
+                    - -45
+            -   location:
+                    - 5484
+                    - 3146
+                    - -51
+            -   location:
+                    - 5478
+                    - 3148
+                    - -45
+    -   type: Static
+        arguments: ''
+        description: small palm
+        item_id: 3229
+        placements:
+            -   location:
+                    - 5460
+                    - 3162
+                    - -45
+    -   type: Static
+        arguments: ''
+        description: stalagmites
+        item_id: 2273
+        placements:
+            -   location:
+                    - 5367
+                    - 1774
+                    - -118
+    -   type: Static
+        arguments: ''
+        description: lever
+        item_id: 4243
+        placements:
+            -   location:
+                    - 5143
+                    - 1703
+                    - 10
+    -   type: MetalDoor
+        arguments: (Facing = EastCW)
+        description: metal door
+        item_id: 1659
+        placements:
+            -   location:
+                    - 5343
+                    - 1571
+                    - 0
+            -   location:
+                    - 5343
+                    - 1557
+                    - 0
+            -   location:
+                    - 5335
+                    - 1543
+                    - 0
+            -   location:
+                    - 5355
+                    - 1544
+                    - 0
+            -   location:
+                    - 5344
+                    - 1577
+                    - 0
+    -   type: StrongWoodDoor
+        arguments: (Facing = EastCW)
+        description: wooden door
+        item_id: 1771
+        placements:
+            -   location:
+                    - 5303
+                    - 1568
+                    - 0
+            -   location:
+                    - 5300
+                    - 1556
+                    - 0
+            -   location:
+                    - 5309
+                    - 1556
+                    - 0
+            -   location:
+                    - 5294
+                    - 1564
+                    - 0
+    -   type: MetalDoor
+        arguments: (Facing = NorthCW)
+        description: metal door
+        item_id: 1667
+        placements:
+            -   location:
+                    - 5333
+                    - 1556
+                    - 0
+            -   location:
+                    - 5333
+                    - 1547
+                    - 0
+    -   type: MetalDoor
+        arguments: (Facing = NorthCCW)
+        description: metal door
+        item_id: 1663
+        placements:
+            -   location:
+                    - 5353
+                    - 1715
+                    - -85
+            -   location:
+                    - 5242
+                    - 1602
+                    - 0
+    -   type: MetalDoor
+        arguments: (Facing = SouthCW)
+        description: metal door
+        item_id: 1661
+        placements:
+            -   location:
+                    - 5356
+                    - 1556
+                    - 0
+            -   location:
+                    - 5356
+                    - 1548
+                    - 0
+            -   location:
+                    - 5242
+                    - 1603
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: lever
+        item_id: 4236
+        placements:
+            -   location:
+                    - 5251
+                    - 1603
+                    - 7
+    -   type: Static
+        arguments: ''
+        description: egg case web
+        item_id: 4312
+        placements:
+            -   location:
+                    - 5302
+                    - 1552
+                    - 0
+            -   location:
+                    - 5300
+                    - 1548
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: lever
+        item_id: 4245
+        placements:
+            -   location:
+                    - 5143
+                    - 1703
+                    - 10
+    -   type: MetalGoldenChest
+        arguments: ''
+        description: metal chest
+        item_id: 3649
+        placements:
+            -   location:
+                    - 5360
+                    - 1715
+                    - -89
+            -   location:
+                    - 5351
+                    - 1551
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: fire
+        item_id: 6571
+        placements:
+            -   location:
+                    - 5169
+                    - 1586
+                    - 15
+    -   type: WoodenChest
+        arguments: ''
+        description: wooden chest
+        item_id: 3650
+        placements:
+            -   location:
+                    - 5360
+                    - 1705
+                    - -67
+            -   location:
+                    - 5362
+                    - 1718
+                    - -125
+            -   location:
+                    - 5349
+                    - 1739
+                    - -125
+    -   type: MetalDoor
+        arguments: (Facing = WestCCW)
+        description: metal door
+        item_id: 1657
+        placements:
+            -   location:
+                    - 5343
+                    - 1577
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: cave wall
+        item_id: 628
+        placements:
+            -   location:
+                    - 5342
+                    - 1658
+                    - 22
+    -   type: Static
+        arguments: ''
+        description: cocoon
+        item_id: 4314
+        placements:
+            -   location:
+                    - 5296
+                    - 1547
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: web
+        item_id: 4317
+        placements:
+            -   location:
+                    - 5296
+                    - 1547
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: lever
+        item_id: 4238
+        placements:
+            -   location:
+                    - 5251
+                    - 1603
+                    - 7
+    -   type: Static
+        arguments: ''
+        description: egg case
+        item_id: 4313
+        placements:
+            -   location:
+                    - 5300
+                    - 1548
+                    - 0
+            -   location:
+                    - 5302
+                    - 1552
+                    - 0
+    -   type: StrongWoodDoor
+        arguments: (Facing = WestCW)
+        description: wooden door
+        item_id: 1765
+        placements:
+            -   location:
+                    - 5292
+                    - 1560
+                    - 0

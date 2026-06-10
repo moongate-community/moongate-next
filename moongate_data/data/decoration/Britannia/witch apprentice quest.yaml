@@ -1,0 +1,113 @@
+decoration:
+    -   type: Spawner
+        arguments: (Spawn = Grizelda; Count=1; HomeRange=0)
+        description: Grizelda
+        item_id: 7955
+        placements:
+            -   location:
+                    - 850
+                    - 1544
+                    - 0
+    -   type: Spawner
+        arguments: (Spawn = Blackheart; Count=1; HomeRange=0)
+        description: Captain Blackheart
+        item_id: 7955
+        placements:
+            -   location:
+                    - 2679
+                    - 2234
+                    - 2
+    -   type: Barrel
+        arguments: ''
+        description: barrel
+        item_id: 3703
+        placements:
+            -   location:
+                    - 844
+                    - 1547
+                    - 0
+            -   location:
+                    - 860
+                    - 1547
+                    - 0
+    -   type: Lantern
+        arguments: ''
+        description: lantern
+        item_id: 2581
+        placements:
+            -   location:
+                    - 851
+                    - 1537
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: grasses
+        item_id: 3253
+        placements:
+            -   location:
+                    - 851
+                    - 1549
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: empty tub
+        item_id: 3715
+        placements:
+            -   location:
+                    - 855
+                    - 1534
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: sledge hammer
+        item_id: 4020
+        placements:
+            -   location:
+                    - 856
+                    - 1537
+                    - 0
+    -   type: MetalChest
+        arguments: ''
+        description: metal chest
+        item_id: 2475
+        placements:
+            -   location:
+                    - 858
+                    - 1538
+                    - 0
+    -   type: Pitchfork
+        arguments: ''
+        description: pitchfork
+        item_id: 3719
+        placements:
+            -   location:
+                    - 861
+                    - 1546
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: stew
+        item_id: 2416
+        placements:
+            -   location:
+                    - 849
+                    - 1544
+                    - 8
+    -   type: Static
+        arguments: ''
+        description: fire pit
+        item_id: 4012
+        placements:
+            -   location:
+                    - 849
+                    - 1544
+                    - 0
+    -   type: Static
+        arguments: ''
+        description: cauldron
+        item_id: 2420
+        placements:
+            -   location:
+                    - 849
+                    - 1544
+                    - 0

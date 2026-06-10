@@ -1,0 +1,44 @@
+logger:
+  level: Debug
+  log_packets: true
+  write_to_file: false
+  file_name: moongate.log
+game_loop:
+  idle_cpu_enabled: true
+  idle_sleep_ms: 1
+timing:
+  tick_duration: 00:00:00.0080000
+  wheel_size: 512
+metrics:
+  refresh_interval: 00:00:05
+  log_enabled: true
+  log_interval: 00:01:00
+server:
+  server_name: Moongate Server
+web:
+  base_url: ''
+  jwt:
+    issuer: Moongate
+    audience: Moongate.Web
+    signing_key: MOONGATE_DEVELOPMENT_ONLY_SIGNING_KEY_CHANGE_ME_2026
+    access_token_minutes: 15
+    refresh_token_days: 14
+    rotate_refresh_tokens: true
+persistence:
+  autosave_interval: 00:05:00
+  snapshot_file_suffix: .snapshot.bin
+  journal_file_name: world.journal.bin
+  enable_file_lock: true
+uo:
+  client_files_directory: ~/uo
+  starting_map: Trammel
+  starting: 1496,1628,10
+  starting_city: Britain
+network:
+  port: 2593
+  ping_server_enabled: true
+  ping_server_port: 12000
+  max_pending_buffer_bytes: 65536
+  max_declared_packet_length: 16384
+  max_packets_per_drain: 256
+  max_outgoing_packets_per_drain: 256

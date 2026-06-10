@@ -1,0 +1,207 @@
+decoration:
+    -   type: Static
+        arguments: ''
+        description: fire
+        item_id: 6571
+        placements:
+            -   location:
+                    - 579
+                    - 408
+                    - 33
+            -   location:
+                    - 580
+                    - 408
+                    - 33
+    -   type: Static
+        arguments: (Hue = 0x849)
+        description: stone stairs
+        item_id: 1875
+        placements:
+            -   location:
+                    - 555
+                    - 425
+                    - -13
+    -   type: Static
+        arguments: (Hue = 0x84A)
+        description: stone stairs
+        item_id: 1875
+        placements:
+            -   location:
+                    - 556
+                    - 425
+                    - -13
+    -   type: Static
+        arguments: (Hue = 0x847)
+        description: stone stairs
+        item_id: 1875
+        placements:
+            -   location:
+                    - 557
+                    - 425
+                    - -13
+    -   type: Static
+        arguments: ''
+        description: magical crystal
+        item_id: 7961
+        placements:
+            -   location:
+                    - 570
+                    - 414
+                    - 47
+            -   location:
+                    - 570
+                    - 415
+                    - 47
+            -   location:
+                    - 578
+                    - 409
+                    - 67
+            -   location:
+                    - 578
+                    - 410
+                    - 67
+    -   type: FancyDrawer
+        arguments: ''
+        description: chest of drawers
+        item_id: 2616
+        placements:
+            -   location:
+                    - 572
+                    - 412
+                    - 41
+    -   type: FullBookcase
+        arguments: ''
+        description: bookcase
+        item_id: 2714
+        placements:
+            -   location:
+                    - 576
+                    - 423
+                    - 41
+            -   location:
+                    - 576
+                    - 426
+                    - 41
+            -   location:
+                    - 576
+                    - 429
+                    - 41
+            -   location:
+                    - 579
+                    - 421
+                    - 61
+            -   location:
+                    - 579
+                    - 425
+                    - 61
+    -   type: FullBookcase
+        arguments: ''
+        description: bookcase
+        item_id: 2716
+        placements:
+            -   location:
+                    - 576
+                    - 424
+                    - 41
+            -   location:
+                    - 576
+                    - 428
+                    - 41
+            -   location:
+                    - 579
+                    - 422
+                    - 61
+            -   location:
+                    - 579
+                    - 424
+                    - 61
+    -   type: FullBookcase
+        arguments: ''
+        description: bookcase
+        item_id: 2713
+        placements:
+            -   location:
+                    - 576
+                    - 425
+                    - 41
+            -   location:
+                    - 576
+                    - 427
+                    - 41
+            -   location:
+                    - 576
+                    - 430
+                    - 41
+            -   location:
+                    - 579
+                    - 423
+                    - 61
+            -   location:
+                    - 579
+                    - 426
+                    - 61
+    -   type: Static
+        arguments: ''
+        description: dresser
+        item_id: 2621
+        placements:
+            -   location:
+                    - 577
+                    - 408
+                    - 41
+    -   type: Static
+        arguments: ''
+        description: dresser
+        item_id: 2620
+        placements:
+            -   location:
+                    - 578
+                    - 408
+                    - 41
+    -   type: Static
+        arguments: (Hue = 0x847)
+        description: cactus
+        item_id: 3366
+        placements:
+            -   location:
+                    - 579
+                    - 408
+                    - 26
+            -   location:
+                    - 580
+                    - 408
+                    - 26
+    -   type: Static
+        arguments: ''
+        description: book
+        item_id: 4030
+        placements:
+            -   location:
+                    - 579
+                    - 409
+                    - 26
+            -   location:
+                    - 580
+                    - 409
+                    - 26
+    -   type: Static
+        arguments: ''
+        description: magical crystal
+        item_id: 7964
+        placements:
+            -   location:
+                    - 579
+                    - 428
+                    - 67
+            -   location:
+                    - 579
+                    - 429
+                    - 67
+            -   location:
+                    - 585
+                    - 416
+                    - 47
+            -   location:
+                    - 586
+                    - 416
+                    - 47

@@ -1,0 +1,503 @@
+decoration:
+    -   type: DarkWoodDoor
+        arguments: (Facing = SouthCW)
+        description: wooden door
+        item_id: 1709
+        placements:
+            -   location:
+                    - 989
+                    - 519
+                    - -30
+            -   location:
+                    - 999
+                    - 527
+                    - -50
+    -   type: DarkWoodDoor
+        arguments: (Facing = NorthCCW)
+        description: wooden door
+        item_id: 1711
+        placements:
+            -   location:
+                    - 999
+                    - 512
+                    - -50
+            -   location:
+                    - 989
+                    - 518
+                    - -30
+    -   type: DarkWoodDoor
+        arguments: (Facing = EastCCW)
+        description: wooden door
+        item_id: 1703
+        placements:
+            -   location:
+                    - 991
+                    - 522
+                    - -30
+            -   location:
+                    - 978
+                    - 522
+                    - -50
+            -   location:
+                    - 1002
+                    - 522
+                    - -50
+            -   location:
+                    - 1002
+                    - 522
+                    - -30
+    -   type: Backpack
+        arguments: ''
+        description: backpack
+        item_id: 3701
+        placements:
+            -   location:
+                    - 992
+                    - 509
+                    - -47
+    -   type: LibraryBookcase
+        arguments: ''
+        description: bookcase
+        item_id: 2715
+        placements:
+            -   location:
+                    - 950
+                    - 493
+                    - -30
+            -   location:
+                    - 951
+                    - 498
+                    - -30
+            -   location:
+                    - 953
+                    - 493
+                    - -30
+            -   location:
+                    - 952
+                    - 496
+                    - -30
+            -   location:
+                    - 952
+                    - 498
+                    - -30
+            -   location:
+                    - 953
+                    - 496
+                    - -30
+            -   location:
+                    - 986
+                    - 525
+                    - -30
+            -   location:
+                    - 1004
+                    - 523
+                    - -50
+    -   type: EmptyBookcase
+        arguments: (Hue = 0x47E)
+        description: wooden shelf
+        item_id: 2718
+        placements:
+            -   location:
+                    - 947
+                    - 496
+                    - -70
+            -   location:
+                    - 947
+                    - 498
+                    - -70
+            -   location:
+                    - 947
+                    - 499
+                    - -70
+            -   location:
+                    - 947
+                    - 540
+                    - -70
+            -   location:
+                    - 947
+                    - 542
+                    - -70
+            -   location:
+                    - 948
+                    - 543
+                    - -30
+            -   location:
+                    - 949
+                    - 541
+                    - -50
+            -   location:
+                    - 947
+                    - 544
+                    - -70
+            -   location:
+                    - 1022
+                    - 494
+                    - -50
+            -   location:
+                    - 1022
+                    - 495
+                    - -50
+            -   location:
+                    - 1022
+                    - 543
+                    - -70
+            -   location:
+                    - 1022
+                    - 544
+                    - -70
+            -   location:
+                    - 1024
+                    - 499
+                    - -50
+            -   location:
+                    - 949
+                    - 543
+                    - -50
+            -   location:
+                    - 1024
+                    - 500
+                    - -50
+    -   type: Static
+        arguments: (Hue = 0x47E)
+        description: empty tub
+        item_id: 3715
+        placements:
+            -   location:
+                    - 947
+                    - 497
+                    - -70
+    -   type: Barrel
+        arguments: (Hue = 0x47E)
+        description: barrel
+        item_id: 4014
+        placements:
+            -   location:
+                    - 947
+                    - 538
+                    - -70
+            -   location:
+                    - 948
+                    - 538
+                    - -70
+            -   location:
+                    - 1028
+                    - 541
+                    - -70
+            -   location:
+                    - 1028
+                    - 542
+                    - -64
+            -   location:
+                    - 1028
+                    - 542
+                    - -70
+    -   type: EmptyBookcase
+        arguments: (Hue = 0x47E)
+        description: wooden shelf
+        item_id: 2717
+        placements:
+            -   location:
+                    - 954
+                    - 538
+                    - -30
+            -   location:
+                    - 1025
+                    - 493
+                    - -30
+            -   location:
+                    - 1028
+                    - 493
+                    - -30
+            -   location:
+                    - 1026
+                    - 538
+                    - -30
+    -   type: SmallForgeAddon
+        arguments: ''
+        description: forge
+        item_id: 4017
+        placements:
+            -   location:
+                    - 974
+                    - 509
+                    - -50
+            -   location:
+                    - 977
+                    - 509
+                    - -50
+    -   type: AnvilSouthAddon
+        arguments: ''
+        description: anvil
+        item_id: 4016
+        placements:
+            -   location:
+                    - 975
+                    - 509
+                    - -50
+            -   location:
+                    - 976
+                    - 509
+                    - -50
+    -   type: AnvilEastAddon
+        arguments: ''
+        description: anvil
+        item_id: 4015
+        placements:
+            -   location:
+                    - 973
+                    - 513
+                    - -50
+    -   type: Static
+        arguments: ''
+        description: bellows
+        item_id: 6534
+        placements:
+            -   location:
+                    - 973
+                    - 514
+                    - -50
+    -   type: Static
+        arguments: ''
+        description: forge
+        item_id: 6538
+        placements:
+            -   location:
+                    - 973
+                    - 515
+                    - -50
+    -   type: Static
+        arguments: ''
+        description: forge
+        item_id: 6542
+        placements:
+            -   location:
+                    - 973
+                    - 516
+                    - -50
+    -   type: MetalChest
+        arguments: (Hue = 0x47E)
+        description: metal chest
+        item_id: 2475
+        placements:
+            -   location:
+                    - 987
+                    - 516
+                    - -44
+            -   location:
+                    - 993
+                    - 516
+                    - -44
+            -   location:
+                    - 994
+                    - 516
+                    - -44
+            -   location:
+                    - 1004
+                    - 509
+                    - -30
+    -   type: Metalchest
+        arguments: (Hue = 0x47E)
+        description: metal chest
+        item_id: 3708
+        placements:
+            -   location:
+                    - 985
+                    - 523
+                    - -40
+            -   location:
+                    - 985
+                    - 523
+                    - -45
+            -   location:
+                    - 985
+                    - 523
+                    - -50
+    -   type: Static
+        arguments: ''
+        description: dresser
+        item_id: 2621
+        placements:
+            -   location:
+                    - 987
+                    - 525
+                    - -30
+    -   type: Static
+        arguments: ''
+        description: dresser
+        item_id: 2620
+        placements:
+            -   location:
+                    - 988
+                    - 525
+                    - -30
+    -   type: Armoire
+        arguments: ''
+        description: armoire
+        item_id: 2639
+        placements:
+            -   location:
+                    - 999
+                    - 523
+                    - -30
+            -   location:
+                    - 1001
+                    - 523
+                    - -30
+    -   type: Drawer
+        arguments: ''
+        description: chest of drawers
+        item_id: 2612
+        placements:
+            -   location:
+                    - 996
+                    - 530
+                    - -30
+    -   type: LibraryBookcase
+        arguments: ''
+        description: bookcase
+        item_id: 2713
+        placements:
+            -   location:
+                    - 1000
+                    - 524
+                    - -50
+            -   location:
+                    - 1000
+                    - 525
+                    - -50
+            -   location:
+                    - 1000
+                    - 529
+                    - -50
+            -   location:
+                    - 1000
+                    - 530
+                    - -50
+    -   type: Barrel
+        arguments: (Hue = 0x47E)
+        description: barrel
+        item_id: 3703
+        placements:
+            -   location:
+                    - 1022
+                    - 538
+                    - -70
+            -   location:
+                    - 1022
+                    - 538
+                    - -64
+            -   location:
+                    - 1022
+                    - 539
+                    - -70
+            -   location:
+                    - 1022
+                    - 540
+                    - -70
+            -   location:
+                    - 1023
+                    - 538
+                    - -70
+    -   type: SpinningWheelSouthAddon
+        arguments: ''
+        description: spinning wheel
+        item_id: 4117
+        placements:
+            -   location:
+                    - 973
+                    - 530
+                    - -50
+    -   type: LoomSouthAddon
+        arguments: ''
+        description: upright loom
+        item_id: 4197
+        placements:
+            -   location:
+                    - 975
+                    - 523
+                    - -50
+    -   type: DarkWoodDoor
+        arguments: (Facing = EastCW)
+        description: wooden door
+        item_id: 1707
+        placements:
+            -   location:
+                    - 978
+                    - 517
+                    - -50
+            -   location:
+                    - 994
+                    - 516
+                    - -30
+    -   type: DarkWoodDoor
+        arguments: (Facing = NorthCW)
+        description: wooden door
+        item_id: 1715
+        placements:
+            -   location:
+                    - 980
+                    - 527
+                    - -50
+    -   type: DarkWoodDoor
+        arguments: (Facing = SouthCCW)
+        description: wooden door
+        item_id: 1713
+        placements:
+            -   location:
+                    - 980
+                    - 512
+                    - -50
+    -   type: LightWoodDoor
+        arguments: (Facing = WestCW)
+        description: wooden door
+        item_id: 1749
+        placements:
+            -   location:
+                    - 926
+                    - 642
+                    - -90
+    -   type: LocalizedSign
+        arguments: (LabelNumber = 1061836)
+        description: Bakery
+        item_id: 2979
+        placements:
+            -   location:
+                    - 962
+                    - 633
+                    - -90
+    -   type: LocalizedSign
+        arguments: (LabelNumber = 1061835)
+        description: Tavern
+        item_id: 3011
+        placements:
+            -   location:
+                    - 962
+                    - 641
+                    - -90
+    -   type: LightWoodDoor
+        arguments: (Facing = EastCCW)
+        description: wooden door
+        item_id: 1751
+        placements:
+            -   location:
+                    - 927
+                    - 642
+                    - -90
+    -   type: LightWoodGate
+        arguments: (Facing = NorthCCW)
+        description: wooden gate
+        item_id: 2115
+        placements:
+            -   location:
+                    - 952
+                    - 637
+                    - -90
+    -   type: LightWoodDoor
+        arguments: (Facing = SouthCW)
+        description: wooden door
+        item_id: 1757
+        placements:
+            -   location:
+                    - 928
+                    - 637
+                    - -90

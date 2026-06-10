@@ -1,0 +1,47 @@
+decoration:
+    -   type: Spawner
+        arguments: (Spawn = IharaSoko; Count=1; HomeRange=0)
+        description: Ihara Soko
+        item_id: 7955
+        placements:
+            -   location:
+                    - 678
+                    - 1277
+                    - 47
+    -   type: Blocker
+        arguments: ''
+        description: blockers around him
+        item_id: 8612
+        placements:
+            -   location:
+                    - 677
+                    - 1277
+                    - 47
+            -   location:
+                    - 679
+                    - 1277
+                    - 47
+            -   location:
+                    - 678
+                    - 1276
+                    - 47
+            -   location:
+                    - 678
+                    - 1278
+                    - 47
+            -   location:
+                    - 677
+                    - 1276
+                    - 47
+            -   location:
+                    - 677
+                    - 1278
+                    - 47
+            -   location:
+                    - 679
+                    - 1276
+                    - 47
+            -   location:
+                    - 679
+                    - 1278
+                    - 47

@@ -1,0 +1,381 @@
+decoration:
+    -   type: Static
+        arguments: (Hue = 0x3F1)
+        description: moongate
+        item_id: 8151
+        placements:
+            -   location:
+                    - 375
+                    - 802
+                    - 1
+    -   type: Teleporter
+        arguments: (PointDest = (770, 1209, 25); MapDest=Tokuno)
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 375
+                    - 802
+                    - 1
+    -   type: AnkhNorth
+        arguments: (Hue = 0xFA)
+        description: ankh
+        item_id: 4
+        placements:
+            -   location:
+                    - 397
+                    - 801
+                    - 4
+    -   type: Spawner
+        arguments: (Spawn = Emino; Count=1; HomeRange=0)
+        description: Emino
+        item_id: 7955
+        placements:
+            -   location:
+                    - 411
+                    - 810
+                    - -1
+    -   type: Spawner
+        arguments: (Spawn = Zoel; Count=1; HomeRange=0)
+        description: Zoel
+        item_id: 7955
+        placements:
+            -   location:
+                    - 388
+                    - 817
+                    - -1
+    -   type: Spawner
+        arguments: (Spawn = HiddenFigure; Count=1; HomeRange=0)
+        description: Hidden figures
+        item_id: 7955
+        placements:
+            -   location:
+                    - 403
+                    - 1118
+                    - 0
+            -   location:
+                    - 405
+                    - 1118
+                    - 0
+            -   location:
+                    - 403
+                    - 1110
+                    - 0
+            -   location:
+                    - 403
+                    - 1112
+                    - 0
+            -   location:
+                    - 403
+                    - 1103
+                    - 0
+            -   location:
+                    - 404
+                    - 1101
+                    - 0
+            -   location:
+                    - 419
+                    - 1118
+                    - 0
+            -   location:
+                    - 418
+                    - 1120
+                    - 0
+            -   location:
+                    - 419
+                    - 1111
+                    - 0
+            -   location:
+                    - 418
+                    - 1109
+                    - 0
+            -   location:
+                    - 419
+                    - 1102
+                    - 0
+            -   location:
+                    - 418
+                    - 1103
+                    - 0
+    -   type: Spawner
+        arguments: (Spawn = EnshroudedFigure; Count=1; HomeRange=0)
+        description: Enshrouded figure
+        item_id: 7955
+        placements:
+            -   location:
+                    - 403
+                    - 1094
+                    - 0
+    -   type: Spawner
+        arguments: (Spawn = JedahEntille; Count=1; HomeRange=0)
+        description: Jedah Entille
+        item_id: 7955
+        placements:
+            -   location:
+                    - 404
+                    - 1093
+                    - 0
+    -   type: GuardianBarrier
+        arguments: ''
+        description: Guardian barrier
+        item_id: 14695
+        placements:
+            -   location:
+                    - 404
+                    - 1140
+                    - 0
+            -   location:
+                    - 405
+                    - 1140
+                    - 0
+            -   location:
+                    - 406
+                    - 1140
+                    - 0
+            -   location:
+                    - 407
+                    - 1140
+                    - 0
+            -   location:
+                    - 408
+                    - 1140
+                    - 0
+            -   location:
+                    - 409
+                    - 1140
+                    - 0
+    -   type: GreenNinjaQuestTeleporter
+        arguments: ''
+        description: Green teleporters
+        item_id: 1308
+        placements:
+            -   location:
+                    - 418
+                    - 804
+                    - -1
+    -   type: Static
+        arguments: (Hue = 0x17E)
+        description: ''
+        item_id: 1308
+        placements:
+            -   location:
+                    - 412
+                    - 1123
+                    - 0
+    -   type: Teleporter
+        arguments: (PointDest = (417, 806, -1))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 412
+                    - 1123
+                    - 0
+    -   type: BlueNinjaQuestTeleporter
+        arguments: ''
+        description: Blue teleporters
+        item_id: 1308
+        placements:
+            -   location:
+                    - 423
+                    - 805
+                    - -1
+    -   type: Static
+        arguments: (Hue = 0x2)
+        description: ''
+        item_id: 1308
+        placements:
+            -   location:
+                    - 411
+                    - 1117
+                    - 0
+    -   type: Teleporter
+        arguments: (PointDest = (422, 806, -1))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 411
+                    - 1117
+                    - 0
+    -   type: Static
+        arguments: (Hue = 0x21)
+        description: Red teleporter
+        item_id: 1308
+        placements:
+            -   location:
+                    - 421
+                    - 1092
+                    - 0
+    -   type: Teleporter
+        arguments: (PointDest = (391, 803, -1))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 421
+                    - 1092
+                    - 0
+    -   type: WhiteNinjaQuestTeleporter
+        arguments: ''
+        description: White teleporters
+        item_id: 1308
+        placements:
+            -   location:
+                    - 392
+                    - 802
+                    - -1
+    -   type: Static
+        arguments: (Hue = 0x47E)
+        description: ''
+        item_id: 1308
+        placements:
+            -   location:
+                    - 412
+                    - 1086
+                    - 0
+    -   type: Teleporter
+        arguments: (PointDest = (391, 803, -1))
+        description: ''
+        item_id: 7107
+        placements:
+            -   location:
+                    - 412
+                    - 1086
+                    - 0
+    -   type: EminosKatanaChest
+        arguments: ''
+        description: wooden chest
+        item_id: 3650
+        placements:
+            -   location:
+                    - 393
+                    - 989
+                    - -15
+    -   type: SpikeTrap
+        arguments: ''
+        description: floor spikes
+        item_id: 4506
+        placements:
+            -   location:
+                    - 418
+                    - 1084
+                    - 0
+    -   type: SawTrap
+        arguments: ''
+        description: floor saw
+        item_id: 4524
+        placements:
+            -   location:
+                    - 421
+                    - 1077
+                    - 0
+    -   type: FireColumnTrap
+        arguments: ''
+        description: hole
+        item_id: 7025
+        placements:
+            -   location:
+                    - 403
+                    - 1073
+                    - 0
+            -   location:
+                    - 410
+                    - 1050
+                    - 0
+            -   location:
+                    - 408
+                    - 1044
+                    - 0
+            -   location:
+                    - 409
+                    - 1044
+                    - 0
+            -   location:
+                    - 410
+                    - 1044
+                    - 0
+            -   location:
+                    - 411
+                    - 1044
+                    - 0
+            -   location:
+                    - 412
+                    - 1044
+                    - 0
+            -   location:
+                    - 413
+                    - 1044
+                    - 0
+    -   type: Static
+        arguments: (Hue = 0x48C)
+        description: haramaki-do
+        item_id: 9844
+        placements:
+            -   location:
+                    - 409
+                    - 1009
+                    - -13
+    -   type: Static
+        arguments: (Hue = 0x47E)
+        description: war mace
+        item_id: 5126
+        placements:
+            -   location:
+                    - 409
+                    - 1008
+                    - -13
+    -   type: Static
+        arguments: (Hue = 0x48C)
+        description: kabuto
+        item_id: 9069
+        placements:
+            -   location:
+                    - 409
+                    - 1008
+                    - -13
+    -   type: OrnateWoodenChest
+        arguments: ''
+        description: chest
+        item_id: 10253
+        placements:
+            -   location:
+                    - 436
+                    - 999
+                    - -15
+    -   type: Static
+        arguments: ''
+        description: kimono
+        item_id: 9857
+        placements:
+            -   location:
+                    - 396
+                    - 1149
+                    - 0
+    -   type: Static
+        arguments: (Hue = 0x530)
+        description: ninja pants
+        item_id: 9809
+        placements:
+            -   location:
+                    - 397
+                    - 1146
+                    - 1
+    -   type: Static
+        arguments: (Hue = 0x530)
+        description: ninja mask
+        item_id: 9892
+        placements:
+            -   location:
+                    - 395
+                    - 1146
+                    - 0
+    -   type: Static
+        arguments: (Hue = 0x530)
+        description: ninja shirt
+        item_id: 9832
+        placements:
+            -   location:
+                    - 396
+                    - 1146
+                    - 0

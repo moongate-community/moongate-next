@@ -1,0 +1,37 @@
+decoration:
+    -   type: SerpentPillar
+        arguments: (Word = doracron; DestStart=(5922, 2645); DestEnd=(6022, 2745))
+        description: Serpent pillars
+        item_id: 9023
+        placements:
+            -   location:
+                    - 2983
+                    - 2888
+                    - -5
+    -   type: SerpentPillar
+        arguments: (Word = sueacron; DestStart=(2933, 2838); DestEnd=(3033, 2938))
+        description: ''
+        item_id: 9023
+        placements:
+            -   location:
+                    - 5972
+                    - 2695
+                    - -5
+    -   type: SerpentPillar
+        arguments: (Word = doracron; DestStart=(5215, 2705); DestEnd=(5315, 2805))
+        description: ''
+        item_id: 9023
+        placements:
+            -   location:
+                    - 422
+                    - 3281
+                    - -5
+    -   type: SerpentPillar
+        arguments: (Word = sueacron; DestStart=(372, 3231); DestEnd=(472, 3331))
+        description: ''
+        item_id: 9023
+        placements:
+            -   location:
+                    - 5265
+                    - 2755
+                    - -5

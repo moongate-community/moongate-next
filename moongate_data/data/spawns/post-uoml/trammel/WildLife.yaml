@@ -1,0 +1,19 @@
+spawn:
+    -   type: Spawner
+        guid: 53f1207a-7347-4899-8c9d-020fdd199822
+        name: Spawner (126)
+        location:
+            - 1651
+            - 612
+            - 22
+        map: Trammel
+        count: 3
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 20
+        walking_range: 20
+        entries:
+            -   name: TimberWolf
+                max_count: 3
+                probability: 100

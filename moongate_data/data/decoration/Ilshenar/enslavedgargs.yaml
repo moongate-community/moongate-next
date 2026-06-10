@@ -1,0 +1,220 @@
+decoration:
+    -   type: Static
+        arguments: ''
+        description: stalagmites
+        item_id: 2273
+        placements:
+            -   location:
+                    - 707
+                    - 667
+                    - -37
+            -   location:
+                    - 709
+                    - 667
+                    - -16
+    -   type: Static
+        arguments: ''
+        description: flowstone
+        item_id: 2274
+        placements:
+            -   location:
+                    - 708
+                    - 667
+                    - -38
+    -   type: Static
+        arguments: ''
+        description: stalagmites
+        item_id: 2276
+        placements:
+            -   location:
+                    - 710
+                    - 667
+                    - -10
+            -   location:
+                    - 714
+                    - 668
+                    - -29
+    -   type: Static
+        arguments: ''
+        description: stalagmites
+        item_id: 2277
+        placements:
+            -   location:
+                    - 712
+                    - 667
+                    - -9
+    -   type: Static
+        arguments: ''
+        description: flowstone
+        item_id: 2278
+        placements:
+            -   location:
+                    - 710
+                    - 667
+                    - -17
+            -   location:
+                    - 712
+                    - 667
+                    - -15
+    -   type: Static
+        arguments: ''
+        description: flowstone
+        item_id: 2280
+        placements:
+            -   location:
+                    - 712
+                    - 667
+                    - -38
+            -   location:
+                    - 713
+                    - 667
+                    - -37
+    -   type: AnvilEastAddon
+        arguments: ''
+        description: anvil
+        item_id: 4015
+        placements:
+            -   location:
+                    - 947
+                    - 413
+                    - -80
+            -   location:
+                    - 958
+                    - 421
+                    - -80
+            -   location:
+                    - 958
+                    - 422
+                    - -80
+    -   type: SmallForgeAddon
+        arguments: ''
+        description: forge
+        item_id: 4017
+        placements:
+            -   location:
+                    - 946
+                    - 413
+                    - -80
+    -   type: Static
+        arguments: ''
+        description: sledge hammer
+        item_id: 4020
+        placements:
+            -   location:
+                    - 957
+                    - 427
+                    - -74
+    -   type: Static
+        arguments: ''
+        description: sledge hammer
+        item_id: 4021
+        placements:
+            -   location:
+                    - 955
+                    - 415
+                    - -74
+    -   type: Static
+        arguments: (Hue = 0x1; Name=a cave entrance)
+        description: tapestry
+        item_id: 4065
+        placements:
+            -   location:
+                    - 709
+                    - 667
+                    - -42
+    -   type: Static
+        arguments: (Hue = 0x1; Name=a cave entrance)
+        description: tapestry
+        item_id: 4066
+        placements:
+            -   location:
+                    - 710
+                    - 667
+                    - -42
+            -   location:
+                    - 711
+                    - 667
+                    - -42
+    -   type: Static
+        arguments: ''
+        description: butcher knife
+        item_id: 5110
+        placements:
+            -   location:
+                    - 864
+                    - 468
+                    - 7
+    -   type: Static
+        arguments: ''
+        description: rock
+        item_id: 6004
+        placements:
+            -   location:
+                    - 706
+                    - 668
+                    - -36
+    -   type: Static
+        arguments: ''
+        description: rock
+        item_id: 6006
+        placements:
+            -   location:
+                    - 711
+                    - 667
+                    - -16
+    -   type: Static
+        arguments: ''
+        description: bellows
+        item_id: 6546
+        placements:
+            -   location:
+                    - 958
+                    - 420
+                    - -80
+            -   location:
+                    - 958
+                    - 425
+                    - -80
+    -   type: Static
+        arguments: ''
+        description: forge
+        item_id: 6550
+        placements:
+            -   location:
+                    - 958
+                    - 419
+                    - -80
+            -   location:
+                    - 958
+                    - 424
+                    - -80
+    -   type: Static
+        arguments: ''
+        description: forge
+        item_id: 6554
+        placements:
+            -   location:
+                    - 958
+                    - 418
+                    - -80
+            -   location:
+                    - 958
+                    - 423
+                    - -80
+    -   type: Static
+        arguments: ''
+        description: nodraw
+        item_id: 8600
+        placements:
+            -   location:
+                    - 911
+                    - 451
+                    - -80
+            -   location:
+                    - 911
+                    - 452
+                    - -80
+            -   location:
+                    - 911
+                    - 453
+                    - -80

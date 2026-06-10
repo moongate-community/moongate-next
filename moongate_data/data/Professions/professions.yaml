@@ -1,0 +1,169 @@
+profession:
+    -   name: Samurai
+        true_name: Samurai
+        name_id: 1062948
+        desc_id: 1062950
+        desc: 6
+        top_level: true
+        gump: 5591
+        type: Profession
+        skills:
+            -   name: Bushido
+                value: 30
+            -   name: Swordsmanship
+                value: 30
+            -   name: Focus
+                value: 30
+            -   name: Parrying
+                value: 30
+        stats:
+            -   type: Str
+                value: 40
+            -   type: Dex
+                value: 30
+            -   type: Int
+                value: 20
+    -   name: Ninja
+        true_name: Ninja
+        name_id: 1062949
+        desc_id: 1062951
+        desc: 7
+        top_level: true
+        gump: 5589
+        type: Profession
+        skills:
+            -   name: Ninjitsu
+                value: 30
+            -   name: Hiding
+                value: 30
+            -   name: Fencing
+                value: 30
+            -   name: Stealth
+                value: 30
+        stats:
+            -   type: Str
+                value: 40
+            -   type: Dex
+                value: 30
+            -   type: Int
+                value: 20
+    -   name: Paladin
+        true_name: Paladin
+        name_id: 1061177
+        desc_id: 1061227
+        desc: 5
+        top_level: true
+        gump: 5587
+        type: Profession
+        skills:
+            -   name: Chivalry
+                value: 30
+            -   name: Tactics
+                value: 30
+            -   name: Focus
+                value: 30
+            -   name: Swordsmanship
+                value: 30
+        stats:
+            -   type: Str
+                value: 45
+            -   type: Dex
+                value: 20
+            -   type: Int
+                value: 25
+    -   name: Necromancer
+        true_name: Necromancer
+        name_id: 1061178
+        desc_id: 1061228
+        desc: 4
+        top_level: true
+        gump: 5557
+        type: Profession
+        skills:
+            -   name: Necromancy
+                value: 30
+            -   name: Spirit Speak
+                value: 30
+            -   name: Swordsmanship
+                value: 30
+            -   name: Meditation
+                value: 30
+        stats:
+            -   type: Str
+                value: 25
+            -   type: Dex
+                value: 20
+            -   type: Int
+                value: 45
+    -   name: Warrior
+        true_name: Warrior
+        name_id: 1061180
+        desc_id: 1061230
+        desc: 1
+        top_level: true
+        gump: 5577
+        type: Profession
+        skills:
+            -   name: Tactics
+                value: 30
+            -   name: Healing
+                value: 30
+            -   name: Swordsmanship
+                value: 30
+            -   name: Anatomy
+                value: 30
+        stats:
+            -   type: Str
+                value: 45
+            -   type: Dex
+                value: 35
+            -   type: Int
+                value: 10
+    -   name: Mage
+        true_name: Mage
+        name_id: 1061179
+        desc_id: 1061229
+        desc: 2
+        top_level: true
+        gump: 5569
+        type: Profession
+        skills:
+            -   name: Magery
+                value: 30
+            -   name: Meditation
+                value: 30
+            -   name: Evaluate Intelligence
+                value: 30
+            -   name: Wrestling
+                value: 30
+        stats:
+            -   type: Str
+                value: 25
+            -   type: Dex
+                value: 20
+            -   type: Int
+                value: 45
+    -   name: Blacksmith
+        true_name: Blacksmith
+        name_id: 1061181
+        desc_id: 1061231
+        desc: 3
+        top_level: true
+        gump: 5555
+        type: Profession
+        skills:
+            -   name: Blacksmith
+                value: 30
+            -   name: Tinkering
+                value: 30
+            -   name: Mining
+                value: 30
+            -   name: Tailoring
+                value: 30
+        stats:
+            -   type: Str
+                value: 60
+            -   type: Dex
+                value: 15
+            -   type: Int
+                value: 15

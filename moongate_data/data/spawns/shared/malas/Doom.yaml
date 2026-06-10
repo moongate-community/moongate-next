@@ -1,0 +1,901 @@
+spawn:
+    -   type: Spawner
+        guid: 0bb98d0c-0614-431b-a6ce-c30718f447c8
+        name: Spawner (401)
+        location:
+            - 447
+            - 25
+            - -1
+        map: Malas
+        count: 6
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 10
+        walking_range: 10
+        entries:
+            -   name: Skeleton
+                max_count: 6
+                probability: 100
+    -   type: Spawner
+        guid: 0e708303-8a2d-4207-bdc3-d7f732e04efe
+        name: Spawner (401)
+        location:
+            - 496
+            - 75
+            - 0
+        map: Malas
+        count: 3
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 8
+        walking_range: 8
+        entries:
+            -   name: PatchworkSkeleton
+                max_count: 3
+                probability: 100
+    -   type: Spawner
+        guid: 1210b304-4b1a-47be-a503-9f490764d069
+        name: Spawner (401)
+        location:
+            - 287
+            - 81
+            - -1
+        map: Malas
+        count: 6
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 30
+        walking_range: 30
+        entries:
+            -   name: Skeleton
+                max_count: 6
+                probability: 100
+    -   type: Spawner
+        guid: 13e0051b-bff0-4826-9e89-73ea9ec64e7a
+        name: Spawner (401)
+        location:
+            - 320
+            - 207
+            - -1
+        map: Malas
+        count: 2
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 15
+        walking_range: 15
+        entries:
+            -   name: Lich
+                max_count: 2
+                probability: 100
+    -   type: Spawner
+        guid: 182c0603-13fa-414f-849c-dcbde31a739a
+        name: Spawner (401)
+        location:
+            - 479
+            - 168
+            - -1
+        map: Malas
+        count: 4
+        min_delay: 00:02:00
+        max_delay: 00:03:00
+        team: 0
+        home_range: 20
+        walking_range: 20
+        entries:
+            -   name: Devourer
+                max_count: 3
+                probability: 100
+            -   name: BoneKnight
+                max_count: 1
+                probability: 100
+    -   type: Spawner
+        guid: 20977621-9e81-4c25-b802-19fa12fc3633
+        name: Spawner (401)
+        location:
+            - 323
+            - 90
+            - -1
+        map: Malas
+        count: 9
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 40
+        walking_range: 40
+        entries:
+            -   name: Skeleton
+                max_count: 4
+                probability: 100
+            -   name: PatchworkSkeleton
+                max_count: 5
+                probability: 100
+    -   type: Spawner
+        guid: 218aaa26-c02b-4605-8c79-c9879523ea0b
+        name: Spawner (401)
+        location:
+            - 356
+            - 40
+            - -1
+        map: Malas
+        count: 6
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 8
+        walking_range: 8
+        entries:
+            -   name: VampireBat
+                max_count: 4
+                probability: 100
+            -   name: Skeleton
+                max_count: 2
+                probability: 100
+    -   type: Spawner
+        guid: 298afdb1-74fb-4668-9bc2-5f625a61caed
+        name: Spawner (401)
+        location:
+            - 478
+            - 206
+            - -1
+        map: Malas
+        count: 2
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 20
+        walking_range: 20
+        entries:
+            -   name: RottingCorpse
+                max_count: 2
+                probability: 100
+    -   type: Spawner
+        guid: 2a98c34c-cb3d-4d28-8c12-1a3cf7cc58ad
+        name: Spawner (401)
+        location:
+            - 330
+            - 136
+            - 0
+        map: Malas
+        count: 2
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 15
+        walking_range: 15
+        entries:
+            -   name: Lich
+                max_count: 2
+                probability: 100
+    -   type: Spawner
+        guid: 2be25342-c032-406a-af47-8eb5994c0875
+        name: Spawner (401)
+        location:
+            - 427
+            - 256
+            - -1
+        map: Malas
+        count: 2
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 10
+        walking_range: 30
+        entries:
+            -   name: RottingCorpse
+                max_count: 2
+                probability: 100
+    -   type: Spawner
+        guid: 32a2e0d8-8246-42ff-8e13-c15b51a9f73f
+        name: Spawner (401)
+        location:
+            - 470
+            - 30
+            - -2
+        map: Malas
+        count: 6
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 20
+        walking_range: 20
+        entries:
+            -   name: PatchworkSkeleton
+                max_count: 4
+                probability: 100
+            -   name: Lich
+                max_count: 2
+                probability: 100
+    -   type: Spawner
+        guid: 42bbf95d-6b39-4df6-a4f4-7a8d385b49ef
+        name: Spawner (401)
+        location:
+            - 442
+            - 205
+            - -1
+        map: Malas
+        count: 1
+        min_delay: 00:20:00
+        max_delay: 00:40:00
+        team: 0
+        home_range: 30
+        walking_range: 30
+        entries:
+            -   name: BoneDemon
+                max_count: 1
+                probability: 100
+    -   type: Spawner
+        guid: 48538f93-9afa-44c9-baab-b1c3612bdde5
+        name: Spawner (401)
+        location:
+            - 356
+            - 234
+            - -1
+        map: Malas
+        count: 3
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 15
+        walking_range: 15
+        entries:
+            -   name: Devourer
+                max_count: 3
+                probability: 100
+    -   type: Spawner
+        guid: 5110399b-8443-448e-a68c-f59ac2303716
+        name: Spawner (401)
+        location:
+            - 441
+            - 78
+            - -1
+        map: Malas
+        count: 6
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 30
+        walking_range: 30
+        entries:
+            -   name: PatchworkSkeleton
+                max_count: 4
+                probability: 100
+            -   name: RottingCorpse
+                max_count: 2
+                probability: 100
+    -   type: Spawner
+        guid: 55898d74-f2cf-4c30-953e-e5f3d9a3b5bf
+        name: Spawner (401)
+        location:
+            - 278
+            - 233
+            - 0
+        map: Malas
+        count: 4
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 30
+        walking_range: 30
+        entries:
+            -   name: PatchworkSkeleton
+                max_count: 2
+                probability: 100
+            -   name: VampireBat
+                max_count: 2
+                probability: 100
+    -   type: Spawner
+        guid: 59819649-f460-4934-ba36-a89a98aa13f2
+        name: Spawner (401)
+        location:
+            - 320
+            - 114
+            - -1
+        map: Malas
+        count: 7
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 35
+        walking_range: 35
+        entries:
+            -   name: Zombie
+                max_count: 7
+                probability: 100
+    -   type: Spawner
+        guid: 59d35721-49b5-4ff9-9c91-fad1b3d4b953
+        name: Spawner (401)
+        location:
+            - 395
+            - 33
+            - -1
+        map: Malas
+        count: 4
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 8
+        walking_range: 8
+        entries:
+            -   name: VampireBat
+                max_count: 4
+                probability: 100
+    -   type: Spawner
+        guid: 5bc9de9b-c7d7-4152-9fd1-19e57598100e
+        name: Spawner (401)
+        location:
+            - 320
+            - 114
+            - -1
+        map: Malas
+        count: 3
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 25
+        walking_range: 25
+        entries:
+            -   name: Mummy
+                max_count: 3
+                probability: 100
+    -   type: Spawner
+        guid: 5c28d40c-81f7-428d-b661-6e272aeabf3d
+        name: Spawner (401)
+        location:
+            - 480
+            - 227
+            - -1
+        map: Malas
+        count: 2
+        min_delay: 00:03:00
+        max_delay: 00:05:00
+        team: 0
+        home_range: 20
+        walking_range: 20
+        entries:
+            -   name: Lich
+                max_count: 2
+                probability: 100
+    -   type: Spawner
+        guid: 613d79a6-10e0-4465-9937-142ee7e701b0
+        name: Spawner (401)
+        location:
+            - 289
+            - 154
+            - 5
+        map: Malas
+        count: 1
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 5
+        walking_range: 5
+        entries:
+            -   name: LichLord
+                max_count: 1
+                probability: 100
+    -   type: Spawner
+        guid: 646d5241-162f-477e-a05c-17ba7eb95a83
+        name: Spawner (401)
+        location:
+            - 379
+            - 147
+            - -1
+        map: Malas
+        count: 20
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 40
+        walking_range: 40
+        entries:
+            -   name: PatchworkSkeleton
+                max_count: 10
+                probability: 100
+            -   name: VampireBat
+                max_count: 10
+                probability: 100
+    -   type: Spawner
+        guid: 6492e163-beb3-4abc-a674-921cbf5ba5df
+        name: Spawner (401)
+        location:
+            - 356
+            - 234
+            - -1
+        map: Malas
+        count: 3
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 10
+        walking_range: 10
+        entries:
+            -   name: Skeleton
+                max_count: 3
+                probability: 100
+    -   type: Spawner
+        guid: 693a953a-75cf-43df-9708-b781c8a04439
+        name: Spawner (401)
+        location:
+            - 325
+            - 172
+            - -1
+        map: Malas
+        count: 6
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 35
+        walking_range: 35
+        entries:
+            -   name: PatchworkSkeleton
+                max_count: 3
+                probability: 100
+            -   name: VampireBat
+                max_count: 3
+                probability: 100
+    -   type: Spawner
+        guid: 74182f58-a286-4576-9615-f92bbd4e7b71
+        name: Spawner (401)
+        location:
+            - 378
+            - 236
+            - -1
+        map: Malas
+        count: 2
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 8
+        walking_range: 8
+        entries:
+            -   name: Devourer
+                max_count: 2
+                probability: 100
+    -   type: Spawner
+        guid: 92450262-dc59-4666-b8bd-233fa481ddcb
+        name: Spawner (401)
+        location:
+            - 400
+            - 174
+            - -1
+        map: Malas
+        count: 1
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 5
+        walking_range: 5
+        entries:
+            -   name: Lich
+                max_count: 1
+                probability: 100
+    -   type: Spawner
+        guid: 93ce2586-d403-49a2-acbb-034ef0ee797a
+        name: Spawner (401)
+        location:
+            - 278
+            - 233
+            - 0
+        map: Malas
+        count: 3
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 35
+        walking_range: 35
+        entries:
+            -   name: Devourer
+                max_count: 3
+                probability: 100
+    -   type: Spawner
+        guid: 968ff190-b606-41f5-8cf0-36e15d3fd7d4
+        name: Spawner (401)
+        location:
+            - 382
+            - 82
+            - -1
+        map: Malas
+        count: 6
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 40
+        walking_range: 40
+        entries:
+            -   name: VampireBat
+                max_count: 6
+                probability: 100
+    -   type: Spawner
+        guid: 9e641eb9-2f8a-41ae-afb9-24a4b5879a0a
+        name: Spawner (401)
+        location:
+            - 305
+            - 28
+            - 0
+        map: Malas
+        count: 4
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 10
+        walking_range: 10
+        entries:
+            -   name: Gibberling
+                max_count: 4
+                probability: 100
+    -   type: Spawner
+        guid: a1434ffe-19f2-4076-b1ce-28e59dc9f627
+        name: Spawner (401)
+        location:
+            - 496
+            - 75
+            - 0
+        map: Malas
+        count: 4
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 10
+        walking_range: 10
+        entries:
+            -   name: VampireBat
+                max_count: 4
+                probability: 100
+    -   type: Spawner
+        guid: a42b1d2c-dcd4-4d43-aada-f5707a5f9e9f
+        name: Spawner (401)
+        location:
+            - 468
+            - 141
+            - -1
+        map: Malas
+        count: 2
+        min_delay: 00:01:00
+        max_delay: 00:03:00
+        team: 0
+        home_range: 6
+        walking_range: 6
+        entries:
+            -   name: Lich
+                max_count: 2
+                probability: 100
+    -   type: Spawner
+        guid: a81f4ff2-ee77-4e1f-968d-335a0ecbe7b9
+        name: Spawner (401)
+        location:
+            - 427
+            - 256
+            - -1
+        map: Malas
+        count: 4
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 30
+        walking_range: 30
+        entries:
+            -   name: LichLord
+                max_count: 1
+                probability: 100
+            -   name: RestlessSoul
+                max_count: 3
+                probability: 100
+    -   type: Spawner
+        guid: b0f74ae9-9e85-4525-9903-6e69c2f818e4
+        name: Spawner (401)
+        location:
+            - 309
+            - 15
+            - 0
+        map: Malas
+        count: 7
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 10
+        walking_range: 10
+        entries:
+            -   name: Skeleton
+                max_count: 4
+                probability: 100
+            -   name: BoneMagi
+                max_count: 2
+                probability: 100
+            -   name: BoneKnight
+                max_count: 1
+                probability: 100
+    -   type: Spawner
+        guid: bbfc66e4-a4fd-486a-960e-5cb7c64c2e72
+        name: Spawner (401)
+        location:
+            - 456
+            - 48
+            - -1
+        map: Malas
+        count: 12
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 15
+        walking_range: 15
+        entries:
+            -   name: FleshGolem
+                max_count: 6
+                probability: 100
+            -   name: Devourer
+                max_count: 6
+                probability: 100
+    -   type: Spawner
+        guid: c2ca4b73-4847-47ab-83de-c3f0abb570a9
+        name: Spawner (401)
+        location:
+            - 493
+            - 202
+            - -1
+        map: Malas
+        count: 6
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 12
+        walking_range: 12
+        entries:
+            -   name: Skeleton
+                max_count: 6
+                probability: 100
+    -   type: Spawner
+        guid: c85f6fd0-ad43-4e05-a43e-b49002b7f22c
+        name: Spawner (401)
+        location:
+            - 372
+            - 201
+            - -1
+        map: Malas
+        count: 4
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 20
+        walking_range: 20
+        entries:
+            -   name: Skeleton
+                max_count: 3
+                probability: 100
+            -   name: BoneKnight
+                max_count: 1
+                probability: 100
+    -   type: Spawner
+        guid: cf26832d-8e20-4277-8491-91461dd2995e
+        name: Spawner (401)
+        location:
+            - 487
+            - 118
+            - -1
+        map: Malas
+        count: 5
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 8
+        walking_range: 8
+        entries:
+            -   name: Skeleton
+                max_count: 3
+                probability: 100
+            -   name: Mummy
+                max_count: 2
+                probability: 100
+    -   type: Spawner
+        guid: d03c82ab-0be4-4818-8708-14afba5d8eee
+        name: Spawner (401)
+        location:
+            - 366
+            - 13
+            - -1
+        map: Malas
+        count: 3
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 10
+        walking_range: 10
+        entries:
+            -   name: Lich
+                max_count: 3
+                probability: 100
+    -   type: Spawner
+        guid: d5daa218-49a1-446c-a871-a7ebc77cacf9
+        name: Spawner (401)
+        location:
+            - 480
+            - 227
+            - -1
+        map: Malas
+        count: 3
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 20
+        walking_range: 20
+        entries:
+            -   name: Skeleton
+                max_count: 3
+                probability: 100
+    -   type: Spawner
+        guid: d8a6cfe1-0e71-423a-94e9-4ad92ef8d73d
+        name: Spawner (401)
+        location:
+            - 330
+            - 136
+            - 0
+        map: Malas
+        count: 1
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 4
+        walking_range: 4
+        entries:
+            -   name: LichLord
+                max_count: 1
+                probability: 100
+    -   type: Spawner
+        guid: d99b3aa7-013c-4dd9-8258-ec68e91e6bf5
+        name: Spawner (401)
+        location:
+            - 443
+            - 128
+            - -1
+        map: Malas
+        count: 16
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 40
+        walking_range: 40
+        entries:
+            -   name: PatchworkSkeleton
+                max_count: 7
+                probability: 100
+            -   name: VampireBat
+                max_count: 7
+                probability: 100
+            -   name: RottingCorpse
+                max_count: 2
+                probability: 100
+    -   type: Spawner
+        guid: dcade1a7-1652-4eb7-a550-d9ed7a7449ac
+        name: Spawner (401)
+        location:
+            - 442
+            - 205
+            - -1
+        map: Malas
+        count: 11
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 30
+        walking_range: 30
+        entries:
+            -   name: PatchworkSkeleton
+                max_count: 6
+                probability: 100
+            -   name: VampireBat
+                max_count: 5
+                probability: 100
+    -   type: Spawner
+        guid: e12bb836-80f3-4ce1-b068-9d2485922b0f
+        name: Spawner (401)
+        location:
+            - 290
+            - 28
+            - 0
+        map: Malas
+        count: 4
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 10
+        walking_range: 10
+        entries:
+            -   name: GoreFiend
+                max_count: 4
+                probability: 100
+    -   type: Spawner
+        guid: e764f652-de2c-420f-8419-7d29a2d6cd9c
+        name: Spawner (401)
+        location:
+            - 287
+            - 81
+            - -1
+        map: Malas
+        count: 8
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 40
+        walking_range: 40
+        entries:
+            -   name: VampireBat
+                max_count: 6
+                probability: 100
+            -   name: RottingCorpse
+                max_count: 2
+                probability: 100
+    -   type: Spawner
+        guid: f20c08f3-28e9-47a3-b24e-b31370ce2c18
+        name: Spawner (401)
+        location:
+            - 447
+            - 25
+            - -1
+        map: Malas
+        count: 2
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 15
+        walking_range: 15
+        entries:
+            -   name: Lich
+                max_count: 2
+                probability: 100
+    -   type: Spawner
+        guid: f909d2a4-b3bf-4d0c-b07c-f36839c99209
+        name: Spawner (401)
+        location:
+            - 479
+            - 168
+            - -1
+        map: Malas
+        count: 5
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 20
+        walking_range: 20
+        entries:
+            -   name: Skeleton
+                max_count: 5
+                probability: 100
+    -   type: Spawner
+        guid: f9c8b1af-1ea5-466d-90a1-e956f8c8de31
+        name: Spawner (401)
+        location:
+            - 266
+            - 26
+            - 0
+        map: Malas
+        count: 2
+        min_delay: 00:01:00
+        max_delay: 00:02:00
+        team: 0
+        home_range: 5
+        walking_range: 8
+        entries:
+            -   name: LichLord
+                max_count: 2
+                probability: 100
+    -   type: Spawner
+        guid: ff72dd04-bba5-4a6f-8899-d851b4c1fe88
+        name: Spawner (401)
+        location:
+            - 480
+            - 227
+            - -1
+        map: Malas
+        count: 1
+        min_delay: 00:05:00
+        max_delay: 00:10:00
+        team: 0
+        home_range: 20
+        walking_range: 20
+        entries:
+            -   name: LichLord
+                max_count: 1
+                probability: 100
