@@ -80,6 +80,7 @@ public class ItemTemplateYamlLoaderTests
                   weight: 2
                   is_movable: true
                   hue: 7
+                  comment: Base clothing note
                   script_id: clothing_script
                   rarity: Common
                   tags:
@@ -99,12 +100,95 @@ public class ItemTemplateYamlLoaderTests
         Assert.Equal(2, shirt.Weight);
         Assert.True(shirt.IsMovable);
         Assert.Equal(7, shirt.Hue);
+        Assert.Equal("Base clothing note", shirt.Comment);
         Assert.Equal("clothing_script", shirt.ScriptId);
         Assert.Equal(ItemRarity.Common, shirt.Rarity);
         Assert.Equal(["clothing"], shirt.Tags);
         Assert.Equal(5399, shirt.ItemId);
         Assert.Equal(ItemLayerType.Shirt, shirt.Layer);
         Assert.False(shirt.IsAbstract);
+    }
+
+    [Fact]
+    public void LoadAll_MissingNullOrEmptyName_UsesTileDataName()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "tile_names.yaml",
+            """
+            item_templates:
+                - id: missing_name
+                  item_id: 100
+                - id: null_name
+                  name:
+                  item_id: 101
+                - id: empty_name
+                  name: ""
+                  item_id: 102
+            """
+        );
+        var tileData = new TestTileDataStore(
+            (100, "Missing Name Tile"),
+            (101, "Null Name Tile"),
+            (102, "Empty Name Tile")
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path, tileData);
+
+        var templates = loader.LoadAll();
+
+        Assert.Equal("Missing Name Tile", templates.Single(template => template.Id == "missing_name").Name);
+        Assert.Equal("Null Name Tile", templates.Single(template => template.Id == "null_name").Name);
+        Assert.Equal("Empty Name Tile", templates.Single(template => template.Id == "empty_name").Name);
+    }
+
+    [Fact]
+    public void LoadAll_InheritedName_WinsOverTileDataName()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "inheritance.yaml",
+            """
+            item_templates:
+                - id: parent
+                  name: Parent Name
+                - id: child
+                  base_item: parent
+                  item_id: 100
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path, new TestTileDataStore((100, "Tile Name")));
+
+        var templates = loader.LoadAll();
+
+        var child = templates.Single(template => template.Id == "child");
+        Assert.Equal("Parent Name", child.Name);
+    }
+
+    [Fact]
+    public void LoadAll_Comment_ChildValueWinsOverParent()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "comments.yaml",
+            """
+            item_templates:
+                - id: parent
+                  comment: Parent note
+                - id: child_without_comment
+                  base_item: parent
+                - id: child_with_comment
+                  base_item: parent
+                  comment: Child note
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var templates = loader.LoadAll();
+
+        var withoutComment = templates.Single(template => template.Id == "child_without_comment");
+        var withComment = templates.Single(template => template.Id == "child_with_comment");
+        Assert.Equal("Parent note", withoutComment.Comment);
+        Assert.Equal("Child note", withComment.Comment);
     }
 
     [Fact]

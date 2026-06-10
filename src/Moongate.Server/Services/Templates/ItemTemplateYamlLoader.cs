@@ -1,5 +1,6 @@
 using System.Globalization;
 using Moongate.Core.Yaml;
+using Moongate.UO.Data.Interfaces.Tiles;
 using Moongate.UO.Data.Templates.Items;
 using Moongate.UO.Data.Types.Items;
 using Serilog;
@@ -31,12 +32,14 @@ public sealed class ItemTemplateYamlLoader
     }
 
     private readonly ILogger _logger = Log.ForContext<ItemTemplateYamlLoader>();
+    private readonly ITileDataStore? _tileData;
     private readonly string _templatesDirectory;
 
-    public ItemTemplateYamlLoader(string templatesDirectory)
+    public ItemTemplateYamlLoader(string templatesDirectory, ITileDataStore? tileData = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(templatesDirectory);
 
+        _tileData = tileData;
         _templatesDirectory = Path.GetFullPath(templatesDirectory);
     }
 
@@ -111,6 +114,7 @@ public sealed class ItemTemplateYamlLoader
         }
 
         ResolveBaseItems(templates);
+        ApplyTileDataNameFallbacks(templates);
         ValidateParams(templates, sources);
 
         _logger.Information(
@@ -132,6 +136,11 @@ public sealed class ItemTemplateYamlLoader
         if (string.IsNullOrWhiteSpace(child.Name))
         {
             child.Name = parent.Name;
+        }
+
+        if (string.IsNullOrWhiteSpace(child.Comment))
+        {
+            child.Comment = parent.Comment;
         }
 
         if (string.IsNullOrWhiteSpace(child.ScriptId))
@@ -268,6 +277,29 @@ public sealed class ItemTemplateYamlLoader
         }
 
         states[template.Id] = ResolveState.Done;
+    }
+
+    private void ApplyTileDataNameFallbacks(List<ItemTemplateDefinition> templates)
+    {
+        if (_tileData is null)
+        {
+            return;
+        }
+
+        foreach (var template in templates)
+        {
+            if (!string.IsNullOrWhiteSpace(template.Name) || template.ItemId == 0)
+            {
+                continue;
+            }
+
+            var itemName = _tileData.GetItem(template.ItemId).Name;
+
+            if (!string.IsNullOrWhiteSpace(itemName))
+            {
+                template.Name = itemName;
+            }
+        }
     }
 
     private static void ValidateParams(

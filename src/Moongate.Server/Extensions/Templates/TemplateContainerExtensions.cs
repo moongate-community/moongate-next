@@ -4,6 +4,7 @@ using Moongate.Core.Types;
 using Moongate.Server.Extensions.Hosting;
 using Moongate.Server.Services.Templates;
 using Moongate.UO.Data.Interfaces.Services;
+using Moongate.UO.Data.Interfaces.Tiles;
 
 namespace Moongate.Server.Extensions.Templates;
 
@@ -26,7 +27,8 @@ public static class TemplateContainerExtensions
         container.Register<IItemTemplateService, ItemTemplateService>(Reuse.Singleton);
         container.RegisterDelegate(
             static resolver => new ItemTemplateYamlLoader(
-                resolver.Resolve<DirectoriesConfig>()[DirectoryType.Templates_Items]
+                resolver.Resolve<DirectoriesConfig>()[DirectoryType.Templates_Items],
+                resolver.Resolve<ITileDataStore>()
             ),
             Reuse.Singleton
         );
