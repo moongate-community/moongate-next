@@ -3,6 +3,7 @@ using Moongate.Server.Services.Templates;
 using Moongate.UO.Data.Templates.Items;
 using Moongate.UO.Data.Templates.Mobiles;
 using Moongate.UO.Data.Types.Items;
+using Moongate.UO.Data.Types.Mobiles;
 
 namespace Moongate.Tests.Server.Mobiles;
 
@@ -127,5 +128,25 @@ public sealed class MobileTemplateValidatorTests
 
         var ex = Assert.Throws<InvalidOperationException>(() => MobileTemplateValidator.Validate(One(m), Items(), new FakeLoot()));
         Assert.Contains("NotASkill", ex.Message);
+    }
+
+    [Fact]
+    public void Validate_InvalidNotoriety_Throws()
+    {
+        var m = Mob("g");
+        m.Notoriety = Notoriety.Invalid;
+
+        var ex = Assert.Throws<InvalidOperationException>(() => MobileTemplateValidator.Validate(One(m), Items(), new FakeLoot()));
+        Assert.Contains("notoriety", ex.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void Validate_BackpackNotBackpackLayer_Throws()
+    {
+        var m = Mob("g");
+        m.BackpackTemplate = "katana"; // exists, has a layer, but it's OneHanded not Backpack
+
+        var ex = Assert.Throws<InvalidOperationException>(() => MobileTemplateValidator.Validate(One(m), Items(), new FakeLoot()));
+        Assert.Contains("Backpack", ex.Message);
     }
 }

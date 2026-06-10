@@ -1,6 +1,8 @@
 using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Templates.Items;
 using Moongate.UO.Data.Templates.Mobiles;
+using Moongate.UO.Data.Types.Items;
+using Moongate.UO.Data.Types.Mobiles;
 using Moongate.UO.Data.Types.Skills;
 
 namespace Moongate.Server.Services.Mobiles;
@@ -23,10 +25,21 @@ public static class MobileTemplateValidator
 
         foreach (var template in templates)
         {
+            ValidateNotoriety(template);
             ValidateEquipment(template, items);
             ValidateBackpack(template, items);
             ValidateLootTables(template, loot);
             ValidateSkills(template);
+        }
+    }
+
+    private static void ValidateNotoriety(MobileTemplateDefinition template)
+    {
+        if (template.Notoriety == Notoriety.Invalid)
+        {
+            throw new InvalidOperationException(
+                $"Mobile template '{template.Id}' has Invalid notoriety."
+            );
         }
     }
 
@@ -58,6 +71,13 @@ public static class MobileTemplateValidator
         {
             throw new InvalidOperationException(
                 $"Mobile template '{template.Id}' backpack_template '{item.Id}' has no layer."
+            );
+        }
+
+        if (item.Layer != ItemLayerType.Backpack)
+        {
+            throw new InvalidOperationException(
+                $"Mobile template '{template.Id}' backpack_template '{item.Id}' is not a Backpack-layer item (layer {item.Layer})."
             );
         }
     }
