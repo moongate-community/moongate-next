@@ -1,4 +1,12 @@
-export type AdminNavId = "overview" | "runtime" | "metrics" | "persistence" | "security" | "users" | "console";
+export type AdminNavId =
+  | "overview"
+  | "runtime"
+  | "metrics"
+  | "persistence"
+  | "security"
+  | "users"
+  | "itemTemplates"
+  | "console";
 
 export type AdminStatus = "healthy" | "warning" | "offline";
 
