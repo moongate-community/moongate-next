@@ -15,6 +15,7 @@ public sealed class ItemTemplateDefinitionTests
                 - id: plain_shirt
                   base_item: base_clothing
                   name: Shirt
+                  comment: Starter clothing template
                   item_id: 5399
                   hue: 33
                   weight: 1
@@ -34,6 +35,7 @@ public sealed class ItemTemplateDefinitionTests
         Assert.Equal("plain_shirt", template.Id);
         Assert.Equal("base_clothing", template.BaseItem);
         Assert.Equal("Shirt", template.Name);
+        Assert.Equal("Starter clothing template", template.Comment);
         Assert.Equal(5399, template.ItemId);
         Assert.Equal(33, template.Hue);
         Assert.Equal(1, template.Weight);
@@ -61,6 +63,7 @@ public sealed class ItemTemplateDefinitionTests
         var template = Assert.Single(table.ItemTemplates);
         Assert.False(template.IsAbstract);
         Assert.Null(template.BaseItem);
+        Assert.Equal("", template.Comment);
         Assert.Equal(1, template.Amount);
         Assert.Equal(0, template.ItemId);
         Assert.Null(template.Layer);

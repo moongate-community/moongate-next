@@ -25,6 +25,8 @@ public sealed class ItemTemplateDefinition
 
     public string Name { get; set; } = "";
 
+    public string Comment { get; set; } = "";
+
     public int ItemId { get; set; }
 
     public int Hue { get; set; }
