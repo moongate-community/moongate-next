@@ -36,6 +36,12 @@ public interface IItemEntity : IWorldEntity
     /// <summary>Rarity tier of the item.</summary>
     ItemRarity Rarity { get; set; }
 
+    /// <summary>Gold amount a player pays when buying this item from a vendor.</summary>
+    int BuyValue { get; set; }
+
+    /// <summary>Gold amount a player receives when selling this item to a vendor.</summary>
+    int SellValue { get; set; }
+
     /// <summary>Minimum account level required to see or interact with the item.</summary>
     UserLevelType Visibility { get; set; }
 

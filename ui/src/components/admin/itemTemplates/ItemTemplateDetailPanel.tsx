@@ -3,6 +3,7 @@ import type { ItemTemplateDetail } from "../../../types/itemTemplates";
 import { DefinitionList } from "../DefinitionList";
 import { HueSwatch } from "./HueSwatch";
 import { ItemImageCell } from "./ItemImageCell";
+import { ItemValueDisplay } from "./ItemValueDisplay";
 import { RarityBadge } from "./RarityBadge";
 
 type ItemTemplateDetailPanelProps = {
@@ -55,6 +56,7 @@ export function ItemTemplateDetailPanel({ template, loading, error }: ItemTempla
 
       <div className="grid gap-4 p-4">
         <HueSwatch hue={template.hue} mode="detail" />
+        <ItemValueDisplay value={template.value} mode="detail" />
         <DefinitionList
           items={[
             { term: "Base item", value: template.baseItem ?? "-", mono: true },

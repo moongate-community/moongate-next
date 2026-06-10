@@ -25,7 +25,16 @@ export type ItemTemplateSummary = {
   layer: string | null;
   tags: string[];
   isAbstract: boolean;
+  value: ItemTemplateValueSummary | null;
   hue: HueSummary;
+};
+
+export type ItemTemplateValueSummary = {
+  buy: number;
+  sell: number;
+  rarityMultiplier: number;
+  effectiveBuy: number;
+  effectiveSell: number;
 };
 
 export type ItemTemplateParamSummary = {

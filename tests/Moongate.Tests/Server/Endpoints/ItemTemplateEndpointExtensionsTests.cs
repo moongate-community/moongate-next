@@ -79,6 +79,8 @@ public sealed class ItemTemplateEndpointExtensionsTests
     [InlineData("3937", "longsword")]
     [InlineData("0x0F61", "longsword")]
     [InlineData("0xF61", "longsword")]
+    [InlineData("125", "longsword")]
+    [InlineData("55", "longsword")]
     public void HandleList_SearchesApprovedFields(string search, string expectedId)
     {
         var result = ItemTemplateEndpointExtensions.HandleList(
@@ -193,6 +195,11 @@ public sealed class ItemTemplateEndpointExtensionsTests
                     ScriptId = "combat_script",
                     Rarity = ItemRarity.Common,
                     Layer = ItemLayerType.OneHanded,
+                    Value = new()
+                    {
+                        Buy = 125,
+                        Sell = 55
+                    },
                     Tags = ["weapon"]
                 },
                 new()

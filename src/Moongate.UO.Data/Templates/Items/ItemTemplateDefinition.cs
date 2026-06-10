@@ -48,6 +48,8 @@ public sealed class ItemTemplateDefinition
     /// <summary>Item rarity; templates default to Common.</summary>
     public ItemRarity Rarity { get; set; } = ItemRarity.Common;
 
+    public ItemTemplateValueDefinition? Value { get; set; }
+
     public UserLevelType Visibility { get; set; }
 
     public List<string> Tags { get; set; } = [];

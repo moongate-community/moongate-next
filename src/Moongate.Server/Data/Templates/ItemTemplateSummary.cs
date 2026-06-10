@@ -15,6 +15,7 @@ public sealed record ItemTemplateSummary(
     string? Layer,
     IReadOnlyList<string> Tags,
     bool IsAbstract,
+    ItemTemplateValueSummary? Value,
     HueSummary Hue
 )
 {
@@ -35,6 +36,7 @@ public sealed record ItemTemplateSummary(
             template.Layer.HasValue ? FormatLayer(template.Layer.Value) : null,
             [..template.Tags],
             template.IsAbstract,
+            template.Value is null ? null : ItemTemplateValueSummary.FromDefinition(template.Value, template.Rarity),
             HueSummary.FromValue(template.Hue, hues)
         );
     }

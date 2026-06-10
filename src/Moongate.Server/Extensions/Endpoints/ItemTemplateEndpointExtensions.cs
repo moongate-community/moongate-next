@@ -146,6 +146,14 @@ public static class ItemTemplateEndpointExtensions
         yield return ItemTemplateSummary.FormatItemId(template.ItemId);
         yield return $"0x{template.ItemId:X}";
 
+        if (template.Value is not null)
+        {
+            yield return template.Value.Buy.ToString(CultureInfo.InvariantCulture);
+            yield return template.Value.BaseSell.ToString(CultureInfo.InvariantCulture);
+            yield return template.Value.EffectiveBuy(template.Rarity).ToString(CultureInfo.InvariantCulture);
+            yield return template.Value.EffectiveSell(template.Rarity).ToString(CultureInfo.InvariantCulture);
+        }
+
         foreach (var tag in template.Tags)
         {
             yield return tag;

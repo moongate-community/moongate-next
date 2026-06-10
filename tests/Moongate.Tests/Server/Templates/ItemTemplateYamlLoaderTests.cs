@@ -83,6 +83,9 @@ public class ItemTemplateYamlLoaderTests
                   comment: Base clothing note
                   script_id: clothing_script
                   rarity: Uncommon
+                  value:
+                      buy: 20
+                      sell: 10
                   tags:
                       - clothing
                 - id: plain_shirt
@@ -103,6 +106,9 @@ public class ItemTemplateYamlLoaderTests
         Assert.Equal("Base clothing note", shirt.Comment);
         Assert.Equal("clothing_script", shirt.ScriptId);
         Assert.Equal(ItemRarity.Uncommon, shirt.Rarity);
+        Assert.NotNull(shirt.Value);
+        Assert.Equal(20, shirt.Value.Buy);
+        Assert.Equal(10, shirt.Value.BaseSell);
         Assert.Equal(["clothing"], shirt.Tags);
         Assert.Equal(5399, shirt.ItemId);
         Assert.Equal(ItemLayerType.Shirt, shirt.Layer);
@@ -308,6 +314,41 @@ public class ItemTemplateYamlLoaderTests
         var withoutTags = templates.Single(template => template.Id == "child_without_tags");
         Assert.Equal(["own"], withTags.Tags);
         Assert.Equal(["a", "b"], withoutTags.Tags);
+    }
+
+    [Fact]
+    public void LoadAll_Value_ChildValueWinsOverParent()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "values.yaml",
+            """
+            item_templates:
+                - id: parent
+                  value:
+                      buy: 20
+                      sell: 10
+                - id: child_without_value
+                  base_item: parent
+                - id: child_with_value
+                  base_item: parent
+                  value:
+                      buy: 40
+                      sell: 18
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var templates = loader.LoadAll();
+
+        var inherited = templates.Single(template => template.Id == "child_without_value");
+        var own = templates.Single(template => template.Id == "child_with_value");
+        Assert.NotNull(inherited.Value);
+        Assert.Equal(20, inherited.Value.Buy);
+        Assert.Equal(10, inherited.Value.BaseSell);
+        Assert.NotNull(own.Value);
+        Assert.Equal(40, own.Value.Buy);
+        Assert.Equal(18, own.Value.BaseSell);
     }
 
     [Fact]

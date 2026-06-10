@@ -186,6 +186,8 @@ public sealed class ItemTemplateYamlLoader
             child.Rarity = parent.Rarity;
         }
 
+        child.Value ??= parent.Value?.Clone();
+
         if (child.Visibility == default)
         {
             child.Visibility = parent.Visibility;

@@ -95,6 +95,11 @@ public sealed class ItemFactoryServiceTests
             GumpId = 0x3C,
             ScriptId = "shirt_script",
             Rarity = ItemRarity.Common,
+            Value = new()
+            {
+                Buy = 20,
+                Sell = 8
+            },
             Visibility = UserLevelType.GameMaster
         };
         var items = new FakeItemService();
@@ -112,8 +117,31 @@ public sealed class ItemFactoryServiceTests
         Assert.Equal(0x3C, entity.GumpId);
         Assert.Equal("shirt_script", entity.ScriptId);
         Assert.Equal(ItemRarity.Common, entity.Rarity);
+        Assert.Equal(20, entity.BuyValue);
+        Assert.Equal(8, entity.SellValue);
         Assert.Equal(UserLevelType.GameMaster, entity.Visibility);
         Assert.Single(items.Created);
+    }
+
+    [Fact]
+    public async Task CreateFromTemplateAsync_AppliesRarityMultiplierToValue()
+    {
+        var template = new ItemTemplateDefinition
+        {
+            Id = "rare_katana",
+            Rarity = ItemRarity.Rare,
+            Value = new()
+            {
+                Buy = 25,
+                Sell = 10
+            }
+        };
+        var factory = new ItemFactoryService(NewRegistry(template), new FakeItemService());
+
+        var entity = await factory.CreateFromTemplateAsync("rare_katana");
+
+        Assert.Equal(38, entity.BuyValue);
+        Assert.Equal(15, entity.SellValue);
     }
 
     [Fact]

@@ -3,6 +3,9 @@ item_templates:
       is_abstract: true
       is_stackable: true
       is_movable: true
+      value:
+          buy: 3
+          sell: 1
       tags: [reagent]
     - id: black_pearl
       base_item: base_reagent

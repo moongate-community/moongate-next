@@ -5,6 +5,9 @@ item_templates:
       weight: 1
       is_movable: true
       layer: OneHanded
+      value:
+          buy: 24
+          sell: 12
       tags: [weapon]
     - id: broadsword
       name: Broadsword
@@ -12,4 +15,7 @@ item_templates:
       weight: 6
       is_movable: true
       layer: OneHanded
+      value:
+          buy: 60
+          sell: 30
       tags: [weapon]

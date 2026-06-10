@@ -3,17 +3,26 @@ item_templates:
       item_id: 4027
       weight: 2
       is_movable: true
+      value:
+          buy: 25
+          sell: 12
       tags: [tool, blacksmith]
     - id: smith_hammer
       item_id: 5091
       weight: 8
       is_movable: true
       layer: OneHanded
+      value:
+          buy: 20
+          sell: 10
       tags: [tool, blacksmith]
     - id: sewing_kit
       item_id: 3997
       weight: 2
       is_movable: true
+      value:
+          buy: 18
+          sell: 9
       tags: [tool, tailor]
     - id: fishing_pole
       item_id: 3520
@@ -26,11 +35,17 @@ item_templates:
       weight: 11
       is_movable: true
       layer: OneHanded
+      value:
+          buy: 35
+          sell: 17
       tags: [tool, mining]
     - id: shovel
       item_id: 3897
       weight: 5
       is_movable: true
+      value:
+          buy: 15
+          sell: 7
       tags: [tool, mining]
     - id: hatchet
       item_id: 3907

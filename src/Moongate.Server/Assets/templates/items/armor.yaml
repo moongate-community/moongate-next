@@ -3,6 +3,9 @@ item_templates:
       is_abstract: true
       weight: 2
       is_movable: true
+      value:
+          buy: 35
+          sell: 17
       tags: [armor, leather]
     - id: leather_cap
       base_item: base_leather_armor
@@ -36,10 +39,17 @@ item_templates:
       weight: 5
       is_movable: true
       layer: TwoHanded
+      value:
+          buy: 40
+          sell: 20
       tags: [armor, shield]
     - id: bronze_shield
       item_id: 7026
       weight: 6
       is_movable: true
       layer: TwoHanded
+      rarity: Uncommon
+      value:
+          buy: 80
+          sell: 40
       tags: [armor, shield]

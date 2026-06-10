@@ -60,6 +60,12 @@ public sealed class ItemFactoryService : IItemFactoryService
             Visibility = template.Visibility
         };
 
+        if (template.Value is not null)
+        {
+            item.BuyValue = template.Value.EffectiveBuy(template.Rarity);
+            item.SellValue = template.Value.EffectiveSell(template.Rarity);
+        }
+
         item.CustomProperties[ItemTemplateDefinition.ReservedIsMovableParamKey] = new CustomProperty
         {
             Type = CustomPropertyType.Boolean,

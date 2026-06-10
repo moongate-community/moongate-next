@@ -3,16 +3,25 @@ item_templates:
       is_abstract: true
       weight: 4
       is_movable: true
+      value:
+          buy: 50
+          sell: 25
       tags: [weapon]
     - id: katana
       base_item: base_weapon
       item_id: 5119
       layer: OneHanded
+      value:
+          buy: 85
+          sell: 42
     - id: kryss
       base_item: base_weapon
       item_id: 5121
       weight: 2
       layer: OneHanded
+      value:
+          buy: 45
+          sell: 22
     - id: mace
       base_item: base_weapon
       item_id: 3932
@@ -23,11 +32,19 @@ item_templates:
       item_id: 3911
       weight: 8
       layer: TwoHanded
+      rarity: Uncommon
+      value:
+          buy: 95
+          sell: 47
     - id: halberd
       base_item: base_weapon
       item_id: 5182
       weight: 16
       layer: TwoHanded
+      rarity: Rare
+      value:
+          buy: 120
+          sell: 60
     - id: spear
       base_item: base_weapon
       item_id: 3938
@@ -38,6 +55,9 @@ item_templates:
       item_id: 5042
       weight: 6
       layer: TwoHanded
+      value:
+          buy: 70
+          sell: 35
       tags: [weapon, ranged]
     - id: crossbow
       base_item: base_weapon

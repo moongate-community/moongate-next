@@ -1,6 +1,7 @@
 import type { ItemTemplateSummary } from "../../../types/itemTemplates";
 import { HueSwatch } from "./HueSwatch";
 import { ItemImageCell } from "./ItemImageCell";
+import { ItemValueDisplay } from "./ItemValueDisplay";
 import { RarityBadge } from "./RarityBadge";
 
 type ItemTemplateTableProps = {
@@ -29,6 +30,7 @@ export function ItemTemplateTable({ templates, selectedId, onSelect }: ItemTempl
             <th className="px-2.5 py-2">Item</th>
             <th className="px-2.5 py-2">Hue</th>
             <th className="px-2.5 py-2">Rarity</th>
+            <th className="px-2.5 py-2">Value</th>
             <th className="px-2.5 py-2">Layer</th>
             <th className="px-2.5 py-2">Tags</th>
             <th className="px-2.5 py-2">Abstract</th>
@@ -52,6 +54,9 @@ export function ItemTemplateTable({ templates, selectedId, onSelect }: ItemTempl
               </td>
               <td className="px-2.5 py-1.5">
                 <RarityBadge rarity={template.rarity} />
+              </td>
+              <td className="px-2.5 py-1.5">
+                <ItemValueDisplay value={template.value} />
               </td>
               <td className="px-2.5 py-1.5 text-xs text-fg-muted">{template.layer ?? "-"}</td>
               <td className="px-2.5 py-1.5">

@@ -74,6 +74,11 @@ public sealed class ItemTemplateApiModelTests
             Hue = 1,
             Rarity = ItemRarity.Common,
             Layer = ItemLayerType.OneHanded,
+            Value = new()
+            {
+                Buy = 25,
+                Sell = 12
+            },
             Tags = ["weapon"],
             IsAbstract = false
         };
@@ -85,7 +90,37 @@ public sealed class ItemTemplateApiModelTests
         Assert.Equal("/api/items/0x0F61.png", summary.ImageUrl);
         Assert.Equal("Common", summary.Rarity);
         Assert.Equal("OneHanded", summary.Layer);
+        Assert.NotNull(summary.Value);
+        Assert.Equal(25, summary.Value.Buy);
+        Assert.Equal(12, summary.Value.Sell);
+        Assert.Equal(1.0m, summary.Value.RarityMultiplier);
+        Assert.Equal(25, summary.Value.EffectiveBuy);
+        Assert.Equal(12, summary.Value.EffectiveSell);
         Assert.Equal(["weapon"], summary.Tags);
+    }
+
+    [Fact]
+    public void ItemTemplateSummary_AppliesRarityValueMultiplier()
+    {
+        var template = new ItemTemplateDefinition
+        {
+            Id = "rare_katana",
+            Name = "Rare Katana",
+            ItemId = 0x13FF,
+            Rarity = ItemRarity.Rare,
+            Value = new()
+            {
+                Buy = 25,
+                Sell = 10
+            }
+        };
+
+        var summary = ItemTemplateSummary.FromDefinition(template, new FakeHueStore());
+
+        Assert.NotNull(summary.Value);
+        Assert.Equal(1.5m, summary.Value.RarityMultiplier);
+        Assert.Equal(38, summary.Value.EffectiveBuy);
+        Assert.Equal(15, summary.Value.EffectiveSell);
     }
 
     [Fact]
@@ -122,6 +157,7 @@ public sealed class ItemTemplateApiModelTests
         Assert.True(detail.IsMovable);
         Assert.False(detail.IsStackable);
         Assert.Equal(42, detail.GumpId);
+        Assert.Null(detail.Value);
         var param = Assert.Single(detail.Params);
         Assert.Equal("capacity", param.Key);
         Assert.Equal("Integer", param.Type);

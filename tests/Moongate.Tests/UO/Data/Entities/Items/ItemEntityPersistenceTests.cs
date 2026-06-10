@@ -54,6 +54,8 @@ public sealed class ItemEntityPersistenceTests : IDisposable
                 Amount = i + 1,
                 Weight = 1,
                 Rarity = ItemRarity.Common,
+                BuyValue = 2,
+                SellValue = 1,
                 ParentContainerId = backpackId
             };
 
@@ -117,6 +119,8 @@ public sealed class ItemEntityPersistenceTests : IDisposable
                 Assert.NotNull(child);
                 Assert.Equal($"arrow-{i}", child!.Name);
                 Assert.Equal(i + 1, child.Amount);
+                Assert.Equal(2, child.BuyValue);
+                Assert.Equal(1, child.SellValue);
                 Assert.Equal(3, child.CustomProperties.Count);
                 Assert.Equal(i, child.CustomProperties["index"].IntegerValue);
                 Assert.Equal($"arrow-{i}", child.CustomProperties["name"].StringValue);

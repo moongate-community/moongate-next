@@ -40,6 +40,10 @@ public sealed class ItemEntity : IItemEntity
 
     public ItemRarity Rarity { get; set; }
 
+    public int BuyValue { get; set; }
+
+    public int SellValue { get; set; }
+
     public UserLevelType Visibility { get; set; }
 
     public Serial ParentContainerId { get; set; }

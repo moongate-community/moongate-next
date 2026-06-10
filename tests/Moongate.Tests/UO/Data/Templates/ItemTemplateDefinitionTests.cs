@@ -24,6 +24,9 @@ public sealed class ItemTemplateDefinitionTests
                   layer: Shirt
                   script_id: shirt_script
                   rarity: Common
+                  value:
+                      buy: 24
+                      sell: 12
                   tags: [clothing, starter]
                   params:
                       dyeable: { type: String, value: "true" }
@@ -44,6 +47,9 @@ public sealed class ItemTemplateDefinitionTests
         Assert.Equal(ItemLayerType.Shirt, template.Layer);
         Assert.Equal("shirt_script", template.ScriptId);
         Assert.Equal(ItemRarity.Common, template.Rarity);
+        Assert.NotNull(template.Value);
+        Assert.Equal(24, template.Value.Buy);
+        Assert.Equal(12, template.Value.BaseSell);
         Assert.Equal(new[] { "clothing", "starter" }, template.Tags);
         Assert.Equal(ItemTemplateParamType.String, template.Params["dyeable"].Type);
         Assert.Equal("true", template.Params["dyeable"].Value);
@@ -69,8 +75,28 @@ public sealed class ItemTemplateDefinitionTests
         Assert.Null(template.Layer);
         Assert.Null(template.GumpId);
         Assert.Equal(ItemRarity.Common, template.Rarity);
+        Assert.Null(template.Value);
         Assert.Empty(template.Tags);
         Assert.Empty(template.Params);
+    }
+
+    [Fact]
+    public void Deserialize_ValueWithoutSell_UsesHalfBuyAsBaseSell()
+    {
+        const string yaml =
+            """
+            item_templates:
+                - id: dagger
+                  value:
+                      buy: 25
+            """;
+
+        var table = YamlUtils.Deserialize<ItemTemplateTable>(yaml);
+
+        var template = Assert.Single(table.ItemTemplates);
+        Assert.NotNull(template.Value);
+        Assert.Equal(25, template.Value.Buy);
+        Assert.Equal(12, template.Value.BaseSell);
     }
 
     [Fact]
