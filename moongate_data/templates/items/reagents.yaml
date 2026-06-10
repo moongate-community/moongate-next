@@ -1,0 +1,30 @@
+item_templates:
+    - id: base_reagent
+      is_abstract: true
+      is_stackable: true
+      is_movable: true
+      tags: [reagent]
+    - id: black_pearl
+      base_item: base_reagent
+      item_id: 3962
+    - id: blood_moss
+      base_item: base_reagent
+      item_id: 3963
+    - id: garlic
+      base_item: base_reagent
+      item_id: 3972
+    - id: ginseng
+      base_item: base_reagent
+      item_id: 3973
+    - id: mandrake_root
+      base_item: base_reagent
+      item_id: 3974
+    - id: nightshade
+      base_item: base_reagent
+      item_id: 3976
+    - id: spider_silk
+      base_item: base_reagent
+      item_id: 3981
+    - id: sulfurous_ash
+      base_item: base_reagent
+      item_id: 3980

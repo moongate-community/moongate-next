@@ -1,0 +1,40 @@
+item_templates:
+    - id: tongs
+      item_id: 4027
+      weight: 2
+      is_movable: true
+      tags: [tool, blacksmith]
+    - id: smith_hammer
+      item_id: 5091
+      weight: 8
+      is_movable: true
+      layer: OneHanded
+      tags: [tool, blacksmith]
+    - id: sewing_kit
+      item_id: 3997
+      weight: 2
+      is_movable: true
+      tags: [tool, tailor]
+    - id: fishing_pole
+      item_id: 3520
+      weight: 8
+      is_movable: true
+      layer: TwoHanded
+      tags: [tool, fishing]
+    - id: pickaxe
+      item_id: 3718
+      weight: 11
+      is_movable: true
+      layer: OneHanded
+      tags: [tool, mining]
+    - id: shovel
+      item_id: 3897
+      weight: 5
+      is_movable: true
+      tags: [tool, mining]
+    - id: hatchet
+      item_id: 3907
+      weight: 4
+      is_movable: true
+      layer: OneHanded
+      tags: [tool, lumberjack]
