@@ -1,0 +1,39 @@
+mobile_templates:
+  - id: base_humanoid
+    is_abstract: true
+    race_index: 0
+    gender: Male
+    stats: { strength: 50, dexterity: 50, intelligence: 30 }
+    resources: { hits: 50, mana: 30, stamina: 50 }
+    tags: [humanoid]
+
+  - id: town_guard
+    base_mobile: base_humanoid
+    name: a guard
+    title: the guard
+    body: 400
+    skin_hue: 1002
+    brain: guard_brain
+    notoriety: Innocent
+    karma: 1000
+    fame: 2500
+    stats: { strength: 100, dexterity: 90, intelligence: 50 }
+    resources: { hits: 120, mana: 50, stamina: 90 }
+    resistances: { physical: 40, fire: 20 }
+    skills:
+      Swords: 90
+      Tactics: 80
+    equipment:
+      - item: leather_chest
+      - item: katana
+    backpack_template: backpack
+    loot_tables: [common]
+    tags: [npc, guard]
+
+  - id: chicken
+    name: a chicken
+    body: 208
+    notoriety: Innocent
+    stats: { strength: 5, dexterity: 25, intelligence: 5 }
+    resources: { hits: 5, mana: 0, stamina: 25 }
+    tags: [animal]
