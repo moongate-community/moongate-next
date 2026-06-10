@@ -10,6 +10,7 @@ using Moongate.Server.Extensions.Configuration;
 using Moongate.Server.Extensions.EventBus;
 using Moongate.Server.Extensions.Items;
 using Moongate.Server.Extensions.Loadouts;
+using Moongate.Server.Extensions.Loot;
 using Moongate.Server.Extensions.Logging;
 using Moongate.Server.Extensions.Metrics;
 using Moongate.Server.Extensions.Mobiles;
@@ -63,6 +64,9 @@ internal static class BootstrapRegistrationExtensions
 
         // Starter loadouts (priority 13): fail-fast YAML load + validation against templates.
         container.AddMoongateStarterLoadouts();
+
+        // Loot tables (priority 14): fail-fast YAML load + validation against templates.
+        container.AddMoongateLootTables();
 
         return container;
     }
