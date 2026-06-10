@@ -9,6 +9,7 @@ using Moongate.Server.Extensions.Commands;
 using Moongate.Server.Extensions.Configuration;
 using Moongate.Server.Extensions.EventBus;
 using Moongate.Server.Extensions.Items;
+using Moongate.Server.Extensions.Loadouts;
 using Moongate.Server.Extensions.Logging;
 using Moongate.Server.Extensions.Metrics;
 using Moongate.Server.Extensions.Mobiles;
@@ -53,11 +54,15 @@ internal static class BootstrapRegistrationExtensions
         // Seed bundled YAML assets from embedded resources, then register client-file + UO stores.
         var dataDirectory = directories[DirectoryType.Data];
         BundledDataAssetsBootstrapper.EnsureDataAssets(dataDirectory, Log.Logger);
+        BundledDataAssetsBootstrapper.EnsureTemplateAssets(directories[DirectoryType.Templates], Log.Logger);
         container.AddMoongateUoData(Path.Combine(dataDirectory, "uo_files"));
         container.AddMoongateWorldData(dataDirectory);
 
         // Item templates (priority 12): fail-fast YAML load + validation.
         container.AddMoongateItemTemplates();
+
+        // Starter loadouts (priority 13): fail-fast YAML load + validation against templates.
+        container.AddMoongateStarterLoadouts();
 
         return container;
     }

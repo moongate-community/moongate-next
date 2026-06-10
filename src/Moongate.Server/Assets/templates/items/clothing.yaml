@@ -1,0 +1,28 @@
+item_templates:
+    - id: base_clothing
+      is_abstract: true
+      weight: 1
+      is_movable: true
+      tags: [clothing]
+    - id: plain_shirt
+      base_item: base_clothing
+      name: Shirt
+      item_id: 5399
+      layer: Shirt
+    - id: plain_pants
+      base_item: base_clothing
+      name: Long Pants
+      item_id: 5433
+      layer: Pants
+    - id: leather_shoes
+      base_item: base_clothing
+      name: Shoes
+      item_id: 5903
+      weight: 2
+      layer: Shoes
+    - id: plain_robe
+      base_item: base_clothing
+      name: Robe
+      item_id: 7939
+      weight: 3
+      layer: OuterTorso
