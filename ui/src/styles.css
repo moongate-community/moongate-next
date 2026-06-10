@@ -1,27 +1,9 @@
 /* Base resets, fonts and theme tokens now live in styles/theme.css.
-   This file keeps the legacy component styles for login/player views
-   until they are migrated to the Tailwind token system. */
+   This file keeps the remaining legacy player view styles until they
+   are migrated to the Tailwind token system. */
 
 button:disabled {
   opacity: 0.64;
-}
-
-.login-screen {
-  display: grid;
-  min-height: 100vh;
-  place-items: center;
-  padding: 32px 16px;
-  background:
-    radial-gradient(circle at 22% 18%, rgba(124, 159, 122, 0.18), transparent 32%),
-    linear-gradient(135deg, #eef1e8 0%, #f7f8f4 48%, #e7ece2 100%);
-}
-
-.admin-login-screen {
-  position: relative;
-  overflow: hidden;
-  background:
-    radial-gradient(circle at 16% 18%, rgba(47, 92, 59, 0.28), transparent 32%),
-    linear-gradient(135deg, #16231b 0%, #26382c 42%, #eef1e8 42%, #f7f8f4 100%);
 }
 
 .vanta-bg {
@@ -30,145 +12,10 @@ button:disabled {
   z-index: 0;
 }
 
-.admin-login-screen .login-panel {
-  position: relative;
-  z-index: 1;
-}
-
-.player-login-screen {
-  background:
-    radial-gradient(circle at 80% 12%, rgba(31, 80, 83, 0.18), transparent 30%),
-    linear-gradient(135deg, #eef6f5 0%, #f7f8f4 54%, #e7ece2 100%);
-}
-
-.login-panel {
-  width: min(100%, 390px);
-  padding: 32px;
-  border: 1px solid rgba(29, 42, 35, 0.12);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 24px 60px rgba(28, 42, 34, 0.12);
-}
-
-.admin-login-panel {
-  border-color: rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.94);
-}
-
-.player-login-panel {
-  border-color: rgba(31, 80, 83, 0.14);
-  background: rgba(255, 255, 255, 0.88);
-}
-
-.login-logo {
-  display: block;
-  width: 72px;
-  height: 72px;
-  margin: 0 auto 18px;
-  object-fit: contain;
-}
-
-.login-mode-switch {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4px;
-  padding: 4px;
-  margin-bottom: 20px;
-  border: 1px solid rgba(29, 42, 35, 0.1);
-  border-radius: 8px;
-  background: #eef1e9;
-}
-
-.login-mode-switch button {
-  display: inline-flex;
-  min-height: 34px;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  border: 0;
-  border-radius: 6px;
-  color: #5c685f;
-  font-size: 13px;
-  font-weight: 760;
-  background: transparent;
-}
-
-.login-mode-switch button.active {
-  color: #17211c;
-  background: #ffffff;
-  box-shadow: 0 1px 3px rgba(32, 44, 37, 0.1);
-}
-
-.login-panel h1 {
-  margin: 0 0 8px;
-  font-size: 30px;
-  font-weight: 700;
-  line-height: 1.1;
-  text-align: center;
-}
-
-.login-copy {
-  margin: 0 0 26px;
-  color: #66736a;
-  font-size: 14px;
-  line-height: 1.5;
-  text-align: center;
-}
-
-.login-form {
-  display: grid;
-  gap: 16px;
-}
-
-.login-form label {
-  display: grid;
-  gap: 7px;
-  color: #3e4b43;
-  font-size: 13px;
-  font-weight: 650;
-}
-
-.login-form input {
-  width: 100%;
-  height: 42px;
-  padding: 0 12px;
-  border: 1px solid #cdd5cc;
-  border-radius: 6px;
-  color: #17211c;
-  background: #ffffff;
-  outline: none;
-}
-
-.login-form input:focus {
-  border-color: #6f916c;
-  box-shadow: 0 0 0 3px rgba(111, 145, 108, 0.18);
-}
-
-.login-form button,
 .side-nav button,
 .icon-button {
   border: 0;
   border-radius: 6px;
-}
-
-.login-form button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 44px;
-  padding: 0 16px;
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 700;
-  background: #2f5c3b;
-}
-
-.form-error {
-  margin: -2px 0 0;
-  color: #9b2f2f;
-  font-size: 13px;
-  font-weight: 650;
 }
 
 .shell {

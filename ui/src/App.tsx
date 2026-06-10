@@ -11,9 +11,13 @@ import type { AuthTokenResponse } from "./types/auth";
 type AppSection = "admin" | "player";
 type PlayerNavId = "profile" | "adventures";
 
+function sectionFromPath(): AppSection {
+  return window.location.pathname.startsWith("/admin") ? "admin" : "player";
+}
+
 export default function App() {
   const [session, setSession] = useState<AuthTokenResponse | null>(() => readStoredAuth());
-  const [section, setSection] = useState<AppSection>("admin");
+  const [section, setSection] = useState<AppSection>(() => sectionFromPath());
   const [adminNav, setAdminNav] = useState<AdminNavId>("overview");
   const [playerNav, setPlayerNav] = useState<PlayerNavId>("profile");
 
@@ -34,7 +38,7 @@ export default function App() {
   }
 
   if (!session) {
-    return <LoginView onLogin={handleLogin} />;
+    return <LoginView section={sectionFromPath()} onLogin={handleLogin} />;
   }
 
   const activeItemId = section === "admin" ? adminNav : playerNav;

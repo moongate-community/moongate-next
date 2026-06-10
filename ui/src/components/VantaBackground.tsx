@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import FOG from "vanta/dist/vanta.fog.min";
 
-// Fog palette tuned to the admin login's dark-green gradient (see .admin-login-screen in styles.css).
+// Fog palette tuned to the administrator login backdrop.
 const ADMIN_FOG_OPTIONS = {
   mouseControls: true,
   touchControls: true,
