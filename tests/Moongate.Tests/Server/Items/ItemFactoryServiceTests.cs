@@ -81,6 +81,19 @@ public sealed class ItemFactoryServiceTests
     }
 
     [Fact]
+    public async Task CreateFromTemplateAsync_WithAmount_SetsAmountOnEntity()
+    {
+        var template = new ItemTemplateDefinition { Id = "gold_coin", ItemId = 3821, IsStackable = true };
+        var items = new FakeItemService();
+        var factory = new ItemFactoryService(NewRegistry(template), items);
+
+        var entity = await factory.CreateFromTemplateAsync("gold_coin", 250);
+
+        Assert.Equal(250, entity.Amount);
+        Assert.True(entity.Id.IsValid);
+    }
+
+    [Fact]
     public async Task CreateFromTemplateAsync_MapsTemplateFieldsOntoEntity()
     {
         var template = new ItemTemplateDefinition

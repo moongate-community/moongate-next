@@ -29,9 +29,23 @@ public sealed class ItemFactoryService : IItemFactoryService
         _items = items;
     }
 
-    public async ValueTask<ItemEntity> CreateFromTemplateAsync(
+    public ValueTask<ItemEntity> CreateFromTemplateAsync(
         string templateId,
         CancellationToken cancellationToken = default
+    )
+        => CreateInternalAsync(templateId, amount: null, cancellationToken);
+
+    public ValueTask<ItemEntity> CreateFromTemplateAsync(
+        string templateId,
+        int amount,
+        CancellationToken cancellationToken = default
+    )
+        => CreateInternalAsync(templateId, amount, cancellationToken);
+
+    private async ValueTask<ItemEntity> CreateInternalAsync(
+        string templateId,
+        int? amount,
+        CancellationToken cancellationToken
     )
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(templateId);
@@ -52,7 +66,7 @@ public sealed class ItemFactoryService : IItemFactoryService
             ItemId = template.ItemId,
             Hue = (Hue)template.Hue,
             Weight = template.Weight,
-            Amount = template.Amount,
+            Amount = amount ?? template.Amount,
             IsStackable = template.IsStackable,
             GumpId = template.GumpId,
             ScriptId = template.ScriptId,
