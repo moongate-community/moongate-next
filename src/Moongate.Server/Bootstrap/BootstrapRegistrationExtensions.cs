@@ -68,6 +68,9 @@ internal static class BootstrapRegistrationExtensions
         // Loot tables (priority 14): fail-fast YAML load + validation against templates.
         container.AddMoongateLootTables();
 
+        // Mobile templates (priority 16): fail-fast YAML load + validation against item and loot registries.
+        container.AddMoongateMobileTemplates();
+
         return container;
     }
 
