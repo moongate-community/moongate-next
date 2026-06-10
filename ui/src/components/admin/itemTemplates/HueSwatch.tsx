@@ -10,8 +10,8 @@ export function HueSwatch({ hue, mode = "compact" }: HueSwatchProps) {
 
   if (mode === "compact") {
     return (
-      <span className="inline-flex min-w-[86px] items-center gap-2 text-xs text-fg-muted" title={`${hue.hex} ${hue.name}`}>
-        <span className="h-3 w-10 overflow-hidden rounded-sm border border-border bg-muted" aria-hidden>
+      <span className="inline-flex min-w-[80px] items-center gap-1.5 text-xs text-fg-muted" title={`${hue.hex} ${hue.name}`}>
+        <span className="h-3 w-8 overflow-hidden rounded-sm border border-border bg-muted" aria-hidden>
           {hue.colors.length > 0 && (
             <span
               className="block h-full w-full"
@@ -19,7 +19,7 @@ export function HueSwatch({ hue, mode = "compact" }: HueSwatchProps) {
             />
           )}
         </span>
-        <span className="font-mono">{label}</span>
+        <span className="font-mono text-[11px]">{label}</span>
       </span>
     );
   }
@@ -27,13 +27,13 @@ export function HueSwatch({ hue, mode = "compact" }: HueSwatchProps) {
   return (
     <div className="grid gap-2">
       <div className="flex flex-wrap items-center gap-2 text-sm">
-        <span className="font-mono font-semibold text-fg">{hue.hex}</span>
+        <span className="font-mono text-[13px] font-medium text-fg">{hue.hex}</span>
         <span className="text-fg-muted">{hue.name}</span>
         {hue.isNone && (
-          <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-semibold text-fg-muted">None</span>
+          <span className="rounded-md bg-muted px-1.5 py-0.5 text-[11px] font-medium text-fg-muted">None</span>
         )}
         {!hue.isKnown && (
-          <span className="rounded-full bg-warning/10 px-2 py-0.5 text-[11px] font-semibold text-warning">
+          <span className="rounded-md bg-warning/10 px-1.5 py-0.5 text-[11px] font-medium text-warning">
             Unknown hue
           </span>
         )}
@@ -46,7 +46,7 @@ export function HueSwatch({ hue, mode = "compact" }: HueSwatchProps) {
           {hue.colors.map((color) => (
             <span
               key={color.index}
-              className="h-5"
+          className="h-4"
               title={`${color.index}: ${color.hex}`}
               style={{ backgroundColor: color.hex }}
             />

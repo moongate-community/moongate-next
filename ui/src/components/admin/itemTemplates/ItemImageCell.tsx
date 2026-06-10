@@ -9,12 +9,12 @@ type ItemImageCellProps = {
 
 export function ItemImageCell({ src, alt, size = "small" }: ItemImageCellProps) {
   const [failed, setFailed] = useState(false);
-  const boxClass = size === "large" ? "h-24 w-24" : "h-10 w-10";
+  const boxClass = size === "large" ? "h-20 w-20" : "h-8 w-8";
 
   return (
-    <div className={`${boxClass} inline-flex shrink-0 items-center justify-center rounded-md border border-border bg-muted`}>
+    <div className={`${boxClass} inline-flex shrink-0 items-center justify-center rounded-md border border-border bg-bg`}>
       {failed ? (
-        <ImageOff size={size === "large" ? 24 : 16} aria-hidden className="text-fg-subtle" />
+        <ImageOff size={size === "large" ? 22 : 14} aria-hidden className="text-fg-subtle" />
       ) : (
         <img
           src={src}

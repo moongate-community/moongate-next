@@ -73,7 +73,7 @@ export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, 
   }
 
   return (
-    <section className="grid gap-6 px-5 py-6 md:px-7">
+    <section className="grid gap-5 px-4 py-5 md:px-6">
       <AdminDashboardHeader snapshot={snapshot} loading={loading} onRefresh={refresh} />
 
       <div className="grid min-w-0 gap-4">
@@ -82,7 +82,7 @@ export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, 
         {activeView === "metrics" && (
           <Suspense
             fallback={
-              <div className="rounded-lg border border-border bg-surface p-5 text-sm font-semibold text-fg-muted shadow-card">
+              <div className="rounded-md border border-border bg-surface p-4 text-sm font-medium text-fg-muted">
                 Loading metrics panels…
               </div>
             }

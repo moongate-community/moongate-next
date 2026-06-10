@@ -13,15 +13,15 @@ type PanelProps = {
 /** Shared surface card used by every admin panel for a consistent look. */
 export function Panel({ title, icon: Icon, action, children, className }: PanelProps) {
   return (
-    <article className={`animate-rise rounded-lg border border-border bg-surface p-5 shadow-card ${className ?? ""}`}>
-      <header className="mb-4 flex items-center justify-between gap-3">
+    <article className={`animate-rise rounded-md border border-border bg-surface ${className ?? ""}`}>
+      <header className="flex min-h-[48px] items-center justify-between gap-3 border-b border-border px-4">
         <div className="flex items-center gap-2.5">
-          {Icon && <Icon size={18} aria-hidden className="text-fg-subtle" />}
-          <h3 className="text-base font-bold tracking-tight text-fg">{title}</h3>
+          {Icon && <Icon size={16} aria-hidden className="text-fg-subtle" />}
+          <h3 className="text-sm font-semibold tracking-tight text-fg">{title}</h3>
         </div>
         {action}
       </header>
-      {children}
+      <div className="p-4">{children}</div>
     </article>
   );
 }
