@@ -1,6 +1,7 @@
 using Moongate.Core.Yaml;
 using Moongate.UO.Data.Templates.Items;
 using Moongate.UO.Data.Templates.Mobiles;
+using Moongate.UO.Data.Types.Mobiles;
 using Serilog;
 using ILogger = Serilog.ILogger;
 
@@ -15,7 +16,13 @@ namespace Moongate.Server.Services.Mobiles;
 /// Inheritance merge: scalar fields use default-value sentinels (a child at its
 /// default inherits the parent); nullable blocks (stats/resources/resistances)
 /// inherit whole when the child's is null; lists inherit when the child's is
-/// empty; dictionaries (skills/params) merge key-by-key (child overrides).
+/// empty; dictionaries (skills/params) merge key-by-key (child overrides). The
+/// sentinel strategy means a child cannot explicitly re-state a default over a
+/// non-default parent value — e.g. <c>gender: Male</c> (the zero member) over a
+/// <c>Female</c> parent, or <c>notoriety: Innocent</c> over a <c>Criminal</c>
+/// parent, both inherit the parent. Deliberate KISS tradeoff; switch the DTO
+/// fields to nullables if explicit overrides become necessary. Inherited stats/
+/// resources/resistances blocks are shared (treated as immutable template data).
 /// </remarks>
 public sealed class MobileTemplateYamlLoader
 {
@@ -199,7 +206,7 @@ public sealed class MobileTemplateYamlLoader
             child.Gender = parent.Gender;
         }
 
-        if (child.Notoriety == Moongate.UO.Data.Types.Mobiles.Notoriety.Innocent)
+        if (child.Notoriety == Notoriety.Innocent)
         {
             child.Notoriety = parent.Notoriety;
         }

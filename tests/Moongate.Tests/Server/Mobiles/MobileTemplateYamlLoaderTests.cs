@@ -155,4 +155,28 @@ public sealed class MobileTemplateYamlLoaderTests
         Assert.Empty(t.Skills);
         Assert.Empty(t.Params);
     }
+
+    [Fact]
+    public void LoadAll_ChildRestatesDefaultNotoriety_InheritsParent()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "a.yaml",
+            """
+            mobile_templates:
+              - id: base_criminal
+                is_abstract: true
+                notoriety: Criminal
+              - id: thug
+                base_mobile: base_criminal
+                notoriety: Innocent
+            """
+        );
+        var loader = new MobileTemplateYamlLoader(dir.Path);
+
+        var thug = loader.LoadAll().Single(t => t.Id == "thug");
+
+        // Documented sentinel limitation: Innocent is the default, so it inherits Criminal.
+        Assert.Equal(Moongate.UO.Data.Types.Mobiles.Notoriety.Criminal, thug.Notoriety);
+    }
 }
