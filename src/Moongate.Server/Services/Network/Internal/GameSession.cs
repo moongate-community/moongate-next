@@ -1,6 +1,7 @@
 using System.Net;
 using Moongate.Abstractions.Interfaces.Network;
 using Moongate.Network.Client;
+using Moongate.Network.Middlewares;
 using Moongate.Network.Spans;
 
 namespace Moongate.Server.Services.Network.Internal;
@@ -52,6 +53,18 @@ public sealed class GameSession
         SessionId = client.SessionId;
         ClientEndPoint = client.RemoteEndPoint as IPEndPoint;
         ServerEndPoint = client.LocalEndPoint as IPEndPoint;
+    }
+
+    /// <summary>
+    /// Enables UO transport compression for this session's outgoing packets (idempotent). Called
+    /// after game login: every server packet from that point on must be compressed.
+    /// </summary>
+    public void EnableCompression()
+    {
+        if (!Client.ContainsMiddleware<CompressionMiddleware>())
+        {
+            Client.AddMiddleware(new CompressionMiddleware());
+        }
     }
 
     /// <summary>
