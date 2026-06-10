@@ -3,6 +3,7 @@ using Moongate.Server.Services.Loadouts;
 using Moongate.Server.Services.Templates;
 using Moongate.Server.Services.World;
 using Moongate.Tests.Support;
+using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Templates.Items;
 using Moongate.UO.Data.Types.Items;
 
@@ -34,9 +35,9 @@ public sealed class StarterLoadoutBootServiceTests
     private static StarterLoadoutService NewLoadoutService(ItemTemplateService templates)
         => new(
             templates,
-            new ThrowingItemFactory(),
-            new ThrowingMobileService(),
-            new ThrowingItemService()
+            new Lazy<IItemFactoryService>(static () => new ThrowingItemFactory()),
+            new Lazy<IMobileService>(static () => new ThrowingMobileService()),
+            new Lazy<IItemService>(static () => new ThrowingItemService())
         );
 
     [Fact]

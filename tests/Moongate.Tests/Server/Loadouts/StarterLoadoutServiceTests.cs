@@ -203,7 +203,12 @@ public sealed class StarterLoadoutServiceTests
         var factory = new FakeItemFactory(templates);
         var mobiles = new FakeMobileService();
         var items = new FakeItemService();
-        var service = new StarterLoadoutService(templates, factory, mobiles, items);
+        var service = new StarterLoadoutService(
+            templates,
+            new Lazy<IItemFactoryService>(() => factory),
+            new Lazy<IMobileService>(() => mobiles),
+            new Lazy<IItemService>(() => items)
+        );
         service.SetDefinition(definition);
 
         return (service, factory, mobiles, items);

@@ -18,17 +18,21 @@ public sealed class StarterLoadoutService : IStarterLoadoutService
 {
     private readonly ILogger _logger = Log.ForContext<StarterLoadoutService>();
     private readonly IItemTemplateService _templates;
-    private readonly IItemFactoryService _itemFactory;
-    private readonly IMobileService _mobiles;
-    private readonly IItemService _items;
+
+    // Lazy: this singleton is constructed with the boot services (before the
+    // persistence service starts), but the item/mobile services resolve their
+    // persistence data access eagerly — defer until ApplyAsync actually runs.
+    private readonly Lazy<IItemFactoryService> _itemFactory;
+    private readonly Lazy<IMobileService> _mobiles;
+    private readonly Lazy<IItemService> _items;
 
     private StarterLoadoutDefinition? _definition;
 
     public StarterLoadoutService(
         IItemTemplateService templates,
-        IItemFactoryService itemFactory,
-        IMobileService mobiles,
-        IItemService items
+        Lazy<IItemFactoryService> itemFactory,
+        Lazy<IMobileService> mobiles,
+        Lazy<IItemService> items
     )
     {
         ArgumentNullException.ThrowIfNull(templates);
@@ -99,7 +103,7 @@ public sealed class StarterLoadoutService : IStarterLoadoutService
 
         if (loadout.Backpack is not null && loadout.Backpack.Layer is { } backpackLayer)
         {
-            backpackEntity = await _itemFactory.CreateFromTemplateAsync(loadout.Backpack.Template.Id, cancellationToken);
+            backpackEntity = await _itemFactory.Value.CreateFromTemplateAsync(loadout.Backpack.Template.Id, cancellationToken);
 
             // Set before EquipAsync: the mobile upsert inside it persists the reference.
             mobile.BackpackId = backpackEntity.Id;
@@ -114,7 +118,7 @@ public sealed class StarterLoadoutService : IStarterLoadoutService
                 continue;
             }
 
-            var item = await _itemFactory.CreateFromTemplateAsync(entry.Template.Id, cancellationToken);
+            var item = await _itemFactory.Value.CreateFromTemplateAsync(entry.Template.Id, cancellationToken);
             item.Amount = entry.Amount;
 
             var packetHue = entry.PacketHue switch
@@ -145,10 +149,10 @@ public sealed class StarterLoadoutService : IStarterLoadoutService
                 continue;
             }
 
-            var item = await _itemFactory.CreateFromTemplateAsync(entry.Template.Id, cancellationToken);
+            var item = await _itemFactory.Value.CreateFromTemplateAsync(entry.Template.Id, cancellationToken);
             item.Amount = entry.Amount;
 
-            var added = await _items.AddItemAsync(backpackEntity, item, default, cancellationToken);
+            var added = await _items.Value.AddItemAsync(backpackEntity, item, default, cancellationToken);
 
             if (!added)
             {
@@ -168,7 +172,7 @@ public sealed class StarterLoadoutService : IStarterLoadoutService
         CancellationToken cancellationToken
     )
     {
-        var equipped = await _mobiles.EquipAsync(mobile, item, layer, cancellationToken);
+        var equipped = await _mobiles.Value.EquipAsync(mobile, item, layer, cancellationToken);
 
         if (!equipped)
         {
