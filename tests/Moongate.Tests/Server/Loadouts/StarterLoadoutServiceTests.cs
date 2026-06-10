@@ -32,6 +32,13 @@ public sealed class StarterLoadoutServiceTests
             string templateId,
             CancellationToken cancellationToken = default
         )
+            => CreateFromTemplateAsync(templateId, -1, cancellationToken);
+
+        public ValueTask<ItemEntity> CreateFromTemplateAsync(
+            string templateId,
+            int amount,
+            CancellationToken cancellationToken = default
+        )
         {
             if (!_templates.TryGet(templateId, out var template))
             {
@@ -43,7 +50,7 @@ public sealed class StarterLoadoutServiceTests
                 Id = new Serial(_next++),
                 Name = template.Name,
                 ItemId = template.ItemId,
-                Amount = template.Amount
+                Amount = amount < 0 ? template.Amount : amount
             };
 
             Created.Add(item);

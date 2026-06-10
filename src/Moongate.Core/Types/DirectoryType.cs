@@ -10,6 +10,7 @@ public enum DirectoryType
     Templates_Items,
     Templates_Mobiles,
     Templates_Loadouts,
+    Templates_Loot,
     Scripts,
     Save,
     Images,
