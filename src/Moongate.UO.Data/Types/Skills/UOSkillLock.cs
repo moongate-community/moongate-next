@@ -1,4 +1,4 @@
-namespace Moongate.UO.Data.Types;
+namespace Moongate.UO.Data.Types.Skills;
 
 /// <summary>Lock state controlling whether a skill or stat raises, lowers, or is fixed.</summary>
 public enum UOSkillLock : byte

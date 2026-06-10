@@ -81,8 +81,8 @@ public class GameLoginHandler : PacketHandlerBase<GameLoginPacket>, IPacketHandl
         var characters = await _mobileService.GetByAccountIdAsync(userEntity.Id, cancellationToken);
 
         var characterEntries = characters
-            .Select(m => new CharacterEntry(m.Name ?? string.Empty))
-            .ToList();
+                               .Select(m => new CharacterEntry(m.Name ?? string.Empty))
+                               .ToList();
 
         var charListPacket = new CharactersStartingLocationsPacket();
         charListPacket.Cities.AddRange(StartingCities.AvailableStartingCities);

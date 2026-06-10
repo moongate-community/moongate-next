@@ -4,6 +4,8 @@ using Moongate.UO.Data.Data.Mobiles;
 using Moongate.UO.Data.Interfaces.Entities.Base;
 using Moongate.UO.Data.Types;
 using Moongate.UO.Data.Types.Items;
+using Moongate.UO.Data.Types.Mobiles;
+using Moongate.UO.Data.Types.Skills;
 
 namespace Moongate.UO.Data.Interfaces.Entities.Mobiles;
 

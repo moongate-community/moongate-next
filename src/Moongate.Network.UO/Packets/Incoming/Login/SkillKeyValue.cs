@@ -1,4 +1,5 @@
 using Moongate.UO.Data.Types;
+using Moongate.UO.Data.Types.Skills;
 
 namespace Moongate.Network.UO.Packets.Incoming.Login;
 

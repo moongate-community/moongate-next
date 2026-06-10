@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using Moongate.Core.Extensions.Strings;
 using Moongate.UO.Data.Entities.Mobiles;
 using Moongate.UO.Data.Types;
+using Moongate.UO.Data.Types.Mobiles;
 
 namespace Moongate.UO.Data.Races.Base;
 

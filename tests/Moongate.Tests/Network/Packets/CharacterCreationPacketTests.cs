@@ -1,5 +1,7 @@
 using Moongate.Network.UO.Packets.Incoming.Login;
 using Moongate.UO.Data.Types;
+using Moongate.UO.Data.Types.Mobiles;
+using Moongate.UO.Data.Types.Skills;
 
 namespace Moongate.Tests.Network.Packets;
 

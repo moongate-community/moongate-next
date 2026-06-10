@@ -8,6 +8,7 @@ using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Templates.Items;
 using Moongate.UO.Data.Types;
 using Moongate.UO.Data.Types.Items;
+using Moongate.UO.Data.Types.Properties;
 
 namespace Moongate.Tests.Server.Items;
 

@@ -1,4 +1,4 @@
-namespace Moongate.UO.Data.Types;
+namespace Moongate.UO.Data.Types.Mobiles;
 
 /// <summary>Mobile gender.</summary>
 public enum GenderType

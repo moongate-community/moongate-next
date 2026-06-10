@@ -1,4 +1,4 @@
-namespace Moongate.UO.Data.Types;
+namespace Moongate.UO.Data.Types.Skills;
 
 /// <summary>Identifiers for the Ultima Online skills.</summary>
 public enum UOSkillName

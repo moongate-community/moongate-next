@@ -5,6 +5,7 @@ using Moongate.Persistence.Services.Persistence;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Types;
 using Moongate.UO.Data.Types.Items;
+using Moongate.UO.Data.Types.Properties;
 
 namespace Moongate.Tests.UO.Data.Entities.Items;
 

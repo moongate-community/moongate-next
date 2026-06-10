@@ -6,6 +6,8 @@ using Moongate.Network.UO.Types.Packets;
 using Moongate.UO.Data.Races.Base;
 using Moongate.UO.Data.Types;
 using Moongate.UO.Data.Types.Expansions;
+using Moongate.UO.Data.Types.Mobiles;
+using Moongate.UO.Data.Types.Skills;
 
 namespace Moongate.Network.UO.Packets.Incoming.Login;
 

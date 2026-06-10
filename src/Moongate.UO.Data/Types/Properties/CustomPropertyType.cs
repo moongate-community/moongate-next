@@ -1,4 +1,4 @@
-namespace Moongate.UO.Data.Types;
+namespace Moongate.UO.Data.Types.Properties;
 
 /// <summary>
 /// Declares the supported value kind for a custom property.

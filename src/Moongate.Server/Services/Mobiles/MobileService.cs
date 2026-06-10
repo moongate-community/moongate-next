@@ -6,6 +6,7 @@ using Moongate.UO.Data.Entities.Mobiles;
 using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Types;
 using Moongate.UO.Data.Types.Items;
+using Moongate.UO.Data.Types.Skills;
 
 namespace Moongate.Server.Services.Mobiles;
 
