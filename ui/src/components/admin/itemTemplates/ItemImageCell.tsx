@@ -70,7 +70,7 @@ export function ItemImageCell({ src, alt, size = "small" }: ItemImageCellProps) 
               src={src}
               alt=""
               aria-hidden
-              className="max-h-full max-w-full object-contain"
+              className="h-full w-full object-fill"
               style={{ imageRendering: "pixelated" }}
             />
           </div>,
