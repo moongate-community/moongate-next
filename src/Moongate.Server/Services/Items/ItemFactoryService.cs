@@ -16,8 +16,6 @@ namespace Moongate.Server.Services.Items;
 /// </summary>
 public sealed class ItemFactoryService : IItemFactoryService
 {
-    private const string IsMovableKey = "is_movable";
-
     private readonly IItemTemplateService _templates;
     private readonly IItemService _items;
 
@@ -61,7 +59,7 @@ public sealed class ItemFactoryService : IItemFactoryService
             Visibility = template.Visibility
         };
 
-        item.CustomProperties[IsMovableKey] = new CustomProperty
+        item.CustomProperties[ItemTemplateDefinition.ReservedIsMovableParamKey] = new CustomProperty
         {
             Type = CustomPropertyType.Boolean,
             BooleanValue = template.IsMovable

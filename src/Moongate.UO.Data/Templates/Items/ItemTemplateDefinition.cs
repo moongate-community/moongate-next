@@ -10,6 +10,13 @@ namespace Moongate.UO.Data.Templates.Items;
 /// </summary>
 public sealed class ItemTemplateDefinition
 {
+    /// <summary>
+    /// Param key reserved for the template's <see cref="IsMovable" /> flag on
+    /// created entities: the loader rejects templates declaring it and the
+    /// factory writes it into the entity custom properties.
+    /// </summary>
+    public const string ReservedIsMovableParamKey = "is_movable";
+
     public string Id { get; set; } = "";
 
     public string? BaseItem { get; set; }

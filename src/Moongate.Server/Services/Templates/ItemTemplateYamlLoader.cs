@@ -23,8 +23,6 @@ namespace Moongate.Server.Services.Templates;
 /// </remarks>
 public sealed class ItemTemplateYamlLoader
 {
-    private const string ReservedIsMovableParamKey = "is_movable";
-
     private enum ResolveState : byte
     {
         Unvisited = 0,
@@ -281,10 +279,10 @@ public sealed class ItemTemplateYamlLoader
         {
             foreach (var (key, param) in template.Params)
             {
-                if (string.Equals(key, ReservedIsMovableParamKey, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(key, ItemTemplateDefinition.ReservedIsMovableParamKey, StringComparison.OrdinalIgnoreCase))
                 {
                     throw new InvalidOperationException(
-                        $"Item template '{template.Id}' in '{sources[template.Id]}' uses reserved param key '{ReservedIsMovableParamKey}'."
+                        $"Item template '{template.Id}' in '{sources[template.Id]}' uses reserved param key '{ItemTemplateDefinition.ReservedIsMovableParamKey}'."
                     );
                 }
 
