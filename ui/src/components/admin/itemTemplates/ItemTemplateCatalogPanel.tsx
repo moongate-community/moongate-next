@@ -22,6 +22,8 @@ const defaultFilters: ItemTemplateFilters = {
   abstract: "all"
 };
 
+const rarityOptions = ["None", "Common", "Uncommon", "Rare", "Epic", "Legendary"];
+
 export function ItemTemplateCatalogPanel({ accessToken }: ItemTemplateCatalogPanelProps) {
   const [filters, setFilters] = useState<ItemTemplateFilters>(defaultFilters);
   const [search, setSearch] = useState("");
@@ -124,12 +126,19 @@ export function ItemTemplateCatalogPanel({ accessToken }: ItemTemplateCatalogPan
             placeholder="Tag"
             className="h-8 rounded-md border border-border bg-bg px-2.5 text-[13px] text-fg outline-none transition-colors placeholder:text-fg-subtle focus:border-border-strong focus:bg-surface"
           />
-          <input
+          <select
             value={filters.rarity}
             onChange={(event) => updateFilter("rarity", event.target.value)}
-            placeholder="Rarity"
-            className="h-8 rounded-md border border-border bg-bg px-2.5 text-[13px] text-fg outline-none transition-colors placeholder:text-fg-subtle focus:border-border-strong focus:bg-surface"
-          />
+            aria-label="Filter item templates by rarity"
+            className="h-8 rounded-md border border-border bg-bg px-2.5 text-[13px] text-fg outline-none transition-colors focus:border-border-strong focus:bg-surface"
+          >
+            <option value="">All rarities</option>
+            {rarityOptions.map((rarity) => (
+              <option key={rarity} value={rarity}>
+                {rarity}
+              </option>
+            ))}
+          </select>
           <input
             value={filters.layer}
             onChange={(event) => updateFilter("layer", event.target.value)}
