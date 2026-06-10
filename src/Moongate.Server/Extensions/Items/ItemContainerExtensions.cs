@@ -22,6 +22,7 @@ public static class ItemContainerExtensions
     {
         container.RegisterPersistenceEntity<ItemEntity, Serial>(ItemEntityTypeId, ItemEntitySchemaVersion, item => item.Id);
         container.Register<IItemService, ItemService>(Reuse.Singleton);
+        container.Register<IItemFactoryService, ItemFactoryService>(Reuse.Singleton);
 
         return container;
     }
