@@ -152,6 +152,33 @@ public sealed class ItemTemplateEndpointExtensionsTests
         Assert.IsType<BadRequest<string>>(result);
     }
 
+    [Fact]
+    public void HandleDetail_ExistingTemplate_ReturnsDetail()
+    {
+        var result = ItemTemplateEndpointExtensions.HandleDetail(
+            SeedTemplates(),
+            new FakeHueStore(),
+            "longsword"
+        );
+
+        var ok = Assert.IsType<Ok<ItemTemplateDetail>>(result);
+        Assert.Equal("longsword", ok.Value!.Id);
+        Assert.Equal("Sharp blade", ok.Value.Comment);
+        Assert.Equal("/api/items/0x0F61.png", ok.Value.ImageUrl);
+    }
+
+    [Fact]
+    public void HandleDetail_MissingTemplate_ReturnsNotFound()
+    {
+        var result = ItemTemplateEndpointExtensions.HandleDetail(
+            SeedTemplates(),
+            new FakeHueStore(),
+            "missing"
+        );
+
+        Assert.IsType<NotFound>(result);
+    }
+
     private static FakeTemplateService SeedTemplates()
     {
         var service = new FakeTemplateService();

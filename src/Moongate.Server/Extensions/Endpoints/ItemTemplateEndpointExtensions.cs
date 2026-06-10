@@ -45,6 +45,13 @@ public static class ItemTemplateEndpointExtensions
              .WithName("ListItemTemplates")
              .WithSummary("Returns a paginated, searchable list of item templates.");
 
+        group.MapGet(
+                 "/{id}",
+                 (IItemTemplateService templates, IHueStore hues, string id) => HandleDetail(templates, hues, id)
+             )
+             .WithName("GetItemTemplate")
+             .WithSummary("Returns a full read-only item template definition.");
+
         return endpoints;
     }
 
@@ -113,6 +120,20 @@ public static class ItemTemplateEndpointExtensions
         var result = InMemoryListQuery.Apply(ordered, request, SearchFields, filters);
 
         return TypedResults.Ok(result.Select(template => ItemTemplateSummary.FromDefinition(template, hues)));
+    }
+
+    internal static IResult HandleDetail(
+        IItemTemplateService templates,
+        IHueStore hues,
+        string id
+    )
+    {
+        ArgumentNullException.ThrowIfNull(templates);
+        ArgumentNullException.ThrowIfNull(hues);
+
+        return templates.TryGet(id, out var template)
+                   ? TypedResults.Ok(ItemTemplateDetail.FromDefinition(template, hues))
+                   : TypedResults.NotFound();
     }
 
     private static IEnumerable<string?> SearchFields(ItemTemplateDefinition template)
