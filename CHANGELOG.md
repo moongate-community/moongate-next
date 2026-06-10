@@ -1,3 +1,10 @@
+# [0.1.0-develop.5](https://github.com/moongate-community/moongate-next/compare/v0.1.0-develop.4...v0.1.0-develop.5) (2026-06-10)
+
+
+### Features
+
+* **network:** expose the game session on PacketContext via IGameSession ([d5a43db](https://github.com/moongate-community/moongate-next/commit/d5a43dbf218d1df60567ca6c48d52880ac766e3e))
+
 # [0.1.0-develop.4](https://github.com/moongate-community/moongate-next/compare/v0.1.0-develop.3...v0.1.0-develop.4) (2026-06-10)
 
 
