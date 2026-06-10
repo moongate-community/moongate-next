@@ -279,4 +279,90 @@ public sealed class StarterLoadoutServiceTests
         var dagger = loadout.BackpackItems.Single(item => item.Template.Id == "dagger");
         Assert.Equal(1, dagger.Amount);
     }
+
+    [Fact]
+    public async Task ApplyAsync_EquipsBackpackAndSetsBackpackId()
+    {
+        var (service, factory, mobiles, _) = NewService(NewDefinition());
+        var mobile = new MobileEntity { Id = new Serial(1) };
+        var loadout = service.Compose(0, null);
+
+        await service.ApplyAsync(mobile, loadout, 0, 0);
+
+        var backpack = factory.Created.Single(item => item.ItemId == 3701);
+        Assert.Equal(backpack.Id, mobile.BackpackId);
+        Assert.Contains(mobiles.Equipped, pair => pair.ItemId == backpack.Id && pair.Layer == ItemLayerType.Backpack);
+    }
+
+    [Fact]
+    public async Task ApplyAsync_EquipsItemsOnTemplateLayers()
+    {
+        var (service, _, mobiles, _) = NewService(NewDefinition());
+        var mobile = new MobileEntity { Id = new Serial(1) };
+        var loadout = service.Compose(0, null);
+
+        await service.ApplyAsync(mobile, loadout, 0, 0);
+
+        Assert.Contains(mobiles.Equipped, pair => pair.Layer == ItemLayerType.Shirt);
+        Assert.Contains(mobiles.Equipped, pair => pair.Layer == ItemLayerType.Pants);
+    }
+
+    [Fact]
+    public async Task ApplyAsync_AppliesPacketHuesOnlyToDeclaredEntries()
+    {
+        var (service, factory, _, _) = NewService(NewDefinition());
+        var mobile = new MobileEntity { Id = new Serial(1) };
+        var loadout = service.Compose(0, null);
+
+        await service.ApplyAsync(mobile, loadout, shirtHue: 33, pantsHue: 44);
+
+        var shirt = factory.Created.Single(item => item.ItemId == 5399);
+        var pants = factory.Created.Single(item => item.ItemId == 5433);
+        var backpack = factory.Created.Single(item => item.ItemId == 3701);
+        Assert.Equal((ushort)33, shirt.Hue.Value);
+        Assert.Equal((ushort)44, pants.Hue.Value);
+        Assert.Equal((ushort)0, backpack.Hue.Value);
+    }
+
+    [Fact]
+    public async Task ApplyAsync_ZeroPacketHue_KeepsTemplateHue()
+    {
+        var (service, factory, _, _) = NewService(NewDefinition());
+        var mobile = new MobileEntity { Id = new Serial(1) };
+        var loadout = service.Compose(0, null);
+
+        await service.ApplyAsync(mobile, loadout, shirtHue: 0, pantsHue: 0);
+
+        var shirt = factory.Created.Single(item => item.ItemId == 5399);
+        Assert.Equal((ushort)0, shirt.Hue.Value);
+    }
+
+    [Fact]
+    public async Task ApplyAsync_AddsBackpackItemsToBackpackWithAmounts()
+    {
+        var (service, factory, _, items) = NewService(NewDefinition());
+        var mobile = new MobileEntity { Id = new Serial(1) };
+        var loadout = service.Compose(0, "warrior");
+
+        await service.ApplyAsync(mobile, loadout, 0, 0);
+
+        var backpack = factory.Created.Single(item => item.ItemId == 3701);
+        Assert.Equal(3, items.Added.Count);
+        Assert.All(items.Added, pair => Assert.Equal(backpack.Id, pair.ContainerId));
+        var gold = factory.Created.Single(item => item.ItemId == 3821);
+        Assert.Equal(1000, gold.Amount);
+    }
+
+    [Fact]
+    public async Task ApplyAsync_EmptyLoadout_DoesNothing()
+    {
+        var (service, factory, mobiles, items) = NewService(null);
+        var mobile = new MobileEntity { Id = new Serial(1) };
+
+        await service.ApplyAsync(mobile, service.Compose(0, null), 0, 0);
+
+        Assert.Empty(factory.Created);
+        Assert.Empty(mobiles.Equipped);
+        Assert.Empty(items.Added);
+    }
 }
