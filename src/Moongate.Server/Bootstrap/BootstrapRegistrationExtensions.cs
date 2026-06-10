@@ -54,6 +54,7 @@ internal static class BootstrapRegistrationExtensions
         // Seed bundled YAML assets from embedded resources, then register client-file + UO stores.
         var dataDirectory = directories[DirectoryType.Data];
         BundledDataAssetsBootstrapper.EnsureDataAssets(dataDirectory, Log.Logger);
+        BundledDataAssetsBootstrapper.EnsureTemplateAssets(directories[DirectoryType.Templates], Log.Logger);
         container.AddMoongateUoData(Path.Combine(dataDirectory, "uo_files"));
         container.AddMoongateWorldData(dataDirectory);
 

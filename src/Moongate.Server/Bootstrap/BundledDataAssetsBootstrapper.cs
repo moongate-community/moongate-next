@@ -10,6 +10,7 @@ namespace Moongate.Server.Bootstrap;
 public static class BundledDataAssetsBootstrapper
 {
     public const string DataResourcePrefix = "Moongate.Server.Assets.data/";
+    public const string TemplatesResourcePrefix = "Moongate.Server.Assets.templates/";
 
     public static int EnsureDataAssets(string destinationDirectory, ILogger logger)
     {
@@ -19,6 +20,19 @@ public static class BundledDataAssetsBootstrapper
         return EnsureDataAssets(
             typeof(BundledDataAssetsBootstrapper).Assembly,
             DataResourcePrefix,
+            destinationDirectory,
+            logger
+        );
+    }
+
+    public static int EnsureTemplateAssets(string destinationDirectory, ILogger logger)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(destinationDirectory);
+        ArgumentNullException.ThrowIfNull(logger);
+
+        return EnsureDataAssets(
+            typeof(BundledDataAssetsBootstrapper).Assembly,
+            TemplatesResourcePrefix,
             destinationDirectory,
             logger
         );
