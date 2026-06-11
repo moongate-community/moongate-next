@@ -2,6 +2,7 @@ using DryIoc;
 using Moongate.Abstractions.Data.Internal;
 using Moongate.Core.Data.Directories;
 using Moongate.Core.Types;
+using Moongate.Plugins.Interfaces.Plugins;
 using Moongate.Scripting.Lua.Data.Internal;
 using Moongate.Server.Extensions.Configuration;
 using Moongate.Server.Extensions.Plugins;
@@ -24,12 +25,14 @@ public sealed class PluginContainerExtensionsTests : IDisposable
 
         container.AddMoongatePlugins(directories);
         var sections = container.Resolve<List<ConfigSectionRegistration>>();
+        var catalog = container.Resolve<IPluginCatalogService>();
 
         Assert.Contains(sections, section => section.Name == "fixture_plugin");
         Assert.Contains(
             container.Resolve<List<ScriptModuleData>>(),
             module => module.ModuleType.FullName == "Moongate.PluginFixtures.Basic.BasicPluginScriptModule"
         );
+        Assert.Equal("moongate.fixture.basic", Assert.Single(catalog.GetLoadedPlugins()).Id);
 
         var configPath = Path.Combine(directories[DirectoryType.Config], "moongate.yaml");
         container.AddMoongateConfig(configPath);

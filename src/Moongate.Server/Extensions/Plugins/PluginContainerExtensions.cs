@@ -1,5 +1,6 @@
 using DryIoc;
 using Moongate.Core.Data.Directories;
+using Moongate.Plugins.Interfaces.Plugins;
 using Moongate.Plugins.Services;
 using Moongate.Server.Extensions.Configuration;
 
@@ -20,7 +21,8 @@ public static class PluginContainerExtensions
         ArgumentNullException.ThrowIfNull(directoriesConfig);
 
         var loader = new PluginLoaderService();
-        loader.LoadAndConfigure(container, directoriesConfig);
+        var loaded = loader.LoadAndConfigure(container, directoriesConfig);
+        container.RegisterInstance<IPluginCatalogService>(new PluginCatalogService(loaded));
 
         return container;
     }

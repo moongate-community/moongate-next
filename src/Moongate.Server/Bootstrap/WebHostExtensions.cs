@@ -80,6 +80,7 @@ internal static class WebHostExtensions
         app.UseAuthorization();
 
         app.MapMoongateAuth();
+        app.MapMoongateAdminPlugins();
         app.MapMoongateAdminUsers();
         app.MapMoongateItemTemplates();
         app.MapMoongateMobileTemplates();
