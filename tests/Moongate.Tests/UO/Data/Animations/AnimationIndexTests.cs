@@ -25,4 +25,35 @@ public sealed class AnimationIndexTests
     {
         Assert.True(AnimationIndex.GetIndex(body, action, direction) < 0);
     }
+
+    [Theory]
+    // fileType 1 (anim.mul) unchanged by the new overload:
+    [InlineData(10, 0, 0, 1, 1100)]
+    [InlineData(400, 0, 0, 1, 35000)]
+    // fileType 2 (anim2): body<200 -> body*110; else 22000+(body-200)*65
+    [InlineData(100, 0, 0, 2, 11000)]
+    [InlineData(250, 0, 0, 2, 25250)]
+    // fileType 3 (anim3): body<300 -> body*110; body<400 -> 33000+(body-300)*65; else 35000+(body-400)*175
+    [InlineData(100, 0, 0, 3, 11000)]
+    [InlineData(350, 0, 0, 3, 36250)]
+    [InlineData(400, 0, 0, 3, 35000)]
+    // fileType 4 (anim4): body<200 -> body*110; body<400 -> 22000+(body-200)*65; else 35000+(body-400)*175
+    [InlineData(250, 0, 0, 4, 25250)]
+    [InlineData(400, 0, 0, 4, 35000)]
+    // fileType 5 (anim5): body<200 && body!=34 -> body*110; else 22000+(body-200)*65
+    [InlineData(100, 0, 0, 5, 11000)]
+    [InlineData(250, 0, 0, 5, 25250)]
+    public void GetIndex_PerFileType(int body, int action, int direction, int fileType, int expected)
+    {
+        Assert.Equal(expected, AnimationIndex.GetIndex(body, action, direction, fileType));
+    }
+
+    [Fact]
+    public void GetIndex_DefaultFileType_MatchesFileType1()
+    {
+        Assert.Equal(
+            AnimationIndex.GetIndex(123, 2, 3, 1),
+            AnimationIndex.GetIndex(123, 2, 3)
+        );
+    }
 }
