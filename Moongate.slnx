@@ -6,6 +6,7 @@
         <Project Path="src/Moongate.Network.UO/Moongate.Network.UO.csproj"/>
         <Project Path="src/Moongate.Persistence/Moongate.Persistence.csproj"/>
         <Project Path="src/Moongate.Plugins/Moongate.Plugins.csproj"/>
+        <Project Path="src/Moongate.Plugin.Email/Moongate.Plugin.Email.csproj"/>
         <Project Path="src/Moongate.Scripting.Lua/Moongate.Scripting.Lua.csproj"/>
         <Project Path="src/Moongate.UO.Data/Moongate.UO.Data.csproj"/>
         <Project Path="src/Moongate.UO.Domain/Moongate.UO.Domain.csproj"/>

@@ -85,7 +85,7 @@ public static class AdminUserEndpointExtensions
                            request.Password,
                            level,
                            request.IsActive,
-                           cancellationToken
+                           cancellationToken: cancellationToken
                        );
 
             return TypedResults.Ok(UserSummary.FromEntity(user));

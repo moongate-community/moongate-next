@@ -38,7 +38,7 @@ public static class SeedContainerExtensions
                         "admin",
                         UserLevelType.Administrator,
                         true,
-                        cancellationToken
+                        cancellationToken: cancellationToken
                     );
 
                     log.Warning(

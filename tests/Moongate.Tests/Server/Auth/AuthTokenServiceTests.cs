@@ -20,7 +20,13 @@ public sealed class AuthTokenServiceTests
         private readonly Dictionary<Serial, UserEntity> _users = [];
         private uint _nextId = 1;
 
-        public UserEntity Add(string username, string password, UserLevelType level, bool isActive)
+        public UserEntity Add(
+            string username,
+            string password,
+            UserLevelType level,
+            bool isActive,
+            string? activationId = null
+        )
         {
             var user = new UserEntity(
                 new(_nextId++),
@@ -28,7 +34,8 @@ public sealed class AuthTokenServiceTests
                 $"{username}@test.local",
                 HashUtils.HashPassword(password),
                 level,
-                isActive
+                isActive,
+                activationId
             );
             _users[user.Id] = user;
 
@@ -38,15 +45,33 @@ public sealed class AuthTokenServiceTests
         public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
             => ValueTask.FromResult(_users.Count);
 
+        public ValueTask<UserEntity?> ActivateAsync(string activationId, CancellationToken cancellationToken = default)
+        {
+            var user = _users.Values.FirstOrDefault(
+                candidate => string.Equals(candidate.ActivationId, activationId.Trim(), StringComparison.Ordinal)
+            );
+
+            if (user is null)
+            {
+                return ValueTask.FromResult<UserEntity?>(null);
+            }
+
+            user.IsActive = true;
+            user.ActivationId = null;
+
+            return ValueTask.FromResult<UserEntity?>(user);
+        }
+
         public ValueTask<UserEntity> CreateAsync(
             string username,
             string email,
             string password,
             UserLevelType level = UserLevelType.Player,
             bool isActive = true,
+            string? activationId = null,
             CancellationToken cancellationToken = default
         )
-            => ValueTask.FromResult(Add(username, password, level, isActive));
+            => ValueTask.FromResult(Add(username, password, level, isActive, activationId));
 
         public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
             => ValueTask.FromResult(_users.Remove(id));

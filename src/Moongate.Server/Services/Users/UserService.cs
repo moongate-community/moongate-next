@@ -29,17 +29,51 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
     public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
         => _users.CountAsync(cancellationToken);
 
+    public async ValueTask<UserEntity?> ActivateAsync(string activationId, CancellationToken cancellationToken = default)
+    {
+        var normalizedActivationId = NormalizeActivationId(activationId);
+
+        if (normalizedActivationId is null)
+        {
+            return null;
+        }
+
+        var user = _users
+                   .Query()
+                   .FirstOrDefault(
+                       u => string.Equals(u.ActivationId, normalizedActivationId, StringComparison.Ordinal)
+                   );
+
+        if (user is null)
+        {
+            return null;
+        }
+
+        user.IsActive = true;
+        user.ActivationId = null;
+
+        await _users.UpsertAsync(user, cancellationToken);
+        await _eventBus.PublishAsync(
+            new UserUpdatedEvent(user.Id, user.Username, user.Email, user.Level, user.IsActive, DateTimeOffset.UtcNow),
+            cancellationToken
+        );
+
+        return user;
+    }
+
     public async ValueTask<UserEntity> CreateAsync(
         string username,
         string email,
         string password,
         UserLevelType level = UserLevelType.Player,
         bool isActive = true,
+        string? activationId = null,
         CancellationToken cancellationToken = default
     )
     {
         var normalizedUsername = NormalizeUsername(username);
         var normalizedEmail = NormalizeEmail(email);
+        var normalizedActivationId = NormalizeActivationId(activationId);
 
         if (await GetByUsernameAsync(normalizedUsername, cancellationToken) is not null)
         {
@@ -50,11 +84,27 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
 
         var id = await _users.NextIdAsync(cancellationToken);
         var user =
-            new UserEntity(id, normalizedUsername, normalizedEmail, HashUtils.HashPassword(password), level, isActive);
+            new UserEntity(
+                id,
+                normalizedUsername,
+                normalizedEmail,
+                HashUtils.HashPassword(password),
+                level,
+                isActive,
+                normalizedActivationId
+            );
 
         await _users.UpsertAsync(user, cancellationToken);
         await _eventBus.PublishAsync(
-            new UserCreatedEvent(user.Id, user.Username, user.Level, user.IsActive, DateTimeOffset.UtcNow),
+            new UserCreatedEvent(
+                user.Id,
+                user.Username,
+                user.Level,
+                user.IsActive,
+                DateTimeOffset.UtcNow,
+                user.Email,
+                user.ActivationId
+            ),
             cancellationToken
         );
 
@@ -256,5 +306,12 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
         }
 
         return username.Trim();
+    }
+
+    private static string? NormalizeActivationId(string? activationId)
+    {
+        var normalized = activationId?.Trim();
+
+        return string.IsNullOrEmpty(normalized) ? null : normalized;
     }
 }

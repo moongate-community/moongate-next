@@ -13,6 +13,9 @@ public interface IUserService : IPaginatedService<UserEntity>
     /// <summary>Returns the current number of persisted users.</summary>
     ValueTask<int> CountAsync(CancellationToken cancellationToken = default);
 
+    /// <summary>Activates a user with a pending activation id, clearing the activation id after success.</summary>
+    ValueTask<UserEntity?> ActivateAsync(string activationId, CancellationToken cancellationToken = default);
+
     /// <summary>Creates a user with an auto-allocated serial and a hashed password.</summary>
     ValueTask<UserEntity> CreateAsync(
         string username,
@@ -20,6 +23,7 @@ public interface IUserService : IPaginatedService<UserEntity>
         string password,
         UserLevelType level = UserLevelType.Player,
         bool isActive = true,
+        string? activationId = null,
         CancellationToken cancellationToken = default
     );
 

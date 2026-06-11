@@ -12,6 +12,8 @@ namespace Moongate.Plugins.Data;
 /// </summary>
 public sealed class PluginContext
 {
+    public const string PluginConfigFileName = "plugin.yaml";
+
     private readonly ILogger _logger = Log.ForContext<PluginContext>();
     private readonly ICommandRegistry? _commandRegistry;
 
@@ -25,7 +27,7 @@ public sealed class PluginContext
         ArgumentNullException.ThrowIfNull(directories);
 
         PluginDirectory = Path.GetFullPath(pluginDirectory);
-        PluginConfigPath = Path.Combine(PluginDirectory, "plugin.yaml");
+        PluginConfigPath = Path.Combine(PluginDirectory, PluginConfigFileName);
         Directories = directories;
         _commandRegistry = commandRegistry;
     }

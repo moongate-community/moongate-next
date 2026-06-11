@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Moongate.Core\Moongate.Core.csproj" />
+        <ProjectReference Include="..\Moongate.Abstractions\Moongate.Abstractions.csproj" />
+        <ProjectReference Include="..\Moongate.Plugins\Moongate.Plugins.csproj" />
+        <ProjectReference Include="..\Moongate.UO.Domain\Moongate.UO.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="Moongate.Tests" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Update="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.301">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Fluid.Core" Version="2.31.0" />
+      <PackageReference Include="MailKit" Version="4.17.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="Assets\**\*.*" />
+        <EmbeddedResource Include="Assets\templates\**\*.liquid">
+            <LogicalName>Moongate.Plugin.Email.Assets.templates/%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
+        </EmbeddedResource>
+    </ItemGroup>
+
+</Project>

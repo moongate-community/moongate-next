@@ -92,7 +92,7 @@ public sealed class UserServiceTests : IDisposable
         }
 
         private static UserEntity Clone(UserEntity user)
-            => new(user.Id, user.Username, user.Email, user.Password, user.Level, user.IsActive);
+            => new(user.Id, user.Username, user.Email, user.Password, user.Level, user.IsActive, user.ActivationId);
     }
 
     [Fact]
@@ -189,8 +189,49 @@ public sealed class UserServiceTests : IDisposable
         var created = Assert.Single(bus.AsyncEvents.OfType<UserCreatedEvent>());
         Assert.Equal(user.Id, created.UserId);
         Assert.Equal(user.Username, created.Username);
+        Assert.Equal(user.Email, created.Email);
         Assert.Equal(user.Level, created.Level);
         Assert.True(created.IsActive);
+    }
+
+    [Fact]
+    public async Task CreateAsync_WithActivationId_TrimsAndPersistsActivationId()
+    {
+        var access = new FakeUserAccess();
+        var bus = new CapturingEventBusService();
+        var service = new UserService(access, bus);
+
+        var user = await service.CreateAsync(
+            "Pending",
+            "pending@test.local",
+            "secret",
+            UserLevelType.Player,
+            false,
+            "  activation-token  "
+        );
+
+        Assert.Equal("activation-token", user.ActivationId);
+        Assert.Equal("activation-token", Assert.Single(access.Users).ActivationId);
+
+        var created = Assert.Single(bus.AsyncEvents.OfType<UserCreatedEvent>());
+        Assert.Equal("activation-token", created.ActivationId);
+    }
+
+    [Fact]
+    public async Task CreateAsync_BlankActivationId_PersistsNullActivationId()
+    {
+        var access = new FakeUserAccess();
+        var service = new UserService(access, new CapturingEventBusService());
+
+        var user = await service.CreateAsync(
+            "Pending",
+            "pending@test.local",
+            "secret",
+            activationId: "   "
+        );
+
+        Assert.Null(user.ActivationId);
+        Assert.Null(Assert.Single(access.Users).ActivationId);
     }
 
     [Fact]
@@ -223,6 +264,71 @@ public sealed class UserServiceTests : IDisposable
         var service = new UserService(new FakeUserAccess(), new CapturingEventBusService());
 
         Assert.False(await service.DeleteAsync(new(404)));
+    }
+
+    [Fact]
+    public async Task ActivateAsync_BlankActivationId_ReturnsNull()
+    {
+        var service = new UserService(new FakeUserAccess(), new CapturingEventBusService());
+
+        Assert.Null(await service.ActivateAsync("   "));
+    }
+
+    [Fact]
+    public async Task ActivateAsync_KnownActivationId_ActivatesUserClearsActivationIdAndPublishesUpdate()
+    {
+        var access = new FakeUserAccess();
+        access.Add(
+            new(
+                new(9),
+                "pending",
+                "pending@realm.local",
+                HashUtils.HashPassword("secret"),
+                UserLevelType.Player,
+                false,
+                "token"
+            )
+        );
+        var bus = new CapturingEventBusService();
+        var service = new UserService(access, bus);
+
+        var user = await service.ActivateAsync(" token ");
+
+        Assert.NotNull(user);
+        Assert.True(user!.IsActive);
+        Assert.Null(user.ActivationId);
+
+        var stored = Assert.Single(access.Users);
+        Assert.True(stored.IsActive);
+        Assert.Null(stored.ActivationId);
+
+        var updated = Assert.Single(bus.AsyncEvents.OfType<UserUpdatedEvent>());
+        Assert.Equal(user.Id, updated.UserId);
+        Assert.True(updated.IsActive);
+    }
+
+    [Fact]
+    public async Task ActivateAsync_UnknownActivationId_ReturnsNullAndDoesNotPublish()
+    {
+        var access = new FakeUserAccess();
+        access.Add(
+            new(
+                new(9),
+                "pending",
+                "pending@realm.local",
+                HashUtils.HashPassword("secret"),
+                UserLevelType.Player,
+                false,
+                "token"
+            )
+        );
+        var bus = new CapturingEventBusService();
+        var service = new UserService(access, bus);
+
+        var user = await service.ActivateAsync("other-token");
+
+        Assert.Null(user);
+        Assert.Empty(bus.AsyncEvents);
     }
 
     public void Dispose()

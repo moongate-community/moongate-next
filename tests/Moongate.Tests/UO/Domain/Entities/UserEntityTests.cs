@@ -35,6 +35,23 @@ public class UserEntityTests
         Assert.Equal("hashed_pw", user.Password);
         Assert.Equal(UserLevelType.Player, user.Level);
         Assert.True(user.IsActive);
+        Assert.Null(user.ActivationId);
+    }
+
+    [Fact]
+    public void Constructor_WithActivationId_SetsActivationId()
+    {
+        var user = new UserEntity(
+            new(7),
+            "pending",
+            "pending@test.local",
+            "hashed_pw",
+            UserLevelType.Player,
+            false,
+            "activation-token"
+        );
+
+        Assert.Equal("activation-token", user.ActivationId);
     }
 
     [Fact]
