@@ -21,8 +21,8 @@ public sealed class AnimationFrameDecoderTests
         w.Write(8);            // frame[0] offset: lookup table is 4 (count) + 4 (one offset) = 8 bytes after start
 
         // frame[0] at start+8
-        w.Write((short)0x200); // xCenter -> xBase = 0
-        w.Write((short)(2 - 0x200)); // yCenter -> yBase = (yCenter - height) + 0x200 = 0
+        w.Write((short)0x200); // xCenter -> xBase = xCenter - 0x200 = 0
+        w.Write((short)(0x200 - 2)); // yCenter -> yBase = yCenter + height - 0x200 = 0
         w.Write((short)2);     // width
         w.Write((short)2);     // height
         w.Write(0x80200002);   // run header: xOffset=0, yOffset=0, runLength=2 (XOR 0x80200000)

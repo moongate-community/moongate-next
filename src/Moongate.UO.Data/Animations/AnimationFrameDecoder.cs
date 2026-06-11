@@ -60,7 +60,7 @@ public static class AnimationFrameDecoder
 
         var image = new Image<Rgba32>(width, height);
         var xBase = xCenter - 0x200;
-        var yBase = (yCenter - height) + 0x200;
+        var yBase = yCenter + height - 0x200;
 
         int header;
 
