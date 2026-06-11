@@ -14,6 +14,7 @@ import { MobileTemplateTable } from "./MobileTemplateTable";
 type MobileTemplateCatalogPanelProps = {
   accessToken: string;
   commandTarget?: Extract<AdminCommandTarget, { kind: "mobileTemplate" }> | null;
+  onLootTemplateOpen?: (id: string) => void;
 };
 
 const PAGE_SIZE = 50;
@@ -47,7 +48,11 @@ function replaceMobileTemplateUrl(id?: string) {
   window.history.replaceState(null, "", `/admin?${params.toString()}`);
 }
 
-export function MobileTemplateCatalogPanel({ accessToken, commandTarget }: MobileTemplateCatalogPanelProps) {
+export function MobileTemplateCatalogPanel({
+  accessToken,
+  commandTarget,
+  onLootTemplateOpen
+}: MobileTemplateCatalogPanelProps) {
   const [filters, setFilters] = useState<MobileTemplateFilters>(defaultFilters);
   const [search, setSearch] = useState("");
   const [templates, setTemplates] = useState<MobileTemplateSummary[]>([]);
@@ -153,7 +158,12 @@ export function MobileTemplateCatalogPanel({ accessToken, commandTarget }: Mobil
             All mobiles
           </Button>
         </div>
-        <MobileTemplateDetailPanel template={detail} loading={detailLoading} error={detailError} />
+        <MobileTemplateDetailPanel
+          template={detail}
+          loading={detailLoading}
+          error={detailError}
+          onLootTemplateOpen={onLootTemplateOpen}
+        />
       </div>
     );
   }

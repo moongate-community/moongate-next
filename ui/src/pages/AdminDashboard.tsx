@@ -28,6 +28,7 @@ type AdminDashboardProps = {
   accessTokenExpiresAt: string;
   commandTarget?: AdminCommandTarget | null;
   user: AuthUser;
+  onLootTemplateOpen?: (id: string) => void;
   onRuntimeSnapshotChange?: (snapshot: AdminRuntimeSnapshot) => void;
 };
 
@@ -37,6 +38,7 @@ export function AdminDashboard({
   accessTokenExpiresAt,
   commandTarget,
   user,
+  onLootTemplateOpen,
   onRuntimeSnapshotChange
 }: AdminDashboardProps) {
   const [snapshot, setSnapshot] = useState<AdminRuntimeSnapshot>(() => getOfflineSnapshot());
@@ -128,6 +130,7 @@ export function AdminDashboard({
           <MobileTemplateCatalogPanel
             accessToken={accessToken}
             commandTarget={commandTarget?.kind === "mobileTemplate" ? commandTarget : null}
+            onLootTemplateOpen={onLootTemplateOpen}
           />
         )}
         {activeView === "lootTemplates" && (

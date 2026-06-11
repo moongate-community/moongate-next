@@ -232,6 +232,18 @@ export default function App() {
     });
   }, []);
 
+  const openLootTemplateFromMobile = useCallback((id: string) => {
+    adminCommandTargetSequence.current += 1;
+    window.history.replaceState(null, "", adminUrl("lootTemplates", { kind: "lootTemplate", id }));
+    setSection("admin");
+    setAdminNav("lootTemplates");
+    setAdminCommandTarget({
+      kind: "lootTemplate",
+      id,
+      sequence: adminCommandTargetSequence.current
+    });
+  }, []);
+
   const openUserFromCommand = useCallback((user: AdminUser) => {
     adminCommandTargetSequence.current += 1;
     window.history.replaceState(null, "", `/admin?view=users&user=${encodeURIComponent(user.id)}`);
@@ -443,6 +455,7 @@ export default function App() {
               accessTokenExpiresAt={session.accessTokenExpiresAt}
               user={session.user}
               commandTarget={adminCommandTarget}
+              onLootTemplateOpen={openLootTemplateFromMobile}
               onRuntimeSnapshotChange={setAdminRuntimeSnapshot}
             />
           ) : (
