@@ -3,6 +3,7 @@ export type AdminNavId =
   | "runtime"
   | "metrics"
   | "persistence"
+  | "plugins"
   | "security"
   | "users"
   | "itemTemplates"

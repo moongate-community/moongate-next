@@ -36,14 +36,7 @@ public sealed class PluginCatalogService : IPluginCatalogService
         CancellationToken cancellationToken = default
     )
     {
-        if (string.IsNullOrWhiteSpace(pluginId))
-        {
-            return ValueTask.FromResult<PluginConfigView?>(null);
-        }
-
-        var plugin = _plugins.FirstOrDefault(
-            candidate => string.Equals(candidate.Metadata.Id, pluginId.Trim(), StringComparison.OrdinalIgnoreCase)
-        );
+        var plugin = FindPlugin(pluginId);
 
         if (plugin is null)
         {
@@ -55,6 +48,57 @@ public sealed class PluginCatalogService : IPluginCatalogService
 
     public IReadOnlyList<PluginCatalogEntry> GetLoadedPlugins()
         => _plugins.Select(ToEntry).ToArray();
+
+    public async ValueTask<PluginConfigForm?> GetConfigFormAsync(
+        string pluginId,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var plugin = FindPlugin(pluginId);
+
+        if (plugin?.Instance is not IConfigurablePlugin configurable)
+        {
+            return null;
+        }
+
+        return await configurable.GetConfigFormAsync(cancellationToken);
+    }
+
+    public async ValueTask<PluginConfigSaveResult?> SaveConfigAsync(
+        string pluginId,
+        PluginConfigSaveRequest request,
+        CancellationToken cancellationToken = default
+    )
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        var plugin = FindPlugin(pluginId);
+
+        if (plugin?.Instance is not IConfigurablePlugin configurable)
+        {
+            return null;
+        }
+
+        var result = await configurable.SaveConfigAsync(request, cancellationToken);
+        var config = result.Config ?? await GetConfigCoreAsync(plugin, cancellationToken);
+
+        return result with { Config = config };
+    }
+
+    public async ValueTask<PluginTestResult?> TestAsync(
+        string pluginId,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var plugin = FindPlugin(pluginId);
+
+        if (plugin?.Instance is not ITestablePlugin testable)
+        {
+            return null;
+        }
+
+        return await testable.TestAsync(cancellationToken);
+    }
 
     internal static string SanitizeYaml(string yaml, out IReadOnlyList<string> redactedKeys)
     {
@@ -88,6 +132,18 @@ public sealed class PluginCatalogService : IPluginCatalogService
 
     private static string ConfigDisplayPath(LoadedPlugin plugin)
         => Path.Combine(Path.GetFileName(plugin.PluginDirectory), PluginContext.PluginConfigFileName);
+
+    private LoadedPlugin? FindPlugin(string pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId))
+        {
+            return null;
+        }
+
+        return _plugins.FirstOrDefault(
+            candidate => string.Equals(candidate.Metadata.Id, pluginId.Trim(), StringComparison.OrdinalIgnoreCase)
+        );
+    }
 
     private static async ValueTask<PluginConfigView?> GetConfigCoreAsync(
         LoadedPlugin plugin,
@@ -175,6 +231,8 @@ public sealed class PluginCatalogService : IPluginCatalogService
             plugin.Metadata.Dependencies.ToArray(),
             plugin.Assembly.GetName().Name ?? "",
             Path.GetFileName(plugin.PluginDirectory),
-            File.Exists(Path.Combine(plugin.PluginDirectory, PluginContext.PluginConfigFileName))
+            File.Exists(Path.Combine(plugin.PluginDirectory, PluginContext.PluginConfigFileName)),
+            plugin.Instance is IConfigurablePlugin,
+            plugin.Instance is ITestablePlugin
         );
 }
