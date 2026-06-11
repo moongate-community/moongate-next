@@ -1,6 +1,6 @@
 import { Sparkles, UserRound } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import type { AuthUser } from "../types/auth";
 
 type PlayerDashboardProps = {
@@ -39,7 +39,7 @@ export function PlayerDashboard({ user }: PlayerDashboardProps) {
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
         <Card className="rounded-md border-border bg-surface py-0 shadow-none">
           <CardHeader className="flex flex-row items-center justify-between gap-3 border-b border-border px-4 py-3">
-            <CardTitle className="text-sm tracking-tight text-fg">Characters</CardTitle>
+            <h3 className="m-0 text-sm font-semibold tracking-tight text-fg">Characters</h3>
             <Badge variant="outline" className="rounded-md border-border bg-bg text-fg-muted">0 linked</Badge>
           </CardHeader>
           <CardContent className="grid gap-2 p-4">

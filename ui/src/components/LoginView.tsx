@@ -1,7 +1,7 @@
 import { type FormEvent, Suspense, lazy, useState } from "react";
 import { LogIn, Shield, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -60,9 +60,9 @@ export function LoginView({ section, onLogin }: LoginViewProps) {
           <div className="mb-3 inline-flex h-8 w-8 items-center justify-center rounded-md bg-muted text-fg-muted">
             {sectionIcon}
           </div>
-          <CardTitle className="m-0 text-xl font-semibold leading-tight tracking-tight text-fg">
+          <h1 className="m-0 text-xl font-semibold leading-tight tracking-tight text-fg">
             {isAdmin ? "Admin console" : "Player portal"}
-          </CardTitle>
+          </h1>
         </CardHeader>
 
         <CardContent className="p-4">

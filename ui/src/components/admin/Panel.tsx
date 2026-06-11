@@ -1,6 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
-import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardAction, CardContent, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 type PanelProps = {
@@ -19,7 +19,7 @@ export function Panel({ title, icon: Icon, action, children, className }: PanelP
       <CardHeader className="min-h-[48px] border-b border-border px-4 py-0">
         <div className="flex items-center gap-2.5">
           {Icon && <Icon size={16} aria-hidden className="text-fg-subtle" />}
-          <CardTitle className="text-sm tracking-tight text-fg">{title}</CardTitle>
+          <h3 className="m-0 text-sm font-semibold tracking-tight text-fg">{title}</h3>
         </div>
         {action ? <CardAction>{action}</CardAction> : null}
       </CardHeader>
