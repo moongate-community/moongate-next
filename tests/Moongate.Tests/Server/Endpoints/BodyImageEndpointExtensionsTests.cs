@@ -32,7 +32,7 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
 
         public int RenderCount { get; private set; }
 
-        public Image<Rgba32>? GetBodyFrame(int body, int action = 0, int direction = 1, int frame = 0)
+        public Image<Rgba32>? GetBodyFrame(int body, int action = 0, int direction = 1, int frame = 0, int hue = 0)
         {
             RenderCount++;
 

@@ -1,3 +1,4 @@
+using Moongate.UO.Data.Data.Hues;
 using Moongate.UO.Data.Interfaces.Animations;
 using Moongate.UO.Data.Interfaces.Files;
 using Moongate.UO.Data.Interfaces.Hues;
@@ -33,9 +34,9 @@ public sealed class AnimationService : IAnimationService
         _fileSet = new AnimationFileSet(resolver);
     }
 
-    public Image<Rgba32>? GetBodyFrame(int body, int action = 0, int direction = 1, int frame = 0)
+    public Image<Rgba32>? GetBodyFrame(int body, int action = 0, int direction = 1, int frame = 0, int hue = 0)
     {
-        var (graphic, hue) = _bodyDef.Resolve(body);
+        var (graphic, bodyDefHue) = _bodyDef.Resolve(body);
 
         int fileType;
         int index0;
@@ -58,9 +59,11 @@ public sealed class AnimationService : IAnimationService
             return null;
         }
 
-        if (hue != 0)
+        var effectiveHue = hue != 0 ? hue : bodyDefHue;
+
+        if (effectiveHue != 0)
         {
-            var resolved = _hueStore.GetHue(hue - 1);
+            var resolved = ResolveHue(effectiveHue);
 
             if (resolved is not null)
             {
@@ -69,6 +72,13 @@ public sealed class AnimationService : IAnimationService
         }
 
         return image;
+    }
+
+    private Hue? ResolveHue(int hueValue)
+    {
+        var index = (hueValue & 0x3FFF) - 1; // mask UO mode flags (e.g. 0x8000 partial), packet id is 1-based
+
+        return index >= 0 ? _hueStore.GetHue(index) : null;
     }
 
     private Image<Rgba32>? DecodeWithFallback(int index0, int action, int direction, int frame, int fileType)
