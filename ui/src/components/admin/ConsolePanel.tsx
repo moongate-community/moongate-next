@@ -1,4 +1,10 @@
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
+import { SendHorizontal } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { createConsoleConnection, type LiveConsoleEntry } from "../../lib/consoleClient";
 
 const MAX_LINES = 1000;
@@ -19,9 +25,9 @@ function levelClass(entry: LiveConsoleEntry): string {
   switch (entry.level) {
     case "Error":
     case "Fatal":
-      return "text-red-400";
+      return "text-danger";
     case "Warning":
-      return "text-amber-400";
+      return "text-warning";
     default:
       return "text-fg-muted";
   }
@@ -92,7 +98,7 @@ export function ConsolePanel({ accessToken }: ConsolePanelProps) {
   }, [accessToken]);
 
   useEffect(() => {
-    const node = scrollRef.current;
+    const node = scrollRef.current?.querySelector<HTMLElement>("[data-slot='scroll-area-viewport']");
 
     if (node) {
       node.scrollTop = node.scrollHeight;
@@ -154,40 +160,52 @@ export function ConsolePanel({ accessToken }: ConsolePanelProps) {
 
   return (
     <section className="grid gap-3 px-5 py-6 md:px-7">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold tracking-tight text-fg">Live Console</h2>
-        <span className={`text-xs font-semibold ${connected ? "text-emerald-400" : "text-fg-subtle"}`}>
-          {connected ? "● connected" : "○ disconnected"}
-        </span>
-      </div>
+      <Card className="gap-0 rounded-md border-border bg-surface py-0 shadow-card">
+        <CardHeader className="flex flex-row items-center justify-between gap-3 border-b border-border px-4 py-3">
+          <CardTitle className="text-lg tracking-tight text-fg">Live Console</CardTitle>
+          <Badge
+            variant="outline"
+            className={`gap-1.5 rounded-md px-2 text-xs font-semibold ${connected ? "border-success/20 bg-success/10 text-success" : "border-border bg-muted text-fg-subtle"}`}
+          >
+            <span className={`h-2 w-2 rounded-full ${connected ? "bg-success" : "bg-fg-subtle"}`} aria-hidden />
+            {connected ? "Connected" : "Disconnected"}
+          </Badge>
+        </CardHeader>
+        <CardContent className="grid gap-3 p-3">
+          <ScrollArea
+            ref={scrollRef}
+            className="h-[60vh] min-h-[200px] rounded-md border border-border bg-bg font-mono text-[13px] leading-relaxed"
+          >
+            <div className="grid gap-0.5 p-3">
+              {lines.map((entry, index) => (
+                <div key={index} className={`whitespace-pre-wrap break-words ${levelClass(entry)}`}>
+                  <span className="mr-2 text-fg-subtle">{formatTime(entry.timestamp)}</span>
+                  {entry.kind === "Log" && entry.level ? <span className="mr-2">[{entry.level}]</span> : null}
+                  {entry.message}
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
 
-      <div
-        ref={scrollRef}
-        className="h-[60vh] min-h-[200px] overflow-y-auto rounded-lg border border-border bg-surface p-3 font-mono text-[13px] leading-relaxed shadow-card"
-      >
-        {lines.map((entry, index) => (
-          <div key={index} className={`whitespace-pre-wrap break-words ${levelClass(entry)}`}>
-            <span className="mr-2 text-fg-subtle">{formatTime(entry.timestamp)}</span>
-            {entry.kind === "Log" && entry.level ? <span className="mr-2">[{entry.level}]</span> : null}
-            {entry.message}
-          </div>
-        ))}
-      </div>
-
-      <form onSubmit={submit} className="flex gap-2">
-        <span className="flex items-center font-mono text-accent">&gt;</span>
-        <input
-          type="text"
-          aria-label="Command input"
-          value={input}
-          onChange={(event) => setInput(event.target.value)}
-          onKeyDown={onKeyDown}
-          placeholder="Type a command and press Enter…"
-          autoComplete="off"
-          spellCheck={false}
-          className="min-w-0 flex-1 rounded-md border border-border bg-bg px-3 py-2 font-mono text-sm text-fg outline-none focus:border-accent"
-        />
-      </form>
+          <form onSubmit={submit} className="flex gap-2">
+            <span className="flex items-center font-mono text-accent">&gt;</span>
+            <Input
+              type="text"
+              aria-label="Command input"
+              value={input}
+              onChange={(event) => setInput(event.target.value)}
+              onKeyDown={onKeyDown}
+              placeholder="Command"
+              autoComplete="off"
+              spellCheck={false}
+              className="min-w-0 flex-1 bg-bg font-mono text-sm text-fg"
+            />
+            <Button type="submit" size="icon-sm" aria-label="Send command">
+              <SendHorizontal size={16} aria-hidden />
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </section>
   );
 }
