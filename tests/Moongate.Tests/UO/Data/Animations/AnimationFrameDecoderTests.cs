@@ -66,4 +66,16 @@ public sealed class AnimationFrameDecoderTests
 
         Assert.Null(AnimationFrameDecoder.Decode(block, 0));
     }
+
+    [Fact]
+    public void DecodeFrame_ReturnsImageAndCenters()
+    {
+        using var decoded = AnimationFrameDecoder.DecodeFrame(BuildBlock(), frame: 0);
+
+        Assert.NotNull(decoded);
+        Assert.Equal(0x200, decoded!.CenterX);
+        Assert.Equal(0x200 - 2, decoded.CenterY);
+        Assert.Equal(2, decoded.Image.Width);
+        Assert.Equal(new Rgba32(255, 0, 0, 255), decoded.Image[0, 0]); // same content as Decode
+    }
 }

@@ -13,6 +13,9 @@ public static class AnimationFrameDecoder
     private const int RleTerminator = 0x7FFF7FFF;
 
     public static Image<Rgba32>? Decode(byte[] block, int frame)
+        => DecodeFrame(block, frame)?.Image;
+
+    public static DecodedFrame? DecodeFrame(byte[] block, int frame)
     {
         ArgumentNullException.ThrowIfNull(block);
 
@@ -87,7 +90,7 @@ public static class AnimationFrameDecoder
             }
         }
 
-        return image;
+        return new DecodedFrame(image, xCenter, yCenter);
     }
 
     private static Rgba32 FromArgb1555(ushort value)
