@@ -43,7 +43,7 @@ public sealed class LootTemplateProjectionService
         }
 
         var previewItems = rows
-                           .Where(static row => row.Kind == "item")
+                           .Where(static row => row.ItemTemplateId is not null)
                            .GroupBy(static row => row.ItemTemplateId, StringComparer.OrdinalIgnoreCase)
                            .Select(static group => group.First())
                            .Take(24)
@@ -65,17 +65,14 @@ public sealed class LootTemplateProjectionService
             return;
         }
 
+        var candidateChance = node.Chance / matches.Count;
+
         for (var i = 0; i < matches.Count; i++)
         {
             var template = matches[i];
-            var itemNode = new LootNode
-            {
-                Item = template.Id,
-                Chance = node.Chance,
-                Amount = node.Amount,
-                Weight = node.Weight
-            };
-            AddNode(rows, itemNode, parentId, depth, i);
+            var id = $"{parentId}.{i.ToString(CultureInfo.InvariantCulture)}";
+
+            rows.Add(CreateItemRow(id, parentId, depth, "category_candidate", template, node.Amount, candidateChance));
         }
     }
 
@@ -141,6 +138,38 @@ public sealed class LootTemplateProjectionService
             itemIdHex,
             imageUrl,
             stackable
+        );
+    }
+
+    private static LootTemplateNodeSummary CreateItemRow(
+        string id,
+        string parentId,
+        int depth,
+        string kind,
+        ItemTemplateDefinition template,
+        LootAmount? amount,
+        double chance
+    )
+    {
+        var amountMin = amount?.Min ?? 1;
+        var amountMax = amount?.Max ?? 1;
+        var label = string.IsNullOrWhiteSpace(template.Name) ? template.Id : template.Name;
+        var itemIdHex = FormatItemId(template.ItemId);
+
+        return new(
+            id,
+            parentId,
+            depth,
+            kind,
+            label,
+            chance,
+            0,
+            amountMin,
+            amountMax,
+            template.Id,
+            itemIdHex,
+            FormatItemImageUrl(template.ItemId),
+            template.IsStackable
         );
     }
 

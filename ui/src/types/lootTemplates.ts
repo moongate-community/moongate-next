@@ -11,7 +11,7 @@ export type LootTemplateNodeSummary = {
   id: string;
   parentId: string;
   depth: number;
-  kind: "item" | "category" | "pick_one_of" | "group";
+  kind: "item" | "category" | "category_candidate" | "pick_one_of" | "group";
   label: string;
   chance: number;
   weight: number;

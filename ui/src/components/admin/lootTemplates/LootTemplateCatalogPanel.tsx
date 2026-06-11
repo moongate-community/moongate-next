@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowLeft, PackageOpen, RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -88,6 +88,7 @@ export function LootTemplateCatalogPanel({ accessToken, commandTarget }: LootTem
   const [detailLoading, setDetailLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [detailError, setDetailError] = useState<string | null>(null);
+  const detailRequestSequence = useRef(0);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -119,6 +120,9 @@ export function LootTemplateCatalogPanel({ accessToken, commandTarget }: LootTem
   }, [load]);
 
   const openTemplateDetail = useCallback(async (id: string, updateUrl = true) => {
+    const requestSequence = detailRequestSequence.current + 1;
+    detailRequestSequence.current = requestSequence;
+
     setSelectedId(id);
     setDetail(null);
     setDetailPageOpen(true);
@@ -130,11 +134,19 @@ export function LootTemplateCatalogPanel({ accessToken, commandTarget }: LootTem
     }
 
     try {
-      setDetail(await getLootTemplate(accessToken, id));
+      const nextDetail = await getLootTemplate(accessToken, id);
+
+      if (detailRequestSequence.current === requestSequence) {
+        setDetail(nextDetail);
+      }
     } catch (caught) {
-      setDetailError(caught instanceof Error ? caught.message : "Failed to load loot template detail");
+      if (detailRequestSequence.current === requestSequence) {
+        setDetailError(caught instanceof Error ? caught.message : "Failed to load loot template detail");
+      }
     } finally {
-      setDetailLoading(false);
+      if (detailRequestSequence.current === requestSequence) {
+        setDetailLoading(false);
+      }
     }
   }, [accessToken]);
 
@@ -151,6 +163,7 @@ export function LootTemplateCatalogPanel({ accessToken, commandTarget }: LootTem
   }
 
   function closeDetailPage() {
+    detailRequestSequence.current += 1;
     setSelectedId(null);
     setDetail(null);
     setDetailError(null);

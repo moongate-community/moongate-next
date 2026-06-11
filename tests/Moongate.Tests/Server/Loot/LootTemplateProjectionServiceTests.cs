@@ -46,6 +46,12 @@ public sealed class LootTemplateProjectionServiceTests
         Assert.Contains(detail.Nodes, row => row.ItemTemplateId == "ruby");
         Assert.Contains(detail.Nodes, row => row.ItemTemplateId == "sapphire");
         Assert.DoesNotContain(detail.Nodes, row => row.ItemTemplateId == "abstract_gem");
+
+        var candidates = detail.Nodes.Where(static row => row.Kind == "category_candidate").ToArray();
+        Assert.Equal(2, candidates.Length);
+        Assert.All(candidates, row => Assert.Equal(0.125, row.Chance));
+        Assert.All(candidates, row => Assert.Equal(0, row.Weight));
+        Assert.Equal(2, detail.PreviewItems.Count);
     }
 
     private static ItemTemplateDefinition Item(
