@@ -1,13 +1,15 @@
 using Moongate.UO.Data.Interfaces.Animations;
+using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Interfaces.Tiles;
+using Moongate.UO.Data.Types.Items;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
 namespace Moongate.UO.Data.Animations;
 
 /// <summary>
-/// Composites a dressed mobile figure: the body (skin-hued) plus hair and facial hair (hued), all decoded
-/// at the same pose and combined via <see cref="AnimationCompositor" />.
+/// Composites a dressed mobile figure: body (skin-hued), hair, facial hair, and worn equipment (each routed
+/// via <see cref="EquipConvTable" /> and hued), drawn in front-facing layer order via <see cref="AnimationCompositor" />.
 /// </summary>
 public sealed class MobileFigureRenderer : IMobileFigureRenderer
 {
@@ -15,14 +17,25 @@ public sealed class MobileFigureRenderer : IMobileFigureRenderer
 
     private readonly IAnimationService _animation;
     private readonly ITileDataStore _tileData;
+    private readonly IItemTemplateService _itemTemplates;
+    private readonly EquipConvTable _equipConv;
 
-    public MobileFigureRenderer(IAnimationService animation, ITileDataStore tileData)
+    public MobileFigureRenderer(
+        IAnimationService animation,
+        ITileDataStore tileData,
+        IItemTemplateService itemTemplates,
+        EquipConvTable equipConv
+    )
     {
         ArgumentNullException.ThrowIfNull(animation);
         ArgumentNullException.ThrowIfNull(tileData);
+        ArgumentNullException.ThrowIfNull(itemTemplates);
+        ArgumentNullException.ThrowIfNull(equipConv);
 
         _animation = animation;
         _tileData = tileData;
+        _itemTemplates = itemTemplates;
+        _equipConv = equipConv;
     }
 
     public Image<Rgba32>? Render(MobileRenderRequest request)
@@ -49,25 +62,28 @@ public sealed class MobileFigureRenderer : IMobileFigureRenderer
             return null;
         }
 
-        var layers = new List<DecodedFrame> { body };
+        var layers = new List<(int Priority, DecodedFrame Frame)> { (EquipmentDrawOrder.BodyPriority, body) };
 
-        AddHairLayer(layers, request.HairStyle, request.HairHue, chosenDirection);
-        AddHairLayer(layers, request.FacialHairStyle, request.FacialHairHue, chosenDirection);
+        AddHairLayer(layers, request.HairStyle, request.HairHue, chosenDirection, ItemLayerType.Hair);
+        AddHairLayer(layers, request.FacialHairStyle, request.FacialHairHue, chosenDirection, ItemLayerType.FacialHair);
+        AddEquipmentLayers(layers, request, chosenDirection);
 
         try
         {
-            return AnimationCompositor.Compose(layers);
+            var ordered = layers.OrderBy(layer => layer.Priority).Select(layer => layer.Frame).ToArray();
+
+            return AnimationCompositor.Compose(ordered);
         }
         finally
         {
             foreach (var layer in layers)
             {
-                layer.Dispose();
+                layer.Frame.Dispose();
             }
         }
     }
 
-    private void AddHairLayer(List<DecodedFrame> layers, int style, int hue, int direction)
+    private void AddHairLayer(List<(int Priority, DecodedFrame Frame)> layers, int style, int hue, int direction, ItemLayerType layer)
     {
         if (style == 0)
         {
@@ -85,7 +101,53 @@ public sealed class MobileFigureRenderer : IMobileFigureRenderer
 
         if (frame is not null)
         {
-            layers.Add(frame);
+            layers.Add((EquipmentDrawOrder.Priority(layer), frame));
+        }
+    }
+
+    private void AddEquipmentLayers(List<(int Priority, DecodedFrame Frame)> layers, MobileRenderRequest request, int direction)
+    {
+        foreach (var itemId in request.Equipment)
+        {
+            if (!_itemTemplates.TryGet(itemId, out var definition) || definition.Layer is null)
+            {
+                continue;
+            }
+
+            var priority = EquipmentDrawOrder.Priority(definition.Layer.Value);
+
+            if (priority == EquipmentDrawOrder.Skip)
+            {
+                continue;
+            }
+
+            var equipmentAnim = _tileData.GetItem(definition.ItemId).Animation;
+
+            if (equipmentAnim <= 0)
+            {
+                continue;
+            }
+
+            int finalAnim;
+            int hue;
+
+            if (_equipConv.TryConvert(request.Body, equipmentAnim, out var conversion))
+            {
+                finalAnim = conversion.AnimId;
+                hue = conversion.Hue != 0 ? conversion.Hue : definition.Hue;
+            }
+            else
+            {
+                finalAnim = equipmentAnim;
+                hue = definition.Hue;
+            }
+
+            var frame = _animation.GetDecodedFrame(finalAnim, 0, direction, 0, hue);
+
+            if (frame is not null)
+            {
+                layers.Add((priority, frame));
+            }
         }
     }
 }

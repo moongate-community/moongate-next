@@ -32,7 +32,7 @@ public class TileDataStoreTests
             TileDataFixture.Write(
                 dir.FullName,
                 [new(3, (uint)UoTileFlag.Impassable, "grass")],
-                [new(0x0A, (uint)UoTileFlag.Weapon, "dagger", 1, 0, 0, 0, 0, 5)]
+                [new(0x0A, (uint)UoTileFlag.Weapon, "dagger", 1, 0, 627, 3, 0, 5)]
             );
             var store = new TileDataStore(new UoFileResolver(dir.FullName));
 
@@ -44,6 +44,8 @@ public class TileDataStoreTests
             Assert.Equal("dagger", item.Name);
             Assert.True(item.Weapon);
             Assert.Equal(1, item.Weight);
+            Assert.Equal(627, item.Animation); // read after quantity, not after quality
+            Assert.Equal(3, item.Quantity);
             Assert.Equal(5, item.Height);
         }
         finally
