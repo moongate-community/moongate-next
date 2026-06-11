@@ -110,6 +110,14 @@ public static class UoDataContainerExtensions
             Reuse.Singleton
         );
 
+        container.RegisterDelegate<IMobileFigureRenderer>(
+            resolver => new MobileFigureRenderer(
+                resolver.Resolve<IAnimationService>(),
+                resolver.Resolve<ITileDataStore>()
+            ),
+            Reuse.Singleton
+        );
+
         container.RegisterDelegate<ISkillDataStore>(_ => new SkillDataStore(dataDirectory), Reuse.Singleton);
         container.RegisterDelegate<IRaceStore>(_ => new RaceStore(dataDirectory), Reuse.Singleton);
         container.RegisterDelegate<IBodyDataStore>(_ => new BodyDataStore(dataDirectory), Reuse.Singleton);
