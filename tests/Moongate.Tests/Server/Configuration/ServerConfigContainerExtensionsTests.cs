@@ -14,13 +14,16 @@ public sealed class ServerConfigContainerExtensionsTests : IDisposable
     public void AddMoongateServerConfig_BindsServerName()
     {
         Directory.CreateDirectory(_dir);
-        File.WriteAllText(ConfigPath, "server:\n  server_name: \"Custom Shard\"\n");
+        File.WriteAllText(ConfigPath, "server:\n  server_name: \"Custom Shard\"\n  is_registration_allowed: true\n");
 
         var container = new Container();
         container.AddMoongateServerConfig();
         container.AddMoongateConfig(ConfigPath);
 
-        Assert.Equal("Custom Shard", container.Resolve<ServerConfig>().ServerName);
+        var config = container.Resolve<ServerConfig>();
+
+        Assert.Equal("Custom Shard", config.ServerName);
+        Assert.True(config.IsRegistrationAllowed);
     }
 
     [Fact]
@@ -30,7 +33,10 @@ public sealed class ServerConfigContainerExtensionsTests : IDisposable
         container.AddMoongateServerConfig();
         container.AddMoongateConfig(ConfigPath);
 
-        Assert.Equal("Moongate Server", container.Resolve<ServerConfig>().ServerName);
+        var config = container.Resolve<ServerConfig>();
+
+        Assert.Equal("Moongate Server", config.ServerName);
+        Assert.False(config.IsRegistrationAllowed);
     }
 
     public void Dispose()

@@ -92,7 +92,7 @@ public sealed class UserServiceTests : IDisposable
         }
 
         private static UserEntity Clone(UserEntity user)
-            => new(user.Id, user.Username, user.Email, user.Password, user.Level, user.IsActive);
+            => new(user.Id, user.Username, user.Email, user.Password, user.Level, user.IsActive, user.ActivationId);
     }
 
     [Fact]
@@ -191,6 +191,42 @@ public sealed class UserServiceTests : IDisposable
         Assert.Equal(user.Username, created.Username);
         Assert.Equal(user.Level, created.Level);
         Assert.True(created.IsActive);
+    }
+
+    [Fact]
+    public async Task CreateAsync_WithActivationId_TrimsAndPersistsActivationId()
+    {
+        var access = new FakeUserAccess();
+        var service = new UserService(access, new CapturingEventBusService());
+
+        var user = await service.CreateAsync(
+            "Pending",
+            "pending@test.local",
+            "secret",
+            UserLevelType.Player,
+            false,
+            "  activation-token  "
+        );
+
+        Assert.Equal("activation-token", user.ActivationId);
+        Assert.Equal("activation-token", Assert.Single(access.Users).ActivationId);
+    }
+
+    [Fact]
+    public async Task CreateAsync_BlankActivationId_PersistsNullActivationId()
+    {
+        var access = new FakeUserAccess();
+        var service = new UserService(access, new CapturingEventBusService());
+
+        var user = await service.CreateAsync(
+            "Pending",
+            "pending@test.local",
+            "secret",
+            activationId: "   "
+        );
+
+        Assert.Null(user.ActivationId);
+        Assert.Null(Assert.Single(access.Users).ActivationId);
     }
 
     [Fact]

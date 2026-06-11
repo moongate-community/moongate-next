@@ -11,8 +11,17 @@ public sealed class UserEntity
     public string Password { get; set; }
     public UserLevelType Level { get; set; }
     public bool IsActive { get; set; }
+    public string? ActivationId { get; set; }
 
-    public UserEntity(Serial id, string username, string email, string password, UserLevelType level, bool isActive)
+    public UserEntity(
+        Serial id,
+        string username,
+        string email,
+        string password,
+        UserLevelType level,
+        bool isActive,
+        string? activationId = null
+    )
     {
         Id = id;
         Username = username;
@@ -20,5 +29,6 @@ public sealed class UserEntity
         Password = password;
         Level = level;
         IsActive = isActive;
+        ActivationId = activationId;
     }
 }

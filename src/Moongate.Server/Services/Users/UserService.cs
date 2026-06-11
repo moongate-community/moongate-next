@@ -35,11 +35,13 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
         string password,
         UserLevelType level = UserLevelType.Player,
         bool isActive = true,
+        string? activationId = null,
         CancellationToken cancellationToken = default
     )
     {
         var normalizedUsername = NormalizeUsername(username);
         var normalizedEmail = NormalizeEmail(email);
+        var normalizedActivationId = NormalizeActivationId(activationId);
 
         if (await GetByUsernameAsync(normalizedUsername, cancellationToken) is not null)
         {
@@ -50,7 +52,15 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
 
         var id = await _users.NextIdAsync(cancellationToken);
         var user =
-            new UserEntity(id, normalizedUsername, normalizedEmail, HashUtils.HashPassword(password), level, isActive);
+            new UserEntity(
+                id,
+                normalizedUsername,
+                normalizedEmail,
+                HashUtils.HashPassword(password),
+                level,
+                isActive,
+                normalizedActivationId
+            );
 
         await _users.UpsertAsync(user, cancellationToken);
         await _eventBus.PublishAsync(
@@ -256,5 +266,12 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
         }
 
         return username.Trim();
+    }
+
+    private static string? NormalizeActivationId(string? activationId)
+    {
+        var normalized = activationId?.Trim();
+
+        return string.IsNullOrEmpty(normalized) ? null : normalized;
     }
 }

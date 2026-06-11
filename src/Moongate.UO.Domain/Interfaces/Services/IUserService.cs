@@ -20,6 +20,7 @@ public interface IUserService : IPaginatedService<UserEntity>
         string password,
         UserLevelType level = UserLevelType.Player,
         bool isActive = true,
+        string? activationId = null,
         CancellationToken cancellationToken = default
     );
 

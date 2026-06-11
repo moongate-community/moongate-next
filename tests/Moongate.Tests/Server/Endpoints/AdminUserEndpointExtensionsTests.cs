@@ -30,6 +30,7 @@ public sealed class AdminUserEndpointExtensionsTests
             string password,
             UserLevelType level = UserLevelType.Player,
             bool isActive = true,
+            string? activationId = null,
             CancellationToken cancellationToken = default
         )
         {
@@ -38,7 +39,7 @@ public sealed class AdminUserEndpointExtensionsTests
                 throw new InvalidOperationException($"Email '{email}' is already in use.");
             }
 
-            var user = new UserEntity(new(_next++), username, email, HashUtils.HashPassword(password), level, isActive);
+            var user = new UserEntity(new(_next++), username, email, HashUtils.HashPassword(password), level, isActive, activationId);
             _users[user.Id] = user;
 
             return ValueTask.FromResult(user);

@@ -20,7 +20,13 @@ public sealed class AuthTokenServiceTests
         private readonly Dictionary<Serial, UserEntity> _users = [];
         private uint _nextId = 1;
 
-        public UserEntity Add(string username, string password, UserLevelType level, bool isActive)
+        public UserEntity Add(
+            string username,
+            string password,
+            UserLevelType level,
+            bool isActive,
+            string? activationId = null
+        )
         {
             var user = new UserEntity(
                 new(_nextId++),
@@ -28,7 +34,8 @@ public sealed class AuthTokenServiceTests
                 $"{username}@test.local",
                 HashUtils.HashPassword(password),
                 level,
-                isActive
+                isActive,
+                activationId
             );
             _users[user.Id] = user;
 
@@ -44,9 +51,10 @@ public sealed class AuthTokenServiceTests
             string password,
             UserLevelType level = UserLevelType.Player,
             bool isActive = true,
+            string? activationId = null,
             CancellationToken cancellationToken = default
         )
-            => ValueTask.FromResult(Add(username, password, level, isActive));
+            => ValueTask.FromResult(Add(username, password, level, isActive, activationId));
 
         public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
             => ValueTask.FromResult(_users.Remove(id));
