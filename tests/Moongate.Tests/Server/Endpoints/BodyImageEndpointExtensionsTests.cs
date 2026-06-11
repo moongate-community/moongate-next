@@ -70,7 +70,7 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
     public async Task Get_ExistingBody_ReturnsPngFile()
     {
         var result = await BodyImageEndpointExtensions.HandleGetBodyImageAsync(
-            "400", new FakeAnimationService([400]), _directories, CancellationToken.None);
+            "400", null, new FakeAnimationService([400]), _directories, CancellationToken.None);
 
         Assert.Contains("PhysicalFile", result.GetType().Name, StringComparison.OrdinalIgnoreCase);
     }
@@ -79,7 +79,7 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
     public async Task Get_MissingBody_ReturnsNotFound()
     {
         var result = await BodyImageEndpointExtensions.HandleGetBodyImageAsync(
-            "999", new FakeAnimationService([400]), _directories, CancellationToken.None);
+            "999", null, new FakeAnimationService([400]), _directories, CancellationToken.None);
 
         Assert.IsType<NotFound>(result);
     }
@@ -88,7 +88,7 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
     public async Task Get_NonNumericBody_ReturnsBadRequest()
     {
         var result = await BodyImageEndpointExtensions.HandleGetBodyImageAsync(
-            "0x190", new FakeAnimationService([400]), _directories, CancellationToken.None);
+            "0x190", null, new FakeAnimationService([400]), _directories, CancellationToken.None);
 
         Assert.IsType<BadRequest<string>>(result);
     }
@@ -98,8 +98,8 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
     {
         var animation = new FakeAnimationService([400]);
 
-        await BodyImageEndpointExtensions.HandleGetBodyImageAsync("400", animation, _directories, CancellationToken.None);
-        await BodyImageEndpointExtensions.HandleGetBodyImageAsync("400", animation, _directories, CancellationToken.None);
+        await BodyImageEndpointExtensions.HandleGetBodyImageAsync("400", null, animation, _directories, CancellationToken.None);
+        await BodyImageEndpointExtensions.HandleGetBodyImageAsync("400", null, animation, _directories, CancellationToken.None);
 
         Assert.Equal(1, animation.RenderCount); // second call served from disk cache
     }
@@ -114,6 +114,37 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
         Assert.Equal(2, ok.Value!.TotalBodies);
         Assert.Equal(1, ok.Value.Generated); // 400 rendered
         Assert.Equal(1, ok.Value.Skipped);   // 401 has no image
+    }
+
+    [Fact]
+    public void GetCachePath_IncludesHueWhenNonZero()
+    {
+        Assert.EndsWith($"{Path.DirectorySeparatorChar}400.png", BodyImageEndpointExtensions.GetCachePath(_directories, 400, 0));
+        Assert.EndsWith($"{Path.DirectorySeparatorChar}400_1003.png", BodyImageEndpointExtensions.GetCachePath(_directories, 400, 1003));
+    }
+
+    [Fact]
+    public async Task Get_DifferentHues_RenderSeparately()
+    {
+        var animation = new FakeAnimationService([400]);
+
+        await BodyImageEndpointExtensions.HandleGetBodyImageAsync("400", 1003, animation, _directories, CancellationToken.None);
+        await BodyImageEndpointExtensions.HandleGetBodyImageAsync("400", 2002, animation, _directories, CancellationToken.None);
+        await BodyImageEndpointExtensions.HandleGetBodyImageAsync("400", 1003, animation, _directories, CancellationToken.None); // cache hit
+
+        Assert.Equal(2, animation.RenderCount); // hue 1003 and hue 2002 each rendered once; the third served from cache
+        Assert.True(File.Exists(BodyImageEndpointExtensions.GetCachePath(_directories, 400, 1003)));
+        Assert.True(File.Exists(BodyImageEndpointExtensions.GetCachePath(_directories, 400, 2002)));
+    }
+
+    [Fact]
+    public async Task Get_NegativeHue_TreatedAsBase()
+    {
+        var animation = new FakeAnimationService([400]);
+
+        await BodyImageEndpointExtensions.HandleGetBodyImageAsync("400", -5, animation, _directories, CancellationToken.None);
+
+        Assert.True(File.Exists(BodyImageEndpointExtensions.GetCachePath(_directories, 400, 0))); // negative hue -> base file
     }
 
     public void Dispose()

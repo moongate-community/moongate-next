@@ -12,7 +12,7 @@ namespace Moongate.Server.Extensions.Endpoints;
 
 public static class BodyImageEndpointExtensions
 {
-    private static readonly ConcurrentDictionary<int, SemaphoreSlim> _generationLocks = new();
+    private static readonly ConcurrentDictionary<string, SemaphoreSlim> _generationLocks = new();
 
     public static IEndpointRouteBuilder MapMoongateBodyImages(this IEndpointRouteBuilder endpoints)
     {
@@ -20,14 +20,15 @@ public static class BodyImageEndpointExtensions
                      "/api/mobiles/{body}.png",
                      (
                          string body,
+                         int? hue,
                          IAnimationService animationService,
                          DirectoriesConfig directories,
                          CancellationToken cancellationToken
-                     ) => HandleGetBodyImageAsync(body, animationService, directories, cancellationToken)
+                     ) => HandleGetBodyImageAsync(body, hue, animationService, directories, cancellationToken)
                  )
                  .WithName("GetBodyImage")
                  .WithTags("Mobiles")
-                 .WithSummary("Returns a lazily generated PNG image of the specified UO body graphic.")
+                 .WithSummary("Returns a lazily generated PNG image of the specified UO body graphic, optionally hued.")
                  .Produces(StatusCodes.Status200OK, contentType: "image/png")
                  .Produces(StatusCodes.Status400BadRequest)
                  .Produces(StatusCodes.Status404NotFound);
@@ -50,18 +51,23 @@ public static class BodyImageEndpointExtensions
         return endpoints;
     }
 
-    internal static string GetCachePath(DirectoriesConfig directories, int body)
+    internal static string GetCachePath(DirectoriesConfig directories, int body, int hue)
     {
         ArgumentNullException.ThrowIfNull(directories);
 
         var directory = Path.Combine(directories[DirectoryType.Cache], "images", "mobiles");
         Directory.CreateDirectory(directory);
 
-        return Path.Combine(directory, $"{body.ToString(CultureInfo.InvariantCulture)}.png");
+        var fileName = hue == 0
+            ? $"{body.ToString(CultureInfo.InvariantCulture)}.png"
+            : $"{body.ToString(CultureInfo.InvariantCulture)}_{hue.ToString(CultureInfo.InvariantCulture)}.png";
+
+        return Path.Combine(directory, fileName);
     }
 
     internal static async Task<IResult> HandleGetBodyImageAsync(
         string bodyText,
+        int? hue,
         IAnimationService animationService,
         DirectoriesConfig directories,
         CancellationToken cancellationToken
@@ -75,7 +81,9 @@ public static class BodyImageEndpointExtensions
             return TypedResults.BadRequest("body must be a non-negative integer");
         }
 
-        var result = await EnsureBodyImageAsync(body, animationService, directories, cancellationToken);
+        var effectiveHue = hue.GetValueOrDefault() > 0 ? hue.GetValueOrDefault() : 0;
+
+        var result = await EnsureBodyImageAsync(body, effectiveHue, animationService, directories, cancellationToken);
 
         return result.HasImage
                    ? Results.File(result.CachePath, "image/png")
@@ -105,7 +113,7 @@ public static class BodyImageEndpointExtensions
 
             try
             {
-                var result = await EnsureBodyImageAsync(body, animationService, directories, cancellationToken);
+                var result = await EnsureBodyImageAsync(body, 0, animationService, directories, cancellationToken);
 
                 if (!result.HasImage)
                 {
@@ -144,19 +152,20 @@ public static class BodyImageEndpointExtensions
 
     private static async Task<(bool HasImage, bool Generated, string CachePath)> EnsureBodyImageAsync(
         int body,
+        int hue,
         IAnimationService animationService,
         DirectoriesConfig directories,
         CancellationToken cancellationToken
     )
     {
-        var cachePath = GetCachePath(directories, body);
+        var cachePath = GetCachePath(directories, body, hue);
 
         if (File.Exists(cachePath))
         {
             return (true, false, cachePath);
         }
 
-        var generationLock = _generationLocks.GetOrAdd(body, static _ => new SemaphoreSlim(1, 1));
+        var generationLock = _generationLocks.GetOrAdd(cachePath, static _ => new SemaphoreSlim(1, 1));
         await generationLock.WaitAsync(cancellationToken);
 
         try
@@ -166,7 +175,7 @@ public static class BodyImageEndpointExtensions
                 return (true, false, cachePath);
             }
 
-            using var image = animationService.GetBodyFrame(body);
+            using var image = animationService.GetBodyFrame(body, hue: hue);
 
             if (image is null)
             {
