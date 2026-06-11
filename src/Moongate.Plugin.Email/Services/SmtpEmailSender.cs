@@ -1,5 +1,4 @@
 using MailKit.Net.Smtp;
-using MailKit.Security;
 using MimeKit;
 using Moongate.Abstractions.Interfaces.Services;
 using Moongate.Plugin.Email.Data;
@@ -33,7 +32,12 @@ public sealed class SmtpEmailSender : IEmailSender
         using var smtp = new SmtpClient();
         smtp.Timeout = _config.Smtp.TimeoutSeconds * 1000;
 
-        await smtp.ConnectAsync(_config.Smtp.Host, _config.Smtp.Port, SecureSocketOptions(), cancellationToken);
+        await smtp.ConnectAsync(
+            _config.Smtp.Host,
+            _config.Smtp.Port,
+            SmtpSecurityOptions.Resolve(_config.Smtp),
+            cancellationToken
+        );
         await smtp.AuthenticateAsync(_config.Smtp.Username, password, cancellationToken);
         await smtp.SendAsync(BuildMessage(message), cancellationToken);
         await smtp.DisconnectAsync(true, cancellationToken);
@@ -59,15 +63,5 @@ public sealed class SmtpEmailSender : IEmailSender
         mime.Body = body.ToMessageBody();
 
         return mime;
-    }
-
-    private SecureSocketOptions SecureSocketOptions()
-    {
-        if (_config.Smtp.UseSsl)
-        {
-            return MailKit.Security.SecureSocketOptions.SslOnConnect;
-        }
-
-        return _config.Smtp.StartTls ? MailKit.Security.SecureSocketOptions.StartTls : MailKit.Security.SecureSocketOptions.None;
     }
 }

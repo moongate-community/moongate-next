@@ -5,6 +5,7 @@ import {
   Gauge,
   KeyRound,
   PackageSearch,
+  Plug,
   ScrollText,
   Sparkles,
   TerminalSquare,
@@ -32,6 +33,11 @@ export const adminItems = [
     id: "persistence",
     label: "Persistence",
     icon: ScrollText
+  },
+  {
+    id: "plugins",
+    label: "Plugins",
+    icon: Plug
   },
   {
     id: "security",
@@ -67,7 +73,7 @@ export const adminGroups = [
   },
   {
     label: "Operations",
-    itemIds: ["persistence", "console"]
+    itemIds: ["persistence", "plugins", "console"]
   },
   {
     label: "World data",

@@ -11,14 +11,38 @@ public sealed class AdminPluginEndpointExtensionsTests
     {
         private readonly Dictionary<string, PluginCatalogEntry> _plugins = new(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, PluginConfigView> _configs = new(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, PluginConfigForm> _forms = new(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, PluginConfigSaveResult> _saveResults = new(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, PluginTestResult> _testResults = new(StringComparer.OrdinalIgnoreCase);
 
-        public void Add(PluginCatalogEntry plugin, PluginConfigView? config = null)
+        public void Add(
+            PluginCatalogEntry plugin,
+            PluginConfigView? config = null,
+            PluginConfigForm? form = null,
+            PluginConfigSaveResult? saveResult = null,
+            PluginTestResult? testResult = null
+        )
         {
             _plugins[plugin.Id] = plugin;
 
             if (config is not null)
             {
                 _configs[plugin.Id] = config;
+            }
+
+            if (form is not null)
+            {
+                _forms[plugin.Id] = form;
+            }
+
+            if (saveResult is not null)
+            {
+                _saveResults[plugin.Id] = saveResult;
+            }
+
+            if (testResult is not null)
+            {
+                _testResults[plugin.Id] = testResult;
             }
         }
 
@@ -30,6 +54,25 @@ public sealed class AdminPluginEndpointExtensionsTests
 
         public IReadOnlyList<PluginCatalogEntry> GetLoadedPlugins()
             => _plugins.Values.ToArray();
+
+        public ValueTask<PluginConfigForm?> GetConfigFormAsync(
+            string pluginId,
+            CancellationToken cancellationToken = default
+        )
+            => ValueTask.FromResult(_forms.GetValueOrDefault(pluginId));
+
+        public ValueTask<PluginConfigSaveResult?> SaveConfigAsync(
+            string pluginId,
+            PluginConfigSaveRequest request,
+            CancellationToken cancellationToken = default
+        )
+            => ValueTask.FromResult(_saveResults.GetValueOrDefault(pluginId));
+
+        public ValueTask<PluginTestResult?> TestAsync(
+            string pluginId,
+            CancellationToken cancellationToken = default
+        )
+            => ValueTask.FromResult(_testResults.GetValueOrDefault(pluginId));
     }
 
     [Fact]
@@ -54,6 +97,36 @@ public sealed class AdminPluginEndpointExtensionsTests
     public async Task HandleGetConfigAsync_UnknownPlugin_ReturnsNotFound()
     {
         var result = await AdminPluginEndpointExtensions.HandleGetConfigAsync(
+                         new FakePluginCatalogService(),
+                         "missing",
+                         CancellationToken.None
+                     );
+
+        Assert.IsType<NotFound>(result);
+    }
+
+    [Fact]
+    public async Task HandleGetConfigFormAsync_KnownConfigurablePlugin_ReturnsForm()
+    {
+        var service = new FakePluginCatalogService();
+        var plugin = CreatePlugin();
+        var form = new PluginConfigForm([new("general", "General", [])]);
+        service.Add(plugin, form: form);
+
+        var result = await AdminPluginEndpointExtensions.HandleGetConfigFormAsync(
+                         service,
+                         plugin.Id,
+                         CancellationToken.None
+                     );
+
+        var ok = Assert.IsType<Ok<PluginConfigForm>>(result);
+        Assert.Same(form, ok.Value);
+    }
+
+    [Fact]
+    public async Task HandleGetConfigFormAsync_UnsupportedPlugin_ReturnsNotFound()
+    {
+        var result = await AdminPluginEndpointExtensions.HandleGetConfigFormAsync(
                          new FakePluginCatalogService(),
                          "missing",
                          CancellationToken.None
@@ -94,6 +167,68 @@ public sealed class AdminPluginEndpointExtensionsTests
         var ok = Assert.IsType<Ok<IReadOnlyList<PluginCatalogEntry>>>(result);
         Assert.NotNull(ok.Value);
         Assert.Single(ok.Value);
+    }
+
+    [Fact]
+    public async Task HandleSaveConfigAsync_KnownConfigurablePlugin_ReturnsResult()
+    {
+        var service = new FakePluginCatalogService();
+        var plugin = CreatePlugin();
+        var saveResult = new PluginConfigSaveResult(true, true, [], null);
+        service.Add(plugin, saveResult: saveResult);
+
+        var result = await AdminPluginEndpointExtensions.HandleSaveConfigAsync(
+                         service,
+                         plugin.Id,
+                         new(new Dictionary<string, object?>()),
+                         CancellationToken.None
+                     );
+
+        var ok = Assert.IsType<Ok<PluginConfigSaveResult>>(result);
+        Assert.Same(saveResult, ok.Value);
+    }
+
+    [Fact]
+    public async Task HandleSaveConfigAsync_UnsupportedPlugin_ReturnsNotFound()
+    {
+        var result = await AdminPluginEndpointExtensions.HandleSaveConfigAsync(
+                         new FakePluginCatalogService(),
+                         "missing",
+                         new(new Dictionary<string, object?>()),
+                         CancellationToken.None
+                     );
+
+        Assert.IsType<NotFound>(result);
+    }
+
+    [Fact]
+    public async Task HandleTestAsync_KnownTestablePlugin_ReturnsResult()
+    {
+        var service = new FakePluginCatalogService();
+        var plugin = CreatePlugin();
+        var testResult = new PluginTestResult(true, "OK", []);
+        service.Add(plugin, testResult: testResult);
+
+        var result = await AdminPluginEndpointExtensions.HandleTestAsync(
+                         service,
+                         plugin.Id,
+                         CancellationToken.None
+                     );
+
+        var ok = Assert.IsType<Ok<PluginTestResult>>(result);
+        Assert.Same(testResult, ok.Value);
+    }
+
+    [Fact]
+    public async Task HandleTestAsync_UnsupportedPlugin_ReturnsNotFound()
+    {
+        var result = await AdminPluginEndpointExtensions.HandleTestAsync(
+                         new FakePluginCatalogService(),
+                         "missing",
+                         CancellationToken.None
+                     );
+
+        Assert.IsType<NotFound>(result);
     }
 
     private static PluginCatalogEntry CreatePlugin()

@@ -10,5 +10,7 @@ public sealed record PluginCatalogEntry(
     IReadOnlyList<string> Dependencies,
     string AssemblyName,
     string DirectoryName,
-    bool HasConfig
+    bool HasConfig,
+    bool IsConfigurable = false,
+    bool IsTestable = false
 );
