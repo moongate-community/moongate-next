@@ -11,4 +11,7 @@ public interface IBodyDataStore
     /// <summary>Returns the body type for <paramref name="bodyId" />, or <see cref="UoBodyType.Empty" />.</summary>
     /// <param name="bodyId">Body graphic id.</param>
     UoBodyType GetBodyType(int bodyId);
+
+    /// <summary>Returns every body id whose classification is not <see cref="UoBodyType.Empty" />.</summary>
+    IReadOnlyCollection<int> GetClassifiedBodies();
 }

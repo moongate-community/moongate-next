@@ -56,4 +56,24 @@ public class BodyDataStoreTests
             dir.Delete(true);
         }
     }
+
+    [Fact]
+    public void GetClassifiedBodies_ReturnsEveryNonEmptyId()
+    {
+        var dir = Directory.CreateTempSubdirectory("nr-uo-");
+
+        try
+        {
+            File.WriteAllText(Path.Combine(dir.FullName, "bodies.yaml"), Yaml);
+            var store = new BodyDataStore(dir.FullName);
+
+            var ids = store.GetClassifiedBodies().OrderBy(x => x).ToArray();
+
+            Assert.Equal(new[] { 1, 2, 5, 6, 7, 150, 400, 401 }, ids);
+        }
+        finally
+        {
+            dir.Delete(true);
+        }
+    }
 }
