@@ -43,7 +43,7 @@ export function MobileTemplateDetailPanel({ template, loading, error }: MobileTe
     <aside className="rounded-md border border-border bg-surface">
       {/* Header */}
       <div className="flex items-start gap-3 border-b border-border p-4">
-        <BodyImageCell imageUrl={template.imageUrl} body={template.body} bodyHex={template.bodyHex} />
+        <BodyImageCell key={template.id} imageUrl={template.imageUrl} body={template.body} bodyHex={template.bodyHex} />
         <div className="min-w-0">
           <h3 className="m-0 text-base font-semibold text-fg">{template.name || template.id}</h3>
           {template.title && (

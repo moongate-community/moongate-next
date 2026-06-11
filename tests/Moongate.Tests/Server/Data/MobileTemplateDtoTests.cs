@@ -33,8 +33,8 @@ public sealed class MobileTemplateDtoTests
             BackpackTemplate = "backpack",
             IsAbstract = false
         };
+        m.Skills["Tactics"] = 80; // inserted before Swords so the OrderBy(name) is actually exercised
         m.Skills["Swords"] = 90;
-        m.Skills["Tactics"] = 80;
         m.Equipment.Add(new MobileEquipmentEntry { Item = "leather_chest" });
         m.Equipment.Add(new MobileEquipmentEntry { Item = "katana" });
         m.LootTables.Add("common");
