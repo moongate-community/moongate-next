@@ -1,12 +1,13 @@
 import { useState, type ReactNode } from "react";
-import { LogOut, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { Activity, LogOut, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { adminItems, playerItems } from "../data/navigation";
 import { useTheme } from "../lib/useTheme";
-import type { AdminNavId } from "../types/admin";
+import type { AdminNavId, AdminRuntimeSnapshot } from "../types/admin";
 import type { AuthUser } from "../types/auth";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -17,6 +18,7 @@ type AppShellProps = {
   user: AuthUser;
   section: AppSection;
   activeItemId: AdminNavId | PlayerNavId;
+  runtimeSnapshot?: AdminRuntimeSnapshot | null;
   onItemChange: (itemId: AdminNavId | PlayerNavId) => void;
   onLogout: () => Promise<void>;
   children: ReactNode;
@@ -36,6 +38,7 @@ export function AppShell({
   user,
   section,
   activeItemId,
+  runtimeSnapshot = null,
   onItemChange,
   onLogout,
   children
@@ -47,6 +50,9 @@ export function AppShell({
   const columns = isSidebarCollapsed
     ? "md:grid-cols-[68px_minmax(0,1fr)]"
     : "md:grid-cols-[238px_minmax(0,1fr)]";
+  const isAdmin = section === "admin";
+  const isLive = runtimeSnapshot?.reachable ?? false;
+  const version = runtimeSnapshot?.server?.version ?? "Unknown version";
 
   return (
     <div className={cn("grid min-h-screen grid-cols-1 bg-bg text-fg transition-[grid-template-columns] duration-200 ease-out", columns)}>
@@ -116,6 +122,21 @@ export function AppShell({
 
       <main className="min-w-0">
         <header className="sticky top-0 z-10 flex min-h-[52px] items-center justify-end gap-3 border-b border-border bg-bg/90 px-4 backdrop-blur-md md:px-6">
+          {isAdmin && (
+            <Badge
+              variant="outline"
+              className={cn(
+                "mr-auto min-h-[30px] gap-2 rounded-md px-2.5 text-xs font-medium",
+                isLive
+                  ? "border-success/20 bg-success/10 text-success"
+                  : "border-danger/20 bg-danger/10 text-danger"
+              )}
+            >
+              <span className={`h-2 w-2 rounded-full ${isLive ? "bg-success" : "bg-danger"}`} aria-hidden />
+              <Activity size={14} aria-hidden />
+              {isLive ? "Live" : "Offline"}
+            </Badge>
+          )}
           <div className="flex min-w-0 items-center gap-3">
             <Avatar size="sm" className="rounded-md">
               <AvatarFallback className="rounded-md text-[11px] font-semibold">{initialsOf(user.username)}</AvatarFallback>
@@ -145,6 +166,20 @@ export function AppShell({
           </div>
         </header>
         {children}
+        {isAdmin && (
+          <footer className="border-t border-border px-4 py-3 text-[11px] text-fg-subtle md:px-6">
+            <div className="flex flex-wrap items-center justify-center gap-2 text-center">
+              <span>
+                Built with love by{" "}
+                <a className="font-medium text-fg underline-offset-4 hover:underline" href="https://github.com/tgiachi" target="_blank" rel="noreferrer">
+                  squid
+                </a>
+              </span>
+              <span aria-hidden>❤️</span>
+              <span className="font-mono">{version}</span>
+            </div>
+          </footer>
+        )}
       </main>
     </div>
   );

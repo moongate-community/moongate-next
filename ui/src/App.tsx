@@ -6,7 +6,7 @@ import { login, logout } from "./lib/authClient";
 import { clearStoredAuth, readStoredAuth, writeStoredAuth } from "./lib/authStorage";
 import { AdminDashboard } from "./pages/AdminDashboard";
 import { PlayerDashboard } from "./pages/PlayerDashboard";
-import type { AdminNavId } from "./types/admin";
+import type { AdminNavId, AdminRuntimeSnapshot } from "./types/admin";
 import type { AuthTokenResponse } from "./types/auth";
 
 type AppSection = "admin" | "player";
@@ -21,12 +21,14 @@ export default function App() {
   const [section, setSection] = useState<AppSection>(() => sectionFromPath());
   const [adminNav, setAdminNav] = useState<AdminNavId>("overview");
   const [playerNav, setPlayerNav] = useState<PlayerNavId>("profile");
+  const [adminRuntimeSnapshot, setAdminRuntimeSnapshot] = useState<AdminRuntimeSnapshot | null>(null);
 
   async function handleLogin(nextSection: AppSection, username: string, password: string) {
     const next = await login(username, password);
     writeStoredAuth(next);
     setSession(next);
     setSection(nextSection);
+    setAdminRuntimeSnapshot(null);
   }
 
   async function handleLogout() {
@@ -36,6 +38,7 @@ export default function App() {
 
     clearStoredAuth();
     setSession(null);
+    setAdminRuntimeSnapshot(null);
   }
 
   if (!session) {
@@ -50,6 +53,7 @@ export default function App() {
         user={session.user}
         section={section}
         activeItemId={activeItemId}
+        runtimeSnapshot={section === "admin" ? adminRuntimeSnapshot : null}
         onItemChange={(itemId) => {
           if (section === "admin") {
             setAdminNav(itemId as AdminNavId);
@@ -67,6 +71,7 @@ export default function App() {
             accessToken={session.accessToken}
             accessTokenExpiresAt={session.accessTokenExpiresAt}
             user={session.user}
+            onRuntimeSnapshotChange={setAdminRuntimeSnapshot}
           />
         ) : (
           <PlayerDashboard user={session.user} />

@@ -24,9 +24,16 @@ type AdminDashboardProps = {
   accessToken: string;
   accessTokenExpiresAt: string;
   user: AuthUser;
+  onRuntimeSnapshotChange?: (snapshot: AdminRuntimeSnapshot) => void;
 };
 
-export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, user }: AdminDashboardProps) {
+export function AdminDashboard({
+  activeView,
+  accessToken,
+  accessTokenExpiresAt,
+  user,
+  onRuntimeSnapshotChange
+}: AdminDashboardProps) {
   const [snapshot, setSnapshot] = useState<AdminRuntimeSnapshot>(() => getOfflineSnapshot());
   const [verifiedUser, setVerifiedUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(false);
@@ -42,14 +49,17 @@ export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, 
 
     if (runtimeResult.status === "fulfilled") {
       setSnapshot(runtimeResult.value);
+      onRuntimeSnapshotChange?.(runtimeResult.value);
       setMetricHistory((current) => appendMetricHistory(current, runtimeResult.value));
     } else {
-      setSnapshot(getOfflineSnapshot());
+      const offlineSnapshot = getOfflineSnapshot();
+      setSnapshot(offlineSnapshot);
+      onRuntimeSnapshotChange?.(offlineSnapshot);
     }
 
     setVerifiedUser(authResult.status === "fulfilled" ? authResult.value : null);
     setLoading(false);
-  }, [accessToken]);
+  }, [accessToken, onRuntimeSnapshotChange]);
 
   useEffect(() => {
     void refresh();
@@ -77,7 +87,7 @@ export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, 
 
   return (
     <section className="grid gap-5 px-4 py-5 md:px-6">
-      <AdminDashboardHeader snapshot={snapshot} loading={loading} onRefresh={refresh} />
+      <AdminDashboardHeader loading={loading} onRefresh={refresh} />
 
       <div className="grid min-w-0 gap-4">
         {(activeView === "overview" || activeView === "runtime") && <AdminRuntimePanel services={services} />}
