@@ -86,7 +86,8 @@ public static class MobileTemplateImageEndpointExtensions
                 template.HairStyle,
                 template.HairHue,
                 template.FacialHairStyle,
-                template.FacialHairHue
+                template.FacialHairHue,
+                template.Equipment.Select(entry => entry.Item).ToArray()
             );
 
             using var image = renderer.Render(request);

@@ -7,5 +7,6 @@ public sealed record MobileRenderRequest(
     int HairStyle,
     int HairHue,
     int FacialHairStyle,
-    int FacialHairHue
+    int FacialHairHue,
+    IReadOnlyList<string> Equipment
 );

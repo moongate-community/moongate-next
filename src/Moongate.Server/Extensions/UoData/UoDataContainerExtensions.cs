@@ -111,10 +111,18 @@ public static class UoDataContainerExtensions
         );
 
         container.RegisterDelegate<IMobileFigureRenderer>(
-            resolver => new MobileFigureRenderer(
-                resolver.Resolve<IAnimationService>(),
-                resolver.Resolve<ITileDataStore>()
-            ),
+            resolver =>
+            {
+                var fileResolver = resolver.Resolve<IUoFileResolver>();
+                var equipConvPath = fileResolver.Resolve("Equipconv.def") ?? Path.Combine(dataDirectory, "uo_files", "Equipconv.def");
+
+                return new MobileFigureRenderer(
+                    resolver.Resolve<IAnimationService>(),
+                    resolver.Resolve<ITileDataStore>(),
+                    resolver.Resolve<Moongate.UO.Data.Interfaces.Services.IItemTemplateService>(),
+                    new EquipConvTable(equipConvPath)
+                );
+            },
             Reuse.Singleton
         );
 
