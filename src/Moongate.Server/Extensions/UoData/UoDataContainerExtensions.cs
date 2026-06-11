@@ -100,7 +100,12 @@ public static class UoDataContainerExtensions
                 var bodyDefPath = fileResolver.Resolve("Body.def") ?? Path.Combine(dataDirectory, "uo_files", "Body.def");
                 var bodyConvPath = fileResolver.Resolve("Bodyconv.def") ?? Path.Combine(dataDirectory, "uo_files", "Bodyconv.def");
 
-                return new AnimationService(fileResolver, new BodyDefTable(bodyDefPath), new BodyConvTable(bodyConvPath));
+                return new AnimationService(
+                    fileResolver,
+                    new BodyDefTable(bodyDefPath),
+                    new BodyConvTable(bodyConvPath),
+                    resolver.Resolve<IHueStore>()
+                );
             },
             Reuse.Singleton
         );
