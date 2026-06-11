@@ -27,6 +27,48 @@ public sealed class MobileEntityPersistenceTests : IDisposable
     }
 
     [Fact]
+    public async Task Snapshot_RoundTrip_RestoresBrainReputationAndFaction()
+    {
+        var mobileId = new Serial(3);
+
+        var first = NewService();
+        await first.StartAsync(CancellationToken.None);
+        await first.GetDataAccess<MobileEntity, Serial>().UpsertAsync(
+            new MobileEntity
+            {
+                Id = mobileId,
+                Name = "a guard",
+                BrainId = "guard_brain",
+                Notoriety = Notoriety.Criminal,
+                Karma = -500,
+                Fame = 1200,
+                FactionId = "town_britannia"
+            }
+        );
+        await first.SaveSnapshotAsync();
+        await first.StopAsync(CancellationToken.None);
+
+        var second = NewService();
+        await second.StartAsync(CancellationToken.None);
+
+        try
+        {
+            var loaded = await second.GetDataAccess<MobileEntity, Serial>().GetByIdAsync(mobileId);
+
+            Assert.NotNull(loaded);
+            Assert.Equal("guard_brain", loaded!.BrainId);
+            Assert.Equal(Notoriety.Criminal, loaded.Notoriety);
+            Assert.Equal(-500, loaded.Karma);
+            Assert.Equal(1200, loaded.Fame);
+            Assert.Equal("town_britannia", loaded.FactionId);
+        }
+        finally
+        {
+            await second.StopAsync(CancellationToken.None);
+        }
+    }
+
+    [Fact]
     public async Task Snapshot_RoundTrip_CustomPropertyKeysStayCaseInsensitive()
     {
         var mobileId = new Serial(2);

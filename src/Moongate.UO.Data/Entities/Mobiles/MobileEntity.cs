@@ -52,6 +52,16 @@ public sealed class MobileEntity : IMobileEntity
 
     public bool IsAlive { get; set; } = true;
 
+    public string? BrainId { get; set; }
+
+    public Notoriety Notoriety { get; set; } = Notoriety.Innocent;
+
+    public int Karma { get; set; }
+
+    public int Fame { get; set; }
+
+    public string? FactionId { get; set; }
+
     public MobileStats BaseStats { get; set; } = new();
 
     public MobileResistances Resistances { get; set; } = new();
