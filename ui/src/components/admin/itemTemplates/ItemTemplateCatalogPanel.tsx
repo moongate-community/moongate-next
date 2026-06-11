@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import { RefreshCw, Search } from "lucide-react";
+import { Check, ChevronsUpDown, RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getItemTemplate, listItemTemplates } from "../../../lib/adminItemTemplatesClient";
@@ -27,6 +29,37 @@ const defaultFilters: ItemTemplateFilters = {
 };
 
 const rarityOptions = ["None", "Common", "Uncommon", "Rare", "Epic", "Legendary"];
+const layerOptions = [
+  "OneHanded",
+  "TwoHanded",
+  "Shoes",
+  "Pants",
+  "Shirt",
+  "Helm",
+  "Gloves",
+  "Ring",
+  "Talisman",
+  "Neck",
+  "Hair",
+  "Waist",
+  "InnerTorso",
+  "Bracelet",
+  "Unused_xF",
+  "FacialHair",
+  "MiddleTorso",
+  "Earrings",
+  "Arms",
+  "Cloak",
+  "Backpack",
+  "OuterTorso",
+  "OuterLegs",
+  "InnerLegs",
+  "Mount",
+  "ShopBuy",
+  "ShopResale",
+  "ShopSell",
+  "Bank"
+];
 
 export function ItemTemplateCatalogPanel({ accessToken }: ItemTemplateCatalogPanelProps) {
   const [filters, setFilters] = useState<ItemTemplateFilters>(defaultFilters);
@@ -38,6 +71,8 @@ export function ItemTemplateCatalogPanel({ accessToken }: ItemTemplateCatalogPan
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [detailLoading, setDetailLoading] = useState(false);
+  const [layerOpen, setLayerOpen] = useState(false);
+  const [layerSearch, setLayerSearch] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [detailError, setDetailError] = useState<string | null>(null);
 
@@ -98,6 +133,12 @@ export function ItemTemplateCatalogPanel({ accessToken }: ItemTemplateCatalogPan
     setFilters((current) => ({ ...current, [key]: value, page: 1 }));
   }
 
+  function selectLayer(layer: string) {
+    updateFilter("layer", layer);
+    setLayerSearch("");
+    setLayerOpen(false);
+  }
+
   return (
     <Panel
       title="Item Templates"
@@ -133,29 +174,66 @@ export function ItemTemplateCatalogPanel({ accessToken }: ItemTemplateCatalogPan
             className="h-8 bg-bg px-2.5 text-[13px] text-fg focus-visible:bg-surface"
           />
           <Select value={filters.rarity || "all"} onValueChange={(value) => updateFilter("rarity", value === "all" ? "" : value)}>
-            <SelectTrigger aria-label="Filter item templates by rarity" size="sm" className="h-8 w-full bg-bg text-[13px]">
+            <SelectTrigger aria-label="Filter item templates by rarity" className="h-8 w-full bg-bg text-[13px]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All rarities</SelectItem>
-            {rarityOptions.map((rarity) => (
-              <SelectItem key={rarity} value={rarity}>
-                {rarity}
-              </SelectItem>
-            ))}
+              {rarityOptions.map((rarity) => (
+                <SelectItem key={rarity} value={rarity}>
+                  {rarity}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
-          <Input
-            value={filters.layer}
-            onChange={(event) => updateFilter("layer", event.target.value)}
-            placeholder="Layer"
-            className="h-8 bg-bg px-2.5 text-[13px] text-fg focus-visible:bg-surface"
-          />
+          <Popover
+            open={layerOpen}
+            onOpenChange={(open) => {
+              setLayerOpen(open);
+              if (!open) {
+                setLayerSearch("");
+              }
+            }}
+          >
+            <PopoverTrigger asChild>
+              <Button
+                type="button"
+                variant="outline"
+                role="combobox"
+                aria-expanded={layerOpen}
+                aria-label="Filter item templates by layer"
+                className="h-8 w-full justify-between bg-bg px-2.5 text-[13px] font-normal text-fg hover:bg-surface"
+              >
+                <span className="min-w-0 truncate">{filters.layer || "Layer"}</span>
+                <ChevronsUpDown className="size-3.5 shrink-0 text-fg-subtle" aria-hidden />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="start" className="w-(--radix-popover-trigger-width) p-0">
+              <Command>
+                <CommandInput value={layerSearch} onValueChange={setLayerSearch} placeholder="Search layer" />
+                <CommandList>
+                  <CommandEmpty>No layer found.</CommandEmpty>
+                  <CommandGroup>
+                    <CommandItem value="all-layers" onSelect={() => selectLayer("")}>
+                      <span>All layers</span>
+                      <Check className={`ml-auto size-3.5 ${filters.layer === "" ? "opacity-100" : "opacity-0"}`} aria-hidden />
+                    </CommandItem>
+                    {layerOptions.map((layer) => (
+                      <CommandItem key={layer} value={layer} onSelect={() => selectLayer(layer)}>
+                        <span>{layer}</span>
+                        <Check className={`ml-auto size-3.5 ${filters.layer === layer ? "opacity-100" : "opacity-0"}`} aria-hidden />
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
           <Select
             value={filters.abstract}
             onValueChange={(value) => updateFilter("abstract", value as ItemTemplateFilters["abstract"])}
           >
-            <SelectTrigger aria-label="Filter item templates by abstract state" size="sm" className="h-8 w-full bg-bg text-[13px]">
+            <SelectTrigger aria-label="Filter item templates by abstract state" className="h-8 w-full bg-bg text-[13px]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
