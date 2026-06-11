@@ -76,6 +76,21 @@ public sealed class BodyDataStore : IBodyDataStore
     public UoBodyType GetBodyType(int bodyId)
         => bodyId >= 0 && bodyId < _types.Length ? _types[bodyId] : UoBodyType.Empty;
 
+    public IReadOnlyCollection<int> GetClassifiedBodies()
+    {
+        var ids = new List<int>();
+
+        for (var i = 0; i < _types.Length; i++)
+        {
+            if (_types[i] != UoBodyType.Empty)
+            {
+                ids.Add(i);
+            }
+        }
+
+        return ids;
+    }
+
     private void Apply(List<int> ids, UoBodyType type)
     {
         foreach (var id in ids)

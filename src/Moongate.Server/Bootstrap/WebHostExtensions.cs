@@ -88,6 +88,7 @@ internal static class WebHostExtensions
         app.MapMoongateMetrics();
         app.MapMoongateMapImages();
         app.MapMoongateItemImages();
+        app.MapMoongateBodyImages();
         app.MapHub<LiveConsoleHub>(LiveConsoleHub.Route);
         app.MapFallbackToFile("index.html");
 
