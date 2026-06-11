@@ -5,6 +5,7 @@ import { AdminRuntimePanel } from "../components/admin/AdminRuntimePanel";
 import { AdminSecurityPanel } from "../components/admin/AdminSecurityPanel";
 import { ConsolePanel } from "../components/admin/ConsolePanel";
 import { ItemTemplateCatalogPanel } from "../components/admin/itemTemplates/ItemTemplateCatalogPanel";
+import { MobileTemplateCatalogPanel } from "../components/admin/mobileTemplates/MobileTemplateCatalogPanel";
 import { UserManagementPanel } from "../components/admin/users/UserManagementPanel";
 import { buildRuntimeServices } from "../data/adminDashboard";
 import { getAdminRuntimeSnapshot, getOfflineSnapshot } from "../lib/adminClient";
@@ -93,6 +94,7 @@ export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, 
 
         {activeView === "users" && <UserManagementPanel accessToken={accessToken} />}
         {activeView === "itemTemplates" && <ItemTemplateCatalogPanel accessToken={accessToken} />}
+        {activeView === "mobileTemplates" && <MobileTemplateCatalogPanel accessToken={accessToken} />}
 
         {activeView === "overview" ? (
           <div className="grid gap-4 lg:grid-cols-2">
