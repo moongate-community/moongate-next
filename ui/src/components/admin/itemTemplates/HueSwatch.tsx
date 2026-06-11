@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import type { HueSummary } from "../../../types/itemTemplates";
 
 type HueSwatchProps = {
@@ -30,12 +31,12 @@ export function HueSwatch({ hue, mode = "compact" }: HueSwatchProps) {
         <span className="font-mono text-[13px] font-medium text-fg">{hue.hex}</span>
         <span className="text-fg-muted">{hue.name}</span>
         {hue.isNone && (
-          <span className="rounded-md bg-muted px-1.5 py-0.5 text-[11px] font-medium text-fg-muted">None</span>
+          <Badge variant="outline" className="rounded-md border-transparent bg-muted px-1.5 py-0.5 text-[11px] font-medium text-fg-muted">None</Badge>
         )}
         {!hue.isKnown && (
-          <span className="rounded-md bg-warning/10 px-1.5 py-0.5 text-[11px] font-medium text-warning">
+          <Badge variant="outline" className="rounded-md border-transparent bg-warning/10 px-1.5 py-0.5 text-[11px] font-medium text-warning">
             Unknown hue
-          </span>
+          </Badge>
         )}
       </div>
       {hue.colors.length > 0 && (
@@ -46,7 +47,7 @@ export function HueSwatch({ hue, mode = "compact" }: HueSwatchProps) {
           {hue.colors.map((color) => (
             <span
               key={color.index}
-          className="h-4"
+              className="h-4"
               title={`${color.index}: ${color.hex}`}
               style={{ backgroundColor: color.hex }}
             />

@@ -1,4 +1,7 @@
 import { ArrowDownRight, ArrowUpRight, Minus } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import type { AdminMetricCard } from "../../types/admin";
 import { statusAccentClass, statusTextClass, trendChipClass } from "./adminUi";
 import { Sparkline } from "./Sparkline";
@@ -20,23 +23,24 @@ export function AdminMetricStrip({ metrics }: AdminMetricStripProps) {
         const TrendIcon = metric.trend ? trendIcon[metric.trend.direction] : null;
 
         return (
-          <article
+          <Card
             key={metric.label}
             style={{ animationDelay: `${index * 50}ms` }}
-            className="animate-rise relative grid gap-3 overflow-hidden rounded-lg border border-border bg-surface p-4 shadow-card transition-colors duration-150 hover:border-border-strong"
+            className="animate-rise relative grid gap-3 overflow-hidden rounded-md border-border bg-surface p-4 py-4 shadow-card transition-colors duration-150 hover:border-border-strong"
           >
             <span className={`absolute inset-y-0 left-0 w-1 ${statusAccentClass[metric.status]}`} aria-hidden />
 
             <div className="flex items-start justify-between gap-2">
               <span className="text-xs font-bold uppercase tracking-wide text-fg-subtle">{metric.label}</span>
               {metric.trend && TrendIcon && (
-                <span
-                  className={`inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 font-mono text-[11px] font-semibold ${trendChipClass[metric.trend.polarity]}`}
+                <Badge
+                  variant="outline"
+                  className={cn("gap-1 border-transparent px-1.5 py-0.5 font-mono text-[11px] font-semibold", trendChipClass[metric.trend.polarity])}
                   title={metric.trend.label}
                 >
                   <TrendIcon size={12} aria-hidden />
                   {metric.trend.label}
-                </span>
+                </Badge>
               )}
             </div>
 
@@ -47,7 +51,7 @@ export function AdminMetricStrip({ metrics }: AdminMetricStripProps) {
             )}
 
             <small className="text-xs leading-relaxed text-fg-muted">{metric.detail}</small>
-          </article>
+          </Card>
         );
       })}
     </div>

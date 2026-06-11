@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppShell } from "./components/AppShell";
 import { LoginView } from "./components/LoginView";
 import { login, logout } from "./lib/authClient";
@@ -44,31 +45,33 @@ export default function App() {
   const activeItemId = section === "admin" ? adminNav : playerNav;
 
   return (
-    <AppShell
-      user={session.user}
-      section={section}
-      activeItemId={activeItemId}
-      onItemChange={(itemId) => {
-        if (section === "admin") {
-          setAdminNav(itemId as AdminNavId);
+    <TooltipProvider delayDuration={200}>
+      <AppShell
+        user={session.user}
+        section={section}
+        activeItemId={activeItemId}
+        onItemChange={(itemId) => {
+          if (section === "admin") {
+            setAdminNav(itemId as AdminNavId);
 
-          return;
-        }
+            return;
+          }
 
-        setPlayerNav(itemId as PlayerNavId);
-      }}
-      onLogout={handleLogout}
-    >
-      {section === "admin" ? (
-        <AdminDashboard
-          activeView={adminNav}
-          accessToken={session.accessToken}
-          accessTokenExpiresAt={session.accessTokenExpiresAt}
-          user={session.user}
-        />
-      ) : (
-        <PlayerDashboard user={session.user} />
-      )}
-    </AppShell>
+          setPlayerNav(itemId as PlayerNavId);
+        }}
+        onLogout={handleLogout}
+      >
+        {section === "admin" ? (
+          <AdminDashboard
+            activeView={adminNav}
+            accessToken={session.accessToken}
+            accessTokenExpiresAt={session.accessTokenExpiresAt}
+            user={session.user}
+          />
+        ) : (
+          <PlayerDashboard user={session.user} />
+        )}
+      </AppShell>
+    </TooltipProvider>
   );
 }

@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { RefreshCw, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getItemTemplate, listItemTemplates } from "../../../lib/adminItemTemplatesClient";
 import type { ItemTemplateDetail, ItemTemplateFilters, ItemTemplateSummary } from "../../../types/itemTemplates";
 import { Panel } from "../Panel";
@@ -98,62 +102,68 @@ export function ItemTemplateCatalogPanel({ accessToken }: ItemTemplateCatalogPan
     <Panel
       title="Item Templates"
       action={
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="sm"
           onClick={() => void load()}
-          className="inline-flex min-h-[30px] items-center gap-1.5 rounded-md px-2.5 text-[13px] font-medium text-fg-muted transition-colors duration-150 hover:bg-muted hover:text-fg"
+          className="min-h-[30px] gap-1.5 px-2.5 text-[13px] font-medium text-fg-muted hover:bg-muted hover:text-fg"
         >
           <RefreshCw size={14} aria-hidden />
           Refresh
-        </button>
+        </Button>
       }
     >
       <div className="grid gap-3">
         <div className="grid gap-2 lg:grid-cols-[minmax(260px,1fr)_140px_140px_140px_128px]">
           <label className="relative">
             <Search size={15} aria-hidden className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-fg-subtle" />
-            <input
+            <Input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder="Search id, name, comment, tag, script or item id…"
               aria-label="Search item templates"
-              className="h-8 w-full rounded-md border border-border bg-bg pl-8 pr-2.5 text-[13px] text-fg outline-none transition-colors placeholder:text-fg-subtle focus:border-border-strong focus:bg-surface"
+              className="h-8 bg-bg pl-8 pr-2.5 text-[13px] text-fg focus-visible:bg-surface"
             />
           </label>
-          <input
+          <Input
             value={filters.tag}
             onChange={(event) => updateFilter("tag", event.target.value)}
             placeholder="Tag"
-            className="h-8 rounded-md border border-border bg-bg px-2.5 text-[13px] text-fg outline-none transition-colors placeholder:text-fg-subtle focus:border-border-strong focus:bg-surface"
+            className="h-8 bg-bg px-2.5 text-[13px] text-fg focus-visible:bg-surface"
           />
-          <select
-            value={filters.rarity}
-            onChange={(event) => updateFilter("rarity", event.target.value)}
-            aria-label="Filter item templates by rarity"
-            className="h-8 rounded-md border border-border bg-bg px-2.5 text-[13px] text-fg outline-none transition-colors focus:border-border-strong focus:bg-surface"
-          >
-            <option value="">All rarities</option>
+          <Select value={filters.rarity || "all"} onValueChange={(value) => updateFilter("rarity", value === "all" ? "" : value)}>
+            <SelectTrigger aria-label="Filter item templates by rarity" size="sm" className="h-8 w-full bg-bg text-[13px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All rarities</SelectItem>
             {rarityOptions.map((rarity) => (
-              <option key={rarity} value={rarity}>
+              <SelectItem key={rarity} value={rarity}>
                 {rarity}
-              </option>
+              </SelectItem>
             ))}
-          </select>
-          <input
+            </SelectContent>
+          </Select>
+          <Input
             value={filters.layer}
             onChange={(event) => updateFilter("layer", event.target.value)}
             placeholder="Layer"
-            className="h-8 rounded-md border border-border bg-bg px-2.5 text-[13px] text-fg outline-none transition-colors placeholder:text-fg-subtle focus:border-border-strong focus:bg-surface"
+            className="h-8 bg-bg px-2.5 text-[13px] text-fg focus-visible:bg-surface"
           />
-          <select
+          <Select
             value={filters.abstract}
-            onChange={(event) => updateFilter("abstract", event.target.value as ItemTemplateFilters["abstract"])}
-            className="h-8 rounded-md border border-border bg-bg px-2.5 text-[13px] text-fg outline-none transition-colors focus:border-border-strong focus:bg-surface"
+            onValueChange={(value) => updateFilter("abstract", value as ItemTemplateFilters["abstract"])}
           >
-            <option value="all">All</option>
-            <option value="false">Concrete</option>
-            <option value="true">Abstract</option>
-          </select>
+            <SelectTrigger aria-label="Filter item templates by abstract state" size="sm" className="h-8 w-full bg-bg text-[13px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="false">Concrete</SelectItem>
+              <SelectItem value="true">Abstract</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {error && <p className="m-0 rounded-md bg-danger/10 p-3 text-[13px] font-medium text-danger">{error}</p>}
@@ -161,7 +171,10 @@ export function ItemTemplateCatalogPanel({ accessToken }: ItemTemplateCatalogPan
         <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_340px]">
           <div className="min-w-0">
             {loading ? (
-              <p className="m-0 rounded-md bg-muted p-4 text-[13px] font-medium text-fg-muted">Loading item templates…</p>
+              <div className="grid gap-2 rounded-md bg-muted p-4">
+                <Skeleton className="h-4 w-48" />
+                <Skeleton className="h-64 w-full" />
+              </div>
             ) : (
               <ItemTemplateTable templates={templates} selectedId={selectedId} onSelect={selectTemplate} />
             )}
@@ -169,25 +182,29 @@ export function ItemTemplateCatalogPanel({ accessToken }: ItemTemplateCatalogPan
             <div className="mt-3 flex items-center justify-between text-xs text-fg-muted">
               <span className="font-mono">{totalCount} templates</span>
               <div className="flex items-center gap-2">
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="sm"
                   disabled={filters.page <= 1}
                   onClick={() => setFilters((current) => ({ ...current, page: Math.max(1, current.page - 1) }))}
-                  className="inline-flex min-h-[28px] items-center rounded-md px-2 font-medium text-fg-muted transition-colors duration-150 hover:bg-muted hover:text-fg disabled:opacity-40"
+                  className="min-h-[28px] px-2 font-medium text-fg-muted hover:bg-muted hover:text-fg"
                 >
                   Prev
-                </button>
+                </Button>
                 <span className="font-mono">
                   Page {filters.page} of {totalPages}
                 </span>
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="sm"
                   disabled={filters.page >= totalPages}
                   onClick={() => setFilters((current) => ({ ...current, page: Math.min(totalPages, current.page + 1) }))}
-                  className="inline-flex min-h-[28px] items-center rounded-md px-2 font-medium text-fg-muted transition-colors duration-150 hover:bg-muted hover:text-fg disabled:opacity-40"
+                  className="min-h-[28px] px-2 font-medium text-fg-muted hover:bg-muted hover:text-fg"
                 >
                   Next
-                </button>
+                </Button>
               </div>
             </div>
           </div>

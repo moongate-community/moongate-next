@@ -1,4 +1,7 @@
 import { Box } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { ItemTemplateDetail } from "../../../types/itemTemplates";
 import { DefinitionList } from "../DefinitionList";
 import { GraphicVariantsPanel } from "./GraphicVariantsPanel";
@@ -16,35 +19,41 @@ type ItemTemplateDetailPanelProps = {
 export function ItemTemplateDetailPanel({ template, loading, error }: ItemTemplateDetailPanelProps) {
   if (loading) {
     return (
-      <aside className="rounded-md border border-border bg-surface p-4 text-sm font-medium text-fg-muted">
-        Loading template...
-      </aside>
+      <Card className="rounded-md border-border bg-surface py-0 shadow-none">
+        <CardContent className="grid gap-3 p-4">
+          <Skeleton className="h-16 w-full" />
+          <Skeleton className="h-32 w-full" />
+        </CardContent>
+      </Card>
     );
   }
 
   if (error) {
     return (
-      <aside className="rounded-md border border-danger/20 bg-danger/10 p-4 text-sm font-medium text-danger">
-        {error}
-      </aside>
+      <Card className="rounded-md border-danger/20 bg-danger/10 py-0 text-sm font-medium text-danger shadow-none">
+        <CardContent className="p-4">
+          {error}
+        </CardContent>
+      </Card>
     );
   }
 
   if (!template) {
     return (
-      <aside className="rounded-md border border-dashed border-border bg-bg p-4 text-sm text-fg-muted">
-        <div className="mb-3 inline-flex h-8 w-8 items-center justify-center rounded-md bg-muted">
-          <Box size={17} aria-hidden />
-        </div>
-        <p className="m-0 font-medium text-fg">Select an item template</p>
-        <p className="m-0 mt-1 text-[13px] leading-relaxed">Choose a row to inspect its full read-only definition.</p>
-      </aside>
+      <Card className="rounded-md border-dashed border-border bg-bg py-0 text-sm text-fg-muted shadow-none">
+        <CardContent className="p-4">
+          <div className="mb-3 inline-flex h-8 w-8 items-center justify-center rounded-md bg-muted">
+            <Box size={17} aria-hidden />
+          </div>
+          <p className="m-0 font-medium text-fg">Select an item template</p>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <aside className="rounded-md border border-border bg-surface">
-      <div className="flex items-start gap-3 border-b border-border p-4">
+    <Card className="gap-0 rounded-md border-border bg-surface py-0 shadow-none">
+      <CardHeader className="flex flex-row items-start gap-3 border-b border-border p-4">
         <ItemImageCell src={template.imageUrl} alt={template.name || template.id} size="large" />
         <div className="min-w-0">
           <h3 className="m-0 text-base font-semibold text-fg">{template.name || template.id}</h3>
@@ -53,9 +62,9 @@ export function ItemTemplateDetailPanel({ template, loading, error }: ItemTempla
           </p>
           {template.comment && <p className="m-0 mt-2 text-[13px] leading-relaxed text-fg-muted">{template.comment}</p>}
         </div>
-      </div>
+      </CardHeader>
 
-      <div className="grid gap-4 p-4">
+      <CardContent className="grid gap-4 p-4">
         <HueSwatch hue={template.hue} mode="detail" />
         <ItemValueDisplay value={template.value} mode="detail" />
         <GraphicVariantsPanel variants={template.graphicVariants} />
@@ -81,9 +90,9 @@ export function ItemTemplateDetailPanel({ template, loading, error }: ItemTempla
               <span className="text-xs text-fg-muted">No tags</span>
             ) : (
               template.tags.map((tag) => (
-                <span key={tag} className="rounded-md bg-muted px-1.5 py-0.5 text-[11px] font-medium text-fg-muted">
+                <Badge key={tag} variant="outline" className="rounded-md border-transparent bg-muted px-1.5 py-0.5 text-[11px] font-medium text-fg-muted">
                   {tag}
-                </span>
+                </Badge>
               ))
             )}
           </div>
@@ -95,18 +104,18 @@ export function ItemTemplateDetailPanel({ template, loading, error }: ItemTempla
           ) : (
             <div className="grid gap-2">
               {template.params.map((param) => (
-                <div key={param.key} className="rounded-md border border-border bg-bg p-2">
+                <Card key={param.key} className="gap-1 rounded-md border-border bg-bg p-2 py-2 shadow-none">
                   <div className="flex items-center justify-between gap-2">
                     <span className="font-mono text-xs font-medium text-fg">{param.key}</span>
                     <span className="text-[11px] font-medium text-fg-muted">{param.type}</span>
                   </div>
                   <p className="m-0 mt-1 break-all font-mono text-xs text-fg-muted">{param.value}</p>
-                </div>
+                </Card>
               ))}
             </div>
           )}
         </section>
-      </div>
-    </aside>
+      </CardContent>
+    </Card>
   );
 }

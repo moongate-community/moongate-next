@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { Plus, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   createUser,
   deleteUser,
@@ -102,32 +105,36 @@ export function UserManagementPanel({ accessToken }: UserManagementPanelProps) {
     <Panel
       title="Users"
       action={
-        <button
+        <Button
           type="button"
           onClick={() => { setDialogError(null); setDialog({ kind: "create" }); }}
-          className="inline-flex min-h-[34px] items-center gap-1.5 rounded-md bg-accent px-3 text-[13px] font-semibold text-accent-fg transition-opacity duration-150 hover:opacity-90"
+          size="sm"
+          className="min-h-[34px] gap-1.5 text-[13px] font-semibold"
         >
           <Plus size={16} aria-hidden />
           New user
-        </button>
+        </Button>
       }
     >
       <div className="grid gap-4">
         <div className="relative">
           <Search size={16} aria-hidden className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-fg-subtle" />
-          <input
+          <Input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Search username or email…"
             aria-label="Search users"
-            className="h-10 w-full rounded-md border border-border bg-surface pl-9 pr-3 text-sm text-fg outline-none focus:border-accent"
+            className="h-10 bg-surface pl-9 pr-3 text-sm text-fg"
           />
         </div>
 
         {error && <p className="m-0 rounded-md bg-danger/10 p-3 text-[13px] font-semibold text-danger">{error}</p>}
 
         {loading ? (
-          <p className="m-0 rounded-md bg-muted p-4 text-[13px] font-semibold text-fg-muted">Loading users…</p>
+          <div className="grid gap-2 rounded-md bg-muted p-4">
+            <Skeleton className="h-4 w-40" />
+            <Skeleton className="h-24 w-full" />
+          </div>
         ) : (
           <UserTable
             users={users}
@@ -141,23 +148,27 @@ export function UserManagementPanel({ accessToken }: UserManagementPanelProps) {
         <div className="flex items-center justify-between text-xs text-fg-muted">
           <span className="font-mono">{totalCount} users</span>
           <div className="flex items-center gap-2">
-            <button
+            <Button
               type="button"
+              variant="outline"
+              size="sm"
               disabled={page <= 1}
               onClick={() => setPage((current) => Math.max(1, current - 1))}
-              className="inline-flex min-h-[32px] items-center rounded-md border border-border bg-surface px-2.5 font-semibold text-fg transition-colors duration-150 hover:bg-muted disabled:opacity-50"
+              className="min-h-[32px] border-border bg-surface px-2.5 font-semibold text-fg hover:bg-muted"
             >
               Prev
-            </button>
+            </Button>
             <span className="font-mono">Page {page} of {totalPages}</span>
-            <button
+            <Button
               type="button"
+              variant="outline"
+              size="sm"
               disabled={page >= totalPages}
               onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
-              className="inline-flex min-h-[32px] items-center rounded-md border border-border bg-surface px-2.5 font-semibold text-fg transition-colors duration-150 hover:bg-muted disabled:opacity-50"
+              className="min-h-[32px] border-border bg-surface px-2.5 font-semibold text-fg hover:bg-muted"
             >
               Next
-            </button>
+            </Button>
           </div>
         </div>
       </div>

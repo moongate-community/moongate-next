@@ -1,4 +1,5 @@
 import { ServerCog } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import type { RuntimeServiceStatus } from "../../types/admin";
 import { statusAccentClass } from "./adminUi";
 import { Panel } from "./Panel";
@@ -21,7 +22,9 @@ export function AdminRuntimePanel({ services }: AdminRuntimePanelProps) {
               <strong className="block truncate text-sm font-semibold text-fg">{service.label}</strong>
               <small className="block truncate text-xs text-fg-muted">{service.secondary}</small>
             </div>
-            <b className="shrink-0 font-mono text-xs font-semibold text-fg">{service.primary}</b>
+            <Badge variant="outline" className="shrink-0 rounded-md border-border bg-surface font-mono text-xs font-semibold text-fg">
+              {service.primary}
+            </Badge>
           </div>
         ))}
       </div>

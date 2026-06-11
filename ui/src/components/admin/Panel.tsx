@@ -1,5 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
+import { Card, CardAction, CardContent, CardHeader } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 type PanelProps = {
   title: string;
@@ -13,15 +15,15 @@ type PanelProps = {
 /** Shared surface card used by every admin panel for a consistent look. */
 export function Panel({ title, icon: Icon, action, children, className }: PanelProps) {
   return (
-    <article className={`animate-rise rounded-md border border-border bg-surface ${className ?? ""}`}>
-      <header className="flex min-h-[48px] items-center justify-between gap-3 border-b border-border px-4">
+    <Card className={cn("animate-rise gap-0 rounded-md border-border bg-surface py-0 shadow-none", className)}>
+      <CardHeader className="min-h-[48px] border-b border-border px-4 py-0">
         <div className="flex items-center gap-2.5">
           {Icon && <Icon size={16} aria-hidden className="text-fg-subtle" />}
-          <h3 className="text-sm font-semibold tracking-tight text-fg">{title}</h3>
+          <h3 className="m-0 text-sm font-semibold tracking-tight text-fg">{title}</h3>
         </div>
-        {action}
-      </header>
-      <div className="p-4">{children}</div>
-    </article>
+        {action ? <CardAction>{action}</CardAction> : null}
+      </CardHeader>
+      <CardContent className="p-4">{children}</CardContent>
+    </Card>
   );
 }
