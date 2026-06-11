@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import {
   KBarAnimator,
   KBarPortal,
@@ -18,9 +18,10 @@ import { cn } from "@/lib/utils";
 type CommandPaletteProps = {
   actions: Action[];
   children: ReactNode;
+  onSearchChange?: (search: string) => void;
 };
 
-export function CommandPalette({ actions, children }: CommandPaletteProps) {
+export function CommandPalette({ actions, children, onSearchChange }: CommandPaletteProps) {
   return (
     <KBarProvider
       options={{
@@ -28,6 +29,7 @@ export function CommandPalette({ actions, children }: CommandPaletteProps) {
         enableHistory: true
       }}
     >
+      <CommandPaletteSearchObserver onSearchChange={onSearchChange} />
       <CommandPaletteActions actions={actions} />
       <KBarPortal>
         <KBarPositioner className="z-50 bg-black/10 backdrop-blur-xs">
@@ -64,6 +66,16 @@ export function CommandPaletteButton() {
 
 function CommandPaletteActions({ actions }: { actions: Action[] }) {
   useRegisterActions(actions, [actions]);
+
+  return null;
+}
+
+function CommandPaletteSearchObserver({ onSearchChange }: { onSearchChange?: (search: string) => void }) {
+  const { search } = useKBar((state) => ({ search: state.searchQuery }));
+
+  useEffect(() => {
+    onSearchChange?.(search);
+  }, [onSearchChange, search]);
 
   return null;
 }

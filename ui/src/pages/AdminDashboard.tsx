@@ -13,6 +13,7 @@ import { buildRuntimeServices } from "../data/adminDashboard";
 import { getAdminRuntimeSnapshot, getOfflineSnapshot } from "../lib/adminClient";
 import { me } from "../lib/authClient";
 import type { AdminMetricHistoryPoint, AdminNavId, AdminRuntimeSnapshot } from "../types/admin";
+import type { AdminCommandTarget } from "../types/adminCommandTarget";
 import type { AuthUser } from "../types/auth";
 
 const AdminMetricsPanel = lazy(() =>
@@ -23,6 +24,7 @@ type AdminDashboardProps = {
   activeView: AdminNavId;
   accessToken: string;
   accessTokenExpiresAt: string;
+  commandTarget?: AdminCommandTarget | null;
   user: AuthUser;
   onRuntimeSnapshotChange?: (snapshot: AdminRuntimeSnapshot) => void;
 };
@@ -31,6 +33,7 @@ export function AdminDashboard({
   activeView,
   accessToken,
   accessTokenExpiresAt,
+  commandTarget,
   user,
   onRuntimeSnapshotChange
 }: AdminDashboardProps) {
@@ -107,9 +110,24 @@ export function AdminDashboard({
           </Suspense>
         )}
 
-        {activeView === "users" && <UserManagementPanel accessToken={accessToken} />}
-        {activeView === "itemTemplates" && <ItemTemplateCatalogPanel accessToken={accessToken} />}
-        {activeView === "mobileTemplates" && <MobileTemplateCatalogPanel accessToken={accessToken} />}
+        {activeView === "users" && (
+          <UserManagementPanel
+            accessToken={accessToken}
+            commandTarget={commandTarget?.kind === "user" ? commandTarget : null}
+          />
+        )}
+        {activeView === "itemTemplates" && (
+          <ItemTemplateCatalogPanel
+            accessToken={accessToken}
+            commandTarget={commandTarget?.kind === "itemTemplate" ? commandTarget : null}
+          />
+        )}
+        {activeView === "mobileTemplates" && (
+          <MobileTemplateCatalogPanel
+            accessToken={accessToken}
+            commandTarget={commandTarget?.kind === "mobileTemplate" ? commandTarget : null}
+          />
+        )}
 
         {activeView === "overview" ? (
           <div className="grid gap-4 lg:grid-cols-2">
