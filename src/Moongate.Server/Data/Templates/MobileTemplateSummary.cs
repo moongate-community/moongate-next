@@ -25,14 +25,8 @@ public sealed record MobileTemplateSummary(
     public static string FormatBody(int body)
         => $"0x{body.ToString("X4", CultureInfo.InvariantCulture)}";
 
-    public static string FormatImageUrl(int body, int skinHue)
-    {
-        var bodyText = body.ToString(CultureInfo.InvariantCulture);
-
-        return skinHue != 0
-            ? $"/api/mobiles/{bodyText}.png?hue={skinHue.ToString(CultureInfo.InvariantCulture)}"
-            : $"/api/mobiles/{bodyText}.png";
-    }
+    public static string FormatImageUrl(string id)
+        => $"/api/mobile-templates/{Uri.EscapeDataString(id)}/image.png";
 
     public static MobileTemplateSummary FromDefinition(MobileTemplateDefinition template)
     {
@@ -44,7 +38,7 @@ public sealed record MobileTemplateSummary(
             template.Title ?? "",
             template.Body,
             FormatBody(template.Body),
-            FormatImageUrl(template.Body, template.SkinHue),
+            FormatImageUrl(template.Id),
             template.Gender.ToString(),
             template.Notoriety.ToString(),
             template.Karma,

@@ -113,7 +113,7 @@ public sealed class MobileTemplateEndpointExtensionsTests
         var ok = Assert.IsType<Ok<MobileTemplateDetail>>(MobileTemplateEndpointExtensions.HandleDetail(Seed(), "town_guard"));
 
         Assert.Equal("town_guard", ok.Value!.Id);
-        Assert.Equal("/api/mobiles/400.png", ok.Value.ImageUrl);
+        Assert.Equal("/api/mobile-templates/town_guard/image.png", ok.Value.ImageUrl);
     }
 
     [Fact]
