@@ -84,11 +84,12 @@ public sealed class TileDataStore : ITileDataStore
             var flags = (UoTileFlag)(is64BitFlags ? bin.ReadUInt64() : bin.ReadUInt32());
             int weight = bin.ReadByte();
             int quality = bin.ReadByte();
-            int animation = bin.ReadUInt16();
-            bin.ReadByte();
+            bin.ReadInt16(); // miscData (unknown)
+            bin.ReadByte();  // unknown
             int quantity = bin.ReadByte();
-            bin.ReadInt32();
-            bin.ReadByte();
+            int animation = bin.ReadUInt16();
+            bin.ReadByte();  // hue (unknown)
+            bin.ReadByte();  // stacking offset (unknown)
             int value = bin.ReadByte();
             int height = bin.ReadByte();
 
