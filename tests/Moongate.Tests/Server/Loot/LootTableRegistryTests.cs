@@ -24,6 +24,16 @@ public sealed class LootTableRegistryTests
     }
 
     [Fact]
+    public void GetAll_ReturnsTablesOrderedById()
+    {
+        var registry = new LootTableRegistry([Table("zeta"), Table("alpha")], []);
+
+        var tables = registry.GetAll().Select(static table => table.Id).ToArray();
+
+        Assert.Equal(new[] { "alpha", "zeta" }, tables);
+    }
+
+    [Fact]
     public void TryGetByTag_IsCaseInsensitive()
     {
         var registry = new LootTableRegistry([], [Tmpl("apple", false, "Food")]);
