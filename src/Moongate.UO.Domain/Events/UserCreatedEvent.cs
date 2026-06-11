@@ -11,8 +11,10 @@ public sealed record UserCreatedEvent : IAsyncEvent
 {
     public Serial UserId { get; }
     public string Username { get; }
+    public string? Email { get; }
     public UserLevelType Level { get; }
     public bool IsActive { get; }
+    public string? ActivationId { get; }
     public DateTimeOffset At { get; }
 
     public UserCreatedEvent(
@@ -20,15 +22,19 @@ public sealed record UserCreatedEvent : IAsyncEvent
         string username,
         UserLevelType level,
         bool isActive,
-        DateTimeOffset at
+        DateTimeOffset at,
+        string? email = null,
+        string? activationId = null
     )
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
 
         UserId = userId;
         Username = username;
+        Email = email;
         Level = level;
         IsActive = isActive;
+        ActivationId = activationId;
         At = at;
     }
 }

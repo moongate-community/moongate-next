@@ -1,15 +1,54 @@
 using System.Security.Claims;
+using System.Security.Cryptography;
+using Moongate.Core.Types;
 using Moongate.Server.Data.Auth;
+using Moongate.Server.Data.Config;
 using Moongate.Server.Interfaces.Auth;
+using Moongate.UO.Domain.Entities;
+using Moongate.UO.Domain.Interfaces.Services;
 
 namespace Moongate.Server.Extensions.Endpoints;
 
 public static class AuthEndpointExtensions
 {
+    private const int ActivationIdByteCount = 32;
+
     public static IEndpointRouteBuilder MapMoongateAuth(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/api/auth")
                              .WithTags("Auth");
+
+        group.MapPost(
+                 "/register",
+                 (
+                     AuthRegisterRequest request,
+                     IUserService users,
+                     ServerConfig config,
+                     CancellationToken cancellationToken
+                 ) => HandleRegisterAsync(request, users, config, cancellationToken)
+             )
+             .AllowAnonymous()
+             .WithName("RegisterUser")
+             .WithSummary("Registers a public player account when registration is enabled.")
+             .Produces<AuthUserResponse>(StatusCodes.Status201Created)
+             .Produces(StatusCodes.Status400BadRequest)
+             .Produces(StatusCodes.Status403Forbidden)
+             .Produces(StatusCodes.Status409Conflict);
+
+        group.MapPost(
+                 "/activate",
+                 (
+                     AuthActivationRequest request,
+                     IUserService users,
+                     CancellationToken cancellationToken
+                 ) => HandleActivateAsync(request, users, cancellationToken)
+             )
+             .AllowAnonymous()
+             .WithName("ActivateUser")
+             .WithSummary("Activates a pending user account with an activation id.")
+             .Produces<AuthUserResponse>()
+             .Produces(StatusCodes.Status400BadRequest)
+             .Produces(StatusCodes.Status404NotFound);
 
         group.MapPost(
                  "/login",
@@ -66,6 +105,25 @@ public static class AuthEndpointExtensions
         return endpoints;
     }
 
+    internal static async Task<IResult> HandleActivateAsync(
+        AuthActivationRequest request,
+        IUserService users,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(users);
+
+        if (string.IsNullOrWhiteSpace(request.ActivationId))
+        {
+            return TypedResults.BadRequest("activation_id is required");
+        }
+
+        var user = await users.ActivateAsync(request.ActivationId, cancellationToken);
+
+        return user is null ? TypedResults.NotFound() : TypedResults.Ok(ToAuthUserResponse(user));
+    }
+
     internal static async Task<IResult> HandleLoginAsync(
         AuthLoginRequest request,
         IAuthTokenService auth,
@@ -83,6 +141,53 @@ public static class AuthEndpointExtensions
         var response = await auth.LoginAsync(request.Username, request.Password, cancellationToken);
 
         return response is null ? TypedResults.Unauthorized() : TypedResults.Ok(response);
+    }
+
+    internal static async Task<IResult> HandleRegisterAsync(
+        AuthRegisterRequest request,
+        IUserService users,
+        ServerConfig config,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(users);
+        ArgumentNullException.ThrowIfNull(config);
+
+        if (!config.IsRegistrationAllowed)
+        {
+            return TypedResults.Forbid();
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Username) ||
+            string.IsNullOrWhiteSpace(request.Email) ||
+            string.IsNullOrWhiteSpace(request.Password))
+        {
+            return TypedResults.BadRequest("username, email and password are required");
+        }
+
+        try
+        {
+            var user = await users.CreateAsync(
+                           request.Username,
+                           request.Email,
+                           request.Password,
+                           UserLevelType.Player,
+                           false,
+                           GenerateActivationId(),
+                           cancellationToken
+                       );
+
+            return TypedResults.Created((string?)null, ToAuthUserResponse(user));
+        }
+        catch (ArgumentException ex)
+        {
+            return TypedResults.BadRequest(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return TypedResults.Conflict(ex.Message);
+        }
     }
 
     internal static async Task<IResult> HandleLogoutAsync(
@@ -135,4 +240,10 @@ public static class AuthEndpointExtensions
 
         return response is null ? TypedResults.Unauthorized() : TypedResults.Ok(response);
     }
+
+    private static string GenerateActivationId()
+        => Convert.ToHexString(RandomNumberGenerator.GetBytes(ActivationIdByteCount)).ToLowerInvariant();
+
+    private static AuthUserResponse ToAuthUserResponse(UserEntity user)
+        => new(user.Id.ToString(), user.Username, user.Level.ToString(), user.IsActive);
 }

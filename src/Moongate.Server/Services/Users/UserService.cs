@@ -29,6 +29,38 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
     public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
         => _users.CountAsync(cancellationToken);
 
+    public async ValueTask<UserEntity?> ActivateAsync(string activationId, CancellationToken cancellationToken = default)
+    {
+        var normalizedActivationId = NormalizeActivationId(activationId);
+
+        if (normalizedActivationId is null)
+        {
+            return null;
+        }
+
+        var user = _users
+                   .Query()
+                   .FirstOrDefault(
+                       u => string.Equals(u.ActivationId, normalizedActivationId, StringComparison.Ordinal)
+                   );
+
+        if (user is null)
+        {
+            return null;
+        }
+
+        user.IsActive = true;
+        user.ActivationId = null;
+
+        await _users.UpsertAsync(user, cancellationToken);
+        await _eventBus.PublishAsync(
+            new UserUpdatedEvent(user.Id, user.Username, user.Email, user.Level, user.IsActive, DateTimeOffset.UtcNow),
+            cancellationToken
+        );
+
+        return user;
+    }
+
     public async ValueTask<UserEntity> CreateAsync(
         string username,
         string email,
@@ -64,7 +96,15 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
 
         await _users.UpsertAsync(user, cancellationToken);
         await _eventBus.PublishAsync(
-            new UserCreatedEvent(user.Id, user.Username, user.Level, user.IsActive, DateTimeOffset.UtcNow),
+            new UserCreatedEvent(
+                user.Id,
+                user.Username,
+                user.Level,
+                user.IsActive,
+                DateTimeOffset.UtcNow,
+                user.Email,
+                user.ActivationId
+            ),
             cancellationToken
         );
 

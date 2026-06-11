@@ -24,6 +24,23 @@ public sealed class AdminUserEndpointExtensionsTests
         public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
             => ValueTask.FromResult(_users.Count);
 
+        public ValueTask<UserEntity?> ActivateAsync(string activationId, CancellationToken cancellationToken = default)
+        {
+            var user = _users.Values.FirstOrDefault(
+                candidate => string.Equals(candidate.ActivationId, activationId.Trim(), StringComparison.Ordinal)
+            );
+
+            if (user is null)
+            {
+                return ValueTask.FromResult<UserEntity?>(null);
+            }
+
+            user.IsActive = true;
+            user.ActivationId = null;
+
+            return ValueTask.FromResult<UserEntity?>(user);
+        }
+
         public ValueTask<UserEntity> CreateAsync(
             string username,
             string email,
