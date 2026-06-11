@@ -1,4 +1,5 @@
 import { Gem } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 type RarityBadgeProps = {
   rarity: string;
@@ -67,7 +68,8 @@ export function RarityBadge({ rarity, mode = "compact" }: RarityBadgeProps) {
   const isDetail = mode === "detail";
 
   return (
-    <span
+    <Badge
+      variant="outline"
       className={`relative inline-flex max-w-full items-center gap-1.5 overflow-hidden rounded-md border font-bold leading-none ${
         isDetail ? "px-2 py-1 text-xs" : "px-1.5 py-0.5 text-[11px]"
       }`}
@@ -81,6 +83,6 @@ export function RarityBadge({ rarity, mode = "compact" }: RarityBadgeProps) {
     >
       <Gem size={isDetail ? 14 : 12} aria-hidden className="shrink-0" style={{ color: style.gem }} />
       <span className="truncate">{style.label}</span>
-    </span>
+    </Badge>
   );
 }

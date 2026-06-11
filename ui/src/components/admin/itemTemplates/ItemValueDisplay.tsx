@@ -1,4 +1,6 @@
 import { Coins } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import type { ItemTemplateValueSummary } from "../../../types/itemTemplates";
 
 type ItemValueDisplayProps = {
@@ -19,42 +21,43 @@ export function ItemValueDisplay({ value, mode = "compact" }: ItemValueDisplayPr
 
   if (mode === "detail") {
     return (
-      <div className="rounded-md border border-border bg-bg p-3">
+      <Card className="gap-2 rounded-md border-border bg-bg p-3 py-3 shadow-none">
         <div className="mb-2 flex items-center justify-between gap-2">
           <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-fg">
             <Coins size={14} aria-hidden className="text-warning" />
             Gold value
           </span>
-          <span className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-[11px] font-semibold text-fg-muted">
+          <Badge variant="outline" className="rounded-md border-transparent bg-muted px-1.5 py-0.5 font-mono text-[11px] font-semibold text-fg-muted">
             x{multiplierFormatter.format(value.rarityMultiplier)}
-          </span>
+          </Badge>
         </div>
         <div className="grid grid-cols-2 gap-2 text-xs">
           <ValueCell label="Buy" base={value.buy} effective={value.effectiveBuy} />
           <ValueCell label="Sell" base={value.sell} effective={value.effectiveSell} />
         </div>
-      </div>
+      </Card>
     );
   }
 
   return (
-    <span
-      className="inline-flex items-center gap-1.5 rounded-md bg-muted px-1.5 py-0.5 font-mono text-[11px] font-semibold text-fg"
+    <Badge
+      variant="outline"
+      className="gap-1.5 rounded-md border-transparent bg-muted px-1.5 py-0.5 font-mono text-[11px] font-semibold text-fg"
       title={`Buy ${formatGold(value.effectiveBuy)} · Sell ${formatGold(value.effectiveSell)} · x${multiplierFormatter.format(value.rarityMultiplier)}`}
     >
       <Coins size={12} aria-hidden className="text-warning" />
       {formatGold(value.effectiveBuy)}
-    </span>
+    </Badge>
   );
 }
 
 function ValueCell({ label, base, effective }: { label: string; base: number; effective: number }) {
   return (
-    <div className="rounded-md border border-border bg-surface p-2">
+    <Card className="gap-0 rounded-md border-border bg-surface p-2 py-2 shadow-none">
       <div className="text-[11px] font-medium text-fg-subtle">{label}</div>
       <div className="mt-1 font-mono text-sm font-semibold text-fg">{formatGold(effective)}</div>
       <div className="mt-0.5 font-mono text-[11px] text-fg-muted">base {formatGold(base)}</div>
-    </div>
+    </Card>
   );
 }
 
