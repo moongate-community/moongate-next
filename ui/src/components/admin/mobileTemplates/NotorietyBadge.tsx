@@ -1,4 +1,5 @@
 import { Shield } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 type NotorietyBadgeProps = {
   notoriety: string;
@@ -40,7 +41,8 @@ export function NotorietyBadge({ notoriety, mode = "compact" }: NotorietyBadgePr
   const isDetail = mode === "detail";
 
   return (
-    <span
+    <Badge
+      variant="outline"
       className={`relative inline-flex max-w-full items-center gap-1.5 overflow-hidden rounded-md border font-bold leading-none ${
         isDetail ? "px-2 py-1 text-xs" : "px-1.5 py-0.5 text-[11px]"
       }`}
@@ -50,6 +52,6 @@ export function NotorietyBadge({ notoriety, mode = "compact" }: NotorietyBadgePr
     >
       <Shield size={isDetail ? 14 : 12} aria-hidden className="shrink-0" style={{ color: style.icon }} />
       <span className="truncate">{style.label}</span>
-    </span>
+    </Badge>
   );
 }
