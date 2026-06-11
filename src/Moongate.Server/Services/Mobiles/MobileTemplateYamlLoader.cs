@@ -206,7 +206,7 @@ public sealed class MobileTemplateYamlLoader
             child.Gender = parent.Gender;
         }
 
-        if (child.Notoriety == Notoriety.Innocent)
+        if (child.Notoriety == NotorietyType.Innocent)
         {
             child.Notoriety = parent.Notoriety;
         }

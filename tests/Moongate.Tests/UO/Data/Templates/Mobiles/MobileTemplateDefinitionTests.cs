@@ -55,7 +55,7 @@ public sealed class MobileTemplateDefinitionTests
         Assert.Equal(1002, t.SkinHue);
         Assert.Equal(8251, t.HairStyle);
         Assert.Equal("guard_brain", t.Brain);
-        Assert.Equal(Notoriety.Criminal, t.Notoriety);
+        Assert.Equal(NotorietyType.Criminal, t.Notoriety);
         Assert.Equal(-500, t.Karma);
         Assert.Equal(1200, t.Fame);
         Assert.Equal("town_britannia", t.FactionId);
@@ -86,7 +86,7 @@ public sealed class MobileTemplateDefinitionTests
         var t = Assert.Single(YamlUtils.Deserialize<MobileTemplateTable>(yaml).MobileTemplates);
         Assert.False(t.IsAbstract);
         Assert.Null(t.BaseMobile);
-        Assert.Equal(Notoriety.Innocent, t.Notoriety);
+        Assert.Equal(NotorietyType.Innocent, t.Notoriety);
         Assert.Null(t.Stats);
         Assert.Null(t.Resources);
         Assert.Null(t.Resistances);

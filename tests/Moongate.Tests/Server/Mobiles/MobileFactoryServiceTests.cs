@@ -105,7 +105,7 @@ public sealed class MobileFactoryServiceTests
             Gender = GenderType.Male,
             SkinHue = 1002,
             Brain = "guard_brain",
-            Notoriety = Notoriety.Criminal,
+            Notoriety = NotorietyType.Criminal,
             Karma = -500,
             Fame = 1200,
             FactionId = "town_britannia",
@@ -165,7 +165,7 @@ public sealed class MobileFactoryServiceTests
         var mobile = await service.CreateFromTemplateAsync("town_guard");
 
         Assert.Equal("guard_brain", mobile.BrainId);
-        Assert.Equal(Notoriety.Criminal, mobile.Notoriety);
+        Assert.Equal(NotorietyType.Criminal, mobile.Notoriety);
         Assert.Equal(-500, mobile.Karma);
         Assert.Equal(1200, mobile.Fame);
         Assert.Equal("town_britannia", mobile.FactionId);
