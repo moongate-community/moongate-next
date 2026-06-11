@@ -55,7 +55,7 @@ public sealed class MobileTemplateDtoTests
         Assert.Equal("the guard", s.Title);
         Assert.Equal(400, s.Body);
         Assert.Equal("0x0190", s.BodyHex);
-        Assert.Equal("/api/mobiles/400.png", s.ImageUrl);
+        Assert.Equal("/api/mobiles/400.png?hue=1002", s.ImageUrl); // Guard SkinHue = 1002
         Assert.Equal("Male", s.Gender);
         Assert.Equal("Criminal", s.Notoriety);
         Assert.Equal(-500, s.Karma);
@@ -119,5 +119,25 @@ public sealed class MobileTemplateDtoTests
         Assert.Empty(d.Equipment);
         Assert.Empty(d.LootTables);
         Assert.Empty(d.Params);
+    }
+
+    [Fact]
+    public void Summary_ImageUrl_IncludesSkinHue_WhenNonZero()
+    {
+        var template = new MobileTemplateDefinition { Id = "tinted", Body = 400, SkinHue = 1003 };
+
+        var summary = MobileTemplateSummary.FromDefinition(template);
+
+        Assert.Equal("/api/mobiles/400.png?hue=1003", summary.ImageUrl);
+    }
+
+    [Fact]
+    public void Summary_ImageUrl_NoQuery_WhenSkinHueZero()
+    {
+        var template = new MobileTemplateDefinition { Id = "plain", Body = 400, SkinHue = 0 };
+
+        var summary = MobileTemplateSummary.FromDefinition(template);
+
+        Assert.Equal("/api/mobiles/400.png", summary.ImageUrl);
     }
 }
