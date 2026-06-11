@@ -46,6 +46,9 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
 
             return image;
         }
+
+        public Moongate.UO.Data.Animations.DecodedFrame? GetDecodedFrame(int graphic, int action, int direction, int frame, int hue)
+            => null;
     }
 
     private sealed class FakeBodyDataStore : IBodyDataStore

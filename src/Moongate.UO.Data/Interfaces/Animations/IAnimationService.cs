@@ -1,3 +1,4 @@
+using Moongate.UO.Data.Animations;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
@@ -19,4 +20,10 @@ public interface IAnimationService
     /// <param name="hue">Optional caller hue (e.g. a mobile skin hue, 1-based packet id); when non-zero it
     /// overrides the Body.def hue. 0 = use the Body.def hue (or none).</param>
     Image<Rgba32>? GetBodyFrame(int body, int action = 0, int direction = 1, int frame = 0, int hue = 0);
+
+    /// <summary>
+    /// Decodes a single graphic at one specific direction (no fallback), hued, returning the frame and its
+    /// centre for compositing, or <c>null</c> when absent.
+    /// </summary>
+    DecodedFrame? GetDecodedFrame(int graphic, int action, int direction, int frame, int hue);
 }

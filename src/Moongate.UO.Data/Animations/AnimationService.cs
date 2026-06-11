@@ -36,12 +36,37 @@ public sealed class AnimationService : IAnimationService
 
     public Image<Rgba32>? GetBodyFrame(int body, int action = 0, int direction = 1, int frame = 0, int hue = 0)
     {
-        var (graphic, bodyDefHue) = _bodyDef.Resolve(body);
+        var decoded = GetDecodedFrame(body, action, direction, frame, hue);
+
+        if (decoded is null)
+        {
+            for (var d = 0; d < DirectionCount; d++)
+            {
+                if (d == direction)
+                {
+                    continue;
+                }
+
+                decoded = GetDecodedFrame(body, action, d, frame, hue);
+
+                if (decoded is not null)
+                {
+                    break;
+                }
+            }
+        }
+
+        return decoded?.Image;
+    }
+
+    public DecodedFrame? GetDecodedFrame(int graphic, int action, int direction, int frame, int hue)
+    {
+        var (resolved, bodyDefHue) = _bodyDef.Resolve(graphic);
 
         int fileType;
         int index0;
 
-        if (_bodyConv.TryRoute(graphic, out var route))
+        if (_bodyConv.TryRoute(resolved, out var route))
         {
             fileType = route.FileType;
             index0 = route.TranslatedIndex;
@@ -49,12 +74,12 @@ public sealed class AnimationService : IAnimationService
         else
         {
             fileType = 1;
-            index0 = graphic;
+            index0 = resolved;
         }
 
-        var image = DecodeWithFallback(index0, action, direction, frame, fileType);
+        var decoded = TryDecodeFrame(index0, action, direction, frame, fileType);
 
-        if (image is null)
+        if (decoded is null)
         {
             return null;
         }
@@ -63,15 +88,15 @@ public sealed class AnimationService : IAnimationService
 
         if (effectiveHue != 0)
         {
-            var resolved = ResolveHue(effectiveHue);
+            var resolvedHue = ResolveHue(effectiveHue);
 
-            if (resolved is not null)
+            if (resolvedHue is not null)
             {
-                HueApplier.Apply(image, resolved);
+                HueApplier.Apply(decoded.Image, resolvedHue);
             }
         }
 
-        return image;
+        return decoded;
     }
 
     private Hue? ResolveHue(int hueValue)
@@ -81,34 +106,7 @@ public sealed class AnimationService : IAnimationService
         return index >= 0 ? _hueStore.GetHue(index) : null;
     }
 
-    private Image<Rgba32>? DecodeWithFallback(int index0, int action, int direction, int frame, int fileType)
-    {
-        var image = TryDecode(index0, action, direction, frame, fileType);
-
-        if (image is not null)
-        {
-            return image;
-        }
-
-        for (var d = 0; d < DirectionCount; d++)
-        {
-            if (d == direction)
-            {
-                continue;
-            }
-
-            image = TryDecode(index0, action, d, frame, fileType);
-
-            if (image is not null)
-            {
-                return image;
-            }
-        }
-
-        return null;
-    }
-
-    private Image<Rgba32>? TryDecode(int body, int action, int direction, int frame, int fileType)
+    private DecodedFrame? TryDecodeFrame(int body, int action, int direction, int frame, int fileType)
     {
         var index = AnimationIndex.GetIndex(body, action, direction, fileType);
 
@@ -139,6 +137,6 @@ public sealed class AnimationService : IAnimationService
             read += n;
         }
 
-        return read < length ? null : AnimationFrameDecoder.Decode(buffer, frame);
+        return read < length ? null : AnimationFrameDecoder.DecodeFrame(buffer, frame);
     }
 }
