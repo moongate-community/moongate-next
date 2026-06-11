@@ -88,6 +88,7 @@ public sealed class TileDataStore : ITileDataStore
             bin.ReadByte();  // unknown
             int quantity = bin.ReadByte();
             int animation = bin.ReadUInt16();
+            bin.ReadByte();  // unknown
             bin.ReadByte();  // hue (unknown)
             bin.ReadByte();  // stacking offset (unknown)
             int value = bin.ReadByte();

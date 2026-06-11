@@ -62,6 +62,7 @@ public static class TileDataFixture
             bw.Write((byte)0);                         // unknown
             bw.Write((byte)(entry?.Quantity ?? 0));    // quantity
             bw.Write((ushort)(entry?.Animation ?? 0)); // animation
+            bw.Write((byte)0);                         // unknown
             bw.Write((byte)0);                         // hue (unknown)
             bw.Write((byte)0);                         // stacking offset (unknown)
             bw.Write((byte)(entry?.Value ?? 0));       // value
