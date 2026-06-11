@@ -26,6 +26,7 @@ type PlayerNavId = "profile" | "adventures";
 type AdminRouteTarget =
   | { kind: "itemTemplate"; id: string }
   | { kind: "mobileTemplate"; id: string }
+  | { kind: "lootTemplate"; id: string }
   | null;
 
 type AdminRoute = {
@@ -75,6 +76,7 @@ function readAdminRoute(): AdminRoute {
   const params = new URLSearchParams(window.location.search);
   const itemTemplateId = params.get("itemTemplate");
   const mobileTemplateId = params.get("mobileTemplate");
+  const lootTemplateId = params.get("lootTemplate");
   const view = params.get("view");
 
   if (itemTemplateId) {
@@ -88,6 +90,13 @@ function readAdminRoute(): AdminRoute {
     return {
       view: "mobileTemplates",
       target: { kind: "mobileTemplate", id: mobileTemplateId }
+    };
+  }
+
+  if (lootTemplateId) {
+    return {
+      view: "lootTemplates",
+      target: { kind: "lootTemplate", id: lootTemplateId }
     };
   }
 
@@ -108,6 +117,10 @@ function adminUrl(view: AdminNavId, target?: AdminRouteTarget): string {
     params.set("mobileTemplate", target.id);
   }
 
+  if (target?.kind === "lootTemplate") {
+    params.set("lootTemplate", target.id);
+  }
+
   return `/admin?${params.toString()}`;
 }
 
@@ -123,6 +136,14 @@ function targetFromRoute(route: AdminRoute, sequence: number): AdminCommandTarge
   if (route.target?.kind === "mobileTemplate") {
     return {
       kind: "mobileTemplate",
+      id: route.target.id,
+      sequence
+    };
+  }
+
+  if (route.target?.kind === "lootTemplate") {
+    return {
+      kind: "lootTemplate",
       id: route.target.id,
       sequence
     };

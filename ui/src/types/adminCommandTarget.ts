@@ -12,6 +12,11 @@ export type AdminCommandTarget =
       sequence: number;
     }
   | {
+      kind: "lootTemplate";
+      id: string;
+      sequence: number;
+    }
+  | {
       kind: "user";
       user: AdminUser;
       sequence: number;

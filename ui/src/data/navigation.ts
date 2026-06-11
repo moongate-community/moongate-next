@@ -3,6 +3,7 @@ import {
   Bot,
   ChartSpline,
   KeyRound,
+  PackageOpen,
   PackageSearch,
   Plug,
   ScrollText,
@@ -54,6 +55,11 @@ export const adminItems = [
     icon: Bot
   },
   {
+    id: "lootTemplates",
+    label: "Loot Templates",
+    icon: PackageOpen
+  },
+  {
     id: "console",
     label: "Console",
     icon: TerminalSquare
@@ -71,7 +77,7 @@ export const adminGroups = [
   },
   {
     label: "World data",
-    itemIds: ["itemTemplates", "mobileTemplates"]
+    itemIds: ["itemTemplates", "mobileTemplates", "lootTemplates"]
   },
   {
     label: "Access",
