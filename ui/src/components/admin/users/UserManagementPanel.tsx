@@ -11,6 +11,7 @@ import {
   setUserActive,
   updateUser
 } from "../../../lib/adminUsersClient";
+import type { AdminCommandTarget } from "../../../types/adminCommandTarget";
 import type { AdminUser, CreateUserPayload, UpdateUserPayload } from "../../../types/users";
 import { Panel } from "../Panel";
 import { ConfirmDialog } from "./ConfirmDialog";
@@ -19,6 +20,7 @@ import { UserTable } from "./UserTable";
 
 type UserManagementPanelProps = {
   accessToken: string;
+  commandTarget?: Extract<AdminCommandTarget, { kind: "user" }> | null;
 };
 
 const PAGE_SIZE = 20;
@@ -30,7 +32,7 @@ type Dialog =
   | { kind: "delete"; user: AdminUser }
   | null;
 
-export function UserManagementPanel({ accessToken }: UserManagementPanelProps) {
+export function UserManagementPanel({ accessToken, commandTarget }: UserManagementPanelProps) {
   const [search, setSearch] = useState("");
   const [debounced, setDebounced] = useState("");
   const [page, setPage] = useState(1);
@@ -73,6 +75,15 @@ export function UserManagementPanel({ accessToken }: UserManagementPanelProps) {
   useEffect(() => {
     void load();
   }, [load]);
+
+  useEffect(() => {
+    if (!commandTarget) {
+      return;
+    }
+
+    setDialogError(null);
+    setDialog({ kind: "edit", user: commandTarget.user });
+  }, [commandTarget?.sequence, commandTarget?.user]);
 
   async function runDialogAction(action: () => Promise<void>) {
     setDialogBusy(true);

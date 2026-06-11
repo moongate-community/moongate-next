@@ -13,6 +13,7 @@ import { buildRuntimeServices } from "../data/adminDashboard";
 import { getAdminRuntimeSnapshot, getOfflineSnapshot } from "../lib/adminClient";
 import { me } from "../lib/authClient";
 import type { AdminMetricHistoryPoint, AdminNavId, AdminRuntimeSnapshot } from "../types/admin";
+import type { AdminCommandTarget } from "../types/adminCommandTarget";
 import type { AuthUser } from "../types/auth";
 
 const AdminMetricsPanel = lazy(() =>
@@ -23,10 +24,19 @@ type AdminDashboardProps = {
   activeView: AdminNavId;
   accessToken: string;
   accessTokenExpiresAt: string;
+  commandTarget?: AdminCommandTarget | null;
   user: AuthUser;
+  onRuntimeSnapshotChange?: (snapshot: AdminRuntimeSnapshot) => void;
 };
 
-export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, user }: AdminDashboardProps) {
+export function AdminDashboard({
+  activeView,
+  accessToken,
+  accessTokenExpiresAt,
+  commandTarget,
+  user,
+  onRuntimeSnapshotChange
+}: AdminDashboardProps) {
   const [snapshot, setSnapshot] = useState<AdminRuntimeSnapshot>(() => getOfflineSnapshot());
   const [verifiedUser, setVerifiedUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(false);
@@ -42,14 +52,17 @@ export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, 
 
     if (runtimeResult.status === "fulfilled") {
       setSnapshot(runtimeResult.value);
+      onRuntimeSnapshotChange?.(runtimeResult.value);
       setMetricHistory((current) => appendMetricHistory(current, runtimeResult.value));
     } else {
-      setSnapshot(getOfflineSnapshot());
+      const offlineSnapshot = getOfflineSnapshot();
+      setSnapshot(offlineSnapshot);
+      onRuntimeSnapshotChange?.(offlineSnapshot);
     }
 
     setVerifiedUser(authResult.status === "fulfilled" ? authResult.value : null);
     setLoading(false);
-  }, [accessToken]);
+  }, [accessToken, onRuntimeSnapshotChange]);
 
   useEffect(() => {
     void refresh();
@@ -77,7 +90,7 @@ export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, 
 
   return (
     <section className="grid gap-5 px-4 py-5 md:px-6">
-      <AdminDashboardHeader snapshot={snapshot} loading={loading} onRefresh={refresh} />
+      <AdminDashboardHeader loading={loading} onRefresh={refresh} />
 
       <div className="grid min-w-0 gap-4">
         {(activeView === "overview" || activeView === "runtime") && <AdminRuntimePanel services={services} />}
@@ -97,9 +110,24 @@ export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, 
           </Suspense>
         )}
 
-        {activeView === "users" && <UserManagementPanel accessToken={accessToken} />}
-        {activeView === "itemTemplates" && <ItemTemplateCatalogPanel accessToken={accessToken} />}
-        {activeView === "mobileTemplates" && <MobileTemplateCatalogPanel accessToken={accessToken} />}
+        {activeView === "users" && (
+          <UserManagementPanel
+            accessToken={accessToken}
+            commandTarget={commandTarget?.kind === "user" ? commandTarget : null}
+          />
+        )}
+        {activeView === "itemTemplates" && (
+          <ItemTemplateCatalogPanel
+            accessToken={accessToken}
+            commandTarget={commandTarget?.kind === "itemTemplate" ? commandTarget : null}
+          />
+        )}
+        {activeView === "mobileTemplates" && (
+          <MobileTemplateCatalogPanel
+            accessToken={accessToken}
+            commandTarget={commandTarget?.kind === "mobileTemplate" ? commandTarget : null}
+          />
+        )}
 
         {activeView === "overview" ? (
           <div className="grid gap-4 lg:grid-cols-2">

@@ -60,6 +60,25 @@ export const adminItems = [
   }
 ] as const;
 
+export const adminGroups = [
+  {
+    label: "Overview",
+    itemIds: ["overview", "runtime", "metrics"]
+  },
+  {
+    label: "Operations",
+    itemIds: ["persistence", "console"]
+  },
+  {
+    label: "World data",
+    itemIds: ["itemTemplates", "mobileTemplates"]
+  },
+  {
+    label: "Access",
+    itemIds: ["users", "security"]
+  }
+] as const;
+
 export const playerItems = [
   {
     id: "profile",
@@ -70,5 +89,12 @@ export const playerItems = [
     id: "adventures",
     label: "Adventures",
     icon: Sparkles
+  }
+] as const;
+
+export const playerGroups = [
+  {
+    label: "Portal",
+    itemIds: ["profile", "adventures"]
   }
 ] as const;

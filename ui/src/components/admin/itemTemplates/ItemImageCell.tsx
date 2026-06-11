@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 type ItemImageCellProps = {
   src: string;
   alt: string;
-  size?: "small" | "large";
+  size?: "small" | "large" | "hero";
 };
 
 type PreviewPosition = {
@@ -19,7 +19,8 @@ const PREVIEW_GAP = 10;
 export function ItemImageCell({ src, alt, size = "small" }: ItemImageCellProps) {
   const [failed, setFailed] = useState(false);
   const [previewPosition, setPreviewPosition] = useState<PreviewPosition | null>(null);
-  const boxClass = size === "large" ? "h-20 w-20" : "h-8 w-8";
+  const boxClass = size === "hero" ? "h-24 w-24" : size === "large" ? "h-20 w-20" : "h-8 w-8";
+  const iconSize = size === "small" ? 14 : size === "large" ? 22 : 26;
 
   function showPreview(target: HTMLDivElement) {
     const rect = target.getBoundingClientRect();
@@ -45,7 +46,7 @@ export function ItemImageCell({ src, alt, size = "small" }: ItemImageCellProps) 
         onMouseLeave={() => setPreviewPosition(null)}
       >
         {failed ? (
-          <ImageOff size={size === "large" ? 22 : 14} aria-hidden className="text-fg-subtle" />
+          <ImageOff size={iconSize} aria-hidden className="text-fg-subtle" />
         ) : (
           <img
             src={src}

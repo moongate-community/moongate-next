@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import { RefreshCw, Search } from "lucide-react";
+import { ArrowLeft, RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getMobileTemplate, listMobileTemplates } from "../../../lib/adminMobileTemplatesClient";
+import type { AdminCommandTarget } from "../../../types/adminCommandTarget";
 import type { MobileTemplateDetail, MobileTemplateFilters, MobileTemplateSummary } from "../../../types/mobileTemplates";
 import { Panel } from "../Panel";
 import { MobileTemplateDetailPanel } from "./MobileTemplateDetailPanel";
@@ -12,6 +13,7 @@ import { MobileTemplateTable } from "./MobileTemplateTable";
 
 type MobileTemplateCatalogPanelProps = {
   accessToken: string;
+  commandTarget?: Extract<AdminCommandTarget, { kind: "mobileTemplate" }> | null;
 };
 
 const PAGE_SIZE = 50;
@@ -35,12 +37,23 @@ const notorietyOptions = [
   "Invulnerable"
 ];
 
-export function MobileTemplateCatalogPanel({ accessToken }: MobileTemplateCatalogPanelProps) {
+function replaceMobileTemplateUrl(id?: string) {
+  const params = new URLSearchParams({ view: "mobileTemplates" });
+
+  if (id) {
+    params.set("mobileTemplate", id);
+  }
+
+  window.history.replaceState(null, "", `/admin?${params.toString()}`);
+}
+
+export function MobileTemplateCatalogPanel({ accessToken, commandTarget }: MobileTemplateCatalogPanelProps) {
   const [filters, setFilters] = useState<MobileTemplateFilters>(defaultFilters);
   const [search, setSearch] = useState("");
   const [templates, setTemplates] = useState<MobileTemplateSummary[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detail, setDetail] = useState<MobileTemplateDetail | null>(null);
+  const [detailPageOpen, setDetailPageOpen] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -65,16 +78,6 @@ export function MobileTemplateCatalogPanel({ accessToken }: MobileTemplateCatalo
       setTemplates(result.items);
       setTotalPages(Math.max(1, result.totalPages));
       setTotalCount(result.totalCount);
-
-      setSelectedId((current) => {
-        if (current && !result.items.some((item) => item.id === current)) {
-          setDetail(null);
-
-          return null;
-        }
-
-        return current;
-      });
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Failed to load mobile templates");
       setTemplates([]);
@@ -87,10 +90,16 @@ export function MobileTemplateCatalogPanel({ accessToken }: MobileTemplateCatalo
     void load();
   }, [load]);
 
-  async function selectTemplate(id: string) {
+  const openTemplateDetail = useCallback(async (id: string, updateUrl = true) => {
     setSelectedId(id);
+    setDetail(null);
+    setDetailPageOpen(true);
     setDetailLoading(true);
     setDetailError(null);
+
+    if (updateUrl) {
+      replaceMobileTemplateUrl(id);
+    }
 
     try {
       setDetail(await getMobileTemplate(accessToken, id));
@@ -99,10 +108,54 @@ export function MobileTemplateCatalogPanel({ accessToken }: MobileTemplateCatalo
     } finally {
       setDetailLoading(false);
     }
+  }, [accessToken]);
+
+  useEffect(() => {
+    if (!commandTarget) {
+      return;
+    }
+
+    void openTemplateDetail(commandTarget.id, false);
+  }, [commandTarget?.id, commandTarget?.sequence, openTemplateDetail]);
+
+  async function selectTemplate(id: string) {
+    await openTemplateDetail(id);
+  }
+
+  function closeDetailPage() {
+    setSelectedId(null);
+    setDetail(null);
+    setDetailError(null);
+    setDetailPageOpen(false);
+    replaceMobileTemplateUrl();
   }
 
   function updateFilter<K extends keyof MobileTemplateFilters>(key: K, value: MobileTemplateFilters[K]) {
     setFilters((current) => ({ ...current, [key]: value, page: 1 }));
+  }
+
+  if (detailPageOpen) {
+    return (
+      <div className="grid gap-3">
+        <div className="flex min-h-[48px] items-center justify-between gap-3 rounded-md border border-border bg-surface px-4 py-2">
+          <div className="min-w-0">
+            <h3 className="m-0 truncate text-sm font-semibold tracking-tight text-fg">Mobile Template</h3>
+            <p className="m-0 truncate font-mono text-[11px] text-fg-subtle">{selectedId}</p>
+          </div>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={closeDetailPage}
+            className="min-h-[30px] gap-1.5 px-2.5 text-[13px] font-medium text-fg-muted hover:bg-muted hover:text-fg"
+          >
+            <ArrowLeft size={14} aria-hidden />
+            All mobiles
+          </Button>
+        </div>
+        <MobileTemplateDetailPanel template={detail} loading={detailLoading} error={detailError} />
+      </div>
+    );
   }
 
   return (
@@ -169,7 +222,7 @@ export function MobileTemplateCatalogPanel({ accessToken }: MobileTemplateCatalo
 
         {error && <p className="m-0 rounded-md bg-danger/10 p-3 text-[13px] font-medium text-danger">{error}</p>}
 
-        <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_340px]">
+        <div className="grid gap-3">
           <div className="min-w-0">
             {loading ? (
               <div className="grid gap-2 rounded-md bg-muted p-4">
@@ -209,10 +262,9 @@ export function MobileTemplateCatalogPanel({ accessToken }: MobileTemplateCatalo
               </div>
             </div>
           </div>
-
-          <MobileTemplateDetailPanel template={detail} loading={detailLoading} error={detailError} />
         </div>
       </div>
+
     </Panel>
   );
 }
