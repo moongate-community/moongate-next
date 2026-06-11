@@ -8,6 +8,7 @@ using Moongate.Plugin.Email.Data;
 using Moongate.Plugin.Email.Interfaces;
 using Moongate.Plugin.Email.Services;
 using Moongate.UO.Domain.Events;
+using Serilog;
 
 namespace Moongate.Plugin.Email;
 
@@ -33,8 +34,12 @@ public sealed class EmailPlugin : IMoongatePlugin
             throw new InvalidOperationException($"Email plugin config is invalid: {string.Join("; ", errors)}");
         }
 
+        var paths = new EmailPluginRuntimePaths(context.PluginDirectory);
+
+        EmailTemplateAssetsBootstrapper.EnsureDefaultTemplates(config, paths, Log.ForContext<EmailPlugin>());
+
         container.RegisterInstance(config);
-        container.RegisterInstance(new EmailPluginRuntimePaths(context.PluginDirectory));
+        container.RegisterInstance(paths);
         container.RegisterInstance<ISecretManagerService>(new EnvironmentSecretManagerService(config.Secrets));
         container.Register<IEmailTemplateManager, FluidEmailTemplateManager>(Reuse.Singleton);
         container.Register<IEmailSender, SmtpEmailSender>(Reuse.Singleton);

@@ -3,6 +3,7 @@ using System.Text.Encodings.Web;
 using Fluid;
 using Moongate.Plugin.Email.Data;
 using Moongate.Plugin.Email.Interfaces;
+using Serilog;
 
 namespace Moongate.Plugin.Email.Services;
 
@@ -28,7 +29,11 @@ public sealed class FluidEmailTemplateManager : IEmailTemplateManager
         _paths = paths;
         _options = CreateOptions();
 
-        EnsureDefaultTemplates();
+        EmailTemplateAssetsBootstrapper.EnsureDefaultTemplates(
+            _config,
+            _paths,
+            Log.ForContext<FluidEmailTemplateManager>()
+        );
     }
 
     public async ValueTask<RenderedEmailTemplate> RenderActivationAsync(
@@ -58,9 +63,7 @@ public sealed class FluidEmailTemplateManager : IEmailTemplateManager
     }
 
     internal string TemplatesRoot
-        => Path.IsPathRooted(_config.Templates.Directory)
-               ? _config.Templates.Directory
-               : Path.Combine(_paths.PluginDirectory, _config.Templates.Directory);
+        => EmailTemplateAssetsBootstrapper.ResolveTemplatesRoot(_config, _paths);
 
     private static TemplateOptions CreateOptions()
     {
@@ -74,30 +77,6 @@ public sealed class FluidEmailTemplateManager : IEmailTemplateManager
         );
 
         return options;
-    }
-
-    private void EnsureDefaultTemplates()
-    {
-        var templateDirectory = GetTemplateDirectory(_config.Activation.TemplateId);
-        Directory.CreateDirectory(templateDirectory);
-
-        WriteDefaultIfMissing(Path.Combine(templateDirectory, SubjectFileName), "Activate your Moongate account\n");
-        WriteDefaultIfMissing(
-            Path.Combine(templateDirectory, TextFileName),
-            """
-            Hi {{ username }},
-
-            Activate your account here:
-            {{ activation_url }}
-            """
-        );
-        WriteDefaultIfMissing(
-            Path.Combine(templateDirectory, HtmlFileName),
-            """
-            <p>Hi {{ username }},</p>
-            <p><a href="{{ activation_url }}">Activate your Moongate account</a></p>
-            """
-        );
     }
 
     private string GetTemplateDirectory(string templateId)
@@ -151,14 +130,6 @@ public sealed class FluidEmailTemplateManager : IEmailTemplateManager
         return htmlEncode
                    ? await template.RenderAsync(context, HtmlEncoder.Default)
                    : await template.RenderAsync(context);
-    }
-
-    private static void WriteDefaultIfMissing(string path, string content)
-    {
-        if (!File.Exists(path))
-        {
-            File.WriteAllText(path, content);
-        }
     }
 
     private sealed record CachedTemplate(IFluidTemplate Template, DateTime LastModified);

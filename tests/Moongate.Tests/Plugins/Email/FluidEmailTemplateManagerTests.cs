@@ -29,6 +29,18 @@ public sealed class FluidEmailTemplateManagerTests : IDisposable
     }
 
     [Fact]
+    public void Constructor_DoesNotOverwriteExistingActivationTemplate()
+    {
+        var subjectPath = Path.Combine(_root, "templates", "account_activation", "subject.liquid");
+        Directory.CreateDirectory(Path.GetDirectoryName(subjectPath)!);
+        File.WriteAllText(subjectPath, "Custom subject for {{ username }}\n");
+
+        _ = CreateManager();
+
+        Assert.Equal("Custom subject for {{ username }}\n", File.ReadAllText(subjectPath));
+    }
+
+    [Fact]
     public async Task RenderActivationAsync_DefaultTemplate_RendersTextAndHtml()
     {
         var manager = CreateManager();
