@@ -11,9 +11,15 @@ type MobileTemplateDetailPanelProps = {
   template: MobileTemplateDetail | null;
   loading: boolean;
   error: string | null;
+  onLootTemplateOpen?: (id: string) => void;
 };
 
-export function MobileTemplateDetailPanel({ template, loading, error }: MobileTemplateDetailPanelProps) {
+export function MobileTemplateDetailPanel({
+  template,
+  loading,
+  error,
+  onLootTemplateOpen
+}: MobileTemplateDetailPanelProps) {
   if (loading) {
     return (
       <Card className="rounded-md border-border bg-surface py-0 shadow-none">
@@ -198,9 +204,20 @@ export function MobileTemplateDetailPanel({ template, loading, error }: MobileTe
           ) : (
             <div className="flex flex-wrap gap-1.5">
               {template.lootTables.map((loot) => (
-                <Badge key={loot} variant="outline" className="rounded-md border-transparent bg-muted px-1.5 py-0.5 text-[11px] font-medium text-fg-muted">
-                  {loot}
-                </Badge>
+                onLootTemplateOpen ? (
+                  <button
+                    key={loot}
+                    type="button"
+                    onClick={() => onLootTemplateOpen(loot)}
+                    className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-[11px] font-medium text-fg-muted transition-colors hover:bg-border/60 hover:text-fg"
+                  >
+                    {loot}
+                  </button>
+                ) : (
+                  <Badge key={loot} variant="outline" className="rounded-md border-transparent bg-muted px-1.5 py-0.5 text-[11px] font-medium text-fg-muted">
+                    {loot}
+                  </Badge>
+                )
               ))}
             </div>
           )}

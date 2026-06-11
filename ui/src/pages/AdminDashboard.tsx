@@ -5,6 +5,7 @@ import { AdminRuntimePanel } from "../components/admin/AdminRuntimePanel";
 import { AdminSecurityPanel } from "../components/admin/AdminSecurityPanel";
 import { ConsolePanel } from "../components/admin/ConsolePanel";
 import { ItemTemplateCatalogPanel } from "../components/admin/itemTemplates/ItemTemplateCatalogPanel";
+import { LootTemplateCatalogPanel } from "../components/admin/lootTemplates/LootTemplateCatalogPanel";
 import { MobileTemplateCatalogPanel } from "../components/admin/mobileTemplates/MobileTemplateCatalogPanel";
 import { PluginManagementPanel } from "../components/admin/plugins/PluginManagementPanel";
 import { UserManagementPanel } from "../components/admin/users/UserManagementPanel";
@@ -27,6 +28,7 @@ type AdminDashboardProps = {
   accessTokenExpiresAt: string;
   commandTarget?: AdminCommandTarget | null;
   user: AuthUser;
+  onLootTemplateOpen?: (id: string) => void;
   onRuntimeSnapshotChange?: (snapshot: AdminRuntimeSnapshot) => void;
 };
 
@@ -36,6 +38,7 @@ export function AdminDashboard({
   accessTokenExpiresAt,
   commandTarget,
   user,
+  onLootTemplateOpen,
   onRuntimeSnapshotChange
 }: AdminDashboardProps) {
   const [snapshot, setSnapshot] = useState<AdminRuntimeSnapshot>(() => getOfflineSnapshot());
@@ -127,6 +130,13 @@ export function AdminDashboard({
           <MobileTemplateCatalogPanel
             accessToken={accessToken}
             commandTarget={commandTarget?.kind === "mobileTemplate" ? commandTarget : null}
+            onLootTemplateOpen={onLootTemplateOpen}
+          />
+        )}
+        {activeView === "lootTemplates" && (
+          <LootTemplateCatalogPanel
+            accessToken={accessToken}
+            commandTarget={commandTarget?.kind === "lootTemplate" ? commandTarget : null}
           />
         )}
         {activeView === "plugins" && <PluginManagementPanel accessToken={accessToken} />}

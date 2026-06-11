@@ -16,20 +16,24 @@ public sealed class LootTableBootService : IMoongateService
     private readonly LootTableYamlLoader _loader;
     private readonly ILootService _lootService;
     private readonly IItemTemplateService _templates;
+    private readonly LootTableRegistryStore _registryStore;
 
     public LootTableBootService(
         LootTableYamlLoader loader,
         ILootService lootService,
-        IItemTemplateService templates
+        IItemTemplateService templates,
+        LootTableRegistryStore registryStore
     )
     {
         ArgumentNullException.ThrowIfNull(loader);
         ArgumentNullException.ThrowIfNull(lootService);
         ArgumentNullException.ThrowIfNull(templates);
+        ArgumentNullException.ThrowIfNull(registryStore);
 
         _loader = loader;
         _lootService = lootService;
         _templates = templates;
+        _registryStore = registryStore;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -40,9 +44,12 @@ public sealed class LootTableBootService : IMoongateService
 
         LootTableValidator.Validate(tables, _templates);
 
+        var registry = new LootTableRegistry(tables, _templates.GetAll());
+        _registryStore.SetRegistry(registry);
+
         if (_lootService is LootService lootService)
         {
-            lootService.SetRegistry(new(tables, _templates.GetAll()));
+            lootService.SetRegistry(registry);
 
             _logger.Information("Loot table registry ready with {Count} tables", tables.Count);
 

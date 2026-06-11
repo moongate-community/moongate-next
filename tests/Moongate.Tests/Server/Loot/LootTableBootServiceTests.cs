@@ -13,7 +13,7 @@ public sealed class LootTableBootServiceTests
         using var dir = new TempTemplateDirectory();
         dir.WriteFile("bad.yaml", "loot_tables:\n  - id: t\n    content:\n      - item: does_not_exist\n");
         var templates = Templates();
-        var bootService = new LootTableBootService(new(dir.Path), NewLootService(templates), templates);
+        var bootService = new LootTableBootService(new(dir.Path), NewLootService(templates), templates, new());
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => bootService.StartAsync(CancellationToken.None));
     }
@@ -24,7 +24,7 @@ public sealed class LootTableBootServiceTests
         using var dir = new TempTemplateDirectory();
         var templates = Templates();
         var loot = NewLootService(templates);
-        var bootService = new LootTableBootService(new(dir.Path), loot, templates);
+        var bootService = new LootTableBootService(new(dir.Path), loot, templates, new());
 
         await bootService.StartAsync(CancellationToken.None);
 
@@ -38,11 +38,14 @@ public sealed class LootTableBootServiceTests
         dir.WriteFile("common.yaml", "loot_tables:\n  - id: common\n    content:\n      - item: gold_coin\n");
         var templates = Templates();
         var loot = NewLootService(templates);
-        var bootService = new LootTableBootService(new(dir.Path), loot, templates);
+        var store = new LootTableRegistryStore();
+        var bootService = new LootTableBootService(new(dir.Path), loot, templates, store);
 
         await bootService.StartAsync(CancellationToken.None);
 
         Assert.True(loot.Has("common"));
+        Assert.True(store.IsReady);
+        Assert.True(store.Registry.TryGet("common", out _));
     }
 
     private static LootService NewLootService(ItemTemplateService templates)
