@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Check, ChevronsUpDown, RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -67,6 +68,7 @@ export function ItemTemplateCatalogPanel({ accessToken }: ItemTemplateCatalogPan
   const [templates, setTemplates] = useState<ItemTemplateSummary[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detail, setDetail] = useState<ItemTemplateDetail | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -97,6 +99,7 @@ export function ItemTemplateCatalogPanel({ accessToken }: ItemTemplateCatalogPan
       setSelectedId((current) => {
         if (current && !result.items.some((item) => item.id === current)) {
           setDetail(null);
+          setDetailOpen(false);
 
           return null;
         }
@@ -117,6 +120,8 @@ export function ItemTemplateCatalogPanel({ accessToken }: ItemTemplateCatalogPan
 
   async function selectTemplate(template: ItemTemplateSummary) {
     setSelectedId(template.id);
+    setDetail(null);
+    setDetailOpen(true);
     setDetailLoading(true);
     setDetailError(null);
 
@@ -246,7 +251,7 @@ export function ItemTemplateCatalogPanel({ accessToken }: ItemTemplateCatalogPan
 
         {error && <p className="m-0 rounded-md bg-danger/10 p-3 text-[13px] font-medium text-danger">{error}</p>}
 
-        <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_340px]">
+        <div className="grid gap-3">
           <div className="min-w-0">
             {loading ? (
               <div className="grid gap-2 rounded-md bg-muted p-4">
@@ -286,10 +291,16 @@ export function ItemTemplateCatalogPanel({ accessToken }: ItemTemplateCatalogPan
               </div>
             </div>
           </div>
-
-          <ItemTemplateDetailPanel template={detail} loading={detailLoading} error={detailError} />
         </div>
       </div>
+
+      <Dialog open={detailOpen} onOpenChange={setDetailOpen}>
+        <DialogContent className="max-h-[calc(100vh-2rem)] overflow-y-auto p-0 sm:max-w-[720px] lg:max-w-[820px]">
+          <DialogTitle className="sr-only">Item template detail</DialogTitle>
+          <DialogDescription className="sr-only">Selected item template properties and visual data.</DialogDescription>
+          <ItemTemplateDetailPanel template={detail} loading={detailLoading} error={detailError} />
+        </DialogContent>
+      </Dialog>
     </Panel>
   );
 }

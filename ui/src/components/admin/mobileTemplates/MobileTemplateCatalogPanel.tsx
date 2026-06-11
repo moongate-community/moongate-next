@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -41,6 +42,7 @@ export function MobileTemplateCatalogPanel({ accessToken }: MobileTemplateCatalo
   const [templates, setTemplates] = useState<MobileTemplateSummary[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detail, setDetail] = useState<MobileTemplateDetail | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -69,6 +71,7 @@ export function MobileTemplateCatalogPanel({ accessToken }: MobileTemplateCatalo
       setSelectedId((current) => {
         if (current && !result.items.some((item) => item.id === current)) {
           setDetail(null);
+          setDetailOpen(false);
 
           return null;
         }
@@ -89,6 +92,8 @@ export function MobileTemplateCatalogPanel({ accessToken }: MobileTemplateCatalo
 
   async function selectTemplate(id: string) {
     setSelectedId(id);
+    setDetail(null);
+    setDetailOpen(true);
     setDetailLoading(true);
     setDetailError(null);
 
@@ -169,7 +174,7 @@ export function MobileTemplateCatalogPanel({ accessToken }: MobileTemplateCatalo
 
         {error && <p className="m-0 rounded-md bg-danger/10 p-3 text-[13px] font-medium text-danger">{error}</p>}
 
-        <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_340px]">
+        <div className="grid gap-3">
           <div className="min-w-0">
             {loading ? (
               <div className="grid gap-2 rounded-md bg-muted p-4">
@@ -209,10 +214,16 @@ export function MobileTemplateCatalogPanel({ accessToken }: MobileTemplateCatalo
               </div>
             </div>
           </div>
-
-          <MobileTemplateDetailPanel template={detail} loading={detailLoading} error={detailError} />
         </div>
       </div>
+
+      <Dialog open={detailOpen} onOpenChange={setDetailOpen}>
+        <DialogContent className="max-h-[calc(100vh-2rem)] overflow-y-auto p-0 sm:max-w-[720px] lg:max-w-[820px]">
+          <DialogTitle className="sr-only">Mobile template detail</DialogTitle>
+          <DialogDescription className="sr-only">Selected mobile template properties and body data.</DialogDescription>
+          <MobileTemplateDetailPanel template={detail} loading={detailLoading} error={detailError} />
+        </DialogContent>
+      </Dialog>
     </Panel>
   );
 }
