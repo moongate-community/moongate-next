@@ -1,4 +1,3 @@
-using Moongate.UO.Data.Files;
 using Moongate.UO.Data.Interfaces.Animations;
 using Moongate.UO.Data.Interfaces.Files;
 using SixLabors.ImageSharp;
@@ -7,39 +6,49 @@ using SixLabors.ImageSharp.PixelFormats;
 namespace Moongate.UO.Data.Animations;
 
 /// <summary>
-/// Decodes body frames from <c>anim.mul</c>/<c>anim.idx</c>, applying <c>Body.def</c> remapping and a
-/// direction fallback. Thin glue over <see cref="AnimationIndex" />, <see cref="AnimationFrameDecoder" />
-/// and the shared <see cref="FileIndex" />, mirroring <c>ArtService</c>.
+/// Decodes body frames from the UO animation files, applying <c>Body.def</c> remapping and <c>Bodyconv.def</c>
+/// routing (anim2..anim5) before decoding, with a direction fallback. Thin glue over <see cref="BodyDefTable" />,
+/// <see cref="BodyConvTable" />, <see cref="AnimationIndex" />, <see cref="AnimationFileSet" /> and
+/// <see cref="AnimationFrameDecoder" />, mirroring <c>ArtService</c>.
 /// </summary>
 public sealed class AnimationService : IAnimationService
 {
-    private const int AnimIndexLength = 0x40000;
-    private const int AnimFileId = 6;
     private const int DirectionCount = 5;
 
-    private readonly FileIndex _fileIndex;
+    private readonly AnimationFileSet _fileSet;
     private readonly BodyDefTable _bodyDef;
+    private readonly BodyConvTable _bodyConv;
 
-    public AnimationService(IUoFileResolver resolver, BodyDefTable bodyDef)
+    public AnimationService(IUoFileResolver resolver, BodyDefTable bodyDef, BodyConvTable bodyConv)
     {
         ArgumentNullException.ThrowIfNull(resolver);
         ArgumentNullException.ThrowIfNull(bodyDef);
+        ArgumentNullException.ThrowIfNull(bodyConv);
 
         _bodyDef = bodyDef;
-        _fileIndex = new FileIndex(
-            resolver.Resolve("anim.idx"),
-            resolver.Resolve("anim.mul"),
-            AnimIndexLength,
-            AnimFileId,
-            new NullVerdataPatchSource()
-        );
+        _bodyConv = bodyConv;
+        _fileSet = new AnimationFileSet(resolver);
     }
 
     public Image<Rgba32>? GetBodyFrame(int body, int action = 0, int direction = 1, int frame = 0)
     {
         var (graphic, _) = _bodyDef.Resolve(body);
 
-        var image = TryDecode(graphic, action, direction, frame);
+        int fileType;
+        int index0;
+
+        if (_bodyConv.TryRoute(graphic, out var route))
+        {
+            fileType = route.FileType;
+            index0 = route.TranslatedIndex;
+        }
+        else
+        {
+            fileType = 1;
+            index0 = graphic;
+        }
+
+        var image = TryDecode(index0, action, direction, frame, fileType);
 
         if (image is not null)
         {
@@ -53,7 +62,7 @@ public sealed class AnimationService : IAnimationService
                 continue;
             }
 
-            image = TryDecode(graphic, action, d, frame);
+            image = TryDecode(index0, action, d, frame, fileType);
 
             if (image is not null)
             {
@@ -64,16 +73,16 @@ public sealed class AnimationService : IAnimationService
         return null;
     }
 
-    private Image<Rgba32>? TryDecode(int graphic, int action, int direction, int frame)
+    private Image<Rgba32>? TryDecode(int body, int action, int direction, int frame, int fileType)
     {
-        var index = AnimationIndex.GetIndex(graphic, action, direction);
+        var index = AnimationIndex.GetIndex(body, action, direction, fileType);
 
         if (index < 0)
         {
             return null;
         }
 
-        var stream = _fileIndex.Seek(index, out var length, out _, out _);
+        var stream = _fileSet.Seek(fileType, index, out var length);
 
         if (stream is null || length <= 0)
         {
