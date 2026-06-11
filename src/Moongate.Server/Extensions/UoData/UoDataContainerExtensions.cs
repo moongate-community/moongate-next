@@ -3,12 +3,14 @@ using Moongate.Abstractions.Extensions.DryIoc;
 using Moongate.Core.Extensions.Directories;
 using Moongate.Server.Extensions.Hosting;
 using Moongate.Server.Services.UoData;
+using Moongate.UO.Data.Animations;
 using Moongate.UO.Data.Art;
 using Moongate.UO.Data.Bodies;
 using Moongate.UO.Data.Data;
 using Moongate.UO.Data.Expansions;
 using Moongate.UO.Data.Files;
 using Moongate.UO.Data.Hues;
+using Moongate.UO.Data.Interfaces.Animations;
 using Moongate.UO.Data.Interfaces.Art;
 using Moongate.UO.Data.Interfaces.Bodies;
 using Moongate.UO.Data.Interfaces.Expansions;
@@ -88,6 +90,17 @@ public static class UoDataContainerExtensions
 
         container.RegisterDelegate<IArtService>(
             resolver => new ArtService(resolver.Resolve<IUoFileResolver>()),
+            Reuse.Singleton
+        );
+
+        container.RegisterDelegate<IAnimationService>(
+            resolver =>
+            {
+                var fileResolver = resolver.Resolve<IUoFileResolver>();
+                var bodyDefPath = fileResolver.Resolve("Body.def") ?? Path.Combine(dataDirectory, "uo_files", "Body.def");
+
+                return new AnimationService(fileResolver, new BodyDefTable(bodyDefPath));
+            },
             Reuse.Singleton
         );
 
