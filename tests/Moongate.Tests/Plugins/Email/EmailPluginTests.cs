@@ -70,6 +70,25 @@ public sealed class EmailPluginTests : IDisposable
         Assert.Equal(2525, FindField(form, "smtp.port").Value);
         Assert.True((bool)FindField(form, "enabled").Value!);
         Assert.True(FindField(form, "smtp.password_secret").SecretReference);
+        Assert.DoesNotContain(
+            form.Sections.SelectMany(section => section.Fields),
+            field => field.Path == "secrets.environment.prefix"
+        );
+    }
+
+    [Fact]
+    public void Configure_MissingConfig_UsesBaseUrlForDefaultActivationUrl()
+    {
+        var pluginDirectory = CreatePluginDirectory();
+        var plugin = new EmailPlugin("https://play.moongate.io");
+        var container = new Container();
+        var directories = new DirectoriesConfig(_root, Enum.GetNames<DirectoryType>());
+        var context = new PluginContext(pluginDirectory, directories);
+
+        plugin.Configure(container, context);
+
+        var yaml = File.ReadAllText(Path.Combine(pluginDirectory, PluginContext.PluginConfigFileName));
+        Assert.Contains("url_template: https://play.moongate.io/activate?activation_id={activation_id}", yaml);
     }
 
     [Fact]

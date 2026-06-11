@@ -20,21 +20,36 @@ public sealed class PluginLoaderService
     private readonly ILogger _logger = Log.ForContext<PluginLoaderService>();
 
     public IReadOnlyList<LoadedPlugin> LoadAndConfigure(IContainer container, DirectoriesConfig directories)
+        => LoadAndConfigure(container, directories, []);
+
+    public IReadOnlyList<LoadedPlugin> LoadAndConfigure(
+        IContainer container,
+        DirectoriesConfig directories,
+        IEnumerable<IMoongatePlugin> embeddedPlugins
+    )
     {
         ArgumentNullException.ThrowIfNull(container);
         ArgumentNullException.ThrowIfNull(directories);
+        ArgumentNullException.ThrowIfNull(embeddedPlugins);
 
         var pluginsDirectory = directories[DirectoryType.Plugins];
         Directory.CreateDirectory(pluginsDirectory);
 
-        var loaded = Directory.EnumerateDirectories(pluginsDirectory)
-                              .Order(StringComparer.OrdinalIgnoreCase)
-                              .Select(LoadPluginDirectory)
-                              .ToArray();
+        var loadedFromDirectory = Directory.EnumerateDirectories(pluginsDirectory)
+                                           .Order(StringComparer.OrdinalIgnoreCase)
+                                           .Select(LoadPluginDirectory);
+        var loadedEmbedded = embeddedPlugins.Select(plugin => LoadEmbeddedPlugin(directories, plugin));
+        var loaded = loadedFromDirectory.Concat(loadedEmbedded).ToArray();
 
         var sorted = PluginDependencySorter.ValidateAndSort(loaded);
+        ConfigurePlugins(container, directories, sorted);
 
-        foreach (var plugin in sorted)
+        return sorted;
+    }
+
+    private void ConfigurePlugins(IContainer container, DirectoriesConfig directories, IReadOnlyList<LoadedPlugin> plugins)
+    {
+        foreach (var plugin in plugins)
         {
             var commandRegistry = container.Resolve<ICommandRegistry>(IfUnresolved.ReturnDefault);
             var context = new PluginContext(plugin.PluginDirectory, directories, commandRegistry);
@@ -59,8 +74,6 @@ public sealed class PluginLoaderService
             // Auto-register the plugin's [RegisterPacketHandler]-marked handlers (scanned once per assembly).
             container.AddPacketHandlersFromAssembly(plugin.Assembly);
         }
-
-        return sorted;
     }
 
     private static IEnumerable<Type> GetLoadableTypes(Assembly assembly)
@@ -81,6 +94,27 @@ public sealed class PluginLoaderService
                 ex
             );
         }
+    }
+
+    private static LoadedPlugin LoadEmbeddedPlugin(DirectoriesConfig directories, IMoongatePlugin plugin)
+    {
+        ArgumentNullException.ThrowIfNull(directories);
+        ArgumentNullException.ThrowIfNull(plugin);
+
+        var metadata = plugin.Metadata ??
+                       throw new InvalidOperationException(
+                           $"Plugin {plugin.GetType().FullName} returned null metadata."
+                       );
+
+        if (string.IsNullOrWhiteSpace(metadata.Id))
+        {
+            throw new InvalidOperationException($"Embedded plugin {plugin.GetType().FullName} has missing id.");
+        }
+
+        var pluginDirectory = Path.Combine(directories[DirectoryType.Config], "plugins", metadata.Id.Trim());
+        Directory.CreateDirectory(pluginDirectory);
+
+        return new(pluginDirectory, plugin, plugin.GetType().Assembly);
     }
 
     private LoadedPlugin LoadPluginDirectory(string pluginDirectory)

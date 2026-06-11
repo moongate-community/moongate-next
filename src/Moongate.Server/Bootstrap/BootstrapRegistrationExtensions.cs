@@ -1,8 +1,12 @@
 using DryIoc;
+using Moongate.Abstractions.Configuration;
 using Moongate.Abstractions.Data.Logging;
 using Moongate.Abstractions.Extensions.DryIoc;
+using Moongate.Core.Data.Directories;
 using Moongate.Core.Types;
+using Moongate.Plugin.Email;
 using Moongate.Server.Data;
+using Moongate.Server.Data.Config;
 using Moongate.Server.Data.Events;
 using Moongate.Server.Extensions.Auth;
 using Moongate.Server.Extensions.Commands;
@@ -106,9 +110,36 @@ internal static class BootstrapRegistrationExtensions
 
         // Plugins can declare config sections, services, Lua modules, persistence entities, and handlers.
         // This must run before AddMoongateConfig so plugin config sections are bound at boot.
-        container.AddMoongatePlugins(directories);
+        container.AddMoongatePlugins(directories, new EmailPlugin(ResolveConfiguredWebBaseUrl(directories)));
 
         return container;
+    }
+
+    internal static string? ResolveConfiguredWebBaseUrl(DirectoriesConfig directories)
+    {
+        ArgumentNullException.ThrowIfNull(directories);
+
+        var configPath = RuntimePaths.ResolveConfigPath(directories);
+
+        if (!File.Exists(configPath))
+        {
+            return null;
+        }
+
+        var root = ConfigYamlOptions.Deserializer.Deserialize<Dictionary<string, object?>>(
+            File.ReadAllText(configPath)
+        ) ?? [];
+
+        if (!root.TryGetValue("web", out var raw) || raw is null)
+        {
+            return null;
+        }
+
+        var yaml = ConfigYamlOptions.Serializer.Serialize(raw);
+        var webConfig = ConfigYamlOptions.Deserializer.Deserialize<WebConfig>(yaml);
+        var baseUrl = webConfig?.BaseUrl.Trim();
+
+        return string.IsNullOrWhiteSpace(baseUrl) ? null : baseUrl;
     }
 
     /// <summary>

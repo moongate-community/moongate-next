@@ -2,7 +2,6 @@ import {
   Activity,
   Bot,
   ChartSpline,
-  Gauge,
   KeyRound,
   PackageSearch,
   Plug,
@@ -18,11 +17,6 @@ export const adminItems = [
     id: "overview",
     label: "Overview",
     icon: Activity
-  },
-  {
-    id: "runtime",
-    label: "Runtime",
-    icon: Gauge
   },
   {
     id: "metrics",
@@ -69,7 +63,7 @@ export const adminItems = [
 export const adminGroups = [
   {
     label: "Overview",
-    itemIds: ["overview", "runtime", "metrics"]
+    itemIds: ["overview", "metrics"]
   },
   {
     label: "Operations",

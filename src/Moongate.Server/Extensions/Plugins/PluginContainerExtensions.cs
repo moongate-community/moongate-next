@@ -16,12 +16,24 @@ public static class PluginContainerExtensions
     /// Must run before <see cref="ConfigContainerExtensions.AddMoongateConfig" />.
     /// </summary>
     public static IContainer AddMoongatePlugins(this IContainer container, DirectoriesConfig directoriesConfig)
+        => container.AddMoongatePlugins(directoriesConfig, []);
+
+    /// <summary>
+    /// Loads trusted .NET plugins from the configured plugins directory and registers embedded plugins.
+    /// Must run before <see cref="ConfigContainerExtensions.AddMoongateConfig" />.
+    /// </summary>
+    public static IContainer AddMoongatePlugins(
+        this IContainer container,
+        DirectoriesConfig directoriesConfig,
+        params IMoongatePlugin[] embeddedPlugins
+    )
     {
         ArgumentNullException.ThrowIfNull(container);
         ArgumentNullException.ThrowIfNull(directoriesConfig);
+        ArgumentNullException.ThrowIfNull(embeddedPlugins);
 
         var loader = new PluginLoaderService();
-        var loaded = loader.LoadAndConfigure(container, directoriesConfig);
+        var loaded = loader.LoadAndConfigure(container, directoriesConfig, embeddedPlugins);
         container.RegisterInstance<IPluginCatalogService>(new PluginCatalogService(loaded));
 
         return container;

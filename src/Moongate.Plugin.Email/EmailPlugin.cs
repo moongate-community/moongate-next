@@ -23,12 +23,19 @@ public sealed class EmailPlugin : IMoongatePlugin, IConfigurablePlugin, ITestabl
     private const string TextField = "text";
     private const string TextAreaField = "textarea";
 
+    private readonly string? _defaultActivationBaseUrl;
     private readonly Func<EmailPluginConfig, IEmailConfigurationTester> _testerFactory;
     private EmailPluginConfig _config = new();
     private EmailPluginRuntimePaths? _paths;
 
     public EmailPlugin()
+        : this((string?)null)
     {
+    }
+
+    public EmailPlugin(string? defaultActivationBaseUrl)
+    {
+        _defaultActivationBaseUrl = defaultActivationBaseUrl;
         _testerFactory = config => new SmtpEmailConfigurationTester(new EnvironmentSecretManagerService(config.Secrets));
     }
 
@@ -50,7 +57,7 @@ public sealed class EmailPlugin : IMoongatePlugin, IConfigurablePlugin, ITestabl
 
     public void Configure(IContainer container, PluginContext context)
     {
-        var config = context.LoadConfig(() => new EmailPluginConfig());
+        var config = context.LoadConfig(CreateDefaultConfig);
         var errors = config.Validate().ToArray();
 
         if (errors.Length > 0)
@@ -138,6 +145,29 @@ public sealed class EmailPlugin : IMoongatePlugin, IConfigurablePlugin, ITestabl
         {
             return new(false, "Email plugin test failed.", [ex.Message]);
         }
+    }
+
+    private static string? BuildDefaultActivationUrlTemplate(string? baseUrl)
+    {
+        if (string.IsNullOrWhiteSpace(baseUrl))
+        {
+            return null;
+        }
+
+        return $"{baseUrl.Trim().TrimEnd('/')}/activate?activation_id={{activation_id}}";
+    }
+
+    private EmailPluginConfig CreateDefaultConfig()
+    {
+        var config = new EmailPluginConfig();
+        var activationUrlTemplate = BuildDefaultActivationUrlTemplate(_defaultActivationBaseUrl);
+
+        if (!string.IsNullOrWhiteSpace(activationUrlTemplate))
+        {
+            config.Activation.UrlTemplate = activationUrlTemplate;
+        }
+
+        return config;
     }
 
     private static List<string> ApplyConfigValues(
@@ -267,20 +297,6 @@ public sealed class EmailPlugin : IMoongatePlugin, IConfigurablePlugin, ITestabl
                         Field("smtp.use_ssl", "Use SSL", BooleanField, config.Smtp.UseSsl, false),
                         Field("smtp.start_tls", "STARTTLS", BooleanField, config.Smtp.StartTls, false),
                         Field("smtp.timeout_seconds", "Timeout seconds", NumberField, config.Smtp.TimeoutSeconds, true, defaultValue: 30)
-                    ]
-                ),
-                new(
-                    "secrets",
-                    "Secrets",
-                    [
-                        Field(
-                            "secrets.environment.prefix",
-                            "Environment prefix",
-                            TextField,
-                            config.Secrets.Environment.Prefix,
-                            true,
-                            defaultValue: "MOONGATE_EMAIL_"
-                        )
                     ]
                 ),
                 new(

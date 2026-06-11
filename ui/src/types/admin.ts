@@ -1,6 +1,5 @@
 export type AdminNavId =
   | "overview"
-  | "runtime"
   | "metrics"
   | "persistence"
   | "plugins"

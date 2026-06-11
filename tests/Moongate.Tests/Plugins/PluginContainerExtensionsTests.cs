@@ -2,6 +2,7 @@ using DryIoc;
 using Moongate.Abstractions.Data.Internal;
 using Moongate.Core.Data.Directories;
 using Moongate.Core.Types;
+using Moongate.PluginFixtures.Basic;
 using Moongate.Plugins.Interfaces.Plugins;
 using Moongate.Scripting.Lua.Data.Internal;
 using Moongate.Server.Extensions.Configuration;
@@ -37,6 +38,25 @@ public sealed class PluginContainerExtensionsTests : IDisposable
         var configPath = Path.Combine(directories[DirectoryType.Config], "moongate.yaml");
         container.AddMoongateConfig(configPath);
         Assert.Contains("fixture_plugin:", File.ReadAllText(configPath));
+    }
+
+    [Fact]
+    public void AddMoongatePlugins_RegistersEmbeddedPluginsWithoutDirectoryPackage()
+    {
+        var directories = new DirectoriesConfig(_root, Enum.GetNames<DirectoryType>());
+        var container = new Container();
+        container.AddMoongateLuaScripting(directories);
+
+        container.AddMoongatePlugins(directories, new BasicPlugin());
+        var catalog = container.Resolve<IPluginCatalogService>();
+
+        Assert.Equal("moongate.fixture.basic", Assert.Single(catalog.GetLoadedPlugins()).Id);
+        Assert.Empty(Directory.EnumerateDirectories(directories[DirectoryType.Plugins]));
+        Assert.True(
+            File.Exists(
+                Path.Combine(directories[DirectoryType.Config], "plugins", "moongate.fixture.basic", "plugin.yaml")
+            )
+        );
     }
 
     public void Dispose()

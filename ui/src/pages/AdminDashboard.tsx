@@ -94,7 +94,7 @@ export function AdminDashboard({
       <AdminDashboardHeader loading={loading} onRefresh={refresh} />
 
       <div className="grid min-w-0 gap-4">
-        {(activeView === "overview" || activeView === "runtime") && <AdminRuntimePanel services={services} />}
+        {activeView === "overview" && <AdminRuntimePanel services={services} />}
 
         {activeView === "metrics" && (
           <Suspense
