@@ -1,5 +1,9 @@
 import { type FormEvent, Suspense, lazy, useState } from "react";
 import { LogIn, Shield, Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const VantaBackground = lazy(() =>
   import("./VantaBackground").then((module) => ({ default: module.VantaBackground }))
@@ -47,8 +51,8 @@ export function LoginView({ section, onLogin }: LoginViewProps) {
         </Suspense>
       ) : null}
 
-      <section className="relative z-10 w-full max-w-[380px] rounded-md border border-border bg-surface/95 shadow-raised backdrop-blur">
-        <header className="border-b border-border p-4">
+      <Card className="relative z-10 w-full max-w-[380px] gap-0 rounded-md border-border bg-surface/95 py-0 shadow-raised backdrop-blur">
+        <CardHeader className="border-b border-border p-4">
           <div className="mb-4 flex items-center gap-2">
             <img src="/images/moongate_logo.png" alt="Moongate" className="h-8 w-8 shrink-0 object-contain" />
             <span className="truncate text-base font-semibold tracking-tight text-fg">Moongate</span>
@@ -56,48 +60,49 @@ export function LoginView({ section, onLogin }: LoginViewProps) {
           <div className="mb-3 inline-flex h-8 w-8 items-center justify-center rounded-md bg-muted text-fg-muted">
             {sectionIcon}
           </div>
-          <h1 className="m-0 text-xl font-semibold leading-tight tracking-tight text-fg">
+          <CardTitle className="m-0 text-xl font-semibold leading-tight tracking-tight text-fg">
             {isAdmin ? "Admin console" : "Player portal"}
-          </h1>
-        </header>
+          </CardTitle>
+        </CardHeader>
 
-        <form onSubmit={submit} className="grid gap-3 p-4">
-          <label className="grid gap-1.5 text-[13px] font-medium text-fg-muted">
-            Username
-            <input
-              value={username}
-              onChange={(event) => setUsername(event.target.value)}
-              autoComplete="username"
-              className="h-9 rounded-md border border-border bg-bg px-2.5 text-[13px] text-fg outline-none transition-colors focus:border-border-strong focus:bg-surface"
-            />
-          </label>
-          <label className="grid gap-1.5 text-[13px] font-medium text-fg-muted">
-            Password
-            <input
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              type="password"
-              autoComplete="current-password"
-              className="h-9 rounded-md border border-border bg-bg px-2.5 text-[13px] text-fg outline-none transition-colors focus:border-border-strong focus:bg-surface"
-            />
-          </label>
-          {error ? <p className="m-0 text-[13px] font-medium text-danger">{error}</p> : null}
-          <button
-            type="submit"
-            disabled={busy}
-            className="mt-1 inline-flex min-h-[36px] items-center justify-center gap-2 rounded-md bg-accent px-3 text-[13px] font-medium text-accent-fg transition-opacity duration-150 hover:opacity-90 disabled:opacity-60"
-          >
-            <LogIn size={16} aria-hidden />
-            {busy ? "Signing in" : isAdmin ? "Enter admin console" : "Enter player portal"}
-          </button>
-          <a
-            href={isAdmin ? "/" : "/admin"}
-            className="justify-self-center rounded-md px-2 py-1 text-xs font-medium text-fg-muted transition-colors hover:bg-muted hover:text-fg"
-          >
-            {isAdmin ? "Player portal" : "Admin console"}
-          </a>
-        </form>
-      </section>
+        <CardContent className="p-4">
+          <form onSubmit={submit} className="grid gap-3">
+            <div className="grid gap-1.5">
+              <Label htmlFor="login-username" className="text-[13px] text-fg-muted">
+                Username
+              </Label>
+              <Input
+                id="login-username"
+                value={username}
+                onChange={(event) => setUsername(event.target.value)}
+                autoComplete="username"
+                className="bg-bg text-[13px] text-fg focus-visible:bg-surface"
+              />
+            </div>
+            <div className="grid gap-1.5">
+              <Label htmlFor="login-password" className="text-[13px] text-fg-muted">
+                Password
+              </Label>
+              <Input
+                id="login-password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                type="password"
+                autoComplete="current-password"
+                className="bg-bg text-[13px] text-fg focus-visible:bg-surface"
+              />
+            </div>
+            {error ? <p className="m-0 text-[13px] font-medium text-danger">{error}</p> : null}
+            <Button type="submit" disabled={busy} className="mt-1 min-h-[36px] gap-2 text-[13px]">
+              <LogIn size={16} aria-hidden />
+              {busy ? "Signing in" : isAdmin ? "Enter admin console" : "Enter player portal"}
+            </Button>
+            <Button asChild variant="ghost" size="sm" className="justify-self-center text-xs text-fg-muted hover:bg-muted hover:text-fg">
+              <a href={isAdmin ? "/" : "/admin"}>{isAdmin ? "Player portal" : "Admin console"}</a>
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </main>
   );
 }

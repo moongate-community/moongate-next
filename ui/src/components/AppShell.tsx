@@ -1,5 +1,9 @@
 import { useState, type ReactNode } from "react";
 import { LogOut, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { adminItems, playerItems } from "../data/navigation";
 import { useTheme } from "../lib/useTheme";
 import type { AdminNavId } from "../types/admin";
@@ -45,26 +49,34 @@ export function AppShell({
     : "md:grid-cols-[238px_minmax(0,1fr)]";
 
   return (
-    <div className={`grid min-h-screen grid-cols-1 ${columns} bg-bg text-fg transition-[grid-template-columns] duration-200 ease-out`}>
+    <div className={cn("grid min-h-screen grid-cols-1 bg-bg text-fg transition-[grid-template-columns] duration-200 ease-out", columns)}>
       <aside className="z-20 flex flex-col gap-3 border-b border-border bg-surface-raised px-2 py-2 md:sticky md:top-0 md:z-10 md:h-screen md:border-b-0 md:border-r md:px-2 md:py-3">
-        <div className={`flex h-10 items-center gap-2 ${isSidebarCollapsed ? "md:justify-center md:px-0" : "justify-between px-1.5"}`}>
-          <div className={`flex min-w-0 items-center gap-2.5 ${isSidebarCollapsed ? "md:justify-center" : ""}`}>
+        <div className={cn("flex h-10 items-center gap-2", isSidebarCollapsed ? "md:justify-center md:px-0" : "justify-between px-1.5")}>
+          <div className={cn("flex min-w-0 items-center gap-2.5", isSidebarCollapsed && "md:justify-center")}>
             <img src="/images/moongate_logo.png" alt="Moongate" className="h-7 w-7 shrink-0 object-contain" />
-            <span className={`truncate text-sm font-semibold tracking-tight text-fg ${isSidebarCollapsed ? "md:hidden" : ""}`}>
+            <span className={cn("truncate text-sm font-semibold tracking-tight text-fg", isSidebarCollapsed && "md:hidden")}>
               Moongate
             </span>
           </div>
-          <button
-            type="button"
-            onClick={() => setIsSidebarCollapsed((current) => !current)}
-            aria-expanded={!isSidebarCollapsed}
-            aria-controls="portal-side-nav"
-            aria-label={isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-            title={isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-            className="hidden h-7 w-7 items-center justify-center rounded-md text-fg-subtle transition-colors duration-150 hover:bg-muted hover:text-fg md:inline-flex"
-          >
-            {isSidebarCollapsed ? <PanelLeftOpen size={16} aria-hidden /> : <PanelLeftClose size={16} aria-hidden />}
-          </button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon-xs"
+                onClick={() => setIsSidebarCollapsed((current) => !current)}
+                aria-expanded={!isSidebarCollapsed}
+                aria-controls="portal-side-nav"
+                aria-label={isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                className="hidden text-fg-subtle hover:bg-muted hover:text-fg md:inline-flex"
+              >
+                {isSidebarCollapsed ? <PanelLeftOpen size={16} aria-hidden /> : <PanelLeftClose size={16} aria-hidden />}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right" sideOffset={8}>
+              {isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            </TooltipContent>
+          </Tooltip>
         </div>
 
         <nav
@@ -77,24 +89,26 @@ export function AppShell({
             const collapsed = isSidebarCollapsed;
 
             return (
-              <button
+              <Button
                 key={item.id}
                 type="button"
+                variant="ghost"
+                size="sm"
                 onClick={() => onItemChange(item.id)}
                 aria-label={item.label}
                 aria-current={isActive ? "page" : undefined}
                 title={collapsed ? item.label : undefined}
-                className={[
-                  "group relative flex min-h-[34px] shrink-0 items-center gap-2 rounded-md px-2 text-[13px] font-medium transition-colors duration-150",
-                  collapsed ? "md:justify-center md:px-0" : "",
+                className={cn(
+                  "group relative h-auto min-h-[34px] shrink-0 justify-start gap-2 px-2 text-[13px] font-medium",
+                  collapsed && "md:justify-center md:px-0",
                   isActive
                     ? "bg-surface text-fg shadow-card"
                     : "text-fg-muted hover:bg-muted hover:text-fg"
-                ].join(" ")}
+                )}
               >
                 <item.icon size={16} aria-hidden className="shrink-0" />
-                <span className={collapsed ? "md:hidden" : ""}>{item.label}</span>
-              </button>
+                <span className={cn(collapsed && "md:hidden")}>{item.label}</span>
+              </Button>
             );
           })}
         </nav>
@@ -103,9 +117,9 @@ export function AppShell({
       <main className="min-w-0">
         <header className="sticky top-0 z-10 flex min-h-[52px] items-center justify-end gap-3 border-b border-border bg-bg/90 px-4 backdrop-blur-md md:px-6">
           <div className="flex min-w-0 items-center gap-3">
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-muted text-[11px] font-semibold text-fg-muted">
-              {initialsOf(user.username)}
-            </div>
+            <Avatar size="sm" className="rounded-md">
+              <AvatarFallback className="rounded-md text-[11px] font-semibold">{initialsOf(user.username)}</AvatarFallback>
+            </Avatar>
             <div className="hidden min-w-0 gap-0.5 sm:grid">
               <strong className="truncate text-[13px] font-medium leading-tight text-fg">{user.username}</strong>
               <span className="truncate text-[11px] font-medium text-fg-subtle">{user.level}</span>
@@ -113,15 +127,21 @@ export function AppShell({
           </div>
           <div className="flex items-center gap-2">
             <ThemeToggle theme={theme} onToggle={toggleTheme} />
-            <button
-              type="button"
-              onClick={onLogout}
-              aria-label="Logout"
-              title="Logout"
-              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-fg-muted transition-colors duration-150 hover:bg-muted hover:text-fg"
-            >
-              <LogOut size={16} aria-hidden />
-            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={onLogout}
+                  aria-label="Logout"
+                  className="text-fg-muted hover:bg-muted hover:text-fg"
+                >
+                  <LogOut size={16} aria-hidden />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" sideOffset={8}>Logout</TooltipContent>
+            </Tooltip>
           </div>
         </header>
         {children}
