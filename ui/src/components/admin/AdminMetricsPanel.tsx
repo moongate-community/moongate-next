@@ -7,6 +7,8 @@ import type { ComposeOption } from "echarts/core";
 import type { GridComponentOption, TooltipComponentOption } from "echarts/components";
 import type { LineSeriesOption } from "echarts/charts";
 import { ChartSpline } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { readChartTheme, type ChartTheme } from "../../lib/chartTheme";
 import { useTheme, type Theme } from "../../lib/useTheme";
 import type { AdminMetricHistoryPoint, AdminRuntimeSnapshot } from "../../types/admin";
@@ -128,10 +130,10 @@ export function AdminMetricsPanel({ history, snapshot }: AdminMetricsPanelProps)
       title="Metrics"
       icon={ChartSpline}
       action={
-        <span className="inline-flex min-h-[32px] items-center gap-2 rounded-md border border-success/20 bg-success/10 px-2.5 text-xs font-bold text-success">
+        <Badge variant="outline" className="min-h-[32px] gap-2 rounded-md border-success/20 bg-success/10 px-2.5 text-xs font-bold text-success">
           <ChartSpline size={15} aria-hidden />
           5s refresh
-        </span>
+        </Badge>
       }
     >
       <div className="grid gap-4">
@@ -143,12 +145,13 @@ export function AdminMetricsPanel({ history, snapshot }: AdminMetricsPanelProps)
             lastSample ? `Last ${new Date(lastSample).toLocaleTimeString()}` : "Waiting for sample",
             snapshot.reachable ? "Source online" : "Source offline"
           ].map((chip) => (
-            <span
+            <Badge
               key={chip}
-              className="inline-flex min-h-[28px] items-center rounded-md border border-border bg-muted px-2.5 font-mono text-[11px] font-medium text-fg-muted"
+              variant="outline"
+              className="min-h-[28px] rounded-md border-border bg-muted px-2.5 font-mono text-[11px] font-medium text-fg-muted"
             >
               {chip}
-            </span>
+            </Badge>
           ))}
         </div>
 
@@ -200,7 +203,7 @@ function MetricChart({
   }, [chartOption]);
 
   return (
-    <section className="grid min-w-0 gap-3 rounded-lg border border-border bg-muted p-3.5">
+    <Card className="grid min-w-0 gap-3 rounded-md border-border bg-muted p-3.5 py-3.5 shadow-none">
       <header className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h4 className="m-0 text-sm font-bold leading-tight text-fg">{config.label}</h4>
@@ -216,7 +219,7 @@ function MetricChart({
         role="img"
         aria-label={`${config.label} chart`}
       />
-    </section>
+    </Card>
   );
 }
 

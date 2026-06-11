@@ -7,6 +7,8 @@ import { ConsolePanel } from "../components/admin/ConsolePanel";
 import { ItemTemplateCatalogPanel } from "../components/admin/itemTemplates/ItemTemplateCatalogPanel";
 import { MobileTemplateCatalogPanel } from "../components/admin/mobileTemplates/MobileTemplateCatalogPanel";
 import { UserManagementPanel } from "../components/admin/users/UserManagementPanel";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { buildRuntimeServices } from "../data/adminDashboard";
 import { getAdminRuntimeSnapshot, getOfflineSnapshot } from "../lib/adminClient";
 import { me } from "../lib/authClient";
@@ -83,9 +85,12 @@ export function AdminDashboard({ activeView, accessToken, accessTokenExpiresAt, 
         {activeView === "metrics" && (
           <Suspense
             fallback={
-              <div className="rounded-md border border-border bg-surface p-4 text-sm font-medium text-fg-muted">
-                Loading metrics panels…
-              </div>
+              <Card className="rounded-md border-border bg-surface py-0 shadow-none">
+                <CardContent className="grid gap-3 p-4">
+                  <Skeleton className="h-5 w-48" />
+                  <Skeleton className="h-[220px] w-full" />
+                </CardContent>
+              </Card>
             }
           >
             <AdminMetricsPanel snapshot={snapshot} history={metricHistory} />
