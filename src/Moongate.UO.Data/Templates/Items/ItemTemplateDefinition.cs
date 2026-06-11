@@ -29,6 +29,8 @@ public sealed class ItemTemplateDefinition
 
     public int ItemId { get; set; }
 
+    public List<ItemTemplateGraphicVariantDefinition> GraphicVariants { get; set; } = [];
+
     public int Hue { get; set; }
 
     public int Weight { get; set; }

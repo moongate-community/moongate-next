@@ -32,6 +32,9 @@ public sealed class ItemTemplateDefinitionTests
                   name: Shirt
                   comment: Starter clothing template
                   item_id: 5399
+                  graphic_variants:
+                      - item_id: 5400
+                      - item_id: 5401
                   hue: 33
                   weight: 1
                   is_stackable: false
@@ -55,6 +58,11 @@ public sealed class ItemTemplateDefinitionTests
         Assert.Equal("Shirt", template.Name);
         Assert.Equal("Starter clothing template", template.Comment);
         Assert.Equal(5399, template.ItemId);
+        Assert.Collection(
+            template.GraphicVariants,
+            variant => Assert.Equal(5400, variant.ItemId),
+            variant => Assert.Equal(5401, variant.ItemId)
+        );
         Assert.Equal(33, template.Hue);
         Assert.Equal(1, template.Weight);
         Assert.False(template.IsStackable);
@@ -91,6 +99,7 @@ public sealed class ItemTemplateDefinitionTests
         Assert.Null(template.GumpId);
         Assert.Equal(ItemRarity.Common, template.Rarity);
         Assert.Null(template.Value);
+        Assert.Empty(template.GraphicVariants);
         Assert.Empty(template.Tags);
         Assert.Empty(template.Params);
     }

@@ -62,7 +62,7 @@ public sealed class ItemFactoryService : IItemFactoryService
         var item = new ItemEntity
         {
             Name = template.Name,
-            ItemId = template.ItemId,
+            ItemId = SelectTemplateItemId(template),
             Hue = (Hue)template.Hue,
             Weight = template.Weight,
             Amount = amount ?? template.Amount,
@@ -91,5 +91,30 @@ public sealed class ItemFactoryService : IItemFactoryService
         }
 
         return await _items.CreateAsync(item, cancellationToken);
+    }
+
+    internal static int SelectTemplateItemId(ItemTemplateDefinition template, Func<int, int>? nextIndex = null)
+    {
+        ArgumentNullException.ThrowIfNull(template);
+
+        if (template.GraphicVariants.Count == 0)
+        {
+            return template.ItemId;
+        }
+
+        var count = template.GraphicVariants.Count + 1;
+        var index = nextIndex?.Invoke(count) ?? Random.Shared.Next(count);
+
+        if ((uint)index >= (uint)count)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(nextIndex),
+                $"Graphic variant selector returned index {index}, but valid indexes are 0 through {count - 1}."
+            );
+        }
+
+        return index == 0
+                   ? template.ItemId
+                   : template.GraphicVariants[index - 1].ItemId;
     }
 }

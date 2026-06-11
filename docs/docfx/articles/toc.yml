@@ -8,6 +8,8 @@
   href: data-assets.md
 - name: Item templates
   href: item-templates.md
+- name: Item template converters
+  href: template-converters.md
 - name: Starter loadouts
   href: starter-loadouts.md
 - name: Loot system

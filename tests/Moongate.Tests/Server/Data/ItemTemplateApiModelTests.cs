@@ -73,6 +73,10 @@ public sealed class ItemTemplateApiModelTests
             Comment = "Container base",
             BaseItem = "base_container",
             ItemId = 0x0E3F,
+            GraphicVariants =
+            [
+                new() { ItemId = 0x0E40 }
+            ],
             ScriptId = "container_script",
             Visibility = UserLevelType.GameMaster,
             Amount = 2,
@@ -97,6 +101,10 @@ public sealed class ItemTemplateApiModelTests
         Assert.True(detail.IsMovable);
         Assert.False(detail.IsStackable);
         Assert.Equal(42, detail.GumpId);
+        var variant = Assert.Single(detail.GraphicVariants);
+        Assert.Equal(0x0E40, variant.ItemId);
+        Assert.Equal("0x0E40", variant.ItemIdHex);
+        Assert.Equal("/api/items/0x0E40.png", variant.ImageUrl);
         Assert.Null(detail.Value);
         var param = Assert.Single(detail.Params);
         Assert.Equal("capacity", param.Key);
@@ -136,6 +144,11 @@ public sealed class ItemTemplateApiModelTests
             Id = "longsword",
             Name = "Longsword",
             ItemId = 0x0F61,
+            GraphicVariants =
+            [
+                new() { ItemId = 0x0F62 },
+                new() { ItemId = 0x0F63 }
+            ],
             Hue = 1,
             Rarity = ItemRarity.Common,
             Layer = ItemLayerType.OneHanded,
@@ -153,6 +166,21 @@ public sealed class ItemTemplateApiModelTests
         Assert.Equal("longsword", summary.Id);
         Assert.Equal("0x0F61", summary.ItemIdHex);
         Assert.Equal("/api/items/0x0F61.png", summary.ImageUrl);
+        Assert.Collection(
+            summary.GraphicVariants,
+            variant =>
+            {
+                Assert.Equal(0x0F62, variant.ItemId);
+                Assert.Equal("0x0F62", variant.ItemIdHex);
+                Assert.Equal("/api/items/0x0F62.png", variant.ImageUrl);
+            },
+            variant =>
+            {
+                Assert.Equal(0x0F63, variant.ItemId);
+                Assert.Equal("0x0F63", variant.ItemIdHex);
+                Assert.Equal("/api/items/0x0F63.png", variant.ImageUrl);
+            }
+        );
         Assert.Equal("Common", summary.Rarity);
         Assert.Equal("OneHanded", summary.Layer);
         Assert.NotNull(summary.Value);

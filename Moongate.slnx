@@ -19,7 +19,4 @@
         <Project Path="tests/Moongate.PluginFixtures.Empty/Moongate.PluginFixtures.Empty.csproj"/>
         <Project Path="tests/Moongate.PluginFixtures.Multiple/Moongate.PluginFixtures.Multiple.csproj"/>
     </Folder>
-    <Folder Name="/tools/">
-        <Project Path="tools/Moongate.AssetDataConverter/Moongate.AssetDataConverter.csproj"/>
-    </Folder>
 </Solution>

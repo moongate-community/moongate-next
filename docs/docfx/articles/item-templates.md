@@ -52,6 +52,28 @@ If `name` is missing, null, or empty, Moongate falls back to the UO tiledata
 name for `item_id`. Tiledata names are raw client names, so they can contain UO
 pluralization tokens such as `bread loa%ves/f%`.
 
+## Graphic variants
+
+Use `graphic_variants` when one logical item can be represented by more than
+one equivalent UO art id.
+
+```yaml
+item_templates:
+    - id: bread_loaf
+      name: bread loaf
+      item_id: 4155
+      graphic_variants:
+          - item_id: 4156
+      weight: 1
+      is_movable: true
+      tags: [food]
+```
+
+`item_id` remains the primary/default graphic. When the item factory creates an
+item from the template, it randomly chooses one id from the primary `item_id`
+plus the `graphic_variants` list. The created item entity still stores a single
+resolved `ItemId`.
+
 ## Reusable base item
 
 Use `is_abstract: true` for base templates that should provide shared defaults
@@ -91,6 +113,7 @@ overrides the parent value.
 | `name` | string | tiledata fallback | Display name shown in admin UI and copied onto created items. |
 | `comment` | string | empty | Author note shown in template detail. |
 | `item_id` | integer | `0` | UO item art/tile id. |
+| `graphic_variants` | list | empty | Alternate `item_id` values for the same logical item. |
 | `hue` | integer | `0` | Hue palette index. `0` means no hue override. |
 | `weight` | integer | `0` | Weight for one unit of the item. |
 | `amount` | integer | `1` | Initial stack amount. |
@@ -194,13 +217,17 @@ The template loader fails fast when it finds invalid template data.
 - `id` must be unique, case-insensitively, across all loaded template files.
 - `base_item` must reference an existing template.
 - Base item chains cannot contain cycles.
+- Graphic variant `item_id` values must be positive.
+- Graphic variant `item_id` values cannot duplicate the primary `item_id`.
+- Graphic variant `item_id` values cannot be duplicated within one template.
 - Non-string params must parse as decimal or `0x`-prefixed hexadecimal numbers.
 - `is_movable` cannot be used as a custom param key.
 
 ## Checking templates
 
 The admin UI exposes item templates as a read-only catalog. Use it to verify
-loaded names, tags, hue, rarity, art, and value calculations after editing YAML.
+loaded names, tags, hue, rarity, art, graphic variants, and value calculations
+after editing YAML.
 
 The REST endpoints are administrator-only:
 

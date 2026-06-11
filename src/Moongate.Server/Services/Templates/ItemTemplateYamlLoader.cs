@@ -107,6 +107,7 @@ public sealed class ItemTemplateYamlLoader
                 );
 
                 template.Tags ??= [];
+                template.GraphicVariants ??= [];
 
                 sources[template.Id] = file;
                 templates.Add(template);
@@ -116,6 +117,7 @@ public sealed class ItemTemplateYamlLoader
         ResolveBaseItems(templates);
         ApplyTileDataNameFallbacks(templates);
         ValidateParams(templates, sources);
+        ValidateGraphicVariants(templates, sources);
 
         _logger.Information(
             "Loaded {TemplateCount} item templates from {FileCount} files",
@@ -198,6 +200,11 @@ public sealed class ItemTemplateYamlLoader
             child.Tags = [..parent.Tags];
         }
 
+        if (child.GraphicVariants.Count == 0 && parent.GraphicVariants.Count > 0)
+        {
+            child.GraphicVariants = [..parent.GraphicVariants.Select(CloneGraphicVariant)];
+        }
+
         child.Params = MergeParams(parent.Params, child.Params);
     }
 
@@ -229,6 +236,12 @@ public sealed class ItemTemplateYamlLoader
         {
             Type = param.Type,
             Value = param.Value
+        };
+
+    private static ItemTemplateGraphicVariantDefinition CloneGraphicVariant(ItemTemplateGraphicVariantDefinition variant)
+        => new()
+        {
+            ItemId = variant.ItemId
         };
 
     private static Dictionary<string, ItemTemplateParamDefinition> MergeParams(
@@ -334,6 +347,41 @@ public sealed class ItemTemplateYamlLoader
                     throw new InvalidOperationException(
                         $"Item template '{template.Id}' in '{sources[template.Id]}' has invalid {param.Type} param '{key}' = '{param.Value}'.",
                         exception
+                    );
+                }
+            }
+        }
+    }
+
+    private static void ValidateGraphicVariants(
+        List<ItemTemplateDefinition> templates,
+        Dictionary<string, string> sources
+    )
+    {
+        foreach (var template in templates)
+        {
+            var itemIds = new HashSet<int>();
+
+            foreach (var variant in template.GraphicVariants)
+            {
+                if (variant.ItemId <= 0)
+                {
+                    throw new InvalidOperationException(
+                        $"Item template '{template.Id}' in '{sources[template.Id]}' has invalid graphic variant item_id '{variant.ItemId}'."
+                    );
+                }
+
+                if (variant.ItemId == template.ItemId)
+                {
+                    throw new InvalidOperationException(
+                        $"Item template '{template.Id}' in '{sources[template.Id]}' has graphic variant item_id '{variant.ItemId}' that matches primary item_id."
+                    );
+                }
+
+                if (!itemIds.Add(variant.ItemId))
+                {
+                    throw new InvalidOperationException(
+                        $"Item template '{template.Id}' in '{sources[template.Id]}' has duplicate graphic variant item_id '{variant.ItemId}'."
                     );
                 }
             }

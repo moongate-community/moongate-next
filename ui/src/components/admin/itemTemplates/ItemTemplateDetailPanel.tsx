@@ -1,6 +1,7 @@
 import { Box } from "lucide-react";
 import type { ItemTemplateDetail } from "../../../types/itemTemplates";
 import { DefinitionList } from "../DefinitionList";
+import { GraphicVariantsPanel } from "./GraphicVariantsPanel";
 import { HueSwatch } from "./HueSwatch";
 import { ItemImageCell } from "./ItemImageCell";
 import { ItemValueDisplay } from "./ItemValueDisplay";
@@ -57,6 +58,7 @@ export function ItemTemplateDetailPanel({ template, loading, error }: ItemTempla
       <div className="grid gap-4 p-4">
         <HueSwatch hue={template.hue} mode="detail" />
         <ItemValueDisplay value={template.value} mode="detail" />
+        <GraphicVariantsPanel variants={template.graphicVariants} />
         <DefinitionList
           items={[
             { term: "Base item", value: template.baseItem ?? "-", mono: true },
