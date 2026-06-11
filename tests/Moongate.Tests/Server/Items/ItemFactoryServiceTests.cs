@@ -152,6 +152,45 @@ public sealed class ItemFactoryServiceTests
     }
 
     [Fact]
+    public void SelectTemplateItemId_IndexZero_ReturnsPrimaryItemId()
+    {
+        var template = NewTemplateWithGraphicVariants();
+
+        var itemId = ItemFactoryService.SelectTemplateItemId(template, _ => 0);
+
+        Assert.Equal(4155, itemId);
+    }
+
+    [Fact]
+    public void SelectTemplateItemId_NoVariants_ReturnsPrimaryItemId()
+    {
+        var template = new ItemTemplateDefinition
+        {
+            Id = "bread_loaf",
+            ItemId = 4155
+        };
+
+        var itemId = ItemFactoryService.SelectTemplateItemId(
+            template,
+            _ => throw new InvalidOperationException("Selector should not run without variants.")
+        );
+
+        Assert.Equal(4155, itemId);
+    }
+
+    [Fact]
+    public void SelectTemplateItemId_VariantIndex_ReturnsMatchingVariantItemId()
+    {
+        var template = NewTemplateWithGraphicVariants();
+
+        var firstVariant = ItemFactoryService.SelectTemplateItemId(template, _ => 1);
+        var secondVariant = ItemFactoryService.SelectTemplateItemId(template, _ => 2);
+
+        Assert.Equal(4156, firstVariant);
+        Assert.Equal(4157, secondVariant);
+    }
+
+    [Fact]
     public async Task CreateFromTemplateAsync_UnknownTemplate_Throws()
     {
         var factory = new ItemFactoryService(NewRegistry(), new FakeItemService());
@@ -212,4 +251,16 @@ public sealed class ItemFactoryServiceTests
 
         return registry;
     }
+
+    private static ItemTemplateDefinition NewTemplateWithGraphicVariants()
+        => new()
+        {
+            Id = "bread_loaf",
+            ItemId = 4155,
+            GraphicVariants =
+            [
+                new() { ItemId = 4156 },
+                new() { ItemId = 4157 }
+            ]
+        };
 }

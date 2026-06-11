@@ -34,6 +34,8 @@ x86/
 [Aa][Rr][Mm]64/
 bld/
 [Bb]in/
+!tools/template-converters/bin/
+!tools/template-converters/bin/**
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/

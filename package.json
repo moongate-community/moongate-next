@@ -4,7 +4,9 @@
   "private": true,
   "description": "Release automation for Moongate.",
   "scripts": {
-    "release": "semantic-release"
+    "release": "semantic-release",
+    "templates:convert": "node tools/template-converters/bin/moongate-template-converter.js",
+    "templates:convert:test": "node --test tools/template-converters/test/*.test.js"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",

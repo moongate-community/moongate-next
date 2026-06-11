@@ -27,8 +27,7 @@ module.exports = {
         assets: [
           "CHANGELOG.md",
           "Directory.Build.props",
-          "src/Moongate.Server/Moongate.Server.csproj",
-          "tools/Moongate.AssetDataConverter/Moongate.AssetDataConverter.csproj"
+          "src/Moongate.Server/Moongate.Server.csproj"
         ],
         message: "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }

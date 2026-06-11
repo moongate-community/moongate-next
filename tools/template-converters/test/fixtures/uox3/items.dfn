@@ -1,0 +1,64 @@
+[base_item]
+{
+movable 1
+weight=100
+}
+
+[base_food]
+{
+get=base_item
+type=14
+pileable=1
+}
+
+[0x103b]
+{
+get=base_food
+name=bread loaf
+id=0x103b
+value=7 2
+}
+
+[base_weapon]
+{
+get=base_item
+layer=1
+weight=500
+}
+
+[aos_weapon]
+{
+damage=5 10
+magic=true
+}
+
+[tol_weapon]
+{
+damage=10 20
+}
+
+[katana]
+{
+get=base_weapon
+getaos=aos_weapon
+gettol=tol_weapon
+name=katana
+id=0x13ff
+value=85 42
+pileable=0
+}
+
+[0x13eb_aos]
+{
+get=base_item
+name=bronze ringmail gloves
+id=0x13eb
+layer=7
+}
+
+[0x13eb-b]
+{
+getaos=0x13eb_aos
+color=0x8a9
+sectionid=0x13eb-b
+}

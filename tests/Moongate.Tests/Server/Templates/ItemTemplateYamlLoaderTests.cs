@@ -56,6 +56,32 @@ public class ItemTemplateYamlLoaderTests
     }
 
     [Fact]
+    public void LoadAll_BaseItem_InheritsGraphicVariants()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "variants.yaml",
+            """
+            item_templates:
+                - id: base_food
+                  is_abstract: true
+                  item_id: 4155
+                  graphic_variants:
+                      - item_id: 4156
+                - id: bread_loaf
+                  base_item: base_food
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var templates = loader.LoadAll();
+
+        var bread = templates.Single(template => template.Id == "bread_loaf");
+        var variant = Assert.Single(bread.GraphicVariants);
+        Assert.Equal(4156, variant.ItemId);
+    }
+
+    [Fact]
     public void LoadAll_ChildValues_WinOverParent()
     {
         using var dir = new TempTemplateDirectory();
@@ -81,6 +107,28 @@ public class ItemTemplateYamlLoaderTests
         Assert.Equal("Fancy Shirt", shirt.Name);
         Assert.Equal(44, shirt.Hue);
         Assert.Equal(2, shirt.Weight);
+    }
+
+    [Fact]
+    public void LoadAll_DuplicateGraphicVariant_Throws()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "variants.yaml",
+            """
+            item_templates:
+                - id: bread_loaf
+                  item_id: 4155
+                  graphic_variants:
+                      - item_id: 4156
+                      - item_id: 4156
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var exception = Assert.Throws<InvalidOperationException>(() => loader.LoadAll());
+
+        Assert.Contains("duplicate graphic variant", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -250,6 +298,27 @@ public class ItemTemplateYamlLoaderTests
     }
 
     [Fact]
+    public void LoadAll_InvalidGraphicVariant_Throws()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "variants.yaml",
+            """
+            item_templates:
+                - id: bread_loaf
+                  item_id: 4155
+                  graphic_variants:
+                      - item_id: 0
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var exception = Assert.Throws<InvalidOperationException>(() => loader.LoadAll());
+
+        Assert.Contains("invalid graphic variant", exception.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public void LoadAll_MalformedYaml_Throws()
     {
         using var dir = new TempTemplateDirectory();
@@ -319,6 +388,25 @@ public class ItemTemplateYamlLoaderTests
         var shirt = Assert.Single(loader.LoadAll());
 
         Assert.Empty(shirt.Params);
+    }
+
+    [Fact]
+    public void LoadAll_NullGraphicVariantsKey_LoadsWithEmptyVariants()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "null_variants.yaml",
+            """
+            item_templates:
+                - id: shirt
+                  graphic_variants:
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var shirt = Assert.Single(loader.LoadAll());
+
+        Assert.Empty(shirt.GraphicVariants);
     }
 
     [Fact]
@@ -428,6 +516,27 @@ public class ItemTemplateYamlLoaderTests
 
         var exception = Assert.Throws<InvalidOperationException>(() => loader.LoadAll());
         Assert.Contains("is_movable", exception.Message);
+    }
+
+    [Fact]
+    public void LoadAll_PrimaryGraphicVariant_Throws()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "variants.yaml",
+            """
+            item_templates:
+                - id: bread_loaf
+                  item_id: 4155
+                  graphic_variants:
+                      - item_id: 4155
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var exception = Assert.Throws<InvalidOperationException>(() => loader.LoadAll());
+
+        Assert.Contains("matches primary item_id", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]

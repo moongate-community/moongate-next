@@ -21,12 +21,19 @@ export type ItemTemplateSummary = {
   itemId: number;
   itemIdHex: string;
   imageUrl: string;
+  graphicVariants: ItemTemplateGraphicVariantSummary[];
   rarity: string;
   layer: string | null;
   tags: string[];
   isAbstract: boolean;
   value: ItemTemplateValueSummary | null;
   hue: HueSummary;
+};
+
+export type ItemTemplateGraphicVariantSummary = {
+  itemId: number;
+  itemIdHex: string;
+  imageUrl: string;
 };
 
 export type ItemTemplateValueSummary = {
