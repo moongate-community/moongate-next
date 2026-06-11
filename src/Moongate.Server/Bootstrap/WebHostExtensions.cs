@@ -84,6 +84,7 @@ internal static class WebHostExtensions
         app.MapMoongateAdminUsers();
         app.MapMoongateItemTemplates();
         app.MapMoongateMobileTemplates();
+        app.MapMoongateLootTemplates();
         app.MapMoongateAdminHues();
         app.MapMoongateVersion();
         app.MapMoongateMetrics();

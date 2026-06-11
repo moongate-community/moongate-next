@@ -26,6 +26,11 @@ public static class LootContainerExtensions
 
         container.RegisterInstance<IEnhancedRandom>(BuiltInRng.Generator, IfAlreadyRegistered.Keep);
         container.Register<ILootService, LootService>(Reuse.Singleton);
+        container.Register<LootTableRegistryStore>(Reuse.Singleton);
+        container.RegisterDelegate<LootTemplateProjectionService>(
+            resolver => new(resolver.Resolve<IItemTemplateService>().GetAll()),
+            Reuse.Singleton
+        );
         container.RegisterDelegate(
             static resolver => new LootTableYamlLoader(resolver.Resolve<DirectoriesConfig>()[DirectoryType.Templates_Loot]),
             Reuse.Singleton
