@@ -134,7 +134,7 @@ public sealed class MobileTemplateValidatorTests
     public void Validate_InvalidNotoriety_Throws()
     {
         var m = Mob("g");
-        m.Notoriety = Notoriety.Invalid;
+        m.Notoriety = NotorietyType.Invalid;
 
         var ex = Assert.Throws<InvalidOperationException>(() => MobileTemplateValidator.Validate(One(m), Items(), new FakeLoot()));
         Assert.Contains("notoriety", ex.Message, StringComparison.OrdinalIgnoreCase);

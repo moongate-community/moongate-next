@@ -37,7 +37,7 @@ public sealed class MobileTemplateDefinition
 
     public string? Brain { get; set; }
 
-    public Notoriety Notoriety { get; set; } = Notoriety.Innocent;
+    public NotorietyType Notoriety { get; set; } = NotorietyType.Innocent;
 
     public int Karma { get; set; }
 

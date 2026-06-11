@@ -177,6 +177,6 @@ public sealed class MobileTemplateYamlLoaderTests
         var thug = loader.LoadAll().Single(t => t.Id == "thug");
 
         // Documented sentinel limitation: Innocent is the default, so it inherits Criminal.
-        Assert.Equal(Moongate.UO.Data.Types.Mobiles.Notoriety.Criminal, thug.Notoriety);
+        Assert.Equal(Moongate.UO.Data.Types.Mobiles.NotorietyType.Criminal, thug.Notoriety);
     }
 }

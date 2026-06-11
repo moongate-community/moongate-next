@@ -35,7 +35,7 @@ public static class MobileTemplateValidator
 
     private static void ValidateNotoriety(MobileTemplateDefinition template)
     {
-        if (template.Notoriety == Notoriety.Invalid)
+        if (template.Notoriety == NotorietyType.Invalid)
         {
             throw new InvalidOperationException(
                 $"Mobile template '{template.Id}' has Invalid notoriety."

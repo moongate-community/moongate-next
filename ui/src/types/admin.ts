@@ -6,6 +6,7 @@ export type AdminNavId =
   | "security"
   | "users"
   | "itemTemplates"
+  | "mobileTemplates"
   | "console";
 
 export type AdminStatus = "healthy" | "warning" | "offline";

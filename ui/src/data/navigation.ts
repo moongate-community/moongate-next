@@ -1,5 +1,6 @@
 import {
   Activity,
+  Bot,
   ChartSpline,
   Gauge,
   KeyRound,
@@ -46,6 +47,11 @@ export const adminItems = [
     id: "itemTemplates",
     label: "Item Templates",
     icon: PackageSearch
+  },
+  {
+    id: "mobileTemplates",
+    label: "Mobile Templates",
+    icon: Bot
   },
   {
     id: "console",

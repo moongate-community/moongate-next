@@ -39,7 +39,7 @@ public sealed class MobileEntityPersistenceTests : IDisposable
                 Id = mobileId,
                 Name = "a guard",
                 BrainId = "guard_brain",
-                Notoriety = Notoriety.Criminal,
+                Notoriety = NotorietyType.Criminal,
                 Karma = -500,
                 Fame = 1200,
                 FactionId = "town_britannia"
@@ -57,7 +57,7 @@ public sealed class MobileEntityPersistenceTests : IDisposable
 
             Assert.NotNull(loaded);
             Assert.Equal("guard_brain", loaded!.BrainId);
-            Assert.Equal(Notoriety.Criminal, loaded.Notoriety);
+            Assert.Equal(NotorietyType.Criminal, loaded.Notoriety);
             Assert.Equal(-500, loaded.Karma);
             Assert.Equal(1200, loaded.Fame);
             Assert.Equal("town_britannia", loaded.FactionId);
