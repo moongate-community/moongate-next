@@ -9,6 +9,7 @@ import { adminGroups, adminItems, playerGroups, playerItems } from "../data/navi
 import { useTheme } from "../lib/useTheme";
 import type { AdminNavId, AdminRuntimeSnapshot } from "../types/admin";
 import type { AuthUser } from "../types/auth";
+import { CommandPaletteButton } from "./CommandPalette";
 import { ThemeToggle } from "./ThemeToggle";
 
 type AppSection = "admin" | "player";
@@ -167,6 +168,12 @@ export function AppShell({
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <CommandPaletteButton />
+              </TooltipTrigger>
+              <TooltipContent side="bottom" sideOffset={8}>Command palette</TooltipContent>
+            </Tooltip>
             <ThemeToggle theme={theme} onToggle={toggleTheme} />
             <Tooltip>
               <TooltipTrigger asChild>
