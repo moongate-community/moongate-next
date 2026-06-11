@@ -12,6 +12,8 @@ using Moongate.Server.Interfaces.Sessions;
 using Moongate.UO.Data.Interfaces.Expansions;
 using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Domain.Interfaces.Services;
+using Serilog;
+using ILogger = Serilog.ILogger;
 
 namespace Moongate.Server.Handlers;
 
@@ -26,7 +28,7 @@ public class GameLoginHandler : PacketHandlerBase<GameLoginPacket>, IPacketHandl
 
     private readonly IMobileService _mobileService;
 
-    private readonly Serilog.ILogger _logger = Serilog.Log.ForContext<GameLoginHandler>();
+    private readonly ILogger _logger = Log.ForContext<GameLoginHandler>();
 
     public GameLoginHandler(
         IEventBusService eventBus,

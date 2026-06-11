@@ -10,6 +10,8 @@ using Moongate.Network.UO.Packets.Outgoing.Login;
 using Moongate.Network.UO.Types.Login;
 using Moongate.Server.Data.Config;
 using Moongate.UO.Domain.Interfaces.Services;
+using Serilog;
+using ILogger = Serilog.ILogger;
 
 namespace Moongate.Server.Handlers;
 
@@ -20,7 +22,7 @@ public class LoginHandler : PacketHandlerBase<LoginSeedPacket>, IPacketHandler<A
 
     private readonly ServerConfig _serverConfig;
 
-    private readonly Serilog.ILogger _logger = Serilog.Log.ForContext<LoginHandler>();
+    private readonly ILogger _logger = Log.ForContext<LoginHandler>();
 
     public LoginHandler(
         IEventBusService eventBus,
@@ -85,11 +87,11 @@ public class LoginHandler : PacketHandlerBase<LoginSeedPacket>, IPacketHandler<A
         PlayerSessions.Authenticate(context.SessionId, userEntity.Id, userEntity.Username, DateTimeOffset.Now);
 
         var serverListPacket = new ServerListPacket(
-            new GameServerEntry()
+            new GameServerEntry
             {
                 Index = 0,
                 ServerName = _serverConfig.ServerName,
-                IpAddress = context.Session.ServerEndPoint.Address,
+                IpAddress = context.Session.ServerEndPoint.Address
             }
         );
 

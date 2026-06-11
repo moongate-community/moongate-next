@@ -39,7 +39,7 @@ public class ServerSelectHandler : PacketHandlerBase<ServerSelectPacket>
 
         var sessionKey = (uint)Random.Shared.Next();
 
-        var serverRedirectPacket = new ServerRedirectPacket()
+        var serverRedirectPacket = new ServerRedirectPacket
         {
             IpAddress = context.Session.ServerEndPoint.Address,
             Port = context.Session.ServerEndPoint.Port,

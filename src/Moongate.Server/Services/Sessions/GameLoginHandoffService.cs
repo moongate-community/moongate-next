@@ -29,21 +29,6 @@ public sealed class GameLoginHandoffService : IGameLoginHandoffService
     /// <summary>Number of currently stored (not yet consumed or pruned) handoffs.</summary>
     public int Count => _handoffs.Count;
 
-    public void Store(uint sessionKey, ClientType clientType, ClientVersion? clientVersion)
-        => _handoffs[sessionKey] = new GameLoginHandoff(sessionKey, clientType, clientVersion, _now());
-
-    public bool TryConsume(uint sessionKey, out GameLoginHandoff handoff)
-    {
-        if (_handoffs.TryRemove(sessionKey, out handoff!) && _now() - handoff.CreatedAt <= TimeToLive)
-        {
-            return true;
-        }
-
-        handoff = null!;
-
-        return false;
-    }
-
     /// <summary>Removes every handoff older than <see cref="TimeToLive" />. Invoked by the timer wheel.</summary>
     public void PruneExpired()
     {
@@ -56,5 +41,20 @@ public sealed class GameLoginHandoffService : IGameLoginHandoffService
                 _handoffs.TryRemove(pair.Key, out _);
             }
         }
+    }
+
+    public void Store(uint sessionKey, ClientType clientType, ClientVersion? clientVersion)
+        => _handoffs[sessionKey] = new(sessionKey, clientType, clientVersion, _now());
+
+    public bool TryConsume(uint sessionKey, out GameLoginHandoff handoff)
+    {
+        if (_handoffs.TryRemove(sessionKey, out handoff!) && _now() - handoff.CreatedAt <= TimeToLive)
+        {
+            return true;
+        }
+
+        handoff = null!;
+
+        return false;
     }
 }

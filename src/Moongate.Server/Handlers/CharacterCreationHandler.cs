@@ -21,7 +21,5 @@ public class CharacterCreationHandler : PacketHandlerBase<CharacterCreationPacke
         PacketContext<CharacterCreationPacket> context,
         CancellationToken cancellationToken = default
     )
-    {
-        return Task.CompletedTask;
-    }
+        => Task.CompletedTask;
 }
