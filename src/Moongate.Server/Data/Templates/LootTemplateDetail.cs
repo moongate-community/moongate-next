@@ -4,5 +4,6 @@ public sealed record LootTemplateDetail(
     string Id,
     int RootNodeCount,
     IReadOnlyList<LootTemplateNodeSummary> Nodes,
+    IReadOnlyList<LootTemplateNodeSummary> PotentialItems,
     IReadOnlyList<LootTemplateNodeSummary> PreviewItems
 );

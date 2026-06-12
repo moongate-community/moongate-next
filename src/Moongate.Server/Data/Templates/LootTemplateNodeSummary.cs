@@ -6,6 +6,7 @@ public sealed record LootTemplateNodeSummary(
     int Depth,
     string Kind,
     string Label,
+    string? Rarity,
     double Chance,
     int Weight,
     int AmountMin,

@@ -36,20 +36,21 @@ public sealed class LootTemplateProjectionService
         ArgumentNullException.ThrowIfNull(table);
 
         var rows = new List<LootTemplateNodeSummary>();
+        var potentialItems = new List<LootTemplateNodeSummary>();
 
         for (var i = 0; i < table.Content.Count; i++)
         {
-            AddNode(rows, table.Content[i], "", 0, i);
+            AddNode(rows, potentialItems, table.Content[i], "", 0, i);
         }
 
-        var previewItems = rows
+        var previewItems = potentialItems
                            .Where(static row => row.ItemTemplateId is not null)
                            .GroupBy(static row => row.ItemTemplateId, StringComparer.OrdinalIgnoreCase)
                            .Select(static group => group.First())
                            .Take(24)
                            .ToArray();
 
-        return new(table.Id, table.Content.Count, rows, previewItems);
+        return new(table.Id, table.Content.Count, rows, potentialItems, previewItems);
     }
 
     private static string FormatItemId(int itemId)
@@ -58,7 +59,12 @@ public sealed class LootTemplateProjectionService
     private static string FormatItemImageUrl(int itemId)
         => $"/api/items/{FormatItemId(itemId)}.png";
 
-    private void AddCategoryChildren(List<LootTemplateNodeSummary> rows, LootNode node, string parentId, int depth)
+    private void AddCategoryChildren(
+        List<LootTemplateNodeSummary> potentialItems,
+        LootNode node,
+        string parentId,
+        int depth
+    )
     {
         if (node.Category is null || !_byTag.TryGetValue(node.Category, out var matches))
         {
@@ -70,13 +76,20 @@ public sealed class LootTemplateProjectionService
         for (var i = 0; i < matches.Count; i++)
         {
             var template = matches[i];
-            var id = $"{parentId}.{i.ToString(CultureInfo.InvariantCulture)}";
+            var id = $"{parentId}.candidate.{i.ToString(CultureInfo.InvariantCulture)}";
 
-            rows.Add(CreateItemRow(id, parentId, depth, "category_candidate", template, node.Amount, candidateChance));
+            potentialItems.Add(CreateItemRow(id, parentId, depth, "category_candidate", template, node.Amount, candidateChance));
         }
     }
 
-    private void AddNode(List<LootTemplateNodeSummary> rows, LootNode node, string parentId, int depth, int index)
+    private void AddNode(
+        List<LootTemplateNodeSummary> rows,
+        List<LootTemplateNodeSummary> potentialItems,
+        LootNode node,
+        string parentId,
+        int depth,
+        int index
+    )
     {
         var id = string.IsNullOrWhiteSpace(parentId)
                      ? index.ToString(CultureInfo.InvariantCulture)
@@ -85,11 +98,16 @@ public sealed class LootTemplateProjectionService
         var row = CreateRow(id, parentId, depth, kind, node);
         rows.Add(row);
 
+        if (row.ItemTemplateId is not null)
+        {
+            potentialItems.Add(row);
+        }
+
         if (node.Group is not null)
         {
             for (var i = 0; i < node.Group.Count; i++)
             {
-                AddNode(rows, node.Group[i], id, depth + 1, i);
+                AddNode(rows, potentialItems, node.Group[i], id, depth + 1, i);
             }
         }
 
@@ -97,13 +115,13 @@ public sealed class LootTemplateProjectionService
         {
             for (var i = 0; i < node.PickOneOf.Count; i++)
             {
-                AddNode(rows, node.PickOneOf[i], id, depth + 1, i);
+                AddNode(rows, potentialItems, node.PickOneOf[i], id, depth + 1, i);
             }
         }
 
         if (node.Category is not null)
         {
-            AddCategoryChildren(rows, node, id, depth + 1);
+            AddCategoryChildren(potentialItems, node, id, depth + 1);
         }
     }
 
@@ -112,6 +130,7 @@ public sealed class LootTemplateProjectionService
         var amountMin = node.Amount?.Min ?? 1;
         var amountMax = node.Amount?.Max ?? 1;
         var label = node.Item ?? node.Category ?? kind;
+        string? rarity = null;
         string? itemIdHex = null;
         string? imageUrl = null;
         var stackable = false;
@@ -119,6 +138,7 @@ public sealed class LootTemplateProjectionService
         if (node.Item is not null && _byId.TryGetValue(node.Item, out var template))
         {
             label = string.IsNullOrWhiteSpace(template.Name) ? template.Id : template.Name;
+            rarity = template.Rarity.ToString();
             itemIdHex = FormatItemId(template.ItemId);
             imageUrl = FormatItemImageUrl(template.ItemId);
             stackable = template.IsStackable;
@@ -130,6 +150,7 @@ public sealed class LootTemplateProjectionService
             depth,
             kind,
             label,
+            rarity,
             node.Chance,
             node.Weight,
             amountMin,
@@ -162,6 +183,7 @@ public sealed class LootTemplateProjectionService
             depth,
             kind,
             label,
+            template.Rarity.ToString(),
             chance,
             0,
             amountMin,

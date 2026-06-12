@@ -19,16 +19,18 @@ public sealed class LootTemplateProjectionServiceTests
         Assert.Equal("item", row.Kind);
         Assert.Equal("gold_coin", row.ItemTemplateId);
         Assert.Equal("Gold Coin", row.Label);
+        Assert.Equal("Common", row.Rarity);
         Assert.Equal("0x0EED", row.ItemIdHex);
         Assert.Equal("/api/items/0x0EED.png", row.ImageUrl);
         Assert.Equal(20, row.AmountMin);
         Assert.Equal(90, row.AmountMax);
         Assert.Equal(1.0, row.Chance);
+        Assert.Single(detail.PotentialItems);
         Assert.Single(detail.PreviewItems);
     }
 
     [Fact]
-    public void Project_Category_ExpandsConcreteTaggedItems()
+    public void Project_Category_KeepsDefinitionSeparateFromPotentialItems()
     {
         var service = new LootTemplateProjectionService(
             [
@@ -41,17 +43,28 @@ public sealed class LootTemplateProjectionServiceTests
 
         var detail = service.Project(table);
 
-        Assert.Equal(3, detail.Nodes.Count);
+        var definition = Assert.Single(detail.Nodes);
+        Assert.Equal("category", definition.Kind);
+        Assert.Equal("gem", definition.Label);
         Assert.Contains(detail.Nodes, row => row.Kind == "category" && row.Label == "gem");
-        Assert.Contains(detail.Nodes, row => row.ItemTemplateId == "ruby");
-        Assert.Contains(detail.Nodes, row => row.ItemTemplateId == "sapphire");
+        Assert.DoesNotContain(detail.Nodes, row => row.Kind == "category_candidate");
+        Assert.DoesNotContain(detail.Nodes, row => row.ItemTemplateId == "ruby");
+        Assert.DoesNotContain(detail.Nodes, row => row.ItemTemplateId == "sapphire");
         Assert.DoesNotContain(detail.Nodes, row => row.ItemTemplateId == "abstract_gem");
 
-        var candidates = detail.Nodes.Where(static row => row.Kind == "category_candidate").ToArray();
+        var candidates = detail.PotentialItems.Where(static row => row.Kind == "category_candidate").ToArray();
         Assert.Equal(2, candidates.Length);
+        Assert.Contains(candidates, row => row.ItemTemplateId == "ruby");
+        Assert.Contains(candidates, row => row.ItemTemplateId == "sapphire");
+        Assert.DoesNotContain(candidates, row => row.ItemTemplateId == "abstract_gem");
         Assert.All(candidates, row => Assert.Equal(0.125, row.Chance));
         Assert.All(candidates, row => Assert.Equal(0, row.Weight));
+        Assert.All(candidates, row => Assert.Equal("Common", row.Rarity));
         Assert.Equal(2, detail.PreviewItems.Count);
+        Assert.Equal(
+            detail.PotentialItems.Select(static row => row.ItemTemplateId),
+            detail.PreviewItems.Select(static row => row.ItemTemplateId)
+        );
     }
 
     private static ItemTemplateDefinition Item(

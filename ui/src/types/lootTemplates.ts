@@ -13,6 +13,7 @@ export type LootTemplateNodeSummary = {
   depth: number;
   kind: "item" | "category" | "category_candidate" | "pick_one_of" | "group";
   label: string;
+  rarity: string | null;
   chance: number;
   weight: number;
   amountMin: number;
@@ -27,6 +28,7 @@ export type LootTemplateDetail = {
   id: string;
   rootNodeCount: number;
   nodes: LootTemplateNodeSummary[];
+  potentialItems?: LootTemplateNodeSummary[];
   previewItems: LootTemplateNodeSummary[];
 };
 
