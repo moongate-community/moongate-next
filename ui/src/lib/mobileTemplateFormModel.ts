@@ -116,6 +116,14 @@ export type MobileTemplateSaveResult = {
 
 export const mobileTemplateGenderOptions: string[] = ["Male", "Female"];
 
+export type LabeledOption = { value: string; label: string };
+
+export const mobileTemplateRaceOptions: LabeledOption[] = [
+  { value: "0", label: "Human" },
+  { value: "1", label: "Elf" },
+  { value: "2", label: "Gargoyle" }
+];
+
 export const mobileTemplateNotorietyOptions: MobileTemplateNotoriety[] = [
   "Invalid",
   "Innocent",

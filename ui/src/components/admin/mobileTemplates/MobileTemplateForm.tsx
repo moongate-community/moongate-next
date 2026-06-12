@@ -13,6 +13,7 @@ import {
   mobileTemplateGenderOptions,
   mobileTemplateNotorietyOptions,
   mobileTemplateParamTypeOptions,
+  mobileTemplateRaceOptions,
   type MobileTemplateFormState,
   type MobileTemplateNotoriety,
   type MobileTemplateSaveResult
@@ -562,14 +563,12 @@ export function MobileTemplateForm({ accessToken, mode, template, onCancel, onSa
                 onChange={(value) => update("gender", value as "Male" | "Female")}
                 options={mobileTemplateGenderOptions}
               />
-              <Field label="Race index" htmlFor="mobile-template-race-index">
-                <Input
-                  id="mobile-template-race-index"
-                  value={state.raceIndex}
-                  onChange={(event) => update("raceIndex", event.target.value)}
-                  className="h-9 bg-bg font-mono text-[13px]"
-                />
-              </Field>
+              <SelectField
+                label="Race"
+                value={state.raceIndex}
+                onChange={(value) => update("raceIndex", value)}
+                options={mobileTemplateRaceOptions}
+              />
               <Field label="Skin hue" htmlFor="mobile-template-skin-hue">
                 <div className="flex items-center gap-2">
                   <Input
@@ -886,8 +885,12 @@ function SelectField({
   label: string;
   value: string;
   onChange: (value: string) => void;
-  options: string[];
+  options: ReadonlyArray<string | { value: string; label: string }>;
 }) {
+  const normalized = options.map((option) =>
+    typeof option === "string" ? { value: option, label: option } : option
+  );
+
   return (
     <div className="grid gap-1.5">
       <Label className="text-[12px] font-semibold text-fg-muted">{label}</Label>
@@ -896,9 +899,9 @@ function SelectField({
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          {options.map((option) => (
-            <SelectItem key={option} value={option}>
-              {option}
+          {normalized.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
             </SelectItem>
           ))}
         </SelectContent>
