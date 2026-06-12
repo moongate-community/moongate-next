@@ -1,17 +1,9 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { LootTemplateNodeSummary } from "../../../types/lootTemplates";
+import { rarityColor } from "../../../lib/rarityColors";
 
 type LootContainerPreviewProps = {
   items: LootTemplateNodeSummary[];
-};
-
-const rarityColors: Record<string, string> = {
-  None: "#9ca3af",
-  Common: "#ffffff",
-  Uncommon: "#1eff00",
-  Rare: "#0070dd",
-  Epic: "#a335ee",
-  Legendary: "#ff8000"
 };
 
 function amountText(item: LootTemplateNodeSummary): string {
@@ -20,10 +12,6 @@ function amountText(item: LootTemplateNodeSummary): string {
 
 function chanceText(chance: number): string {
   return `${Math.round(chance * 1000) / 10}%`;
-}
-
-function rarityColor(item: LootTemplateNodeSummary): string {
-  return item.rarity ? rarityColors[item.rarity] ?? rarityColors.Common : rarityColors.Common;
 }
 
 function LootItemTooltip({ item }: { item: LootTemplateNodeSummary }) {
@@ -40,7 +28,7 @@ function LootItemTooltip({ item }: { item: LootTemplateNodeSummary }) {
           </div>
         ) : null}
         <div className="min-w-0">
-          <div className="truncate text-sm font-semibold" style={{ color: rarityColor(item) }}>
+          <div className="truncate text-sm font-semibold" style={{ color: rarityColor(item.rarity) }}>
             {item.label}
           </div>
           {item.rarity ? <div className="mt-0.5 text-[#ffd100]">{item.rarity}</div> : null}
