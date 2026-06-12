@@ -636,7 +636,6 @@ export function MobileTemplateForm({ accessToken, mode, template, onCancel, onSa
         accessToken={accessToken}
         onSelect={(body) => {
           update("body", String(body));
-          setBodyPickerOpen(false);
         }}
       />
     </form>

@@ -1,3 +1,4 @@
+import { readJson } from "./authClient";
 import type { PagedResult } from "../types/itemTemplates";
 
 export type BodySummary = {
@@ -6,6 +7,10 @@ export type BodySummary = {
   bodyType: string;
   imageUrl: string;
 };
+
+function authHeaders(accessToken: string): HeadersInit {
+  return { Authorization: `Bearer ${accessToken}` };
+}
 
 export async function listBodies(
   accessToken: string,
@@ -19,12 +24,8 @@ export async function listBodies(
   }
 
   const response = await fetch(`/api/admin/bodies?${params.toString()}`, {
-    headers: { Authorization: `Bearer ${accessToken}` }
+    headers: authHeaders(accessToken)
   });
 
-  if (!response.ok) {
-    throw new Error(`Failed to load bodies (${response.status})`);
-  }
-
-  return (await response.json()) as PagedResult<BodySummary>;
+  return readJson<PagedResult<BodySummary>>(response);
 }
