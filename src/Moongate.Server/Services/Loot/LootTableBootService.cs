@@ -1,4 +1,5 @@
 using Moongate.Abstractions.Interfaces.Services;
+using Moongate.Server.Services.Templates;
 using Moongate.UO.Data.Interfaces.Services;
 using Serilog;
 using ILogger = Serilog.ILogger;
@@ -17,23 +18,27 @@ public sealed class LootTableBootService : IMoongateService
     private readonly ILootService _lootService;
     private readonly IItemTemplateService _templates;
     private readonly LootTableRegistryStore _registryStore;
+    private readonly IItemService _items;
 
     public LootTableBootService(
         LootTableYamlLoader loader,
         ILootService lootService,
         IItemTemplateService templates,
-        LootTableRegistryStore registryStore
+        LootTableRegistryStore registryStore,
+        IItemService items
     )
     {
         ArgumentNullException.ThrowIfNull(loader);
         ArgumentNullException.ThrowIfNull(lootService);
         ArgumentNullException.ThrowIfNull(templates);
         ArgumentNullException.ThrowIfNull(registryStore);
+        ArgumentNullException.ThrowIfNull(items);
 
         _loader = loader;
         _lootService = lootService;
         _templates = templates;
         _registryStore = registryStore;
+        _items = items;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -45,6 +50,8 @@ public sealed class LootTableBootService : IMoongateService
         LootTableValidator.Validate(tables, _templates);
 
         var registry = new LootTableRegistry(tables, _templates.GetAll());
+        ItemTemplateContentsValidator.Validate(_templates.GetAll(), registry, _items);
+
         _registryStore.SetRegistry(registry);
 
         if (_lootService is LootService lootService)
