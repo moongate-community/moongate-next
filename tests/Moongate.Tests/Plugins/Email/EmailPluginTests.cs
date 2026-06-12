@@ -119,20 +119,59 @@ public sealed class EmailPluginTests : IDisposable
     }
 
     [Fact]
-    public async Task SaveConfigAsync_UnknownField_ReturnsValidationError()
+    public async Task SaveConfigAsync_UnknownField_IsIgnored()
     {
-        var plugin = ConfigurePlugin(CreatePluginDirectory());
+        var pluginDirectory = CreatePluginDirectory();
+        var plugin = ConfigurePlugin(pluginDirectory);
         var request = new PluginConfigSaveRequest(
             new Dictionary<string, object?>
             {
+                ["smtp.host"] = "smtp.example.com",
                 ["smtp.unknown"] = "value"
             }
         );
 
         var result = await plugin.SaveConfigAsync(request);
 
-        Assert.False(result.Success);
-        Assert.Contains(result.Errors, error => error.Contains("Unsupported config field", StringComparison.Ordinal));
+        Assert.True(result.Success);
+        var yaml = File.ReadAllText(Path.Combine(pluginDirectory, PluginContext.PluginConfigFileName));
+        Assert.Contains("host: smtp.example.com", yaml);
+        Assert.DoesNotContain("unknown", yaml);
+    }
+
+    [Fact]
+    public async Task SaveConfigAsync_PreservesFieldsAbsentFromRequest()
+    {
+        var pluginDirectory = CreatePluginDirectory(
+            """
+            enabled: true
+            from:
+              address: noreply@example.com
+            smtp:
+              host: old.example.com
+              username: noreply@example.com
+              password_secret: smtp_password
+            secrets:
+              environment:
+                prefix: CUSTOM_PREFIX_
+            activation:
+              url_template: https://example.com/activate?activation_id={activation_id}
+            """
+        );
+        var plugin = ConfigurePlugin(pluginDirectory);
+        var request = new PluginConfigSaveRequest(
+            new Dictionary<string, object?>
+            {
+                ["smtp.host"] = "new.example.com"
+            }
+        );
+
+        var result = await plugin.SaveConfigAsync(request);
+
+        Assert.True(result.Success);
+        var yaml = File.ReadAllText(Path.Combine(pluginDirectory, PluginContext.PluginConfigFileName));
+        Assert.Contains("host: new.example.com", yaml);   // updated leaf
+        Assert.Contains("prefix: CUSTOM_PREFIX_", yaml);    // not in request/form -> preserved
     }
 
     [Fact]
