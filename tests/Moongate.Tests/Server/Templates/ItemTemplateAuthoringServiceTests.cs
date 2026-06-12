@@ -12,6 +12,7 @@ using Moongate.UO.Data.Interfaces.Hues;
 using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Templates.Items;
 using Moongate.UO.Data.Templates.Loot;
+using ShaiRandom.Generators;
 using Serial = Moongate.Core.Ids.Serial;
 
 namespace Moongate.Tests.Server.Templates;
@@ -161,6 +162,27 @@ public sealed class ItemTemplateAuthoringServiceTests
     }
 
     [Fact]
+    public async Task CreateAsync_WithBaseItem_ThrowsInvalidOperationException()
+    {
+        using var dir = new TempTemplateDirectory();
+        var context = NewContext(dir);
+
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => context.Service.CreateAsync(
+                new()
+                {
+                    Id = "child_crate",
+                    BaseItem = "crate_base",
+                    ItemId = 0x0E3F
+                }
+            ).AsTask()
+        );
+
+        Assert.Contains("base_item", exception.Message);
+        Assert.False(File.Exists(System.IO.Path.Combine(context.ItemsPath, "_web.yaml")));
+    }
+
+    [Fact]
     public async Task CreateAsync_UnknownContentsLootTemplate_DoesNotModifyManagedFile()
     {
         using var dir = new TempTemplateDirectory();
@@ -261,6 +283,59 @@ public sealed class ItemTemplateAuthoringServiceTests
         Assert.Equal(before, File.ReadAllText(sourcePath));
         Assert.True(context.Templates.TryGet("crate", out var template));
         Assert.False(template.IsAbstract);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_RebuildsLootRegistryAfterTagChange()
+    {
+        using var dir = new TempTemplateDirectory();
+        var context = NewContext(dir);
+        WriteItemTemplates(
+            context.ItemsPath,
+            "loot_items.yaml",
+            """
+            item_templates:
+                - id: apple
+                  name: Apple
+                  item_id: 2512
+                  tags: [food]
+                - id: bread_loaf
+                  name: Bread Loaf
+                  item_id: 4155
+                  tags: [food]
+            """
+        );
+        context.ReloadTemplates();
+        context.RegistryStore.SetRegistry(
+            new LootTableRegistry(
+                [
+                    new()
+                    {
+                        Id = "food_loot",
+                        Content = [new() { Category = "food" }]
+                    }
+                ],
+                context.Templates.GetAll()
+            )
+        );
+        context.LootService.SetRegistry(context.RegistryStore.Registry);
+
+        await context.Service.UpdateAsync(
+            "bread_loaf",
+            new()
+            {
+                Id = "bread_loaf",
+                Name = "Bread Loaf",
+                ItemId = 4155,
+                Tags = ["bakery"]
+            }
+        );
+
+        Assert.True(context.RegistryStore.Registry.TryGetByTag("food", out var foodTemplates));
+        Assert.Equal("apple", Assert.Single(foodTemplates).Id);
+        Assert.True(context.RegistryStore.Registry.TryGetByTag("bakery", out var bakeryTemplates));
+        Assert.Equal("bread_loaf", Assert.Single(bakeryTemplates).Id);
+        Assert.True(context.LootService.Has("food_loot"));
     }
 
     [Fact]
@@ -379,6 +454,46 @@ public sealed class ItemTemplateAuthoringServiceTests
     }
 
     [Fact]
+    public async Task UpdateAsync_InheritedTemplate_DoesNotModifyRealFile()
+    {
+        using var dir = new TempTemplateDirectory();
+        var context = NewContext(dir);
+        var sourcePath = WriteItemTemplates(
+            context.ItemsPath,
+            "inherited.yaml",
+            """
+            item_templates:
+                - id: base_crate
+                  name: Base Crate
+                  item_id: 3647
+                  tags: [container]
+                - id: child_crate
+                  base_item: base_crate
+                  name: Child Crate
+                  item_id: 3647
+            """
+        );
+        context.ReloadTemplates();
+        var before = File.ReadAllText(sourcePath);
+
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => context.Service.UpdateAsync(
+                "child_crate",
+                new()
+                {
+                    Id = "child_crate",
+                    BaseItem = "base_crate",
+                    Name = "Edited Child",
+                    ItemId = 0x0E3F
+                }
+            ).AsTask()
+        );
+
+        Assert.Contains("base_item", exception.Message);
+        Assert.Equal(before, File.ReadAllText(sourcePath));
+    }
+
+    [Fact]
     public async Task SaveAsync_InvalidBaseItem_DoesNotModifyRealFile()
     {
         using var dir = new TempTemplateDirectory();
@@ -422,16 +537,23 @@ public sealed class ItemTemplateAuthoringServiceTests
         var templates = new ItemTemplateService();
         var registryStore = new LootTableRegistryStore();
         registryStore.SetRegistry(Registry("common", templates.GetAll()));
+        var lootService = new LootService(
+            templates,
+            new(() => new FakeItemFactory(templates)),
+            new MizuchiRandom(1UL, 1UL)
+        );
+        lootService.SetRegistry(registryStore.Registry);
         var service = new ItemTemplateAuthoringService(
             directories,
             tileData,
             templates,
             new FakeHueStore(),
             registryStore,
-            new FakeItemService(containerItemIds ?? [0x0E3F])
+            new FakeItemService(containerItemIds ?? [0x0E3F]),
+            lootService
         );
 
-        return new(itemsPath, tileData, templates, registryStore, service);
+        return new(itemsPath, tileData, templates, registryStore, lootService, service);
     }
 
     private static LootTableRegistry Registry(string id, IEnumerable<ItemTemplateDefinition> templates)
@@ -466,6 +588,7 @@ public sealed class ItemTemplateAuthoringServiceTests
         TestTileDataStore TileData,
         ItemTemplateService Templates,
         LootTableRegistryStore RegistryStore,
+        LootService LootService,
         ItemTemplateAuthoringService Service
     )
     {
@@ -535,5 +658,49 @@ public sealed class ItemTemplateAuthoringServiceTests
 
         public ValueTask<int> TotalWeightAsync(ItemEntity item, CancellationToken cancellationToken = default)
             => throw new NotSupportedException();
+    }
+
+    private sealed class FakeItemFactory : IItemFactoryService
+    {
+        private readonly IItemTemplateService _templates;
+        private uint _next = Serial.ItemOffset + 1;
+
+        public FakeItemFactory(IItemTemplateService templates)
+        {
+            _templates = templates;
+        }
+
+        public ValueTask<ItemEntity> CreateFromTemplateAsync(
+            string templateId,
+            CancellationToken cancellationToken = default
+        )
+            => CreateFromTemplateAsync(templateId, 1, cancellationToken);
+
+        public ValueTask<ItemEntity> CreateFromTemplateAsync(
+            string templateId,
+            int amount,
+            CancellationToken cancellationToken = default
+        )
+        {
+            if (!_templates.TryGet(templateId, out var template))
+            {
+                throw new InvalidOperationException($"Item template '{templateId}' not found.");
+            }
+
+            if (template.IsAbstract)
+            {
+                throw new InvalidOperationException($"Item template '{templateId}' is abstract.");
+            }
+
+            return ValueTask.FromResult(
+                new ItemEntity
+                {
+                    Id = new(_next++),
+                    ItemId = template.ItemId,
+                    Amount = amount,
+                    IsStackable = template.IsStackable
+                }
+            );
+        }
     }
 }

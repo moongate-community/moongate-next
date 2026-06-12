@@ -174,7 +174,7 @@ export function ItemTemplateCatalogPanel({ accessToken, commandTarget }: ItemTem
   }
 
   function startEdit() {
-    if (!detail) {
+    if (!detail || detail.baseItem) {
       return;
     }
 
@@ -240,7 +240,12 @@ export function ItemTemplateCatalogPanel({ accessToken, commandTarget }: ItemTem
             All items
           </Button>
         </div>
-        <ItemTemplateDetailPanel template={detail} loading={detailLoading} error={detailError} onEdit={detail ? startEdit : undefined} />
+        <ItemTemplateDetailPanel
+          template={detail}
+          loading={detailLoading}
+          error={detailError}
+          onEdit={detail && !detail.baseItem ? startEdit : undefined}
+        />
       </div>
     );
   }

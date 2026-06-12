@@ -121,14 +121,6 @@ export function ItemTemplateForm({ accessToken, mode, template, onCancel, onSave
                   className="h-9 bg-bg text-[13px]"
                 />
               </Field>
-              <Field label="Base item" htmlFor="item-template-base-item">
-                <Input
-                  id="item-template-base-item"
-                  value={state.baseItem}
-                  onChange={(event) => update("baseItem", event.target.value)}
-                  className="h-9 bg-bg font-mono text-[13px]"
-                />
-              </Field>
               <Field label="Script" htmlFor="item-template-script">
                 <Input
                   id="item-template-script"

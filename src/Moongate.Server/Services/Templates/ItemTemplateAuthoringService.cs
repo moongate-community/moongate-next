@@ -16,6 +16,7 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
     private readonly IHueStore _hues;
     private readonly IItemService _items;
     private readonly string _itemsDirectory;
+    private readonly ILootService _lootService;
     private readonly LootTableRegistryStore _lootRegistryStore;
     private readonly object _saveGate = new();
     private readonly IItemTemplateService _templates;
@@ -27,7 +28,8 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
         IItemTemplateService templates,
         IHueStore hues,
         LootTableRegistryStore lootRegistryStore,
-        IItemService items
+        IItemService items,
+        ILootService lootService
     )
     {
         ArgumentNullException.ThrowIfNull(directories);
@@ -36,6 +38,7 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
         ArgumentNullException.ThrowIfNull(hues);
         ArgumentNullException.ThrowIfNull(lootRegistryStore);
         ArgumentNullException.ThrowIfNull(items);
+        ArgumentNullException.ThrowIfNull(lootService);
 
         _itemsDirectory = directories[DirectoryType.Templates_Items];
         _documents = new(_itemsDirectory);
@@ -44,6 +47,7 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
         _hues = hues;
         _lootRegistryStore = lootRegistryStore;
         _items = items;
+        _lootService = lootService;
     }
 
     public ValueTask<ItemTemplateSaveResult> CreateAsync(
@@ -88,9 +92,14 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
 
         lock (_saveGate)
         {
-            if (!_templates.TryGet(id, out _))
+            if (!_templates.TryGet(id, out var existingTemplate))
             {
                 return ValueTask.FromResult<ItemTemplateSaveResult?>(null);
+            }
+
+            if (!string.IsNullOrWhiteSpace(existingTemplate.BaseItem))
+            {
+                throw new InvalidOperationException("base_item templates cannot be authored from the web editor yet.");
             }
 
             var sourceFile = _documents.ResolveSourceFile(template.Id);
@@ -131,6 +140,7 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
 
             var reloaded = new ItemTemplateYamlLoader(_itemsDirectory, _tileData).LoadAll();
             _templates.ReplaceAll(reloaded);
+            PublishLootRegistry(reloaded);
 
             var savedTemplate = reloaded.Single(
                 item => string.Equals(item.Id, template.Id, StringComparison.OrdinalIgnoreCase)
@@ -144,6 +154,17 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
             {
                 Directory.Delete(tempDirectory, true);
             }
+        }
+    }
+
+    private void PublishLootRegistry(IReadOnlyList<ItemTemplateDefinition> templates)
+    {
+        var registry = new LootTableRegistry(_lootRegistryStore.Registry.GetAll(), templates);
+        _lootRegistryStore.SetRegistry(registry);
+
+        if (_lootService is LootService lootService)
+        {
+            lootService.SetRegistry(registry);
         }
     }
 
@@ -245,6 +266,11 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
 
     private static void Validate(ItemTemplateDefinition template)
     {
+        if (!string.IsNullOrWhiteSpace(template.BaseItem))
+        {
+            throw new InvalidOperationException("base_item templates cannot be authored from the web editor yet.");
+        }
+
         if (string.IsNullOrWhiteSpace(template.Id))
         {
             throw new InvalidOperationException("Item template id is required.");
