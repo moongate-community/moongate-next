@@ -242,6 +242,8 @@ public sealed class ItemFactoryServiceTests
         Assert.Equal("true", entity.CustomProperties["dyeable"].StringValue);
         Assert.Equal(CustomPropertyType.Integer, entity.CustomProperties["charges"].Type);
         Assert.Equal(16L, entity.CustomProperties["charges"].IntegerValue);
+        Assert.Equal(CustomPropertyType.String, entity.CustomProperties[ItemTemplateDefinitionKeys.TemplateId].Type);
+        Assert.Equal("shirt", entity.CustomProperties[ItemTemplateDefinitionKeys.TemplateId].StringValue);
     }
 
     private static ItemTemplateService NewRegistry(params ItemTemplateDefinition[] templates)
