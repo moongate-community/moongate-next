@@ -3,6 +3,7 @@ using Moongate.Core.Types;
 using Moongate.Persistence.Data;
 using Moongate.Server.Data.ListQueries;
 using Moongate.Server.Data.Templates;
+using Moongate.Server.Interfaces.Services.Templates;
 using Moongate.UO.Data.Interfaces.Hues;
 using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Templates.Items;
@@ -52,7 +53,51 @@ public static class ItemTemplateEndpointExtensions
              .WithName("GetItemTemplate")
              .WithSummary("Returns a full read-only item template definition.");
 
+        group.MapPost(
+                 "/",
+                 (
+                     IItemTemplateAuthoringService authoring,
+                     ItemTemplateEditRequest request,
+                     CancellationToken cancellationToken
+                 ) => HandleCreateAsync(authoring, request, cancellationToken)
+             )
+             .WithName("CreateItemTemplate")
+             .WithSummary("Creates an item template in the managed web YAML file.");
+
+        group.MapPut(
+                 "/{id}",
+                 (
+                     IItemTemplateAuthoringService authoring,
+                     string id,
+                     ItemTemplateEditRequest request,
+                     CancellationToken cancellationToken
+                 ) => HandleUpdateAsync(authoring, id, request, cancellationToken)
+             )
+             .WithName("UpdateItemTemplate")
+             .WithSummary("Updates an existing item template in its owning YAML file.");
+
         return endpoints;
+    }
+
+    internal static async Task<IResult> HandleCreateAsync(
+        IItemTemplateAuthoringService authoring,
+        ItemTemplateEditRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(authoring);
+        ArgumentNullException.ThrowIfNull(request);
+
+        try
+        {
+            var result = await authoring.CreateAsync(request, cancellationToken);
+
+            return TypedResults.Ok(result);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return TypedResults.BadRequest(exception.Message);
+        }
     }
 
     internal static IResult HandleDetail(
@@ -67,6 +112,29 @@ public static class ItemTemplateEndpointExtensions
         return templates.TryGet(id, out var template)
                    ? TypedResults.Ok(ItemTemplateDetail.FromDefinition(template, hues))
                    : TypedResults.NotFound();
+    }
+
+    internal static async Task<IResult> HandleUpdateAsync(
+        IItemTemplateAuthoringService authoring,
+        string id,
+        ItemTemplateEditRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(authoring);
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+        ArgumentNullException.ThrowIfNull(request);
+
+        try
+        {
+            var result = await authoring.UpdateAsync(id, request, cancellationToken);
+
+            return result is null ? TypedResults.NotFound() : TypedResults.Ok(result);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return TypedResults.BadRequest(exception.Message);
+        }
     }
 
     internal static IResult HandleList(
