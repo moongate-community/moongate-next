@@ -1,6 +1,7 @@
 using System.Net.Mail;
 using Moongate.Abstractions.Data.Secrets;
 using Moongate.Abstractions.Interfaces.Config;
+using Moongate.Plugins.Configuration;
 
 namespace Moongate.Plugin.Email.Data;
 
@@ -8,12 +9,15 @@ namespace Moongate.Plugin.Email.Data;
 public sealed class EmailPluginConfig : IValidatableConfig
 {
     /// <summary>Whether the plugin should send email.</summary>
+    [ConfigField("Enabled")]
     public bool Enabled { get; set; }
 
     /// <summary>Sender identity.</summary>
+    [ConfigSection("Sender")]
     public EmailFromConfig From { get; set; } = new();
 
     /// <summary>SMTP transport settings.</summary>
+    [ConfigSection("SMTP")]
     public SmtpConfig Smtp { get; set; } = new();
 
     /// <summary>Secret resolution settings.</summary>
@@ -26,9 +30,11 @@ public sealed class EmailPluginConfig : IValidatableConfig
     };
 
     /// <summary>Activation email settings.</summary>
+    [ConfigSection("Activation")]
     public ActivationEmailConfig Activation { get; set; } = new();
 
     /// <summary>Template loading settings.</summary>
+    [ConfigSection("Templates")]
     public EmailTemplateOptions Templates { get; set; } = new();
 
     public IEnumerable<string> Validate()

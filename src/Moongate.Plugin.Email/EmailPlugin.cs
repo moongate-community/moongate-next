@@ -74,13 +74,6 @@ public sealed class EmailPlugin : ConfigurablePlugin<EmailPluginConfig>, IMoonga
         container.AddAsyncEventHandler<UserActivationEmailHandler, UserCreatedEvent>();
     }
 
-    public override async ValueTask<PluginConfigForm> GetConfigFormAsync(CancellationToken cancellationToken = default)
-    {
-        var config = await LoadLatestConfigAsync(cancellationToken);
-
-        return BuildConfigForm(config);
-    }
-
     protected override ValueTask<EmailPluginConfig> LoadConfigAsync(CancellationToken cancellationToken)
         => LoadLatestConfigAsync(cancellationToken);
 
@@ -156,85 +149,6 @@ public sealed class EmailPlugin : ConfigurablePlugin<EmailPluginConfig>, IMoonga
 
         return config;
     }
-
-    private static PluginConfigForm BuildConfigForm(EmailPluginConfig config)
-        => new(
-            [
-                new(
-                    "general",
-                    "General",
-                    [
-                        Field("enabled", "Enabled", PluginConfigFieldTypes.Boolean, config.Enabled, false)
-                    ]
-                ),
-                new(
-                    "sender",
-                    "Sender",
-                    [
-                        Field("from.name", "From name", PluginConfigFieldTypes.Text, config.From.Name, true, defaultValue: "Moongate"),
-                        Field("from.address", "From address", PluginConfigFieldTypes.Text, config.From.Address, true)
-                    ]
-                ),
-                new(
-                    "smtp",
-                    "SMTP",
-                    [
-                        Field("smtp.host", "Host", PluginConfigFieldTypes.Text, config.Smtp.Host, true),
-                        Field("smtp.port", "Port", PluginConfigFieldTypes.Number, config.Smtp.Port, true, defaultValue: 587),
-                        Field("smtp.username", "Username", PluginConfigFieldTypes.Text, config.Smtp.Username, true),
-                        Field(
-                            "smtp.password_secret",
-                            "Password secret",
-                            PluginConfigFieldTypes.Text,
-                            config.Smtp.PasswordSecret,
-                            true,
-                            "Logical secret name resolved by the configured secret manager.",
-                            "smtp_password",
-                            true
-                        ),
-                        Field("smtp.use_ssl", "Use SSL", PluginConfigFieldTypes.Boolean, config.Smtp.UseSsl, false),
-                        Field("smtp.start_tls", "STARTTLS", PluginConfigFieldTypes.Boolean, config.Smtp.StartTls, false),
-                        Field("smtp.timeout_seconds", "Timeout seconds", PluginConfigFieldTypes.Number, config.Smtp.TimeoutSeconds, true, defaultValue: 30)
-                    ]
-                ),
-                new(
-                    "activation",
-                    "Activation",
-                    [
-                        Field("activation.template_id", "Template id", PluginConfigFieldTypes.Text, config.Activation.TemplateId, true, defaultValue: "account_activation"),
-                        Field(
-                            "activation.url_template",
-                            "Activation URL template",
-                            PluginConfigFieldTypes.TextArea,
-                            config.Activation.UrlTemplate,
-                            true,
-                            "Must contain {activation_id}."
-                        )
-                    ]
-                ),
-                new(
-                    "templates",
-                    "Templates",
-                    [
-                        Field("templates.directory", "Directory", PluginConfigFieldTypes.Text, config.Templates.Directory, true, defaultValue: "templates"),
-                        Field("templates.reload_on_change", "Reload on change", PluginConfigFieldTypes.Boolean, config.Templates.ReloadOnChange, false)
-                    ]
-                )
-            ]
-        );
-
-    private static PluginConfigField Field(
-        string path,
-        string label,
-        string type,
-        object? value,
-        bool required,
-        string? help = null,
-        object? defaultValue = null,
-        bool secretReference = false,
-        IReadOnlyList<string>? options = null
-    )
-        => new(path, label, type, required, help, options ?? [], value, defaultValue, secretReference);
 
     private static PluginConfigSaveResult Failure(string error)
         => new(false, false, [error], null);

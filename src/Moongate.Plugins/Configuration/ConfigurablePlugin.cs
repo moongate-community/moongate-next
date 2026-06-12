@@ -13,7 +13,8 @@ namespace Moongate.Plugins.Configuration;
 public abstract class ConfigurablePlugin<TConfig> : IConfigurablePlugin
     where TConfig : class
 {
-    public abstract ValueTask<PluginConfigForm> GetConfigFormAsync(CancellationToken cancellationToken = default);
+    public virtual async ValueTask<PluginConfigForm> GetConfigFormAsync(CancellationToken cancellationToken = default)
+        => ConfigFormScanner.BuildForm(await LoadConfigAsync(cancellationToken));
 
     public async ValueTask<PluginConfigSaveResult> SaveConfigAsync(
         PluginConfigSaveRequest request,
