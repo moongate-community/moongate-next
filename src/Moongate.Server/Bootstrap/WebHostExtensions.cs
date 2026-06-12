@@ -28,6 +28,9 @@ internal static class WebHostExtensions
     {
         // ASP.NET Core services (OpenAPI, Kestrel, routing, ...) register through IServiceCollection.
         builder.Services.AddEndpointsApiExplorer();
+        builder.Services.ConfigureHttpJsonOptions(
+            options => options.SerializerOptions.Converters.Add(new JsonStringEnumConverter())
+        );
         builder.Services.AddSwaggerGen(
             options =>
             {
