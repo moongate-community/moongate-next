@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { ArrowLeft, RefreshCw, Search } from "lucide-react";
+import { ArrowLeft, Boxes, RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -9,6 +9,7 @@ import type { AdminCommandTarget } from "../../../types/adminCommandTarget";
 import type { MobileTemplateDetail, MobileTemplateFilters, MobileTemplateSummary } from "../../../types/mobileTemplates";
 import { Panel } from "../Panel";
 import { MobileTemplateDetailPanel } from "./MobileTemplateDetailPanel";
+import { MobileTemplatePickerDialog } from "./MobileTemplatePickerDialog";
 import { MobileTemplateTable } from "./MobileTemplateTable";
 
 type MobileTemplateCatalogPanelProps = {
@@ -65,6 +66,7 @@ export function MobileTemplateCatalogPanel({
   const [detailLoading, setDetailLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [detailError, setDetailError] = useState<string | null>(null);
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -172,16 +174,37 @@ export function MobileTemplateCatalogPanel({
     <Panel
       title="Mobile Templates"
       action={
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => void load()}
-          className="min-h-[30px] gap-1.5 px-2.5 text-[13px] font-medium text-fg-muted hover:bg-muted hover:text-fg"
-        >
-          <RefreshCw size={14} aria-hidden />
-          Refresh
-        </Button>
+        <div className="flex items-center gap-1.5">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => setPickerOpen(true)}
+            className="min-h-[30px] gap-1.5 px-2.5 text-[13px] font-medium text-fg-muted hover:bg-muted hover:text-fg"
+          >
+            <Boxes size={14} aria-hidden />
+            Browse mobiles
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => void load()}
+            className="min-h-[30px] gap-1.5 px-2.5 text-[13px] font-medium text-fg-muted hover:bg-muted hover:text-fg"
+          >
+            <RefreshCw size={14} aria-hidden />
+            Refresh
+          </Button>
+          <MobileTemplatePickerDialog
+            open={pickerOpen}
+            onOpenChange={setPickerOpen}
+            accessToken={accessToken}
+            onSelect={(id) => {
+              setPickerOpen(false);
+              void openTemplateDetail(id);
+            }}
+          />
+        </div>
       }
     >
       <div className="grid gap-3">
