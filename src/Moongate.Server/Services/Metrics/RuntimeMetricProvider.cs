@@ -1,3 +1,4 @@
+using System.Threading;
 using Moongate.Abstractions.Data.Metrics;
 using Moongate.Abstractions.Interfaces.Metrics;
 using Moongate.Abstractions.Types.Metrics;
@@ -11,7 +12,7 @@ namespace Moongate.Server.Services.Metrics;
 public sealed class RuntimeMetricProvider : IMetricProvider
 {
     private readonly IProcessRuntimeSampler _sampler;
-    private readonly object _sync = new();
+    private readonly Lock _sync = new();
 
     private ProcessRuntimeReading? _previous;
 
@@ -25,11 +26,12 @@ public sealed class RuntimeMetricProvider : IMetricProvider
     public IReadOnlyList<MetricSample> Collect()
     {
         var current = _sampler.Read();
+        var cores = _sampler.ProcessorCount;
         double cpuPercent;
 
         lock (_sync)
         {
-            cpuPercent = ComputeCpuPercent(_previous, current, _sampler.ProcessorCount);
+            cpuPercent = ComputeCpuPercent(_previous, current, cores);
             _previous = current;
         }
 

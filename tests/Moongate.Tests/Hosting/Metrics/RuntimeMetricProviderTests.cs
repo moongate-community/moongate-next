@@ -98,6 +98,20 @@ public class RuntimeMetricProviderTests
         Assert.Equal(MetricType.Gauge, TypeOf(samples, "memory_working_set_bytes"));
     }
 
+    [Fact]
+    public void Collect_NegativeCpuDelta_ReportsZeroCpu()
+    {
+        var sampler = new FakeSampler { ProcessorCount = 1 };
+        var provider = new RuntimeMetricProvider(sampler);
+
+        sampler.Reading = Reading(cpuMs: 9000, t: 0);
+        provider.Collect();
+        sampler.Reading = Reading(cpuMs: 1000, t: 1000);
+        var samples = provider.Collect();
+
+        Assert.Equal(0, ValueOf(samples, "cpu_percent"));
+    }
+
     private static ProcessRuntimeReading Reading(double cpuMs, double t)
         => new()
         {
