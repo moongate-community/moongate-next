@@ -1,6 +1,9 @@
+using System.Globalization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Moongate.Core.Data.Directories;
 using Moongate.Core.Types;
+using Moongate.Persistence.Data;
 using Moongate.Server.Data.Mobiles;
 using Moongate.Server.Extensions.Endpoints;
 using Moongate.UO.Data.Animations;
@@ -69,6 +72,27 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
         public IReadOnlyCollection<int> GetClassifiedBodies()
             => _bodies;
     }
+
+    private sealed class FakeBodyDataStoreForList : IBodyDataStore
+    {
+        private readonly int[] _bodies;
+
+        public FakeBodyDataStoreForList(params int[] bodies)
+        {
+            _bodies = bodies;
+        }
+
+        public int Count => _bodies.Length;
+
+        public UoBodyType GetBodyType(int bodyId)
+            => Array.IndexOf(_bodies, bodyId) >= 0 ? UoBodyType.Human : UoBodyType.Empty;
+
+        public IReadOnlyCollection<int> GetClassifiedBodies()
+            => _bodies;
+    }
+
+    private static PagedResult<BodySummary> OkList(IResult result)
+        => Assert.IsType<Ok<PagedResult<BodySummary>>>(result).Value!;
 
     [Fact]
     public async Task Build_TalliesGeneratedAndSkipped()
@@ -221,4 +245,45 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
             BodyImageEndpointExtensions.GetCachePath(_directories, 400, 1003)
         );
     }
+
+    [Fact]
+    public void HandleListBodies_OrdersAscending_AndProjectsSummary()
+    {
+        var page = OkList(BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStoreForList(401, 400), null, null, null));
+
+        Assert.Equal(2, page.TotalCount);
+        Assert.Equal(400, page.Items[0].Body);
+        Assert.Equal("0x0190", page.Items[0].BodyHex);
+        Assert.Equal("Human", page.Items[0].BodyType);
+        Assert.Equal("/api/mobiles/400.png", page.Items[0].ImageUrl);
+    }
+
+    [Fact]
+    public void HandleListBodies_Pagination_Bounds()
+    {
+        var page = BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStoreForList(1, 2, 3, 4, 5), 2, 2, null);
+
+        var value = OkList(page);
+        Assert.Equal(2, value.Items.Count);
+        Assert.Equal(5, value.TotalCount);
+        Assert.Equal(3, value.TotalPages);
+        Assert.Equal(3, value.Items[0].Body); // page 2 of size 2 → items 3,4
+    }
+
+    [Fact]
+    public void HandleListBodies_SearchByDecimalId_Filters()
+        => Assert.Equal(1, OkList(BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStoreForList(400, 401), null, null, "401")).TotalCount);
+
+    [Fact]
+    public void HandleListBodies_SearchByHex_Filters()
+    {
+        var page = OkList(BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStoreForList(400, 401), null, null, "0x0190"));
+
+        Assert.Equal(1, page.TotalCount);
+        Assert.Equal(400, page.Items[0].Body);
+    }
+
+    [Fact]
+    public void HandleListBodies_PageBeyondEnd_ReturnsEmpty()
+        => Assert.Empty(OkList(BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStoreForList(1, 2), 9, 60, null)).Items);
 }
