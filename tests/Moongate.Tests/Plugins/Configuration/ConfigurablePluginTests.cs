@@ -60,6 +60,29 @@ public class ConfigurablePluginTests
         Assert.Null(plugin.Saved);
     }
 
+    [Fact]
+    public async Task GetConfigFormAsync_DefaultsToAttributeScan()
+    {
+        var plugin = new FakeFormPlugin { Existing = new FormSample { Smtp = { Port = 2525 } } };
+
+        var form = await plugin.GetConfigFormAsync();
+
+        Assert.Equal(["general", "sender", "smtp"], form.Sections.Select(section => section.Id).ToArray());
+        var port = form.Sections.SelectMany(section => section.Fields).Single(field => field.Path == "smtp.port");
+        Assert.Equal(2525, port.Value);
+    }
+
+    private sealed class FakeFormPlugin : ConfigurablePlugin<FormSample>
+    {
+        public FormSample Existing { get; set; } = new();
+
+        protected override ValueTask<FormSample> LoadConfigAsync(CancellationToken ct)
+            => ValueTask.FromResult(Existing);
+
+        protected override ValueTask<PluginConfigSaveResult> SaveTypedConfigAsync(FormSample config, CancellationToken ct)
+            => ValueTask.FromResult(new PluginConfigSaveResult(true, false, [], null));
+    }
+
     private sealed class FakePlugin : ConfigurablePlugin<Sample>
     {
         public Sample Existing { get; set; } = new();
