@@ -35,6 +35,12 @@ public sealed class ItemTemplateEndpointExtensionsTests
                 _templates[template.Id] = template;
             }
         }
+
+        public void ReplaceAll(IEnumerable<ItemTemplateDefinition> templates)
+        {
+            _templates.Clear();
+            UpsertRange(templates);
+        }
     }
 
     private sealed class FakeHueStore : IHueStore

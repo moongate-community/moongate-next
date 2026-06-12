@@ -9,12 +9,14 @@ namespace Moongate.Server.Services.Templates;
 /// </summary>
 public sealed class ItemTemplateService : IItemTemplateService
 {
-    private readonly Dictionary<string, ItemTemplateDefinition> _templates = new(StringComparer.OrdinalIgnoreCase);
+    private readonly object _gate = new();
+    private IReadOnlyDictionary<string, ItemTemplateDefinition> _templates =
+        new Dictionary<string, ItemTemplateDefinition>(StringComparer.OrdinalIgnoreCase);
 
     public int Count => _templates.Count;
 
     public void Clear()
-        => _templates.Clear();
+        => ReplaceAll([]);
 
     public IReadOnlyCollection<ItemTemplateDefinition> GetAll()
         => _templates.Values.ToArray();
@@ -26,9 +28,30 @@ public sealed class ItemTemplateService : IItemTemplateService
     {
         ArgumentNullException.ThrowIfNull(templates);
 
-        foreach (var template in templates)
+        lock (_gate)
         {
-            _templates[template.Id] = template;
+            var next = new Dictionary<string, ItemTemplateDefinition>(_templates, StringComparer.OrdinalIgnoreCase);
+
+            foreach (var template in templates)
+            {
+                next[template.Id] = template;
+            }
+
+            _templates = next;
+        }
+    }
+
+    public void ReplaceAll(IEnumerable<ItemTemplateDefinition> templates)
+    {
+        ArgumentNullException.ThrowIfNull(templates);
+
+        lock (_gate)
+        {
+            _templates = templates.ToDictionary(
+                static template => template.Id,
+                static template => template,
+                StringComparer.OrdinalIgnoreCase
+            );
         }
     }
 }

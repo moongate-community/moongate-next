@@ -30,6 +30,7 @@ public sealed class UoItemEndpointExtensionsTests
     [Theory]
     [InlineData("crate", "wooden crate")]
     [InlineData("1", "wooden crate")]
+    [InlineData("0x0001", "wooden crate")]
     [InlineData("0x001", "wooden crate")]
     [InlineData("0x1", "wooden crate")]
     [InlineData("wearable", "longsword")]
@@ -86,9 +87,9 @@ public sealed class UoItemEndpointExtensionsTests
 
         var ok = Assert.IsType<Ok<UoItemDetail>>(result);
         Assert.Equal(1, ok.Value!.ItemId);
-        Assert.Equal("0x001", ok.Value.ItemIdHex);
+        Assert.Equal("0x0001", ok.Value.ItemIdHex);
         Assert.Equal("wooden crate", ok.Value.Name);
-        Assert.Equal("/api/items/0x001.png", ok.Value.ImageUrl);
+        Assert.Equal("/api/items/0x0001.png", ok.Value.ImageUrl);
         Assert.True(ok.Value.Container);
         Assert.True(ok.Value.Surface);
         Assert.Equal((ulong)(UoTileFlag.Container | UoTileFlag.Surface), ok.Value.RawFlags);

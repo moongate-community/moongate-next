@@ -215,6 +215,55 @@ public sealed class ItemTemplateAuthoringServiceTests
     }
 
     [Fact]
+    public async Task UpdateAsync_LootReferencedTemplateBecomingAbstract_DoesNotModifyRealFile()
+    {
+        using var dir = new TempTemplateDirectory();
+        var context = NewContext(dir);
+        var sourcePath = WriteItemTemplates(
+            context.ItemsPath,
+            "loot_items.yaml",
+            """
+            item_templates:
+                - id: crate
+                  name: Loot Crate
+                  item_id: 3647
+            """
+        );
+        context.ReloadTemplates();
+        context.RegistryStore.SetRegistry(
+            new LootTableRegistry(
+                [
+                    new()
+                    {
+                        Id = "crate_loot",
+                        Content = [new() { Item = "crate" }]
+                    }
+                ],
+                context.Templates.GetAll()
+            )
+        );
+        var before = File.ReadAllText(sourcePath);
+
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => context.Service.UpdateAsync(
+                "crate",
+                new()
+                {
+                    Id = "crate",
+                    Name = "Loot Crate",
+                    ItemId = 0x0E3F,
+                    IsAbstract = true
+                }
+            ).AsTask()
+        );
+
+        Assert.Contains("abstract", exception.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal(before, File.ReadAllText(sourcePath));
+        Assert.True(context.Templates.TryGet("crate", out var template));
+        Assert.False(template.IsAbstract);
+    }
+
+    [Fact]
     public async Task CreateAsync_ConcurrentCreates_PreservesAllManagedTemplates()
     {
         using var dir = new TempTemplateDirectory();
@@ -382,7 +431,7 @@ public sealed class ItemTemplateAuthoringServiceTests
             new FakeItemService(containerItemIds ?? [0x0E3F])
         );
 
-        return new(itemsPath, tileData, templates, service);
+        return new(itemsPath, tileData, templates, registryStore, service);
     }
 
     private static LootTableRegistry Registry(string id, IEnumerable<ItemTemplateDefinition> templates)
@@ -391,7 +440,7 @@ public sealed class ItemTemplateAuthoringServiceTests
                 new()
                 {
                     Id = id,
-                    Content = [new() { Item = "gold_coin" }]
+                    Content = []
                 }
             ],
             templates
@@ -416,13 +465,13 @@ public sealed class ItemTemplateAuthoringServiceTests
         string ItemsPath,
         TestTileDataStore TileData,
         ItemTemplateService Templates,
+        LootTableRegistryStore RegistryStore,
         ItemTemplateAuthoringService Service
     )
     {
         public void ReloadTemplates()
         {
-            Templates.Clear();
-            Templates.UpsertRange(new ItemTemplateYamlLoader(ItemsPath, TileData).LoadAll());
+            Templates.ReplaceAll(new ItemTemplateYamlLoader(ItemsPath, TileData).LoadAll());
         }
     }
 

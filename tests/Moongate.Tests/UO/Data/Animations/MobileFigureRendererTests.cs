@@ -78,6 +78,12 @@ public sealed class MobileFigureRendererTests
         {
             foreach (var t in templates) { _map[t.Id] = t; }
         }
+
+        public void ReplaceAll(IEnumerable<Moongate.UO.Data.Templates.Items.ItemTemplateDefinition> templates)
+        {
+            _map.Clear();
+            UpsertRange(templates);
+        }
     }
 
     private static EquipConvTable EmptyEquipConv()

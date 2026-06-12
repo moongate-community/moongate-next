@@ -130,8 +130,7 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
             _documents.Upsert(sourceFile, template);
 
             var reloaded = new ItemTemplateYamlLoader(_itemsDirectory, _tileData).LoadAll();
-            _templates.Clear();
-            _templates.UpsertRange(reloaded);
+            _templates.ReplaceAll(reloaded);
 
             var savedTemplate = reloaded.Single(
                 item => string.Equals(item.Id, template.Id, StringComparison.OrdinalIgnoreCase)
@@ -150,12 +149,16 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
 
     private void ValidateCandidateContents(IReadOnlyList<ItemTemplateDefinition> templates)
     {
+        var lootRegistry = _lootRegistryStore.Registry;
+        var candidateTemplateService = new ItemTemplateService();
+        candidateTemplateService.ReplaceAll(templates);
+        LootTableValidator.Validate(lootRegistry.GetAll(), candidateTemplateService);
+
         if (!templates.Any(static template => template.Contents is not null))
         {
             return;
         }
 
-        var lootRegistry = _lootRegistryStore.Registry;
         var candidateRegistry = new LootTableRegistry(lootRegistry.GetAll(), templates);
         ItemTemplateContentsValidator.Validate(templates, candidateRegistry, _items);
     }

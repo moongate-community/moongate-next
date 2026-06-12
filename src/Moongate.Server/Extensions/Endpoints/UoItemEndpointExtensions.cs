@@ -137,6 +137,7 @@ public static class UoItemEndpointExtensions
     {
         yield return item.ItemId.ToString(CultureInfo.InvariantCulture);
         yield return FormatItemId(item.ItemId);
+        yield return $"0x{item.ItemId:X3}";
         yield return $"0x{item.ItemId:X}";
         yield return item.Item.Name;
 
@@ -153,7 +154,7 @@ public static class UoItemEndpointExtensions
                .ToArray();
 
     private static string FormatItemId(int itemId)
-        => $"0x{itemId.ToString("X3", CultureInfo.InvariantCulture)}";
+        => $"0x{itemId.ToString("X4", CultureInfo.InvariantCulture)}";
 
     private static string FormatImageUrl(int itemId)
         => $"/api/items/{FormatItemId(itemId)}.png";
