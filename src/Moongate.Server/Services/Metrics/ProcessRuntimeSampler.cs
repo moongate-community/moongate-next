@@ -18,6 +18,8 @@ public sealed class ProcessRuntimeSampler : IProcessRuntimeSampler
 
     public ProcessRuntimeReading Read()
     {
+        var timestamp = DateTimeOffset.UtcNow;
+
         try
         {
             using var process = Process.GetCurrentProcess();
@@ -33,14 +35,14 @@ public sealed class ProcessRuntimeSampler : IProcessRuntimeSampler
                 Gen0Collections = GC.CollectionCount(0),
                 Gen1Collections = GC.CollectionCount(1),
                 Gen2Collections = GC.CollectionCount(2),
-                Timestamp = DateTimeOffset.UtcNow
+                Timestamp = timestamp
             };
         }
         catch (Exception ex)
         {
             _logger.Warning(ex, "ProcessRuntimeSampler failed to read; returning empty reading");
 
-            return new ProcessRuntimeReading { Timestamp = DateTimeOffset.UtcNow };
+            return new ProcessRuntimeReading { Timestamp = timestamp };
         }
     }
 }

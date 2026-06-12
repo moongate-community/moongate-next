@@ -17,7 +17,9 @@ public class ProcessRuntimeSamplerTests
         Assert.True(reading.GcHeapSizeBytes >= 0);
         Assert.True(reading.AllocatedBytesTotal >= 0);
         Assert.True(reading.Gen0Collections >= 0);
+        Assert.True(reading.Gen1Collections >= 0);
+        Assert.True(reading.Gen2Collections >= 0);
         Assert.True(reading.TotalProcessorTime >= TimeSpan.Zero);
-        Assert.NotEqual(default, reading.Timestamp);
+        Assert.True(reading.Timestamp > DateTimeOffset.UtcNow.AddSeconds(-5));
     }
 }
