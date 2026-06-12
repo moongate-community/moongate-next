@@ -38,6 +38,8 @@ using Moongate.Server.Services.LiveConsole;
 using Moongate.Server.Services.Logging;
 using Moongate.Server.Services.Network;
 using Moongate.Server.Services.Timing;
+using Moongate.Abstractions.Interfaces.Metrics;
+using Moongate.Server.Services.Metrics;
 using Serilog;
 
 namespace Moongate.Server.Bootstrap;
@@ -168,6 +170,11 @@ internal static class BootstrapRegistrationExtensions
         container.AddMetricProvider<EventBusService>();
         container.AddMetricProvider<GameLoopService>();
         container.AddMetricProvider<TimerWheelService>();
+
+        // Runtime process metrics (CPU / memory / GC).
+        container.Register<IProcessRuntimeSampler, ProcessRuntimeSampler>(Reuse.Singleton);
+        container.Register<RuntimeMetricProvider>(Reuse.Singleton);
+        container.AddMetricProvider<RuntimeMetricProvider>();
 
         // Core server identity config (the "server" section).
         container.AddMoongateServerConfig();
