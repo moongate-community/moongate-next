@@ -1,10 +1,9 @@
-using System.Globalization;
-using System.Text.Json;
 using DryIoc;
 using Moongate.Abstractions.Configuration;
 using Moongate.Abstractions.Extensions.DryIoc;
 using Moongate.Abstractions.Interfaces.Services;
 using Moongate.Abstractions.Services.Secrets;
+using Moongate.Plugins.Configuration;
 using Moongate.Plugins.Data;
 using Moongate.Plugins.Interfaces.Plugins;
 using Moongate.Plugin.Email.Data;
@@ -16,7 +15,7 @@ using Serilog;
 namespace Moongate.Plugin.Email;
 
 /// <summary>Moongate email delivery plugin.</summary>
-public sealed class EmailPlugin : IMoongatePlugin, IConfigurablePlugin, ITestablePlugin
+public sealed class EmailPlugin : ConfigurablePlugin<EmailPluginConfig>, IMoongatePlugin, ITestablePlugin
 {
     private const string BooleanField = "boolean";
     private const string NumberField = "number";
@@ -80,20 +79,21 @@ public sealed class EmailPlugin : IMoongatePlugin, IConfigurablePlugin, ITestabl
         container.AddAsyncEventHandler<UserActivationEmailHandler, UserCreatedEvent>();
     }
 
-    public async ValueTask<PluginConfigForm> GetConfigFormAsync(CancellationToken cancellationToken = default)
+    public override async ValueTask<PluginConfigForm> GetConfigFormAsync(CancellationToken cancellationToken = default)
     {
         var config = await LoadLatestConfigAsync(cancellationToken);
 
         return BuildConfigForm(config);
     }
 
-    public async ValueTask<PluginConfigSaveResult> SaveConfigAsync(
-        PluginConfigSaveRequest request,
-        CancellationToken cancellationToken = default
+    protected override ValueTask<EmailPluginConfig> LoadConfigAsync(CancellationToken cancellationToken)
+        => LoadLatestConfigAsync(cancellationToken);
+
+    protected override async ValueTask<PluginConfigSaveResult> SaveTypedConfigAsync(
+        EmailPluginConfig config,
+        CancellationToken cancellationToken
     )
     {
-        ArgumentNullException.ThrowIfNull(request);
-
         var configPath = GetConfigPath();
 
         if (configPath is null)
@@ -101,15 +101,7 @@ public sealed class EmailPlugin : IMoongatePlugin, IConfigurablePlugin, ITestabl
             return Failure("Email plugin has not been configured.");
         }
 
-        if (request.Values is null)
-        {
-            return Failure("Config values are required.");
-        }
-
-        var config = await LoadLatestConfigAsync(cancellationToken);
-        var errors = ApplyConfigValues(config, request.Values);
-
-        errors.AddRange(config.Validate());
+        var errors = config.Validate().ToList();
 
         if (errors.Count > 0)
         {
@@ -168,95 +160,6 @@ public sealed class EmailPlugin : IMoongatePlugin, IConfigurablePlugin, ITestabl
         }
 
         return config;
-    }
-
-    private static List<string> ApplyConfigValues(
-        EmailPluginConfig config,
-        IReadOnlyDictionary<string, object?> values
-    )
-    {
-        var errors = new List<string>();
-
-        foreach (var (path, value) in values)
-        {
-            switch (path)
-            {
-                case "enabled":
-                    ApplyBool(value, path, errors, result => config.Enabled = result);
-                    break;
-                case "from.name":
-                    config.From.Name = ReadString(value);
-                    break;
-                case "from.address":
-                    config.From.Address = ReadString(value);
-                    break;
-                case "smtp.host":
-                    config.Smtp.Host = ReadString(value);
-                    break;
-                case "smtp.port":
-                    ApplyInt(value, path, errors, result => config.Smtp.Port = result);
-                    break;
-                case "smtp.username":
-                    config.Smtp.Username = ReadString(value);
-                    break;
-                case "smtp.password_secret":
-                    config.Smtp.PasswordSecret = ReadString(value);
-                    break;
-                case "smtp.use_ssl":
-                    ApplyBool(value, path, errors, result => config.Smtp.UseSsl = result);
-                    break;
-                case "smtp.start_tls":
-                    ApplyBool(value, path, errors, result => config.Smtp.StartTls = result);
-                    break;
-                case "smtp.timeout_seconds":
-                    ApplyInt(value, path, errors, result => config.Smtp.TimeoutSeconds = result);
-                    break;
-                case "secrets.environment.prefix":
-                    config.Secrets.Environment.Prefix = ReadString(value);
-                    break;
-                case "activation.template_id":
-                    config.Activation.TemplateId = ReadString(value);
-                    break;
-                case "activation.url_template":
-                    config.Activation.UrlTemplate = ReadString(value);
-                    break;
-                case "templates.directory":
-                    config.Templates.Directory = ReadString(value);
-                    break;
-                case "templates.reload_on_change":
-                    ApplyBool(value, path, errors, result => config.Templates.ReloadOnChange = result);
-                    break;
-                default:
-                    errors.Add($"Unsupported config field '{path}'.");
-                    break;
-            }
-        }
-
-        return errors;
-    }
-
-    private static void ApplyBool(object? value, string path, List<string> errors, Action<bool> apply)
-    {
-        if (TryReadBool(value, out var result))
-        {
-            apply(result);
-
-            return;
-        }
-
-        errors.Add($"Field '{path}' must be a boolean value.");
-    }
-
-    private static void ApplyInt(object? value, string path, List<string> errors, Action<int> apply)
-    {
-        if (TryReadInt(value, out var result))
-        {
-            apply(result);
-
-            return;
-        }
-
-        errors.Add($"Field '{path}' must be a number value.");
     }
 
     private static PluginConfigForm BuildConfigForm(EmailPluginConfig config)
@@ -340,71 +243,6 @@ public sealed class EmailPlugin : IMoongatePlugin, IConfigurablePlugin, ITestabl
 
     private static PluginConfigSaveResult Failure(string error)
         => new(false, false, [error], null);
-
-    private static string ReadString(object? value)
-    {
-        if (value is null)
-        {
-            return "";
-        }
-
-        if (value is JsonElement element)
-        {
-            return element.ValueKind switch
-            {
-                JsonValueKind.Null => "",
-                JsonValueKind.String => element.GetString() ?? "",
-                JsonValueKind.True => "true",
-                JsonValueKind.False => "false",
-                _ => element.ToString()
-            };
-        }
-
-        return Convert.ToString(value, CultureInfo.InvariantCulture) ?? "";
-    }
-
-    private static bool TryReadBool(object? value, out bool result)
-    {
-        if (value is bool boolValue)
-        {
-            result = boolValue;
-
-            return true;
-        }
-
-        if (value is JsonElement { ValueKind: JsonValueKind.True })
-        {
-            result = true;
-
-            return true;
-        }
-
-        if (value is JsonElement { ValueKind: JsonValueKind.False })
-        {
-            result = false;
-
-            return true;
-        }
-
-        return bool.TryParse(ReadString(value), out result);
-    }
-
-    private static bool TryReadInt(object? value, out int result)
-    {
-        if (value is int intValue)
-        {
-            result = intValue;
-
-            return true;
-        }
-
-        if (value is JsonElement element && element.ValueKind == JsonValueKind.Number)
-        {
-            return element.TryGetInt32(out result);
-        }
-
-        return int.TryParse(ReadString(value), NumberStyles.Integer, CultureInfo.InvariantCulture, out result);
-    }
 
     private string? GetConfigPath()
         => _paths is null ? null : Path.Combine(_paths.PluginDirectory, PluginContext.PluginConfigFileName);
