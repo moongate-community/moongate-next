@@ -1,4 +1,5 @@
 using Moongate.UO.Data.Types.Items;
+using YamlDotNet.Serialization;
 
 namespace Moongate.UO.Data.Templates.Items;
 
@@ -8,6 +9,7 @@ public sealed class ItemTemplateValueDefinition
 
     public int? Sell { get; set; }
 
+    [YamlIgnore]
     public int BaseSell => Sell ?? Buy / 2;
 
     public ItemTemplateValueDefinition Clone()

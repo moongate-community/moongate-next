@@ -1,12 +1,18 @@
+using Moongate.Core.Geometry;
 using Moongate.Core.Yaml;
 using Moongate.Core.Data.Directories;
 using Moongate.Core.Types;
 using Moongate.Server.Data.Templates;
+using Moongate.Server.Services.Loot;
 using Moongate.Server.Services.Templates;
 using Moongate.Tests.Support;
 using Moongate.UO.Data.Data.Hues;
+using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Interfaces.Hues;
+using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Templates.Items;
+using Moongate.UO.Data.Templates.Loot;
+using Serial = Moongate.Core.Ids.Serial;
 
 namespace Moongate.Tests.Server.Templates;
 
@@ -104,6 +110,32 @@ public sealed class ItemTemplateAuthoringServiceTests
     }
 
     [Fact]
+    public void Upsert_DoesNotSerializeCalculatedBaseSell()
+    {
+        using var dir = new TempTemplateDirectory();
+        var store = new ItemTemplateYamlDocumentStore(dir.Path);
+        var source = store.ResolveSourceFile("priced_item");
+
+        store.Upsert(
+            source,
+            new ItemTemplateDefinition
+            {
+                Id = "priced_item",
+                Name = "Priced Item",
+                ItemId = 0x0E3F,
+                Value = new()
+                {
+                    Buy = 100,
+                    Sell = 40
+                }
+            }
+        );
+
+        var yaml = File.ReadAllText(source);
+        Assert.DoesNotContain("base_sell", yaml, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task CreateAsync_WritesManagedYamlAndRefreshesRegistry()
     {
         using var dir = new TempTemplateDirectory();
@@ -126,6 +158,90 @@ public sealed class ItemTemplateAuthoringServiceTests
         Assert.True(context.Templates.TryGet("web_crate", out var template));
         Assert.Equal("Web Crate", template.Name);
         Assert.Equal(["container", "storage"], template.Tags);
+    }
+
+    [Fact]
+    public async Task CreateAsync_UnknownContentsLootTemplate_DoesNotModifyManagedFile()
+    {
+        using var dir = new TempTemplateDirectory();
+        var context = NewContext(dir);
+        var source = System.IO.Path.Combine(context.ItemsPath, "_web.yaml");
+
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => context.Service.CreateAsync(
+                new()
+                {
+                    Id = "broken_chest",
+                    Name = "Broken Chest",
+                    ItemId = 0x0E3F,
+                    Contents = new()
+                    {
+                        LootTemplate = "missing",
+                        RefillEvery = TimeSpan.FromHours(6)
+                    }
+                }
+            ).AsTask()
+        );
+
+        Assert.Contains("missing", exception.Message);
+        Assert.False(File.Exists(source));
+        Assert.False(context.Templates.TryGet("broken_chest", out _));
+    }
+
+    [Fact]
+    public async Task CreateAsync_NonContainerContents_ThrowsInvalidOperationException()
+    {
+        using var dir = new TempTemplateDirectory();
+        var context = NewContext(dir, containerItemIds: []);
+
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => context.Service.CreateAsync(
+                new()
+                {
+                    Id = "bad_sword_chest",
+                    Name = "Bad Sword Chest",
+                    ItemId = 0x0F61,
+                    Contents = new()
+                    {
+                        LootTemplate = "common",
+                        RefillEvery = TimeSpan.FromHours(6)
+                    }
+                }
+            ).AsTask()
+        );
+
+        Assert.Contains("container", exception.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.False(context.Templates.TryGet("bad_sword_chest", out _));
+    }
+
+    [Fact]
+    public async Task CreateAsync_ConcurrentCreates_PreservesAllManagedTemplates()
+    {
+        using var dir = new TempTemplateDirectory();
+        var context = NewContext(dir);
+        var requests = Enumerable.Range(0, 24)
+                                 .Select(
+                                     index => new ItemTemplateEditRequest
+                                     {
+                                         Id = $"web_item_{index:D2}",
+                                         Name = $"Web Item {index:D2}",
+                                         ItemId = 0x0E3F
+                                     }
+                                 )
+                                 .ToArray();
+
+        await Task.WhenAll(
+            requests.Select(
+                request => Task.Run(async () => await context.Service.CreateAsync(request))
+            )
+        );
+
+        var table = YamlUtils.DeserializeFromFile<ItemTemplateTable>(
+            System.IO.Path.Combine(context.ItemsPath, "_web.yaml")
+        );
+
+        Assert.Equal(requests.Length, table.ItemTemplates.Count);
+        Assert.All(requests, request => Assert.Contains(table.ItemTemplates, template => template.Id == request.Id));
     }
 
     [Fact]
@@ -249,21 +365,37 @@ public sealed class ItemTemplateAuthoringServiceTests
         Assert.Equal("Original Crate", template.Name);
     }
 
-    private static AuthoringContext NewContext(TempTemplateDirectory dir)
+    private static AuthoringContext NewContext(TempTemplateDirectory dir, int[]? containerItemIds = null)
     {
         var directories = new DirectoriesConfig(dir.Path, DirectoryType.Templates_Items);
         var itemsPath = directories[DirectoryType.Templates_Items];
-        var tileData = new TestTileDataStore((0x0E3F, "Tile Crate"), (3821, "Gold Coin"));
+        var tileData = new TestTileDataStore((0x0E3F, "Tile Crate"), (0x0F61, "Longsword"), (3821, "Gold Coin"));
         var templates = new ItemTemplateService();
+        var registryStore = new LootTableRegistryStore();
+        registryStore.SetRegistry(Registry("common", templates.GetAll()));
         var service = new ItemTemplateAuthoringService(
             directories,
             tileData,
             templates,
-            new FakeHueStore()
+            new FakeHueStore(),
+            registryStore,
+            new FakeItemService(containerItemIds ?? [0x0E3F])
         );
 
         return new(itemsPath, tileData, templates, service);
     }
+
+    private static LootTableRegistry Registry(string id, IEnumerable<ItemTemplateDefinition> templates)
+        => new(
+            [
+                new()
+                {
+                    Id = id,
+                    Content = [new() { Item = "gold_coin" }]
+                }
+            ],
+            templates
+        );
 
     private static string WriteItemTemplates(string itemsPath, string fileName, string yaml)
     {
@@ -302,5 +434,57 @@ public sealed class ItemTemplateAuthoringServiceTests
 
         public Hue? GetHue(int index)
             => null;
+    }
+
+    private sealed class FakeItemService : IItemService
+    {
+        private readonly HashSet<int> _containerItemIds;
+
+        public FakeItemService(params int[] containerItemIds)
+        {
+            _containerItemIds = [.. containerItemIds];
+        }
+
+        public ValueTask<bool> AddItemAsync(
+            ItemEntity container,
+            ItemEntity child,
+            Point2D position,
+            CancellationToken cancellationToken = default
+        )
+            => throw new NotSupportedException();
+
+        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
+            => throw new NotSupportedException();
+
+        public ValueTask<ItemEntity> CreateAsync(ItemEntity item, CancellationToken cancellationToken = default)
+            => throw new NotSupportedException();
+
+        public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
+            => throw new NotSupportedException();
+
+        public ValueTask<ItemEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
+            => throw new NotSupportedException();
+
+        public bool IsContainer(ItemEntity item)
+            => IsContainer(item.ItemId);
+
+        public bool IsContainer(int itemId)
+            => _containerItemIds.Contains(itemId);
+
+        public bool IsDoor(ItemEntity item)
+            => throw new NotSupportedException();
+
+        public bool IsDoor(int itemId)
+            => throw new NotSupportedException();
+
+        public ValueTask<bool> RemoveItemAsync(
+            ItemEntity container,
+            Serial itemId,
+            CancellationToken cancellationToken = default
+        )
+            => throw new NotSupportedException();
+
+        public ValueTask<int> TotalWeightAsync(ItemEntity item, CancellationToken cancellationToken = default)
+            => throw new NotSupportedException();
     }
 }

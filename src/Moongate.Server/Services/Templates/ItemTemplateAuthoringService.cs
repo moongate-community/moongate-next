@@ -2,6 +2,7 @@ using Moongate.Core.Data.Directories;
 using Moongate.Core.Types;
 using Moongate.Server.Data.Templates;
 using Moongate.Server.Interfaces.Services.Templates;
+using Moongate.Server.Services.Loot;
 using Moongate.UO.Data.Interfaces.Hues;
 using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Interfaces.Tiles;
@@ -13,7 +14,10 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
 {
     private readonly ItemTemplateYamlDocumentStore _documents;
     private readonly IHueStore _hues;
+    private readonly IItemService _items;
     private readonly string _itemsDirectory;
+    private readonly LootTableRegistryStore _lootRegistryStore;
+    private readonly object _saveGate = new();
     private readonly IItemTemplateService _templates;
     private readonly ITileDataStore _tileData;
 
@@ -21,19 +25,25 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
         DirectoriesConfig directories,
         ITileDataStore tileData,
         IItemTemplateService templates,
-        IHueStore hues
+        IHueStore hues,
+        LootTableRegistryStore lootRegistryStore,
+        IItemService items
     )
     {
         ArgumentNullException.ThrowIfNull(directories);
         ArgumentNullException.ThrowIfNull(tileData);
         ArgumentNullException.ThrowIfNull(templates);
         ArgumentNullException.ThrowIfNull(hues);
+        ArgumentNullException.ThrowIfNull(lootRegistryStore);
+        ArgumentNullException.ThrowIfNull(items);
 
         _itemsDirectory = directories[DirectoryType.Templates_Items];
         _documents = new(_itemsDirectory);
         _tileData = tileData;
         _templates = templates;
         _hues = hues;
+        _lootRegistryStore = lootRegistryStore;
+        _items = items;
     }
 
     public ValueTask<ItemTemplateSaveResult> CreateAsync(
@@ -46,14 +56,17 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
 
         var template = ToDefinition(request);
 
-        if (TemplateExists(template.Id))
+        lock (_saveGate)
         {
-            throw new InvalidOperationException($"Item template '{template.Id}' already exists.");
+            if (TemplateExists(template.Id))
+            {
+                throw new InvalidOperationException($"Item template '{template.Id}' already exists.");
+            }
+
+            var sourceFile = Path.Combine(_itemsDirectory, ItemTemplateYamlDocumentStore.ManagedFileName);
+
+            return ValueTask.FromResult(Save(template, sourceFile, cancellationToken));
         }
-
-        var sourceFile = Path.Combine(_itemsDirectory, ItemTemplateYamlDocumentStore.ManagedFileName);
-
-        return ValueTask.FromResult(Save(template, sourceFile, cancellationToken));
     }
 
     public ValueTask<ItemTemplateSaveResult?> UpdateAsync(
@@ -73,14 +86,17 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
             throw new InvalidOperationException("Route id must match the request id.");
         }
 
-        if (!_templates.TryGet(id, out _))
+        lock (_saveGate)
         {
-            return ValueTask.FromResult<ItemTemplateSaveResult?>(null);
+            if (!_templates.TryGet(id, out _))
+            {
+                return ValueTask.FromResult<ItemTemplateSaveResult?>(null);
+            }
+
+            var sourceFile = _documents.ResolveSourceFile(template.Id);
+
+            return ValueTask.FromResult<ItemTemplateSaveResult?>(Save(template, sourceFile, cancellationToken));
         }
-
-        var sourceFile = _documents.ResolveSourceFile(template.Id);
-
-        return ValueTask.FromResult<ItemTemplateSaveResult?>(Save(template, sourceFile, cancellationToken));
     }
 
     private ItemTemplateSaveResult Save(
@@ -107,7 +123,8 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
             tempDocuments.Upsert(tempSourceFile, template);
 
             cancellationToken.ThrowIfCancellationRequested();
-            _ = new ItemTemplateYamlLoader(tempDirectory, _tileData).LoadAll();
+            var candidateTemplates = new ItemTemplateYamlLoader(tempDirectory, _tileData).LoadAll();
+            ValidateCandidateContents(candidateTemplates);
 
             cancellationToken.ThrowIfCancellationRequested();
             _documents.Upsert(sourceFile, template);
@@ -129,6 +146,18 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
                 Directory.Delete(tempDirectory, true);
             }
         }
+    }
+
+    private void ValidateCandidateContents(IReadOnlyList<ItemTemplateDefinition> templates)
+    {
+        if (!templates.Any(static template => template.Contents is not null))
+        {
+            return;
+        }
+
+        var lootRegistry = _lootRegistryStore.Registry;
+        var candidateRegistry = new LootTableRegistry(lootRegistry.GetAll(), templates);
+        ItemTemplateContentsValidator.Validate(templates, candidateRegistry, _items);
     }
 
     private bool TemplateExists(string id)
