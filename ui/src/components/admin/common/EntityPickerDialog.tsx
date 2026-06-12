@@ -81,7 +81,7 @@ export function EntityPickerDialog<T>({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex max-h-[80vh] w-[60vw] max-w-[60vw] flex-col gap-3 bg-surface sm:max-w-[60vw]">
+      <DialogContent className="flex h-[80vh] w-[60vw] max-w-[60vw] flex-col gap-3 bg-surface sm:max-w-[60vw]">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
