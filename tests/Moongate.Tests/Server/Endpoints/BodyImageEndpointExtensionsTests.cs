@@ -1,4 +1,3 @@
-using System.Globalization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Moongate.Core.Data.Directories;
@@ -58,34 +57,18 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
     private sealed class FakeBodyDataStore : IBodyDataStore
     {
         private readonly int[] _bodies;
+        private readonly UoBodyType _bodyType;
 
-        public FakeBodyDataStore(params int[] bodies)
+        public FakeBodyDataStore(UoBodyType bodyType, params int[] bodies)
         {
+            _bodyType = bodyType;
             _bodies = bodies;
         }
 
         public int Count => _bodies.Length;
 
         public UoBodyType GetBodyType(int bodyId)
-            => _bodies.Contains(bodyId) ? UoBodyType.Monster : UoBodyType.Empty;
-
-        public IReadOnlyCollection<int> GetClassifiedBodies()
-            => _bodies;
-    }
-
-    private sealed class FakeBodyDataStoreForList : IBodyDataStore
-    {
-        private readonly int[] _bodies;
-
-        public FakeBodyDataStoreForList(params int[] bodies)
-        {
-            _bodies = bodies;
-        }
-
-        public int Count => _bodies.Length;
-
-        public UoBodyType GetBodyType(int bodyId)
-            => Array.IndexOf(_bodies, bodyId) >= 0 ? UoBodyType.Human : UoBodyType.Empty;
+            => Array.IndexOf(_bodies, bodyId) >= 0 ? _bodyType : UoBodyType.Empty;
 
         public IReadOnlyCollection<int> GetClassifiedBodies()
             => _bodies;
@@ -99,7 +82,7 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
     {
         var result = await BodyImageEndpointExtensions.HandleBuildBodyImagesAsync(
                          new FakeAnimationService([400]),
-                         new FakeBodyDataStore(400, 401),
+                         new FakeBodyDataStore(UoBodyType.Monster, 400, 401),
                          _directories,
                          CancellationToken.None
                      );
@@ -249,7 +232,7 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
     [Fact]
     public void HandleListBodies_OrdersAscending_AndProjectsSummary()
     {
-        var page = OkList(BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStoreForList(401, 400), null, null, null));
+        var page = OkList(BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStore(UoBodyType.Human,401, 400), null, null, null));
 
         Assert.Equal(2, page.TotalCount);
         Assert.Equal(400, page.Items[0].Body);
@@ -261,7 +244,7 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
     [Fact]
     public void HandleListBodies_Pagination_Bounds()
     {
-        var page = BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStoreForList(1, 2, 3, 4, 5), 2, 2, null);
+        var page = BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStore(UoBodyType.Human,1, 2, 3, 4, 5), 2, 2, null);
 
         var value = OkList(page);
         Assert.Equal(2, value.Items.Count);
@@ -272,12 +255,12 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
 
     [Fact]
     public void HandleListBodies_SearchByDecimalId_Filters()
-        => Assert.Equal(1, OkList(BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStoreForList(400, 401), null, null, "401")).TotalCount);
+        => Assert.Equal(1, OkList(BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStore(UoBodyType.Human,400, 401), null, null, "401")).TotalCount);
 
     [Fact]
     public void HandleListBodies_SearchByHex_Filters()
     {
-        var page = OkList(BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStoreForList(400, 401), null, null, "0x0190"));
+        var page = OkList(BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStore(UoBodyType.Human,400, 401), null, null, "0x0190"));
 
         Assert.Equal(1, page.TotalCount);
         Assert.Equal(400, page.Items[0].Body);
@@ -285,5 +268,5 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
 
     [Fact]
     public void HandleListBodies_PageBeyondEnd_ReturnsEmpty()
-        => Assert.Empty(OkList(BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStoreForList(1, 2), 9, 60, null)).Items);
+        => Assert.Empty(OkList(BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStore(UoBodyType.Human,1, 2), 9, 60, null)).Items);
 }
