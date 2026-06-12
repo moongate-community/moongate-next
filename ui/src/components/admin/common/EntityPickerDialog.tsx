@@ -12,8 +12,9 @@ type EntityPickerDialogProps<T> = {
   onSelect: (item: T) => void;
   loadPage: (page: number, search: string) => Promise<PagedResult<T>>;
   getKey: (item: T) => string;
-  getImageUrl: (item: T) => string;
+  getImageUrl?: (item: T) => string;
   getLabel: (item: T) => string;
+  renderTile?: (item: T) => ReactNode;
   renderTooltip?: (item: T) => ReactNode;
   filters?: ReactNode;
   title?: string;
@@ -30,6 +31,7 @@ export function EntityPickerDialog<T>({
   getKey,
   getImageUrl,
   getLabel,
+  renderTile,
   renderTooltip,
   filters,
   title = "Select",
@@ -127,7 +129,9 @@ export function EntityPickerDialog<T>({
                     className="grid w-full cursor-pointer gap-1 rounded-md border border-border bg-muted p-2 text-center transition-colors hover:border-fg-subtle hover:bg-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fg-subtle"
                   >
                     <div className="grid h-12 place-items-center">
-                      {getImageUrl(item) ? (
+                      {renderTile ? (
+                        renderTile(item)
+                      ) : getImageUrl?.(item) ? (
                         <img
                           src={getImageUrl(item)}
                           alt=""

@@ -22,6 +22,7 @@ import { notorietyColor } from "../../../lib/notorietyColors";
 import { ItemTemplatePickerDialog } from "../itemTemplates/ItemTemplatePickerDialog";
 import { MobileTemplatePickerDialog } from "./MobileTemplatePickerDialog";
 import { BodyPickerDialog } from "./BodyPickerDialog";
+import { HuePickerDialog } from "./HuePickerDialog";
 
 type MobileTemplateFormProps = {
   accessToken: string;
@@ -38,6 +39,7 @@ export function MobileTemplateForm({ accessToken, mode, template, onCancel, onSa
   const [baseMobilePickerOpen, setBaseMobilePickerOpen] = useState(false);
   const [equipmentPickerOpen, setEquipmentPickerOpen] = useState(false);
   const [bodyPickerOpen, setBodyPickerOpen] = useState(false);
+  const [huePickerField, setHuePickerField] = useState<"skinHue" | "hairHue" | "facialHairHue" | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -564,20 +566,44 @@ export function MobileTemplateForm({ accessToken, mode, template, onCancel, onSa
                 />
               </Field>
               <Field label="Skin hue" htmlFor="mobile-template-skin-hue">
-                <Input
-                  id="mobile-template-skin-hue"
-                  value={state.skinHue}
-                  onChange={(event) => update("skinHue", event.target.value)}
-                  className="h-9 bg-bg font-mono text-[13px]"
-                />
+                <div className="flex items-center gap-2">
+                  <Input
+                    id="mobile-template-skin-hue"
+                    value={state.skinHue}
+                    onChange={(event) => update("skinHue", event.target.value)}
+                    className="h-9 flex-1 bg-bg font-mono text-[13px]"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setHuePickerField("skinHue")}
+                    className="h-9 gap-1.5 border-border bg-bg px-2.5 text-[13px] font-semibold text-fg hover:bg-muted"
+                  >
+                    <Search size={14} aria-hidden />
+                    Browse
+                  </Button>
+                </div>
               </Field>
               <Field label="Hair hue" htmlFor="mobile-template-hair-hue">
-                <Input
-                  id="mobile-template-hair-hue"
-                  value={state.hairHue}
-                  onChange={(event) => update("hairHue", event.target.value)}
-                  className="h-9 bg-bg font-mono text-[13px]"
-                />
+                <div className="flex items-center gap-2">
+                  <Input
+                    id="mobile-template-hair-hue"
+                    value={state.hairHue}
+                    onChange={(event) => update("hairHue", event.target.value)}
+                    className="h-9 flex-1 bg-bg font-mono text-[13px]"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setHuePickerField("hairHue")}
+                    className="h-9 gap-1.5 border-border bg-bg px-2.5 text-[13px] font-semibold text-fg hover:bg-muted"
+                  >
+                    <Search size={14} aria-hidden />
+                    Browse
+                  </Button>
+                </div>
               </Field>
               <Field label="Hair style" htmlFor="mobile-template-hair-style">
                 <Input
@@ -588,12 +614,24 @@ export function MobileTemplateForm({ accessToken, mode, template, onCancel, onSa
                 />
               </Field>
               <Field label="Facial hair hue" htmlFor="mobile-template-facial-hair-hue">
-                <Input
-                  id="mobile-template-facial-hair-hue"
-                  value={state.facialHairHue}
-                  onChange={(event) => update("facialHairHue", event.target.value)}
-                  className="h-9 bg-bg font-mono text-[13px]"
-                />
+                <div className="flex items-center gap-2">
+                  <Input
+                    id="mobile-template-facial-hair-hue"
+                    value={state.facialHairHue}
+                    onChange={(event) => update("facialHairHue", event.target.value)}
+                    className="h-9 flex-1 bg-bg font-mono text-[13px]"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setHuePickerField("facialHairHue")}
+                    className="h-9 gap-1.5 border-border bg-bg px-2.5 text-[13px] font-semibold text-fg hover:bg-muted"
+                  >
+                    <Search size={14} aria-hidden />
+                    Browse
+                  </Button>
+                </div>
               </Field>
               <Field label="Facial hair style" htmlFor="mobile-template-facial-hair-style">
                 <Input
@@ -636,6 +674,22 @@ export function MobileTemplateForm({ accessToken, mode, template, onCancel, onSa
         accessToken={accessToken}
         onSelect={(body) => {
           update("body", String(body));
+        }}
+      />
+
+      <HuePickerDialog
+        open={huePickerField !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setHuePickerField(null);
+          }
+        }}
+        accessToken={accessToken}
+        onSelect={(hue) => {
+          if (huePickerField) {
+            update(huePickerField, String(hue));
+          }
+          setHuePickerField(null);
         }}
       />
     </form>
