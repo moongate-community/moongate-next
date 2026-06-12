@@ -1,4 +1,5 @@
 using System.Globalization;
+using Moongate.Core.Time;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
@@ -37,7 +38,7 @@ public static class YamlUtils
                 return null;
             }
 
-            return TimeSpan.Parse(scalar.Value, CultureInfo.InvariantCulture);
+            return DurationParser.Parse(scalar.Value);
         }
 
         public void WriteYaml(IEmitter emitter, object? value, Type type, ObjectSerializer serializer)

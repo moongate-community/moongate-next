@@ -58,6 +58,14 @@ public class YamlUtilsTests : IDisposable
     }
 
     [Fact]
+    public void Deserialize_TimeSpanShorthand_MapsToTimeSpan()
+    {
+        var deserialized = YamlUtils.Deserialize<YamlPerson>("delay: 6h");
+
+        Assert.Equal(TimeSpan.FromHours(6), deserialized.Delay);
+    }
+
+    [Fact]
     public void SerializeToFile_CreatesNestedDirectories()
     {
         var original = new YamlPerson { Name = "Frodo", Age = 50, Delay = TimeSpan.FromSeconds(30) };
