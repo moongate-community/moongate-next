@@ -2,6 +2,7 @@ using DryIoc;
 using Moongate.Core.Data.Directories;
 using Moongate.Core.Types;
 using Moongate.Server.Extensions.Hosting;
+using Moongate.Server.Interfaces.Services.Templates;
 using Moongate.Server.Services.Templates;
 using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Interfaces.Tiles;
@@ -25,6 +26,7 @@ public static class TemplateContainerExtensions
         ArgumentNullException.ThrowIfNull(container);
 
         container.Register<IItemTemplateService, ItemTemplateService>(Reuse.Singleton);
+        container.Register<IItemTemplateAuthoringService, ItemTemplateAuthoringService>(Reuse.Singleton);
         container.RegisterDelegate(
             static resolver => new ItemTemplateYamlLoader(
                 resolver.Resolve<DirectoriesConfig>()[DirectoryType.Templates_Items],
