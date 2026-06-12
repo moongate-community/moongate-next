@@ -3,6 +3,7 @@ using Moongate.Core.Types;
 using Moongate.Persistence.Data;
 using Moongate.Server.Data.ListQueries;
 using Moongate.Server.Data.Templates;
+using Moongate.Server.Interfaces.Services.Templates;
 using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Templates.Mobiles;
 using Moongate.UO.Data.Types.Mobiles;
@@ -47,7 +48,74 @@ public static class MobileTemplateEndpointExtensions
              .WithName("GetMobileTemplate")
              .WithSummary("Returns a full read-only mobile template definition.");
 
+        group.MapPost(
+                 "/",
+                 (
+                     IMobileTemplateAuthoringService authoring,
+                     MobileTemplateEditRequest request,
+                     CancellationToken cancellationToken
+                 ) => HandleCreateAsync(authoring, request, cancellationToken)
+             )
+             .WithName("CreateMobileTemplate")
+             .WithSummary("Creates a mobile template in the managed web YAML file.");
+
+        group.MapPut(
+                 "/{id}",
+                 (
+                     IMobileTemplateAuthoringService authoring,
+                     string id,
+                     MobileTemplateEditRequest request,
+                     CancellationToken cancellationToken
+                 ) => HandleUpdateAsync(authoring, id, request, cancellationToken)
+             )
+             .WithName("UpdateMobileTemplate")
+             .WithSummary("Updates an existing mobile template in its owning YAML file.");
+
         return endpoints;
+    }
+
+    internal static async Task<IResult> HandleCreateAsync(
+        IMobileTemplateAuthoringService authoring,
+        MobileTemplateEditRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(authoring);
+        ArgumentNullException.ThrowIfNull(request);
+
+        try
+        {
+            var result = await authoring.CreateAsync(request, cancellationToken);
+
+            return TypedResults.Ok(result);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return TypedResults.BadRequest(exception.Message);
+        }
+    }
+
+    internal static async Task<IResult> HandleUpdateAsync(
+        IMobileTemplateAuthoringService authoring,
+        string id,
+        MobileTemplateEditRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(authoring);
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+        ArgumentNullException.ThrowIfNull(request);
+
+        try
+        {
+            var result = await authoring.UpdateAsync(id, request, cancellationToken);
+
+            return result is null ? TypedResults.NotFound() : TypedResults.Ok(result);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return TypedResults.BadRequest(exception.Message);
+        }
     }
 
     internal static IResult HandleDetail(IMobileTemplateService templates, string id)
