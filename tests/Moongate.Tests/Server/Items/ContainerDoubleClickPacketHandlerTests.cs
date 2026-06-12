@@ -2,6 +2,7 @@ using Moongate.Abstractions.Data.Network;
 using Moongate.Core.Geometry;
 using Moongate.Core.Ids;
 using Moongate.Network.UO.Packets.Incoming.Interaction;
+using Moongate.Server.Handlers.Items;
 using Moongate.Server.Interfaces.Services.Items;
 using Moongate.Server.Services.Items;
 using Moongate.Tests.Support;
@@ -12,40 +13,6 @@ namespace Moongate.Tests.Server.Items;
 
 public sealed class ContainerDoubleClickPacketHandlerTests
 {
-    [Fact]
-    public async Task HandleAsync_ItemSerial_CallsContentService()
-    {
-        var item = new ItemEntity { Id = new(Serial.ItemOffset + 10), ItemId = 3651 };
-        var items = new FakeItemService(item);
-        var contents = new CapturingContainerContentService();
-        var handler = new ContainerDoubleClickPacketHandler(items, contents);
-
-        await handler.HandleAsync(Context(item.Id));
-
-        Assert.Same(item, contents.Container);
-    }
-
-    [Fact]
-    public async Task HandleAsync_UnknownSerial_DoesNotCallContentService()
-    {
-        var items = new FakeItemService();
-        var contents = new CapturingContainerContentService();
-        var handler = new ContainerDoubleClickPacketHandler(items, contents);
-
-        await handler.HandleAsync(Context(new(Serial.ItemOffset + 99)));
-
-        Assert.Null(contents.Container);
-    }
-
-    private static PacketContext<DoubleClickPacket> Context(Serial serial)
-        => new(
-            new FakeGameSession { SessionId = 42 },
-            new() { TargetSerial = serial },
-            DateTimeOffset.UtcNow,
-            static (_, _, _) => Task.CompletedTask,
-            static () => [42]
-        );
-
     private sealed class CapturingContainerContentService : IContainerContentService
     {
         public ItemEntity? Container { get; private set; }
@@ -109,4 +76,38 @@ public sealed class ContainerDoubleClickPacketHandlerTests
         public ValueTask<int> TotalWeightAsync(ItemEntity item, CancellationToken cancellationToken = default)
             => throw new NotSupportedException();
     }
+
+    [Fact]
+    public async Task HandleAsync_ItemSerial_CallsContentService()
+    {
+        var item = new ItemEntity { Id = new(Serial.ItemOffset + 10), ItemId = 3651 };
+        var items = new FakeItemService(item);
+        var contents = new CapturingContainerContentService();
+        var handler = new ContainerDoubleClickPacketHandler(items, contents);
+
+        await handler.HandleAsync(Context(item.Id));
+
+        Assert.Same(item, contents.Container);
+    }
+
+    [Fact]
+    public async Task HandleAsync_UnknownSerial_DoesNotCallContentService()
+    {
+        var items = new FakeItemService();
+        var contents = new CapturingContainerContentService();
+        var handler = new ContainerDoubleClickPacketHandler(items, contents);
+
+        await handler.HandleAsync(Context(new(Serial.ItemOffset + 99)));
+
+        Assert.Null(contents.Container);
+    }
+
+    private static PacketContext<DoubleClickPacket> Context(Serial serial)
+        => new(
+            new FakeGameSession { SessionId = 42 },
+            new() { TargetSerial = serial },
+            DateTimeOffset.UtcNow,
+            static (_, _, _) => Task.CompletedTask,
+            static () => [42]
+        );
 }

@@ -27,6 +27,19 @@ public sealed class ItemTemplateServiceTests
     }
 
     [Fact]
+    public void ReplaceAll_ReplacesSnapshot()
+    {
+        var service = new ItemTemplateService();
+        service.UpsertRange([NewTemplate("old")]);
+
+        service.ReplaceAll([NewTemplate("new")]);
+
+        Assert.Equal(1, service.Count);
+        Assert.False(service.TryGet("old", out _));
+        Assert.True(service.TryGet("new", out _));
+    }
+
+    [Fact]
     public void TryGet_IsCaseInsensitive()
     {
         var service = new ItemTemplateService();
@@ -56,19 +69,6 @@ public sealed class ItemTemplateServiceTests
         Assert.Equal(1, service.Count);
         Assert.True(service.TryGet("shirt", out var definition));
         Assert.Equal("Replaced", definition!.Name);
-    }
-
-    [Fact]
-    public void ReplaceAll_ReplacesSnapshot()
-    {
-        var service = new ItemTemplateService();
-        service.UpsertRange([NewTemplate("old")]);
-
-        service.ReplaceAll([NewTemplate("new")]);
-
-        Assert.Equal(1, service.Count);
-        Assert.False(service.TryGet("old", out _));
-        Assert.True(service.TryGet("new", out _));
     }
 
     private static ItemTemplateDefinition NewTemplate(string id)

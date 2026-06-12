@@ -52,14 +52,14 @@ public sealed class AdminPluginEndpointExtensionsTests
         )
             => ValueTask.FromResult(_configs.GetValueOrDefault(pluginId));
 
-        public IReadOnlyList<PluginCatalogEntry> GetLoadedPlugins()
-            => _plugins.Values.ToArray();
-
         public ValueTask<PluginConfigForm?> GetConfigFormAsync(
             string pluginId,
             CancellationToken cancellationToken = default
         )
             => ValueTask.FromResult(_forms.GetValueOrDefault(pluginId));
+
+        public IReadOnlyList<PluginCatalogEntry> GetLoadedPlugins()
+            => _plugins.Values.ToArray();
 
         public ValueTask<PluginConfigSaveResult?> SaveConfigAsync(
             string pluginId,
@@ -73,6 +73,27 @@ public sealed class AdminPluginEndpointExtensionsTests
             CancellationToken cancellationToken = default
         )
             => ValueTask.FromResult(_testResults.GetValueOrDefault(pluginId));
+    }
+
+    [Fact]
+    public void HandleGet_KnownPlugin_ReturnsPlugin()
+    {
+        var service = new FakePluginCatalogService();
+        var plugin = CreatePlugin();
+        service.Add(plugin);
+
+        var result = AdminPluginEndpointExtensions.HandleGet(service, "MOONGATE.FIXTURE.CATALOG");
+
+        var ok = Assert.IsType<Ok<PluginCatalogEntry>>(result);
+        Assert.Same(plugin, ok.Value);
+    }
+
+    [Fact]
+    public void HandleGet_UnknownPlugin_ReturnsNotFound()
+    {
+        var result = AdminPluginEndpointExtensions.HandleGet(new FakePluginCatalogService(), "missing");
+
+        Assert.IsType<NotFound>(result);
     }
 
     [Fact]
@@ -136,27 +157,6 @@ public sealed class AdminPluginEndpointExtensionsTests
     }
 
     [Fact]
-    public void HandleGet_KnownPlugin_ReturnsPlugin()
-    {
-        var service = new FakePluginCatalogService();
-        var plugin = CreatePlugin();
-        service.Add(plugin);
-
-        var result = AdminPluginEndpointExtensions.HandleGet(service, "MOONGATE.FIXTURE.CATALOG");
-
-        var ok = Assert.IsType<Ok<PluginCatalogEntry>>(result);
-        Assert.Same(plugin, ok.Value);
-    }
-
-    [Fact]
-    public void HandleGet_UnknownPlugin_ReturnsNotFound()
-    {
-        var result = AdminPluginEndpointExtensions.HandleGet(new FakePluginCatalogService(), "missing");
-
-        Assert.IsType<NotFound>(result);
-    }
-
-    [Fact]
     public void HandleList_ReturnsLoadedPlugins()
     {
         var service = new FakePluginCatalogService();
@@ -180,7 +180,7 @@ public sealed class AdminPluginEndpointExtensionsTests
         var result = await AdminPluginEndpointExtensions.HandleSaveConfigAsync(
                          service,
                          plugin.Id,
-                         new(new Dictionary<string, object?>()),
+                         new(new()),
                          CancellationToken.None
                      );
 
@@ -194,7 +194,7 @@ public sealed class AdminPluginEndpointExtensionsTests
         var result = await AdminPluginEndpointExtensions.HandleSaveConfigAsync(
                          new FakePluginCatalogService(),
                          "missing",
-                         new(new Dictionary<string, object?>()),
+                         new(new()),
                          CancellationToken.None
                      );
 

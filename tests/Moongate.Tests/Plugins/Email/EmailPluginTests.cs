@@ -1,10 +1,10 @@
 using DryIoc;
 using Moongate.Core.Data.Directories;
 using Moongate.Core.Types;
-using Moongate.Plugins.Data;
 using Moongate.Plugin.Email;
 using Moongate.Plugin.Email.Data;
 using Moongate.Plugin.Email.Interfaces;
+using Moongate.Plugins.Data;
 
 namespace Moongate.Tests.Plugins.Email;
 
@@ -25,6 +25,21 @@ public sealed class EmailPluginTests : IDisposable
 
             return ValueTask.FromResult(new PluginTestResult(true, "OK", []));
         }
+    }
+
+    [Fact]
+    public void Configure_MissingConfig_UsesBaseUrlForDefaultActivationUrl()
+    {
+        var pluginDirectory = CreatePluginDirectory();
+        var plugin = new EmailPlugin("https://play.moongate.io");
+        var container = new Container();
+        var directories = new DirectoriesConfig(_root, Enum.GetNames<DirectoryType>());
+        var context = new PluginContext(pluginDirectory, directories);
+
+        plugin.Configure(container, context);
+
+        var yaml = File.ReadAllText(Path.Combine(pluginDirectory, PluginContext.PluginConfigFileName));
+        Assert.Contains("url_template: https://play.moongate.io/activate?activation_id={activation_id}", yaml);
     }
 
     public void Dispose()
@@ -77,69 +92,6 @@ public sealed class EmailPluginTests : IDisposable
     }
 
     [Fact]
-    public void Configure_MissingConfig_UsesBaseUrlForDefaultActivationUrl()
-    {
-        var pluginDirectory = CreatePluginDirectory();
-        var plugin = new EmailPlugin("https://play.moongate.io");
-        var container = new Container();
-        var directories = new DirectoriesConfig(_root, Enum.GetNames<DirectoryType>());
-        var context = new PluginContext(pluginDirectory, directories);
-
-        plugin.Configure(container, context);
-
-        var yaml = File.ReadAllText(Path.Combine(pluginDirectory, PluginContext.PluginConfigFileName));
-        Assert.Contains("url_template: https://play.moongate.io/activate?activation_id={activation_id}", yaml);
-    }
-
-    [Fact]
-    public async Task SaveConfigAsync_ValidValues_WritesYaml()
-    {
-        var pluginDirectory = CreatePluginDirectory();
-        var plugin = ConfigurePlugin(pluginDirectory);
-        var request = new PluginConfigSaveRequest(
-            new Dictionary<string, object?>
-            {
-                ["enabled"] = true,
-                ["from.address"] = "noreply@example.com",
-                ["smtp.host"] = "smtp.example.com",
-                ["smtp.username"] = "noreply@example.com",
-                ["smtp.password_secret"] = "smtp_password",
-                ["activation.url_template"] = "https://example.com/activate?activation_id={activation_id}"
-            }
-        );
-
-        var result = await plugin.SaveConfigAsync(request);
-
-        Assert.True(result.Success);
-        Assert.True(result.RequiresRestart);
-        var yaml = File.ReadAllText(Path.Combine(pluginDirectory, PluginContext.PluginConfigFileName));
-        Assert.Contains("enabled: true", yaml);
-        Assert.Contains("address: noreply@example.com", yaml);
-        Assert.Contains("host: smtp.example.com", yaml);
-    }
-
-    [Fact]
-    public async Task SaveConfigAsync_UnknownField_IsIgnored()
-    {
-        var pluginDirectory = CreatePluginDirectory();
-        var plugin = ConfigurePlugin(pluginDirectory);
-        var request = new PluginConfigSaveRequest(
-            new Dictionary<string, object?>
-            {
-                ["smtp.host"] = "smtp.example.com",
-                ["smtp.unknown"] = "value"
-            }
-        );
-
-        var result = await plugin.SaveConfigAsync(request);
-
-        Assert.True(result.Success);
-        var yaml = File.ReadAllText(Path.Combine(pluginDirectory, PluginContext.PluginConfigFileName));
-        Assert.Contains("host: smtp.example.com", yaml);
-        Assert.DoesNotContain("unknown", yaml);
-    }
-
-    [Fact]
     public async Task SaveConfigAsync_PreservesFieldsAbsentFromRequest()
     {
         var pluginDirectory = CreatePluginDirectory(
@@ -160,7 +112,7 @@ public sealed class EmailPluginTests : IDisposable
         );
         var plugin = ConfigurePlugin(pluginDirectory);
         var request = new PluginConfigSaveRequest(
-            new Dictionary<string, object?>
+            new()
             {
                 ["smtp.host"] = "new.example.com"
             }
@@ -170,8 +122,56 @@ public sealed class EmailPluginTests : IDisposable
 
         Assert.True(result.Success);
         var yaml = File.ReadAllText(Path.Combine(pluginDirectory, PluginContext.PluginConfigFileName));
-        Assert.Contains("host: new.example.com", yaml);   // updated leaf
-        Assert.Contains("prefix: CUSTOM_PREFIX_", yaml);    // not in request/form -> preserved
+        Assert.Contains("host: new.example.com", yaml);  // updated leaf
+        Assert.Contains("prefix: CUSTOM_PREFIX_", yaml); // not in request/form -> preserved
+    }
+
+    [Fact]
+    public async Task SaveConfigAsync_UnknownField_IsIgnored()
+    {
+        var pluginDirectory = CreatePluginDirectory();
+        var plugin = ConfigurePlugin(pluginDirectory);
+        var request = new PluginConfigSaveRequest(
+            new()
+            {
+                ["smtp.host"] = "smtp.example.com",
+                ["smtp.unknown"] = "value"
+            }
+        );
+
+        var result = await plugin.SaveConfigAsync(request);
+
+        Assert.True(result.Success);
+        var yaml = File.ReadAllText(Path.Combine(pluginDirectory, PluginContext.PluginConfigFileName));
+        Assert.Contains("host: smtp.example.com", yaml);
+        Assert.DoesNotContain("unknown", yaml);
+    }
+
+    [Fact]
+    public async Task SaveConfigAsync_ValidValues_WritesYaml()
+    {
+        var pluginDirectory = CreatePluginDirectory();
+        var plugin = ConfigurePlugin(pluginDirectory);
+        var request = new PluginConfigSaveRequest(
+            new()
+            {
+                ["enabled"] = true,
+                ["from.address"] = "noreply@example.com",
+                ["smtp.host"] = "smtp.example.com",
+                ["smtp.username"] = "noreply@example.com",
+                ["smtp.password_secret"] = "smtp_password",
+                ["activation.url_template"] = "https://example.com/activate?activation_id={activation_id}"
+            }
+        );
+
+        var result = await plugin.SaveConfigAsync(request);
+
+        Assert.True(result.Success);
+        Assert.True(result.RequiresRestart);
+        var yaml = File.ReadAllText(Path.Combine(pluginDirectory, PluginContext.PluginConfigFileName));
+        Assert.Contains("enabled: true", yaml);
+        Assert.Contains("address: noreply@example.com", yaml);
+        Assert.Contains("host: smtp.example.com", yaml);
     }
 
     [Fact]
@@ -201,9 +201,6 @@ public sealed class EmailPluginTests : IDisposable
         Assert.Equal("smtp.example.com", tester.Config!.Smtp.Host);
     }
 
-    private static PluginConfigField FindField(PluginConfigForm form, string path)
-        => form.Sections.SelectMany(section => section.Fields).Single(field => field.Path == path);
-
     private EmailPlugin ConfigurePlugin(string pluginDirectory, CapturingTester? tester = null)
     {
         var plugin = tester is null
@@ -230,4 +227,7 @@ public sealed class EmailPluginTests : IDisposable
 
         return pluginDirectory;
     }
+
+    private static PluginConfigField FindField(PluginConfigForm form, string path)
+        => form.Sections.SelectMany(section => section.Fields).Single(field => field.Path == path);
 }

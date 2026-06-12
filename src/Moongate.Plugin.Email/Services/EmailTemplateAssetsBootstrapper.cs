@@ -88,12 +88,6 @@ internal static class EmailTemplateAssetsBootstrapper
                    : Path.Combine(paths.PluginDirectory, config.Templates.Directory);
     }
 
-    private static IReadOnlyList<string> GetTemplateResourceNames(Assembly assembly, string normalizedPrefix)
-        => assembly.GetManifestResourceNames()
-                   .Where(name => name.StartsWith(normalizedPrefix, StringComparison.Ordinal))
-                   .Order(StringComparer.Ordinal)
-                   .ToArray();
-
     private static string GetRelativePath(string resourceName, string normalizedPrefix)
     {
         var relativePath = resourceName[normalizedPrefix.Length..].Replace('\\', '/');
@@ -106,6 +100,12 @@ internal static class EmailTemplateAssetsBootstrapper
 
         return Path.Combine(segments);
     }
+
+    private static IReadOnlyList<string> GetTemplateResourceNames(Assembly assembly, string normalizedPrefix)
+        => assembly.GetManifestResourceNames()
+                   .Where(name => name.StartsWith(normalizedPrefix, StringComparison.Ordinal))
+                   .Order(StringComparer.Ordinal)
+                   .ToArray();
 
     private static string NormalizeResourcePrefix(string resourcePrefix)
     {

@@ -16,8 +16,8 @@ public sealed class PluginContextTests : IDisposable
 
     private sealed class WeatherPluginConfig
     {
-        public int WeatherIntervalSeconds { get; set; } = 2;
-        public string Region { get; set; } = "Britannia";
+        public int WeatherIntervalSeconds { get; } = 2;
+        public string Region { get; } = "Britannia";
     }
 
     public void Dispose()

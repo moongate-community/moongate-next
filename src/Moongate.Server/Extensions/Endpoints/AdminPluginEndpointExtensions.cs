@@ -51,7 +51,12 @@ public static class AdminPluginEndpointExtensions
 
         group.MapPut(
                  "/{id}/config",
-                 (IPluginCatalogService plugins, string id, PluginConfigSaveRequest request, CancellationToken cancellationToken)
+                 (
+                         IPluginCatalogService plugins,
+                         string id,
+                         PluginConfigSaveRequest request,
+                         CancellationToken cancellationToken
+                     )
                      => HandleSaveConfigAsync(plugins, id, request, cancellationToken)
              )
              .WithName("SavePluginConfig")

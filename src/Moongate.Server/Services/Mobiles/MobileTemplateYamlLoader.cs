@@ -93,11 +93,11 @@ public sealed class MobileTemplateYamlLoader
                     );
                 }
 
-                template.Skills ??= new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+                template.Skills ??= new(StringComparer.OrdinalIgnoreCase);
                 template.Equipment ??= [];
                 template.LootTables ??= [];
                 template.Tags ??= [];
-                template.Params ??= new Dictionary<string, ItemTemplateParamDefinition>(StringComparer.OrdinalIgnoreCase);
+                template.Params ??= new(StringComparer.OrdinalIgnoreCase);
 
                 sources[template.Id] = file;
                 templates.Add(template);
@@ -109,59 +109,6 @@ public sealed class MobileTemplateYamlLoader
         _logger.Information("Loaded {Count} mobile templates from {FileCount} files", templates.Count, files.Length);
 
         return templates;
-    }
-
-    private static void ResolveBaseMobiles(List<MobileTemplateDefinition> templates)
-    {
-        var byId = templates.ToDictionary(
-            static template => template.Id,
-            static template => template,
-            StringComparer.OrdinalIgnoreCase
-        );
-
-        var states = new Dictionary<string, ResolveState>(StringComparer.OrdinalIgnoreCase);
-
-        foreach (var template in templates)
-        {
-            Resolve(template, byId, states);
-        }
-    }
-
-    private static void Resolve(
-        MobileTemplateDefinition template,
-        Dictionary<string, MobileTemplateDefinition> byId,
-        Dictionary<string, ResolveState> states
-    )
-    {
-        if (states.TryGetValue(template.Id, out var state))
-        {
-            if (state == ResolveState.Done)
-            {
-                return;
-            }
-
-            if (state == ResolveState.Visiting)
-            {
-                throw new InvalidOperationException($"Circular base_mobile reference detected at '{template.Id}'.");
-            }
-        }
-
-        states[template.Id] = ResolveState.Visiting;
-
-        if (!string.IsNullOrWhiteSpace(template.BaseMobile))
-        {
-            if (!byId.TryGetValue(template.BaseMobile, out var parent))
-            {
-                throw new InvalidOperationException(
-                    $"Mobile template '{template.Id}' references unknown base_mobile '{template.BaseMobile}'."
-                );
-            }
-
-            Resolve(parent, byId, states);
-            ApplyInheritance(parent, template);
-        }
-
-        states[template.Id] = ResolveState.Done;
     }
 
     private static void ApplyInheritance(MobileTemplateDefinition parent, MobileTemplateDefinition child)
@@ -258,14 +205,67 @@ public sealed class MobileTemplateYamlLoader
 
         foreach (var (key, value) in parent)
         {
-            merged[key] = new ItemTemplateParamDefinition { Type = value.Type, Value = value.Value };
+            merged[key] = new() { Type = value.Type, Value = value.Value };
         }
 
         foreach (var (key, value) in child)
         {
-            merged[key] = new ItemTemplateParamDefinition { Type = value.Type, Value = value.Value };
+            merged[key] = new() { Type = value.Type, Value = value.Value };
         }
 
         return merged;
+    }
+
+    private static void Resolve(
+        MobileTemplateDefinition template,
+        Dictionary<string, MobileTemplateDefinition> byId,
+        Dictionary<string, ResolveState> states
+    )
+    {
+        if (states.TryGetValue(template.Id, out var state))
+        {
+            if (state == ResolveState.Done)
+            {
+                return;
+            }
+
+            if (state == ResolveState.Visiting)
+            {
+                throw new InvalidOperationException($"Circular base_mobile reference detected at '{template.Id}'.");
+            }
+        }
+
+        states[template.Id] = ResolveState.Visiting;
+
+        if (!string.IsNullOrWhiteSpace(template.BaseMobile))
+        {
+            if (!byId.TryGetValue(template.BaseMobile, out var parent))
+            {
+                throw new InvalidOperationException(
+                    $"Mobile template '{template.Id}' references unknown base_mobile '{template.BaseMobile}'."
+                );
+            }
+
+            Resolve(parent, byId, states);
+            ApplyInheritance(parent, template);
+        }
+
+        states[template.Id] = ResolveState.Done;
+    }
+
+    private static void ResolveBaseMobiles(List<MobileTemplateDefinition> templates)
+    {
+        var byId = templates.ToDictionary(
+            static template => template.Id,
+            static template => template,
+            StringComparer.OrdinalIgnoreCase
+        );
+
+        var states = new Dictionary<string, ResolveState>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var template in templates)
+        {
+            Resolve(template, byId, states);
+        }
     }
 }

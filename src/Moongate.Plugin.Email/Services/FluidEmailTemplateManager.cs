@@ -36,6 +36,10 @@ public sealed class FluidEmailTemplateManager : IEmailTemplateManager
         );
     }
 
+    internal string TemplatesRoot => EmailTemplateAssetsBootstrapper.ResolveTemplatesRoot(_config, _paths);
+
+    private sealed record CachedTemplate(IFluidTemplate Template, DateTime LastModified);
+
     public async ValueTask<RenderedEmailTemplate> RenderActivationAsync(
         string templateId,
         ActivationEmailModel model,
@@ -47,23 +51,20 @@ public sealed class FluidEmailTemplateManager : IEmailTemplateManager
 
         var templateDirectory = GetTemplateDirectory(templateId);
         var subject = await RenderAsync(
-            await LoadTemplateAsync(Path.Combine(templateDirectory, SubjectFileName), true, cancellationToken),
-            model,
-            false
-        );
+                          await LoadTemplateAsync(Path.Combine(templateDirectory, SubjectFileName), true, cancellationToken),
+                          model,
+                          false
+                      );
         var text = await RenderAsync(
-            await LoadTemplateAsync(Path.Combine(templateDirectory, TextFileName), true, cancellationToken),
-            model,
-            false
-        );
+                       await LoadTemplateAsync(Path.Combine(templateDirectory, TextFileName), true, cancellationToken),
+                       model,
+                       false
+                   );
         var htmlTemplate = await LoadTemplateAsync(Path.Combine(templateDirectory, HtmlFileName), false, cancellationToken);
         var html = htmlTemplate is null ? null : await RenderAsync(htmlTemplate, model, true);
 
         return new(subject.Trim(), text, string.IsNullOrWhiteSpace(html) ? null : html);
     }
-
-    internal string TemplatesRoot
-        => EmailTemplateAssetsBootstrapper.ResolveTemplatesRoot(_config, _paths);
 
     private static TemplateOptions CreateOptions()
     {
@@ -131,6 +132,4 @@ public sealed class FluidEmailTemplateManager : IEmailTemplateManager
                    ? await template.RenderAsync(context, HtmlEncoder.Default)
                    : await template.RenderAsync(context);
     }
-
-    private sealed record CachedTemplate(IFluidTemplate Template, DateTime LastModified);
 }

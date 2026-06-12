@@ -12,9 +12,7 @@ public sealed class LootTemplateProjectionService
     private readonly IItemTemplateService _templates;
 
     public LootTemplateProjectionService(IEnumerable<ItemTemplateDefinition> templates)
-        : this(NewTemplateService(templates))
-    {
-    }
+        : this(NewTemplateService(templates)) { }
 
     public LootTemplateProjectionService(IItemTemplateService templates)
     {
@@ -36,9 +34,12 @@ public sealed class LootTemplateProjectionService
                     .ToDictionary(
                         static group => group.Key,
                         static group => (IReadOnlyList<ItemTemplateDefinition>)group
-                            .Select(static pair => pair.Template)
-                            .OrderBy(static template => template.Id, StringComparer.OrdinalIgnoreCase)
-                            .ToArray(),
+                                                                               .Select(static pair => pair.Template)
+                                                                               .OrderBy(
+                                                                                   static template => template.Id,
+                                                                                   StringComparer.OrdinalIgnoreCase
+                                                                               )
+                                                                               .ToArray(),
                         StringComparer.OrdinalIgnoreCase
                     );
         var rows = new List<LootTemplateNodeSummary>();
@@ -58,20 +59,6 @@ public sealed class LootTemplateProjectionService
 
         return new(table.Id, table.Content.Count, rows, potentialItems, previewItems);
     }
-
-    private static ItemTemplateService NewTemplateService(IEnumerable<ItemTemplateDefinition> templates)
-    {
-        var service = new ItemTemplateService();
-        service.ReplaceAll(templates);
-
-        return service;
-    }
-
-    private static string FormatItemId(int itemId)
-        => $"0x{itemId.ToString("X4", CultureInfo.InvariantCulture)}";
-
-    private static string FormatItemImageUrl(int itemId)
-        => $"/api/items/{FormatItemId(itemId)}.png";
 
     private void AddCategoryChildren(
         List<LootTemplateNodeSummary> potentialItems,
@@ -93,7 +80,9 @@ public sealed class LootTemplateProjectionService
             var template = matches[i];
             var id = $"{parentId}.candidate.{i.ToString(CultureInfo.InvariantCulture)}";
 
-            potentialItems.Add(CreateItemRow(id, parentId, depth, "category_candidate", template, node.Amount, candidateChance));
+            potentialItems.Add(
+                CreateItemRow(id, parentId, depth, "category_candidate", template, node.Amount, candidateChance)
+            );
         }
     }
 
@@ -142,6 +131,39 @@ public sealed class LootTemplateProjectionService
         }
     }
 
+    private static LootTemplateNodeSummary CreateItemRow(
+        string id,
+        string parentId,
+        int depth,
+        string kind,
+        ItemTemplateDefinition template,
+        LootAmount? amount,
+        double chance
+    )
+    {
+        var amountMin = amount?.Min ?? 1;
+        var amountMax = amount?.Max ?? 1;
+        var label = string.IsNullOrWhiteSpace(template.Name) ? template.Id : template.Name;
+        var itemIdHex = FormatItemId(template.ItemId);
+
+        return new(
+            id,
+            parentId,
+            depth,
+            kind,
+            label,
+            template.Rarity.ToString(),
+            chance,
+            0,
+            amountMin,
+            amountMax,
+            template.Id,
+            itemIdHex,
+            FormatItemImageUrl(template.ItemId),
+            template.IsStackable
+        );
+    }
+
     private static LootTemplateNodeSummary CreateRow(
         IReadOnlyDictionary<string, ItemTemplateDefinition> byId,
         string id,
@@ -186,37 +208,18 @@ public sealed class LootTemplateProjectionService
         );
     }
 
-    private static LootTemplateNodeSummary CreateItemRow(
-        string id,
-        string parentId,
-        int depth,
-        string kind,
-        ItemTemplateDefinition template,
-        LootAmount? amount,
-        double chance
-    )
-    {
-        var amountMin = amount?.Min ?? 1;
-        var amountMax = amount?.Max ?? 1;
-        var label = string.IsNullOrWhiteSpace(template.Name) ? template.Id : template.Name;
-        var itemIdHex = FormatItemId(template.ItemId);
+    private static string FormatItemId(int itemId)
+        => $"0x{itemId.ToString("X4", CultureInfo.InvariantCulture)}";
 
-        return new(
-            id,
-            parentId,
-            depth,
-            kind,
-            label,
-            template.Rarity.ToString(),
-            chance,
-            0,
-            amountMin,
-            amountMax,
-            template.Id,
-            itemIdHex,
-            FormatItemImageUrl(template.ItemId),
-            template.IsStackable
-        );
+    private static string FormatItemImageUrl(int itemId)
+        => $"/api/items/{FormatItemId(itemId)}.png";
+
+    private static ItemTemplateService NewTemplateService(IEnumerable<ItemTemplateDefinition> templates)
+    {
+        var service = new ItemTemplateService();
+        service.ReplaceAll(templates);
+
+        return service;
     }
 
     private static string ResolveKind(LootNode node)

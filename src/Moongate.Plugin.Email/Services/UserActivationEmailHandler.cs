@@ -42,10 +42,10 @@ public sealed class UserActivationEmailHandler : IAsyncEventHandler<UserCreatedE
             var activationUrl = BuildActivationUrl(evt.ActivationId);
             var model = new ActivationEmailModel(evt.Username, evt.Email, evt.ActivationId, activationUrl);
             var rendered = await _templates.RenderActivationAsync(
-                _config.Activation.TemplateId,
-                model,
-                cancellationToken
-            );
+                               _config.Activation.TemplateId,
+                               model,
+                               cancellationToken
+                           );
             var message = new EmailMessage(evt.Username, evt.Email, rendered.Subject, rendered.TextBody, rendered.HtmlBody);
 
             await _sender.SendAsync(message, cancellationToken);

@@ -102,9 +102,7 @@ public sealed class PluginLoaderService
         ArgumentNullException.ThrowIfNull(plugin);
 
         var metadata = plugin.Metadata ??
-                       throw new InvalidOperationException(
-                           $"Plugin {plugin.GetType().FullName} returned null metadata."
-                       );
+                       throw new InvalidOperationException($"Plugin {plugin.GetType().FullName} returned null metadata.");
 
         if (string.IsNullOrWhiteSpace(metadata.Id))
         {

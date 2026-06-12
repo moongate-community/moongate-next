@@ -18,12 +18,12 @@ public interface IItemTemplateService
     /// <summary>Returns all registered templates.</summary>
     IReadOnlyCollection<ItemTemplateDefinition> GetAll();
 
+    /// <summary>Atomically replaces all registered templates with a new snapshot.</summary>
+    void ReplaceAll(IEnumerable<ItemTemplateDefinition> templates);
+
     /// <summary>Gets a template by id; returns false when absent.</summary>
     bool TryGet(string id, [NotNullWhen(true)] out ItemTemplateDefinition? definition);
 
     /// <summary>Adds or replaces templates by id.</summary>
     void UpsertRange(IEnumerable<ItemTemplateDefinition> templates);
-
-    /// <summary>Atomically replaces all registered templates with a new snapshot.</summary>
-    void ReplaceAll(IEnumerable<ItemTemplateDefinition> templates);
 }

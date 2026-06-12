@@ -1,8 +1,8 @@
 using MailKit.Net.Smtp;
 using Moongate.Abstractions.Interfaces.Services;
-using Moongate.Plugins.Data;
 using Moongate.Plugin.Email.Data;
 using Moongate.Plugin.Email.Interfaces;
+using Moongate.Plugins.Data;
 
 namespace Moongate.Plugin.Email.Services;
 

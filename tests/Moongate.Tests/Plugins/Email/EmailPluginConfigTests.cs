@@ -14,6 +14,17 @@ public sealed class EmailPluginConfigTests
     }
 
     [Fact]
+    public void Validate_EnabledInvalidSecretProvider_ReturnsError()
+    {
+        var config = ValidConfig();
+        config.Secrets.Provider = (SecretManagerProviderType)99;
+
+        var errors = config.Validate().ToArray();
+
+        Assert.Contains(errors, error => error.Contains("Secrets.Secret provider", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void Validate_EnabledMissingRequiredValues_ReturnsErrors()
     {
         var config = new EmailPluginConfig
@@ -26,17 +37,6 @@ public sealed class EmailPluginConfigTests
         Assert.Contains(errors, error => error.Contains("From.Address", StringComparison.Ordinal));
         Assert.Contains(errors, error => error.Contains("Smtp.Host", StringComparison.Ordinal));
         Assert.Contains(errors, error => error.Contains("Smtp.Username", StringComparison.Ordinal));
-    }
-
-    [Fact]
-    public void Validate_EnabledInvalidSecretProvider_ReturnsError()
-    {
-        var config = ValidConfig();
-        config.Secrets.Provider = (SecretManagerProviderType)99;
-
-        var errors = config.Validate().ToArray();
-
-        Assert.Contains(errors, error => error.Contains("Secrets.Secret provider", StringComparison.Ordinal));
     }
 
     [Fact]

@@ -28,7 +28,7 @@ public static class HueApplier
                 }
 
                 var (r, g, b) = hue.GetRgb(pixel.R >> 3);
-                image[x, y] = new Rgba32(r, g, b, pixel.A);
+                image[x, y] = new(r, g, b, pixel.A);
             }
         }
     }

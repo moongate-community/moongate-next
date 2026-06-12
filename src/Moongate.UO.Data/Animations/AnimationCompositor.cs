@@ -16,7 +16,7 @@ public static class AnimationCompositor
 
         if (layers.Count == 0)
         {
-            return new Image<Rgba32>(1, 1);
+            return new(1, 1);
         }
 
         var topLeftX = new int[layers.Count];

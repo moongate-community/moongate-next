@@ -7,6 +7,16 @@ namespace Moongate.Tests.Server.Loot;
 public sealed class LootTableRegistryTests
 {
     [Fact]
+    public void GetAll_ReturnsTablesOrderedById()
+    {
+        var registry = new LootTableRegistry([Table("zeta"), Table("alpha")], []);
+
+        var tables = registry.GetAll().Select(static table => table.Id).ToArray();
+
+        Assert.Equal(new[] { "alpha", "zeta" }, tables);
+    }
+
+    [Fact]
     public void TryGet_IsCaseInsensitive()
     {
         var registry = new LootTableRegistry([Table("Common")], []);
@@ -21,16 +31,6 @@ public sealed class LootTableRegistryTests
         var registry = new LootTableRegistry([], []);
 
         Assert.False(registry.TryGet("missing", out _));
-    }
-
-    [Fact]
-    public void GetAll_ReturnsTablesOrderedById()
-    {
-        var registry = new LootTableRegistry([Table("zeta"), Table("alpha")], []);
-
-        var tables = registry.GetAll().Select(static table => table.Id).ToArray();
-
-        Assert.Equal(new[] { "alpha", "zeta" }, tables);
     }
 
     [Fact]

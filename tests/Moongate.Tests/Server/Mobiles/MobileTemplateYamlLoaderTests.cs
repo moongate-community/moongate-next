@@ -1,32 +1,11 @@
 using Moongate.Server.Services.Mobiles;
 using Moongate.Tests.Support;
+using Moongate.UO.Data.Types.Mobiles;
 
 namespace Moongate.Tests.Server.Mobiles;
 
 public sealed class MobileTemplateYamlLoaderTests
 {
-    [Fact]
-    public void LoadAll_MissingDirectory_ReturnsEmpty()
-    {
-        var loader = new MobileTemplateYamlLoader(
-            Path.Combine(Path.GetTempPath(), "moongate-mobile-tests", Guid.NewGuid().ToString("N"))
-        );
-
-        Assert.Empty(loader.LoadAll());
-    }
-
-    [Fact]
-    public void LoadAll_SingleFile_Loads()
-    {
-        using var dir = new TempTemplateDirectory();
-        dir.WriteFile("a.yaml", "mobile_templates:\n  - id: guard\n    body: 400\n");
-        var loader = new MobileTemplateYamlLoader(dir.Path);
-
-        var t = Assert.Single(loader.LoadAll());
-        Assert.Equal("guard", t.Id);
-        Assert.Equal(400, t.Body);
-    }
-
     [Fact]
     public void LoadAll_BaseMobile_InheritsScalarsBlocksAndLists()
     {
@@ -87,26 +66,27 @@ public sealed class MobileTemplateYamlLoaderTests
     }
 
     [Fact]
-    public void LoadAll_DuplicateId_Throws()
+    public void LoadAll_ChildRestatesDefaultNotoriety_InheritsParent()
     {
         using var dir = new TempTemplateDirectory();
-        dir.WriteFile("one.yaml", "mobile_templates:\n  - id: guard\n");
-        dir.WriteFile("two.yaml", "mobile_templates:\n  - id: GUARD\n");
+        dir.WriteFile(
+            "a.yaml",
+            """
+            mobile_templates:
+              - id: base_criminal
+                is_abstract: true
+                notoriety: Criminal
+              - id: thug
+                base_mobile: base_criminal
+                notoriety: Innocent
+            """
+        );
         var loader = new MobileTemplateYamlLoader(dir.Path);
 
-        var exception = Assert.Throws<InvalidOperationException>(() => loader.LoadAll());
-        Assert.Contains("GUARD", exception.Message);
-    }
+        var thug = loader.LoadAll().Single(t => t.Id == "thug");
 
-    [Fact]
-    public void LoadAll_UnknownBaseMobile_Throws()
-    {
-        using var dir = new TempTemplateDirectory();
-        dir.WriteFile("a.yaml", "mobile_templates:\n  - id: orphan\n    base_mobile: nope\n");
-        var loader = new MobileTemplateYamlLoader(dir.Path);
-
-        var exception = Assert.Throws<InvalidOperationException>(() => loader.LoadAll());
-        Assert.Contains("nope", exception.Message);
+        // Documented sentinel limitation: Innocent is the default, so it inherits Criminal.
+        Assert.Equal(NotorietyType.Criminal, thug.Notoriety);
     }
 
     [Fact]
@@ -118,6 +98,18 @@ public sealed class MobileTemplateYamlLoaderTests
 
         var exception = Assert.Throws<InvalidOperationException>(() => loader.LoadAll());
         Assert.Contains("Circular", exception.Message);
+    }
+
+    [Fact]
+    public void LoadAll_DuplicateId_Throws()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile("one.yaml", "mobile_templates:\n  - id: guard\n");
+        dir.WriteFile("two.yaml", "mobile_templates:\n  - id: GUARD\n");
+        var loader = new MobileTemplateYamlLoader(dir.Path);
+
+        var exception = Assert.Throws<InvalidOperationException>(() => loader.LoadAll());
+        Assert.Contains("GUARD", exception.Message);
     }
 
     [Fact]
@@ -142,10 +134,23 @@ public sealed class MobileTemplateYamlLoaderTests
     }
 
     [Fact]
+    public void LoadAll_MissingDirectory_ReturnsEmpty()
+    {
+        var loader = new MobileTemplateYamlLoader(
+            Path.Combine(Path.GetTempPath(), "moongate-mobile-tests", Guid.NewGuid().ToString("N"))
+        );
+
+        Assert.Empty(loader.LoadAll());
+    }
+
+    [Fact]
     public void LoadAll_NullCollections_Normalized()
     {
         using var dir = new TempTemplateDirectory();
-        dir.WriteFile("a.yaml", "mobile_templates:\n  - id: t\n    equipment:\n    loot_tables:\n    tags:\n    skills:\n    params:\n");
+        dir.WriteFile(
+            "a.yaml",
+            "mobile_templates:\n  - id: t\n    equipment:\n    loot_tables:\n    tags:\n    skills:\n    params:\n"
+        );
         var loader = new MobileTemplateYamlLoader(dir.Path);
 
         var t = Assert.Single(loader.LoadAll());
@@ -157,26 +162,25 @@ public sealed class MobileTemplateYamlLoaderTests
     }
 
     [Fact]
-    public void LoadAll_ChildRestatesDefaultNotoriety_InheritsParent()
+    public void LoadAll_SingleFile_Loads()
     {
         using var dir = new TempTemplateDirectory();
-        dir.WriteFile(
-            "a.yaml",
-            """
-            mobile_templates:
-              - id: base_criminal
-                is_abstract: true
-                notoriety: Criminal
-              - id: thug
-                base_mobile: base_criminal
-                notoriety: Innocent
-            """
-        );
+        dir.WriteFile("a.yaml", "mobile_templates:\n  - id: guard\n    body: 400\n");
         var loader = new MobileTemplateYamlLoader(dir.Path);
 
-        var thug = loader.LoadAll().Single(t => t.Id == "thug");
+        var t = Assert.Single(loader.LoadAll());
+        Assert.Equal("guard", t.Id);
+        Assert.Equal(400, t.Body);
+    }
 
-        // Documented sentinel limitation: Innocent is the default, so it inherits Criminal.
-        Assert.Equal(Moongate.UO.Data.Types.Mobiles.NotorietyType.Criminal, thug.Notoriety);
+    [Fact]
+    public void LoadAll_UnknownBaseMobile_Throws()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile("a.yaml", "mobile_templates:\n  - id: orphan\n    base_mobile: nope\n");
+        var loader = new MobileTemplateYamlLoader(dir.Path);
+
+        var exception = Assert.Throws<InvalidOperationException>(() => loader.LoadAll());
+        Assert.Contains("nope", exception.Message);
     }
 }

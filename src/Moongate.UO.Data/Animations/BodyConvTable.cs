@@ -54,6 +54,7 @@ public sealed class BodyConvTable
                 if (value != -1)
                 {
                     _map[body] = (col + 2, value); // fileType 2..5
+
                     break;
                 }
             }

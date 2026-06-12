@@ -5,7 +5,6 @@ using Moongate.Core.Types;
 using Moongate.Core.Utils;
 using Moongate.Persistence.Data;
 using Moongate.Server.Data.Auth;
-using Moongate.Server.Data.Config;
 using Moongate.Server.Extensions.Endpoints;
 using Moongate.Server.Interfaces.Auth;
 using Moongate.UO.Domain.Entities;
@@ -46,9 +45,6 @@ public sealed class AuthEndpointExtensionsTests
         public bool ThrowConflict { get; set; }
         public IReadOnlyCollection<UserEntity> Users => _users.Values.ToArray();
 
-        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(_users.Count);
-
         public ValueTask<UserEntity?> ActivateAsync(string activationId, CancellationToken cancellationToken = default)
         {
             var normalizedActivationId = activationId.Trim();
@@ -66,6 +62,9 @@ public sealed class AuthEndpointExtensionsTests
 
             return ValueTask.FromResult<UserEntity?>(user);
         }
+
+        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
+            => ValueTask.FromResult(_users.Count);
 
         public ValueTask<UserEntity> CreateAsync(
             string username,
@@ -289,6 +288,20 @@ public sealed class AuthEndpointExtensionsTests
     }
 
     [Fact]
+    public async Task HandleRefreshAsync_InvalidRefreshToken_ReturnsUnauthorized()
+    {
+        var auth = new FakeAuthTokenService();
+        var request = new AuthRefreshRequest
+        {
+            RefreshToken = "old"
+        };
+
+        var result = await AuthEndpointExtensions.HandleRefreshAsync(request, auth, CancellationToken.None);
+
+        Assert.IsType<UnauthorizedHttpResult>(result);
+    }
+
+    [Fact]
     public async Task HandleRegisterAsync_DisabledRegistration_ReturnsForbid()
     {
         var users = new FakeUserService();
@@ -302,7 +315,7 @@ public sealed class AuthEndpointExtensionsTests
         var result = await AuthEndpointExtensions.HandleRegisterAsync(
                          request,
                          users,
-                         new ServerConfig(),
+                         new(),
                          CancellationToken.None
                      );
 
@@ -387,20 +400,6 @@ public sealed class AuthEndpointExtensionsTests
 
         Assert.IsType<BadRequest<string>>(result);
         Assert.Empty(users.Users);
-    }
-
-    [Fact]
-    public async Task HandleRefreshAsync_InvalidRefreshToken_ReturnsUnauthorized()
-    {
-        var auth = new FakeAuthTokenService();
-        var request = new AuthRefreshRequest
-        {
-            RefreshToken = "old"
-        };
-
-        var result = await AuthEndpointExtensions.HandleRefreshAsync(request, auth, CancellationToken.None);
-
-        Assert.IsType<UnauthorizedHttpResult>(result);
     }
 
     private static AuthTokenResponse CreateResponse()

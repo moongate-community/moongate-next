@@ -114,29 +114,6 @@ public static class ItemTemplateEndpointExtensions
                    : TypedResults.NotFound();
     }
 
-    internal static async Task<IResult> HandleUpdateAsync(
-        IItemTemplateAuthoringService authoring,
-        string id,
-        ItemTemplateEditRequest request,
-        CancellationToken cancellationToken
-    )
-    {
-        ArgumentNullException.ThrowIfNull(authoring);
-        ArgumentException.ThrowIfNullOrWhiteSpace(id);
-        ArgumentNullException.ThrowIfNull(request);
-
-        try
-        {
-            var result = await authoring.UpdateAsync(id, request, cancellationToken);
-
-            return result is null ? TypedResults.NotFound() : TypedResults.Ok(result);
-        }
-        catch (InvalidOperationException exception)
-        {
-            return TypedResults.BadRequest(exception.Message);
-        }
-    }
-
     internal static IResult HandleList(
         IItemTemplateService templates,
         IHueStore hues,
@@ -202,6 +179,29 @@ public static class ItemTemplateEndpointExtensions
         var result = InMemoryListQuery.Apply(ordered, request, SearchFields, filters);
 
         return TypedResults.Ok(result.Select(template => ItemTemplateSummary.FromDefinition(template, hues)));
+    }
+
+    internal static async Task<IResult> HandleUpdateAsync(
+        IItemTemplateAuthoringService authoring,
+        string id,
+        ItemTemplateEditRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(authoring);
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+        ArgumentNullException.ThrowIfNull(request);
+
+        try
+        {
+            var result = await authoring.UpdateAsync(id, request, cancellationToken);
+
+            return result is null ? TypedResults.NotFound() : TypedResults.Ok(result);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return TypedResults.BadRequest(exception.Message);
+        }
     }
 
     private static IEnumerable<string?> SearchFields(ItemTemplateDefinition template)

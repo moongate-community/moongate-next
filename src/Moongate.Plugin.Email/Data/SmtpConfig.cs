@@ -1,5 +1,4 @@
 using Moongate.Plugins.Configuration;
-using Moongate.Plugins.Types;
 
 namespace Moongate.Plugin.Email.Data;
 
@@ -19,7 +18,12 @@ public sealed class SmtpConfig
     public string Username { get; set; } = "";
 
     /// <summary>Logical secret name resolved by ISecretManagerService.</summary>
-    [ConfigField("Password secret", Required = true, Secret = true, Help = "Logical secret name resolved by the configured secret manager.")]
+    [ConfigField(
+        "Password secret",
+        Required = true,
+        Secret = true,
+        Help = "Logical secret name resolved by the configured secret manager."
+    )]
     public string PasswordSecret { get; set; } = "smtp_password";
 
     /// <summary>Connect with SSL immediately.</summary>

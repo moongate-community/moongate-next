@@ -29,7 +29,7 @@ public static class DurationParser
             'm' => TimeSpan.FromMinutes(amount),
             'h' => TimeSpan.FromHours(amount),
             'd' => TimeSpan.FromDays(amount),
-            _ => TimeSpan.Parse(trimmed, CultureInfo.InvariantCulture)
+            _   => TimeSpan.Parse(trimmed, CultureInfo.InvariantCulture)
         };
     }
 }

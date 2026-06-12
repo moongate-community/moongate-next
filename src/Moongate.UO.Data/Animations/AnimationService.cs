@@ -31,7 +31,7 @@ public sealed class AnimationService : IAnimationService
         _bodyDef = bodyDef;
         _bodyConv = bodyConv;
         _hueStore = hueStore;
-        _fileSet = new AnimationFileSet(resolver);
+        _fileSet = new(resolver);
     }
 
     public Image<Rgba32>? GetBodyFrame(int body, int action = 0, int direction = 1, int frame = 0, int hue = 0)

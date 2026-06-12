@@ -5,7 +5,7 @@ using Moongate.Network.UO.Packets.Incoming.Interaction;
 using Moongate.Server.Interfaces.Services.Items;
 using Moongate.UO.Data.Interfaces.Services;
 
-namespace Moongate.Server.Services.Items;
+namespace Moongate.Server.Handlers.Items;
 
 [RegisterPacketHandler]
 public sealed class ContainerDoubleClickPacketHandler : IPacketHandler<DoubleClickPacket>
@@ -15,8 +15,6 @@ public sealed class ContainerDoubleClickPacketHandler : IPacketHandler<DoubleCli
 
     public ContainerDoubleClickPacketHandler(IItemService items, IContainerContentService contents)
     {
-        ArgumentNullException.ThrowIfNull(items);
-        ArgumentNullException.ThrowIfNull(contents);
 
         _items = items;
         _contents = contents;
@@ -27,15 +25,16 @@ public sealed class ContainerDoubleClickPacketHandler : IPacketHandler<DoubleCli
         CancellationToken cancellationToken = default
     )
     {
-        ArgumentNullException.ThrowIfNull(context);
-
-        var item = await _items.GetByIdAsync(context.Packet.TargetSerial, cancellationToken);
-
-        if (item is null)
+        if (context.Packet.TargetSerial.IsItem)
         {
-            return;
-        }
+            var item = await _items.GetByIdAsync(context.Packet.TargetSerial, cancellationToken);
 
-        await _contents.EnsureContentsAsync(item, cancellationToken);
+            if (item is null)
+            {
+                return;
+            }
+
+            await _contents.EnsureContentsAsync(item, cancellationToken);
+        }
     }
 }

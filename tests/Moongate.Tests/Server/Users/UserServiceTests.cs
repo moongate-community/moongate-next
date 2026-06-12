@@ -96,177 +96,6 @@ public sealed class UserServiceTests : IDisposable
     }
 
     [Fact]
-    public async Task AddMoongateUsers_RegistersServiceAndUserPersistence()
-    {
-        Directory.CreateDirectory(_dir);
-        File.WriteAllText(ConfigPath, "persistence:\n  enable_file_lock: false\n");
-
-        var container = new Container();
-        container.AddMoongateEventBus();
-        container.AddMoongateUsers();
-        container.AddMoongatePersistence(_dir);
-        container.AddMoongateConfig(ConfigPath);
-
-        var orchestrator = container.Orchestrator();
-        await orchestrator.StartAsync(CancellationToken.None);
-
-        try
-        {
-            var service = container.Resolve<IUserService>();
-
-            var user = await service.CreateAsync("ContainerUser", "container@test.local", "secret");
-
-            Assert.Equal(new(1), user.Id);
-            Assert.True(HashUtils.VerifyPassword("secret", user.Password));
-        }
-        finally
-        {
-            await orchestrator.StopAsync(CancellationToken.None);
-        }
-    }
-
-    [Fact]
-    public async Task CountAsync_ReturnsPersistedUserCount()
-    {
-        var access = new FakeUserAccess();
-        access.Add(new(new(1), "one", "one@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, true));
-        access.Add(new(new(2), "two", "two@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, true));
-        var service = new UserService(access, new CapturingEventBusService());
-
-        var count = await service.CountAsync();
-
-        Assert.Equal(2, count);
-    }
-
-    [Fact]
-    public async Task CreateAsync_DuplicateEmailCaseInsensitive_Throws()
-    {
-        var access = new FakeUserAccess();
-        access.Add(new(new(1), "first", "Taken@Realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
-        var service = new UserService(access, new CapturingEventBusService());
-
-        await Assert.ThrowsAsync<InvalidOperationException>(
-            async () => await service.CreateAsync("second", "taken@realm.local", "secret")
-        );
-    }
-
-    [Fact]
-    public async Task CreateAsync_DuplicateUsernameCaseInsensitive_ThrowsAndDoesNotPublish()
-    {
-        var access = new FakeUserAccess();
-        access.Add(new(new(7), "Arthorius", "art@test.local", HashUtils.HashPassword("old"), UserLevelType.Player, true));
-        var bus = new CapturingEventBusService();
-        var service = new UserService(access, bus);
-
-        await Assert.ThrowsAsync<InvalidOperationException>(
-            async () => await service.CreateAsync("arthorius", "dupe@test.local", "secret")
-        );
-
-        Assert.Single(access.Users);
-        Assert.Empty(bus.AsyncEvents);
-    }
-
-    [Fact]
-    public async Task CreateAsync_HashesPasswordPersistsUserAndPublishesCreatedEvent()
-    {
-        var access = new FakeUserAccess();
-        var bus = new CapturingEventBusService();
-        var service = new UserService(access, bus);
-
-        var user = await service.CreateAsync("Arthorius", "arthorius@test.local", "secret", UserLevelType.GameMaster);
-
-        Assert.Equal(new(1), user.Id);
-        Assert.Equal("Arthorius", user.Username);
-        Assert.Equal(UserLevelType.GameMaster, user.Level);
-        Assert.True(user.IsActive);
-        Assert.NotEqual("secret", user.Password);
-        Assert.True(HashUtils.VerifyPassword("secret", user.Password));
-
-        var stored = Assert.Single(access.Users);
-        Assert.Equal(user.Id, stored.Id);
-        Assert.Equal(user.Password, stored.Password);
-
-        var created = Assert.Single(bus.AsyncEvents.OfType<UserCreatedEvent>());
-        Assert.Equal(user.Id, created.UserId);
-        Assert.Equal(user.Username, created.Username);
-        Assert.Equal(user.Email, created.Email);
-        Assert.Equal(user.Level, created.Level);
-        Assert.True(created.IsActive);
-    }
-
-    [Fact]
-    public async Task CreateAsync_WithActivationId_TrimsAndPersistsActivationId()
-    {
-        var access = new FakeUserAccess();
-        var bus = new CapturingEventBusService();
-        var service = new UserService(access, bus);
-
-        var user = await service.CreateAsync(
-            "Pending",
-            "pending@test.local",
-            "secret",
-            UserLevelType.Player,
-            false,
-            "  activation-token  "
-        );
-
-        Assert.Equal("activation-token", user.ActivationId);
-        Assert.Equal("activation-token", Assert.Single(access.Users).ActivationId);
-
-        var created = Assert.Single(bus.AsyncEvents.OfType<UserCreatedEvent>());
-        Assert.Equal("activation-token", created.ActivationId);
-    }
-
-    [Fact]
-    public async Task CreateAsync_BlankActivationId_PersistsNullActivationId()
-    {
-        var access = new FakeUserAccess();
-        var service = new UserService(access, new CapturingEventBusService());
-
-        var user = await service.CreateAsync(
-            "Pending",
-            "pending@test.local",
-            "secret",
-            activationId: "   "
-        );
-
-        Assert.Null(user.ActivationId);
-        Assert.Null(Assert.Single(access.Users).ActivationId);
-    }
-
-    [Fact]
-    public async Task CreateAsync_InvalidEmail_ThrowsArgumentException()
-    {
-        var service = new UserService(new FakeUserAccess(), new CapturingEventBusService());
-
-        await Assert.ThrowsAsync<ArgumentException>(async () => await service.CreateAsync("user", "not-an-email", "secret"));
-    }
-
-    [Fact]
-    public async Task DeleteAsync_RemovesUser_PublishesDeletedEvent_ReturnsTrue()
-    {
-        var access = new FakeUserAccess();
-        access.Add(new(new(11), "zed", "z@realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
-        var bus = new CapturingEventBusService();
-        var service = new UserService(access, bus);
-
-        var deleted = await service.DeleteAsync(new(11));
-
-        Assert.True(deleted);
-        Assert.Empty(access.Users);
-        var evt = Assert.Single(bus.AsyncEvents.OfType<UserDeletedEvent>());
-        Assert.Equal(new(11), evt.UserId);
-    }
-
-    [Fact]
-    public async Task DeleteAsync_UnknownUser_ReturnsFalse()
-    {
-        var service = new UserService(new FakeUserAccess(), new CapturingEventBusService());
-
-        Assert.False(await service.DeleteAsync(new(404)));
-    }
-
-    [Fact]
     public async Task ActivateAsync_BlankActivationId_ReturnsNull()
     {
         var service = new UserService(new FakeUserAccess(), new CapturingEventBusService());
@@ -329,6 +158,177 @@ public sealed class UserServiceTests : IDisposable
 
         Assert.Null(user);
         Assert.Empty(bus.AsyncEvents);
+    }
+
+    [Fact]
+    public async Task AddMoongateUsers_RegistersServiceAndUserPersistence()
+    {
+        Directory.CreateDirectory(_dir);
+        File.WriteAllText(ConfigPath, "persistence:\n  enable_file_lock: false\n");
+
+        var container = new Container();
+        container.AddMoongateEventBus();
+        container.AddMoongateUsers();
+        container.AddMoongatePersistence(_dir);
+        container.AddMoongateConfig(ConfigPath);
+
+        var orchestrator = container.Orchestrator();
+        await orchestrator.StartAsync(CancellationToken.None);
+
+        try
+        {
+            var service = container.Resolve<IUserService>();
+
+            var user = await service.CreateAsync("ContainerUser", "container@test.local", "secret");
+
+            Assert.Equal(new(1), user.Id);
+            Assert.True(HashUtils.VerifyPassword("secret", user.Password));
+        }
+        finally
+        {
+            await orchestrator.StopAsync(CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    public async Task CountAsync_ReturnsPersistedUserCount()
+    {
+        var access = new FakeUserAccess();
+        access.Add(new(new(1), "one", "one@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, true));
+        access.Add(new(new(2), "two", "two@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, true));
+        var service = new UserService(access, new CapturingEventBusService());
+
+        var count = await service.CountAsync();
+
+        Assert.Equal(2, count);
+    }
+
+    [Fact]
+    public async Task CreateAsync_BlankActivationId_PersistsNullActivationId()
+    {
+        var access = new FakeUserAccess();
+        var service = new UserService(access, new CapturingEventBusService());
+
+        var user = await service.CreateAsync(
+                       "Pending",
+                       "pending@test.local",
+                       "secret",
+                       activationId: "   "
+                   );
+
+        Assert.Null(user.ActivationId);
+        Assert.Null(Assert.Single(access.Users).ActivationId);
+    }
+
+    [Fact]
+    public async Task CreateAsync_DuplicateEmailCaseInsensitive_Throws()
+    {
+        var access = new FakeUserAccess();
+        access.Add(new(new(1), "first", "Taken@Realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
+        var service = new UserService(access, new CapturingEventBusService());
+
+        await Assert.ThrowsAsync<InvalidOperationException>(
+            async () => await service.CreateAsync("second", "taken@realm.local", "secret")
+        );
+    }
+
+    [Fact]
+    public async Task CreateAsync_DuplicateUsernameCaseInsensitive_ThrowsAndDoesNotPublish()
+    {
+        var access = new FakeUserAccess();
+        access.Add(new(new(7), "Arthorius", "art@test.local", HashUtils.HashPassword("old"), UserLevelType.Player, true));
+        var bus = new CapturingEventBusService();
+        var service = new UserService(access, bus);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(
+            async () => await service.CreateAsync("arthorius", "dupe@test.local", "secret")
+        );
+
+        Assert.Single(access.Users);
+        Assert.Empty(bus.AsyncEvents);
+    }
+
+    [Fact]
+    public async Task CreateAsync_HashesPasswordPersistsUserAndPublishesCreatedEvent()
+    {
+        var access = new FakeUserAccess();
+        var bus = new CapturingEventBusService();
+        var service = new UserService(access, bus);
+
+        var user = await service.CreateAsync("Arthorius", "arthorius@test.local", "secret", UserLevelType.GameMaster);
+
+        Assert.Equal(new(1), user.Id);
+        Assert.Equal("Arthorius", user.Username);
+        Assert.Equal(UserLevelType.GameMaster, user.Level);
+        Assert.True(user.IsActive);
+        Assert.NotEqual("secret", user.Password);
+        Assert.True(HashUtils.VerifyPassword("secret", user.Password));
+
+        var stored = Assert.Single(access.Users);
+        Assert.Equal(user.Id, stored.Id);
+        Assert.Equal(user.Password, stored.Password);
+
+        var created = Assert.Single(bus.AsyncEvents.OfType<UserCreatedEvent>());
+        Assert.Equal(user.Id, created.UserId);
+        Assert.Equal(user.Username, created.Username);
+        Assert.Equal(user.Email, created.Email);
+        Assert.Equal(user.Level, created.Level);
+        Assert.True(created.IsActive);
+    }
+
+    [Fact]
+    public async Task CreateAsync_InvalidEmail_ThrowsArgumentException()
+    {
+        var service = new UserService(new FakeUserAccess(), new CapturingEventBusService());
+
+        await Assert.ThrowsAsync<ArgumentException>(async () => await service.CreateAsync("user", "not-an-email", "secret"));
+    }
+
+    [Fact]
+    public async Task CreateAsync_WithActivationId_TrimsAndPersistsActivationId()
+    {
+        var access = new FakeUserAccess();
+        var bus = new CapturingEventBusService();
+        var service = new UserService(access, bus);
+
+        var user = await service.CreateAsync(
+                       "Pending",
+                       "pending@test.local",
+                       "secret",
+                       UserLevelType.Player,
+                       false,
+                       "  activation-token  "
+                   );
+
+        Assert.Equal("activation-token", user.ActivationId);
+        Assert.Equal("activation-token", Assert.Single(access.Users).ActivationId);
+
+        var created = Assert.Single(bus.AsyncEvents.OfType<UserCreatedEvent>());
+        Assert.Equal("activation-token", created.ActivationId);
+    }
+
+    [Fact]
+    public async Task DeleteAsync_RemovesUser_PublishesDeletedEvent_ReturnsTrue()
+    {
+        var access = new FakeUserAccess();
+        access.Add(new(new(11), "zed", "z@realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
+        var bus = new CapturingEventBusService();
+        var service = new UserService(access, bus);
+
+        var deleted = await service.DeleteAsync(new(11));
+
+        Assert.True(deleted);
+        Assert.Empty(access.Users);
+        var evt = Assert.Single(bus.AsyncEvents.OfType<UserDeletedEvent>());
+        Assert.Equal(new(11), evt.UserId);
+    }
+
+    [Fact]
+    public async Task DeleteAsync_UnknownUser_ReturnsFalse()
+    {
+        var service = new UserService(new FakeUserAccess(), new CapturingEventBusService());
+
+        Assert.False(await service.DeleteAsync(new(404)));
     }
 
     public void Dispose()

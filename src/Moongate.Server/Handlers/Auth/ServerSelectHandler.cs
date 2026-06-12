@@ -9,7 +9,7 @@ using Moongate.Network.UO.Packets.Outgoing.Login;
 using Moongate.Network.UO.Types.Login;
 using Moongate.Server.Interfaces.Sessions;
 
-namespace Moongate.Server.Handlers;
+namespace Moongate.Server.Handlers.Auth;
 
 [RegisterPacketHandler]
 public class ServerSelectHandler : PacketHandlerBase<ServerSelectPacket>

@@ -10,42 +10,53 @@ namespace Moongate.Tests.Server.Endpoints;
 
 public sealed class UoItemEndpointExtensionsTests
 {
-    [Fact]
-    public void HandleList_ReturnsPagedUoItems()
+    private sealed class TestTileDataStore : ITileDataStore
     {
-        var result = UoItemEndpointExtensions.HandleList(
-            SeedTileData(),
-            1,
-            2,
-            null,
-            null
-        );
+        public TestTileDataStore(IReadOnlyList<ItemData> itemTable)
+        {
+            ItemTable = itemTable;
+        }
 
-        var ok = Assert.IsType<Ok<PagedResult<UoItemSummary>>>(result);
-        Assert.Equal(2, ok.Value!.Items.Count);
-        Assert.Equal(3, ok.Value.TotalCount);
-        Assert.Equal(["gold coin", "wooden crate"], ok.Value.Items.Select(static item => item.Name));
+        public IReadOnlyList<LandData> LandTable { get; } = [];
+
+        public IReadOnlyList<ItemData> ItemTable { get; }
+
+        public ItemData GetItem(int id)
+            => id >= 0 && id < ItemTable.Count ? ItemTable[id] : default;
+
+        public LandData GetLand(int id)
+            => default;
     }
 
-    [Theory]
-    [InlineData("crate", "wooden crate")]
-    [InlineData("1", "wooden crate")]
-    [InlineData("0x0001", "wooden crate")]
-    [InlineData("0x001", "wooden crate")]
-    [InlineData("0x1", "wooden crate")]
-    [InlineData("wearable", "longsword")]
-    public void HandleList_SearchesNameDecimalAndHex(string search, string expectedName)
+    [Fact]
+    public void HandleDetail_ExistingItem_ReturnsDetail()
     {
-        var result = UoItemEndpointExtensions.HandleList(
-            SeedTileData(),
-            1,
-            20,
-            search,
-            null
-        );
+        var result = UoItemEndpointExtensions.HandleDetail(SeedTileData(), "0x001");
 
-        var ok = Assert.IsType<Ok<PagedResult<UoItemSummary>>>(result);
-        Assert.Equal(expectedName, Assert.Single(ok.Value!.Items).Name);
+        var ok = Assert.IsType<Ok<UoItemDetail>>(result);
+        Assert.Equal(1, ok.Value!.ItemId);
+        Assert.Equal("0x0001", ok.Value.ItemIdHex);
+        Assert.Equal("wooden crate", ok.Value.Name);
+        Assert.Equal("/api/items/0x0001.png", ok.Value.ImageUrl);
+        Assert.True(ok.Value.Container);
+        Assert.True(ok.Value.Surface);
+        Assert.Equal((ulong)(UoTileFlag.Container | UoTileFlag.Surface), ok.Value.RawFlags);
+    }
+
+    [Fact]
+    public void HandleDetail_InvalidItemId_ReturnsBadRequest()
+    {
+        var result = UoItemEndpointExtensions.HandleDetail(SeedTileData(), "crate");
+
+        Assert.IsType<BadRequest<string>>(result);
+    }
+
+    [Fact]
+    public void HandleDetail_MissingItem_ReturnsNotFound()
+    {
+        var result = UoItemEndpointExtensions.HandleDetail(SeedTileData(), "0x063");
+
+        Assert.IsType<NotFound>(result);
     }
 
     [Fact]
@@ -81,34 +92,36 @@ public sealed class UoItemEndpointExtensionsTests
     }
 
     [Fact]
-    public void HandleDetail_ExistingItem_ReturnsDetail()
+    public void HandleList_ReturnsPagedUoItems()
     {
-        var result = UoItemEndpointExtensions.HandleDetail(SeedTileData(), "0x001");
+        var result = UoItemEndpointExtensions.HandleList(
+            SeedTileData(),
+            1,
+            2,
+            null,
+            null
+        );
 
-        var ok = Assert.IsType<Ok<UoItemDetail>>(result);
-        Assert.Equal(1, ok.Value!.ItemId);
-        Assert.Equal("0x0001", ok.Value.ItemIdHex);
-        Assert.Equal("wooden crate", ok.Value.Name);
-        Assert.Equal("/api/items/0x0001.png", ok.Value.ImageUrl);
-        Assert.True(ok.Value.Container);
-        Assert.True(ok.Value.Surface);
-        Assert.Equal((ulong)(UoTileFlag.Container | UoTileFlag.Surface), ok.Value.RawFlags);
+        var ok = Assert.IsType<Ok<PagedResult<UoItemSummary>>>(result);
+        Assert.Equal(2, ok.Value!.Items.Count);
+        Assert.Equal(3, ok.Value.TotalCount);
+        Assert.Equal(["gold coin", "wooden crate"], ok.Value.Items.Select(static item => item.Name));
     }
 
-    [Fact]
-    public void HandleDetail_InvalidItemId_ReturnsBadRequest()
+    [Theory, InlineData("crate", "wooden crate"), InlineData("1", "wooden crate"), InlineData("0x0001", "wooden crate"),
+     InlineData("0x001", "wooden crate"), InlineData("0x1", "wooden crate"), InlineData("wearable", "longsword")]
+    public void HandleList_SearchesNameDecimalAndHex(string search, string expectedName)
     {
-        var result = UoItemEndpointExtensions.HandleDetail(SeedTileData(), "crate");
+        var result = UoItemEndpointExtensions.HandleList(
+            SeedTileData(),
+            1,
+            20,
+            search,
+            null
+        );
 
-        Assert.IsType<BadRequest<string>>(result);
-    }
-
-    [Fact]
-    public void HandleDetail_MissingItem_ReturnsNotFound()
-    {
-        var result = UoItemEndpointExtensions.HandleDetail(SeedTileData(), "0x063");
-
-        Assert.IsType<NotFound>(result);
+        var ok = Assert.IsType<Ok<PagedResult<UoItemSummary>>>(result);
+        Assert.Equal(expectedName, Assert.Single(ok.Value!.Items).Name);
     }
 
     private static TestTileDataStore SeedTileData()
@@ -120,22 +133,4 @@ public sealed class UoItemEndpointExtensionsTests
                 default
             ]
         );
-
-    private sealed class TestTileDataStore : ITileDataStore
-    {
-        public TestTileDataStore(IReadOnlyList<ItemData> itemTable)
-        {
-            ItemTable = itemTable;
-        }
-
-        public IReadOnlyList<LandData> LandTable { get; } = [];
-
-        public IReadOnlyList<ItemData> ItemTable { get; }
-
-        public ItemData GetItem(int id)
-            => id >= 0 && id < ItemTable.Count ? ItemTable[id] : default;
-
-        public LandData GetLand(int id)
-            => default;
-    }
 }

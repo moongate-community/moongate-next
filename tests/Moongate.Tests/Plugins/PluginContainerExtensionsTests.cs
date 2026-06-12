@@ -53,9 +53,7 @@ public sealed class PluginContainerExtensionsTests : IDisposable
         Assert.Equal("moongate.fixture.basic", Assert.Single(catalog.GetLoadedPlugins()).Id);
         Assert.Empty(Directory.EnumerateDirectories(directories[DirectoryType.Plugins]));
         Assert.True(
-            File.Exists(
-                Path.Combine(directories[DirectoryType.Config], "plugins", "moongate.fixture.basic", "plugin.yaml")
-            )
+            File.Exists(Path.Combine(directories[DirectoryType.Config], "plugins", "moongate.fixture.basic", "plugin.yaml"))
         );
     }
 

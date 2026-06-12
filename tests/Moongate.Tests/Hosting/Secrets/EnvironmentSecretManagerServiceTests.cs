@@ -20,7 +20,7 @@ public sealed class EnvironmentSecretManagerServiceTests
     public async Task GetSecretAsync_MapsLogicalNameToPrefixedEnvironmentVariable()
     {
         var service = new EnvironmentSecretManagerService(
-            new EnvironmentSecretManagerConfig
+            new()
             {
                 Prefix = "MOONGATE_EMAIL_"
             },
@@ -36,7 +36,7 @@ public sealed class EnvironmentSecretManagerServiceTests
     public async Task GetSecretAsync_MissingVariable_ReturnsNull()
     {
         var service = new EnvironmentSecretManagerService(
-            new EnvironmentSecretManagerConfig
+            new()
             {
                 Prefix = "MOONGATE_EMAIL_"
             },
@@ -48,14 +48,13 @@ public sealed class EnvironmentSecretManagerServiceTests
         Assert.Null(secret);
     }
 
-    [Theory]
-    [InlineData("smtp-password", "MOONGATE_EMAIL_SMTP_PASSWORD")]
-    [InlineData(" smtp password ", "MOONGATE_EMAIL_SMTP_PASSWORD")]
-    [InlineData("smtp.password", "MOONGATE_EMAIL_SMTP_PASSWORD")]
+    [Theory, InlineData("smtp-password", "MOONGATE_EMAIL_SMTP_PASSWORD"),
+     InlineData(" smtp password ", "MOONGATE_EMAIL_SMTP_PASSWORD"),
+     InlineData("smtp.password", "MOONGATE_EMAIL_SMTP_PASSWORD")]
     public void ResolveEnvironmentVariableName_NormalizesLogicalName(string secretName, string expected)
     {
         var service = new EnvironmentSecretManagerService(
-            new EnvironmentSecretManagerConfig
+            new()
             {
                 Prefix = "MOONGATE_EMAIL_"
             },

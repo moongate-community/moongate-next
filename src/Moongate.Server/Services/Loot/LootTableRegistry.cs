@@ -58,11 +58,11 @@ public sealed class LootTableRegistry
         );
     }
 
-    public bool TryGet(string id, [NotNullWhen(true)] out LootTableDefinition? table)
-        => _byId.TryGetValue(id, out table);
-
     public IReadOnlyList<LootTableDefinition> GetAll()
         => _byId.Values.OrderBy(static table => table.Id, StringComparer.OrdinalIgnoreCase).ToArray();
+
+    public bool TryGet(string id, [NotNullWhen(true)] out LootTableDefinition? table)
+        => _byId.TryGetValue(id, out table);
 
     public bool TryGetByTag(string tag, [NotNullWhen(true)] out IReadOnlyList<ItemTemplateDefinition>? templates)
         => _byTag.TryGetValue(tag, out templates);

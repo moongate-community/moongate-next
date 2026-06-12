@@ -21,9 +21,6 @@ public sealed class AdminUserEndpointExtensionsTests
         public bool ThrowConflict { get; set; }
         public IReadOnlyCollection<UserEntity> Users => _users.Values.ToArray();
 
-        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(_users.Count);
-
         public ValueTask<UserEntity?> ActivateAsync(string activationId, CancellationToken cancellationToken = default)
         {
             var user = _users.Values.FirstOrDefault(
@@ -41,6 +38,9 @@ public sealed class AdminUserEndpointExtensionsTests
             return ValueTask.FromResult<UserEntity?>(user);
         }
 
+        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
+            => ValueTask.FromResult(_users.Count);
+
         public ValueTask<UserEntity> CreateAsync(
             string username,
             string email,
@@ -56,7 +56,15 @@ public sealed class AdminUserEndpointExtensionsTests
                 throw new InvalidOperationException($"Email '{email}' is already in use.");
             }
 
-            var user = new UserEntity(new(_next++), username, email, HashUtils.HashPassword(password), level, isActive, activationId);
+            var user = new UserEntity(
+                new(_next++),
+                username,
+                email,
+                HashUtils.HashPassword(password),
+                level,
+                isActive,
+                activationId
+            );
             _users[user.Id] = user;
 
             return ValueTask.FromResult(user);

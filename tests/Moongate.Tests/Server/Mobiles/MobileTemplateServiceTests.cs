@@ -5,8 +5,17 @@ namespace Moongate.Tests.Server.Mobiles;
 
 public sealed class MobileTemplateServiceTests
 {
-    private static MobileTemplateDefinition New(string id)
-        => new() { Id = id, Name = id };
+    [Fact]
+    public void Clear_RemovesAll()
+    {
+        var service = new MobileTemplateService();
+        service.UpsertRange([New("a"), New("b")]);
+
+        service.Clear();
+
+        Assert.Equal(0, service.Count);
+        Assert.Empty(service.GetAll());
+    }
 
     [Fact]
     public void TryGet_IsCaseInsensitive()
@@ -31,22 +40,13 @@ public sealed class MobileTemplateServiceTests
     {
         var service = new MobileTemplateService();
         service.UpsertRange([New("guard")]);
-        service.UpsertRange([new MobileTemplateDefinition { Id = "guard", Name = "Replaced" }]);
+        service.UpsertRange([new() { Id = "guard", Name = "Replaced" }]);
 
         Assert.Equal(1, service.Count);
         Assert.True(service.TryGet("guard", out var definition));
         Assert.Equal("Replaced", definition!.Name);
     }
 
-    [Fact]
-    public void Clear_RemovesAll()
-    {
-        var service = new MobileTemplateService();
-        service.UpsertRange([New("a"), New("b")]);
-
-        service.Clear();
-
-        Assert.Equal(0, service.Count);
-        Assert.Empty(service.GetAll());
-    }
+    private static MobileTemplateDefinition New(string id)
+        => new() { Id = id, Name = id };
 }

@@ -40,13 +40,11 @@ public sealed class AnimationFileSet
     }
 
     private static FileIndex Build(IUoFileResolver resolver, string idxName, string mulName)
-    {
-        return new FileIndex(
+        => new(
             resolver.Resolve(idxName),
             resolver.Resolve(mulName),
             AnimIndexLength,
             AnimFileId,
             new NullVerdataPatchSource()
         );
-    }
 }

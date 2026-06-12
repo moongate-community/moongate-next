@@ -26,9 +26,6 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
         _eventBus = eventBus;
     }
 
-    public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
-        => _users.CountAsync(cancellationToken);
-
     public async ValueTask<UserEntity?> ActivateAsync(string activationId, CancellationToken cancellationToken = default)
     {
         var normalizedActivationId = NormalizeActivationId(activationId);
@@ -40,9 +37,7 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
 
         var user = _users
                    .Query()
-                   .FirstOrDefault(
-                       u => string.Equals(u.ActivationId, normalizedActivationId, StringComparison.Ordinal)
-                   );
+                   .FirstOrDefault(u => string.Equals(u.ActivationId, normalizedActivationId, StringComparison.Ordinal));
 
         if (user is null)
         {
@@ -60,6 +55,9 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
 
         return user;
     }
+
+    public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
+        => _users.CountAsync(cancellationToken);
 
     public async ValueTask<UserEntity> CreateAsync(
         string username,
@@ -281,6 +279,13 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
         await ValueTask.CompletedTask;
     }
 
+    private static string? NormalizeActivationId(string? activationId)
+    {
+        var normalized = activationId?.Trim();
+
+        return string.IsNullOrEmpty(normalized) ? null : normalized;
+    }
+
     private static string NormalizeEmail(string email)
     {
         if (string.IsNullOrWhiteSpace(email))
@@ -306,12 +311,5 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
         }
 
         return username.Trim();
-    }
-
-    private static string? NormalizeActivationId(string? activationId)
-    {
-        var normalized = activationId?.Trim();
-
-        return string.IsNullOrEmpty(normalized) ? null : normalized;
     }
 }

@@ -35,6 +35,25 @@ public static class UoItemEndpointExtensions
         return endpoints;
     }
 
+    internal static IResult HandleDetail(ITileDataStore tileData, string itemId)
+    {
+        ArgumentNullException.ThrowIfNull(tileData);
+
+        if (!TryParseItemId(itemId, out var parsedItemId))
+        {
+            return TypedResults.BadRequest("itemId must be a decimal number or hex text prefixed with 0x.");
+        }
+
+        if (parsedItemId >= tileData.ItemTable.Count)
+        {
+            return TypedResults.NotFound();
+        }
+
+        var item = tileData.GetItem(parsedItemId);
+
+        return IsEmpty(item) ? TypedResults.NotFound() : TypedResults.Ok(ToDetail(parsedItemId, item));
+    }
+
     internal static IResult HandleList(
         ITileDataStore tileData,
         int? page,
@@ -67,47 +86,34 @@ public static class UoItemEndpointExtensions
         return TypedResults.Ok(result.Select(static item => ToSummary(item.ItemId, item.Item)));
     }
 
-    internal static IResult HandleDetail(ITileDataStore tileData, string itemId)
+    private static IReadOnlyList<string> FormatFlags(UoTileFlag flags)
+        => Enum.GetValues<UoTileFlag>()
+               .Where(flag => flag != UoTileFlag.None && flags.HasFlag(flag))
+               .Select(static flag => flag.ToString())
+               .ToArray();
+
+    private static string FormatImageUrl(int itemId)
+        => $"/api/items/{FormatItemId(itemId)}.png";
+
+    private static string FormatItemId(int itemId)
+        => $"0x{itemId.ToString("X4", CultureInfo.InvariantCulture)}";
+
+    private static bool IsEmpty(ItemData item)
+        => string.IsNullOrWhiteSpace(item.Name) && item.Flags == UoTileFlag.None;
+
+    private static IEnumerable<string?> SearchFields((int ItemId, ItemData Item) item)
     {
-        ArgumentNullException.ThrowIfNull(tileData);
+        yield return item.ItemId.ToString(CultureInfo.InvariantCulture);
+        yield return FormatItemId(item.ItemId);
+        yield return $"0x{item.ItemId:X3}";
+        yield return $"0x{item.ItemId:X}";
+        yield return item.Item.Name;
 
-        if (!TryParseItemId(itemId, out var parsedItemId))
+        foreach (var flag in FormatFlags(item.Item.Flags))
         {
-            return TypedResults.BadRequest("itemId must be a decimal number or hex text prefixed with 0x.");
+            yield return flag;
         }
-
-        if (parsedItemId >= tileData.ItemTable.Count)
-        {
-            return TypedResults.NotFound();
-        }
-
-        var item = tileData.GetItem(parsedItemId);
-
-        return IsEmpty(item) ? TypedResults.NotFound() : TypedResults.Ok(ToDetail(parsedItemId, item));
     }
-
-    private static UoItemSummary ToSummary(int itemId, ItemData item)
-        => new(
-            itemId,
-            FormatItemId(itemId),
-            item.Name,
-            FormatImageUrl(itemId),
-            FormatFlags(item.Flags),
-            item.Weight,
-            item.Quality,
-            item.Animation,
-            item.Quantity,
-            item.Value,
-            item.Height,
-            item[UoTileFlag.Container],
-            item[UoTileFlag.Weapon],
-            item[UoTileFlag.Armor],
-            item[UoTileFlag.Wearable],
-            item[UoTileFlag.Door],
-            item[UoTileFlag.Surface],
-            item[UoTileFlag.Background],
-            item[UoTileFlag.Wall]
-        );
 
     private static UoItemDetail ToDetail(int itemId, ItemData item)
         => new(
@@ -133,34 +139,28 @@ public static class UoItemEndpointExtensions
             item[UoTileFlag.Wall]
         );
 
-    private static IEnumerable<string?> SearchFields((int ItemId, ItemData Item) item)
-    {
-        yield return item.ItemId.ToString(CultureInfo.InvariantCulture);
-        yield return FormatItemId(item.ItemId);
-        yield return $"0x{item.ItemId:X3}";
-        yield return $"0x{item.ItemId:X}";
-        yield return item.Item.Name;
-
-        foreach (var flag in FormatFlags(item.Item.Flags))
-        {
-            yield return flag;
-        }
-    }
-
-    private static IReadOnlyList<string> FormatFlags(UoTileFlag flags)
-        => Enum.GetValues<UoTileFlag>()
-               .Where(flag => flag != UoTileFlag.None && flags.HasFlag(flag))
-               .Select(static flag => flag.ToString())
-               .ToArray();
-
-    private static string FormatItemId(int itemId)
-        => $"0x{itemId.ToString("X4", CultureInfo.InvariantCulture)}";
-
-    private static string FormatImageUrl(int itemId)
-        => $"/api/items/{FormatItemId(itemId)}.png";
-
-    private static bool IsEmpty(ItemData item)
-        => string.IsNullOrWhiteSpace(item.Name) && item.Flags == UoTileFlag.None;
+    private static UoItemSummary ToSummary(int itemId, ItemData item)
+        => new(
+            itemId,
+            FormatItemId(itemId),
+            item.Name,
+            FormatImageUrl(itemId),
+            FormatFlags(item.Flags),
+            item.Weight,
+            item.Quality,
+            item.Animation,
+            item.Quantity,
+            item.Value,
+            item.Height,
+            item[UoTileFlag.Container],
+            item[UoTileFlag.Weapon],
+            item[UoTileFlag.Armor],
+            item[UoTileFlag.Wearable],
+            item[UoTileFlag.Door],
+            item[UoTileFlag.Surface],
+            item[UoTileFlag.Background],
+            item[UoTileFlag.Wall]
+        );
 
     private static bool TryParseFlag(string? value, out UoTileFlag? parsed, out string error)
     {

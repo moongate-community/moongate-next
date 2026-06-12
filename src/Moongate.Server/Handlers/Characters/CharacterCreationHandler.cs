@@ -6,7 +6,7 @@ using Moongate.Abstractions.Interfaces.Services;
 using Moongate.Abstractions.Network;
 using Moongate.Network.UO.Packets.Incoming.Login;
 
-namespace Moongate.Server.Handlers;
+namespace Moongate.Server.Handlers.Characters;
 
 [RegisterPacketHandler]
 public class CharacterCreationHandler : PacketHandlerBase<CharacterCreationPacket>

@@ -10,18 +10,6 @@ namespace Moongate.Tests.Server.Endpoints;
 public sealed class LootTemplateEndpointExtensionsTests
 {
     [Fact]
-    public void HandleList_ReturnsPagedLootTemplateSummaries()
-    {
-        var registry = new LootTableRegistry([Table("orc_common"), Table("dragon_rare")], []);
-
-        var result = LootTemplateEndpointExtensions.HandleList(registry, page: 1, pageSize: 10, search: "orc");
-
-        var ok = Assert.IsType<Ok<PagedResult<LootTemplateSummary>>>(result);
-        Assert.Equal("orc_common", Assert.Single(ok.Value!.Items).Id);
-        Assert.Equal(1, ok.Value.TotalCount);
-    }
-
-    [Fact]
     public void HandleDetail_ExistingId_ReturnsProjectedDetail()
     {
         var registry = new LootTableRegistry([Table("orc_common")], []);
@@ -44,10 +32,22 @@ public sealed class LootTemplateEndpointExtensionsTests
         Assert.IsType<NotFound>(result);
     }
 
+    [Fact]
+    public void HandleList_ReturnsPagedLootTemplateSummaries()
+    {
+        var registry = new LootTableRegistry([Table("orc_common"), Table("dragon_rare")], []);
+
+        var result = LootTemplateEndpointExtensions.HandleList(registry, 1, 10, "orc");
+
+        var ok = Assert.IsType<Ok<PagedResult<LootTemplateSummary>>>(result);
+        Assert.Equal("orc_common", Assert.Single(ok.Value!.Items).Id);
+        Assert.Equal(1, ok.Value.TotalCount);
+    }
+
     private static LootTableDefinition Table(string id)
         => new()
         {
             Id = id,
-            Content = [new LootNode { Item = "gold_coin" }]
+            Content = [new() { Item = "gold_coin" }]
         };
 }

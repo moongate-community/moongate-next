@@ -9,6 +9,7 @@ namespace Moongate.Plugins.Services;
 public sealed class PluginCatalogService : IPluginCatalogService
 {
     private const string RedactedValue = "***REDACTED***";
+
     private static readonly string[] SensitiveKeyTokens =
     [
         "password",
@@ -46,9 +47,6 @@ public sealed class PluginCatalogService : IPluginCatalogService
         return GetConfigCoreAsync(plugin, cancellationToken);
     }
 
-    public IReadOnlyList<PluginCatalogEntry> GetLoadedPlugins()
-        => _plugins.Select(ToEntry).ToArray();
-
     public async ValueTask<PluginConfigForm?> GetConfigFormAsync(
         string pluginId,
         CancellationToken cancellationToken = default
@@ -63,6 +61,9 @@ public sealed class PluginCatalogService : IPluginCatalogService
 
         return await configurable.GetConfigFormAsync(cancellationToken);
     }
+
+    public IReadOnlyList<PluginCatalogEntry> GetLoadedPlugins()
+        => _plugins.Select(ToEntry).ToArray();
 
     public async ValueTask<PluginConfigSaveResult?> SaveConfigAsync(
         string pluginId,
@@ -185,23 +186,6 @@ public sealed class PluginCatalogService : IPluginCatalogService
         return SensitiveKeyTokens.Any(token => normalized.Contains(token, StringComparison.Ordinal));
     }
 
-    private static void SanitizeNode(YamlNode node, string path, List<string> redactedKeys)
-    {
-        switch (node)
-        {
-            case YamlMappingNode mapping:
-                SanitizeMapping(mapping, path, redactedKeys);
-                break;
-            case YamlSequenceNode sequence:
-                for (var i = 0; i < sequence.Children.Count; i++)
-                {
-                    SanitizeNode(sequence.Children[i], $"{path}[{i}]", redactedKeys);
-                }
-
-                break;
-        }
-    }
-
     private static void SanitizeMapping(YamlMappingNode mapping, string path, List<string> redactedKeys)
     {
         foreach (var (keyNode, valueNode) in mapping.Children.ToArray())
@@ -218,6 +202,24 @@ public sealed class PluginCatalogService : IPluginCatalogService
             }
 
             SanitizeNode(valueNode, keyPath, redactedKeys);
+        }
+    }
+
+    private static void SanitizeNode(YamlNode node, string path, List<string> redactedKeys)
+    {
+        switch (node)
+        {
+            case YamlMappingNode mapping:
+                SanitizeMapping(mapping, path, redactedKeys);
+
+                break;
+            case YamlSequenceNode sequence:
+                for (var i = 0; i < sequence.Children.Count; i++)
+                {
+                    SanitizeNode(sequence.Children[i], $"{path}[{i}]", redactedKeys);
+                }
+
+                break;
         }
     }
 

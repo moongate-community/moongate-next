@@ -32,14 +32,6 @@ public static class PluginConfigBinder
         return FromNestedMap<T>(map);
     }
 
-    private static IDictionary ToNestedMap<T>(T existing)
-    {
-        var yaml = ConfigYamlOptions.Serializer.Serialize(existing);
-
-        return ConfigYamlOptions.Deserializer.Deserialize<Dictionary<object, object?>>(yaml)
-               ?? new Dictionary<object, object?>();
-    }
-
     private static T FromNestedMap<T>(IDictionary map)
     {
         var yaml = ConfigYamlOptions.Serializer.Serialize(map);
@@ -66,6 +58,14 @@ public static class PluginConfigBinder
         }
 
         node[parts[^1]] = leaf;
+    }
+
+    private static IDictionary ToNestedMap<T>(T existing)
+    {
+        var yaml = ConfigYamlOptions.Serializer.Serialize(existing);
+
+        return ConfigYamlOptions.Deserializer.Deserialize<Dictionary<object, object?>>(yaml) ??
+               new Dictionary<object, object?>();
     }
 
     private static object? Unwrap(object? value)

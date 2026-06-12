@@ -6,13 +6,23 @@ namespace Moongate.Tests.Plugins.Configuration;
 public class PluginConfigBinderTests
 {
     [Fact]
+    public void Apply_CoercesNumericJsonElementToInt()
+    {
+        var existing = new Sample { Inner = new() { Port = 1 } };
+
+        var result = PluginConfigBinder.Apply(existing, new Dictionary<string, object?> { ["inner.port"] = Json("2525") });
+
+        Assert.Equal(2525, result.Inner.Port);
+    }
+
+    [Fact]
     public void Apply_OverlaysProvidedLeaf_AndPreservesUnspecified()
     {
         var existing = new Sample
         {
             Enabled = false,
-            Inner = new SampleInner { Host = "old", Port = 25 },
-            Secrets = new SampleSecrets { Prefix = "keep" }
+            Inner = new() { Host = "old", Port = 25 },
+            Secrets = new() { Prefix = "keep" }
         };
 
         var values = new Dictionary<string, object?>
@@ -27,6 +37,16 @@ public class PluginConfigBinderTests
         Assert.Equal(587, result.Inner.Port);
         Assert.Equal("keep", result.Secrets.Prefix); // not in values -> preserved
         Assert.False(result.Enabled);
+    }
+
+    [Fact]
+    public void Apply_PassesThroughClrPrimitive()
+    {
+        var existing = new Sample();
+
+        var result = PluginConfigBinder.Apply(existing, new Dictionary<string, object?> { ["inner.port"] = 99 });
+
+        Assert.Equal(99, result.Inner.Port);
     }
 
     [Fact]
@@ -47,26 +67,6 @@ public class PluginConfigBinderTests
         var result = PluginConfigBinder.Apply(existing, new Dictionary<string, object?> { ["inner.host"] = Json("\"h\"") });
 
         Assert.Equal("h", result.Inner.Host);
-    }
-
-    [Fact]
-    public void Apply_PassesThroughClrPrimitive()
-    {
-        var existing = new Sample();
-
-        var result = PluginConfigBinder.Apply(existing, new Dictionary<string, object?> { ["inner.port"] = 99 });
-
-        Assert.Equal(99, result.Inner.Port);
-    }
-
-    [Fact]
-    public void Apply_CoercesNumericJsonElementToInt()
-    {
-        var existing = new Sample { Inner = new SampleInner { Port = 1 } };
-
-        var result = PluginConfigBinder.Apply(existing, new Dictionary<string, object?> { ["inner.port"] = Json("2525") });
-
-        Assert.Equal(2525, result.Inner.Port);
     }
 
     private static JsonElement Json(string json)

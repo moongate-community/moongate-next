@@ -16,30 +16,6 @@ public sealed class ItemTemplateYamlDocumentStore
         _templatesDirectory = Path.GetFullPath(templatesDirectory);
     }
 
-    public string ResolveSourceFile(string templateId)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(templateId);
-
-        if (Directory.Exists(_templatesDirectory))
-        {
-            foreach (var file in Directory.GetFiles(_templatesDirectory, "*.yaml", SearchOption.AllDirectories))
-            {
-                var table = LoadTable(file);
-
-                if (table.ItemTemplates.Any(template => string.Equals(
-                        template.Id,
-                        templateId,
-                        StringComparison.OrdinalIgnoreCase
-                    )))
-                {
-                    return file;
-                }
-            }
-        }
-
-        return Path.Combine(_templatesDirectory, ManagedFileName);
-    }
-
     public ItemTemplateTable LoadTable(string filePath)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
@@ -55,6 +31,32 @@ public sealed class ItemTemplateYamlDocumentStore
         table.ItemTemplates ??= [];
 
         return table;
+    }
+
+    public string ResolveSourceFile(string templateId)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(templateId);
+
+        if (Directory.Exists(_templatesDirectory))
+        {
+            foreach (var file in Directory.GetFiles(_templatesDirectory, "*.yaml", SearchOption.AllDirectories))
+            {
+                var table = LoadTable(file);
+
+                if (table.ItemTemplates.Any(
+                        template => string.Equals(
+                            template.Id,
+                            templateId,
+                            StringComparison.OrdinalIgnoreCase
+                        )
+                    ))
+                {
+                    return file;
+                }
+            }
+        }
+
+        return Path.Combine(_templatesDirectory, ManagedFileName);
     }
 
     public void Upsert(string filePath, ItemTemplateDefinition template)

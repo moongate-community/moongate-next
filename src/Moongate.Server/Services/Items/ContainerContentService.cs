@@ -2,10 +2,8 @@ using Moongate.Core.Geometry;
 using Moongate.Core.Ids;
 using Moongate.Server.Interfaces.Services.Items;
 using Moongate.Server.Interfaces.Services.World;
-using Moongate.UO.Data.Data;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Interfaces.Services;
-using Moongate.UO.Data.Templates.Items;
 using Moongate.UO.Data.Types.Properties;
 
 namespace Moongate.Server.Services.Items;
@@ -128,21 +126,12 @@ public sealed class ContainerContentService : IContainerContentService
         );
     }
 
-    private static bool TryGetStringProperty(ItemEntity item, string key, out string value)
-    {
-        value = "";
-
-        if (!item.CustomProperties.TryGetValue(key, out var property) ||
-            property.Type != CustomPropertyType.String ||
-            string.IsNullOrWhiteSpace(property.StringValue))
+    private static void SetIntegerProperty(ItemEntity item, string key, long value)
+        => item.CustomProperties[key] = new()
         {
-            return false;
-        }
-
-        value = property.StringValue;
-
-        return true;
-    }
+            Type = CustomPropertyType.Integer,
+            IntegerValue = value
+        };
 
     private static bool TryGetIntegerProperty(ItemEntity item, string key, out long value)
     {
@@ -158,12 +147,19 @@ public sealed class ContainerContentService : IContainerContentService
         return true;
     }
 
-    private static void SetIntegerProperty(ItemEntity item, string key, long value)
+    private static bool TryGetStringProperty(ItemEntity item, string key, out string value)
     {
-        item.CustomProperties[key] = new CustomProperty
+        value = "";
+
+        if (!item.CustomProperties.TryGetValue(key, out var property) ||
+            property.Type != CustomPropertyType.String ||
+            string.IsNullOrWhiteSpace(property.StringValue))
         {
-            Type = CustomPropertyType.Integer,
-            IntegerValue = value
-        };
+            return false;
+        }
+
+        value = property.StringValue;
+
+        return true;
     }
 }

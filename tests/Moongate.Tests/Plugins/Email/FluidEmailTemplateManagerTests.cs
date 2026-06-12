@@ -7,16 +7,6 @@ public sealed class FluidEmailTemplateManagerTests : IDisposable
 {
     private readonly string _root = Path.Combine(Path.GetTempPath(), $"moongate-email-templates-{Guid.NewGuid():N}");
 
-    public void Dispose()
-    {
-        if (Directory.Exists(_root))
-        {
-            Directory.Delete(_root, true);
-        }
-
-        GC.SuppressFinalize(this);
-    }
-
     [Fact]
     public void Constructor_CreatesDefaultActivationTemplates()
     {
@@ -40,6 +30,16 @@ public sealed class FluidEmailTemplateManagerTests : IDisposable
         Assert.Equal("Custom subject for {{ username }}\n", File.ReadAllText(subjectPath));
     }
 
+    public void Dispose()
+    {
+        if (Directory.Exists(_root))
+        {
+            Directory.Delete(_root, true);
+        }
+
+        GC.SuppressFinalize(this);
+    }
+
     [Fact]
     public async Task RenderActivationAsync_DefaultTemplate_RendersTextAndHtml()
     {
@@ -61,6 +61,18 @@ public sealed class FluidEmailTemplateManagerTests : IDisposable
     }
 
     [Fact]
+    public async Task RenderActivationAsync_MissingRequiredTemplate_Throws()
+    {
+        var manager = CreateManager();
+        File.Delete(Path.Combine(manager.TemplatesRoot, "account_activation", "subject.liquid"));
+        var model = new ActivationEmailModel("Squid", "squid@example.com", "token", "https://example.com/a/token");
+
+        await Assert.ThrowsAsync<InvalidOperationException>(
+            async () => await manager.RenderActivationAsync("account_activation", model)
+        );
+    }
+
+    [Fact]
     public async Task RenderActivationAsync_ReloadsChangedTemplateWhenEnabled()
     {
         var manager = CreateManager();
@@ -77,18 +89,6 @@ public sealed class FluidEmailTemplateManagerTests : IDisposable
         Assert.Equal("New subject for Squid", second.Subject);
     }
 
-    [Fact]
-    public async Task RenderActivationAsync_MissingRequiredTemplate_Throws()
-    {
-        var manager = CreateManager();
-        File.Delete(Path.Combine(manager.TemplatesRoot, "account_activation", "subject.liquid"));
-        var model = new ActivationEmailModel("Squid", "squid@example.com", "token", "https://example.com/a/token");
-
-        await Assert.ThrowsAsync<InvalidOperationException>(
-            async () => await manager.RenderActivationAsync("account_activation", model)
-        );
-    }
-
     private FluidEmailTemplateManager CreateManager()
-        => new(new EmailPluginConfig(), new(_root));
+        => new(new(), new(_root));
 }

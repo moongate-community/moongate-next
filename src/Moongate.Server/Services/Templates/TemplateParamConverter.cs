@@ -17,14 +17,14 @@ public static class TemplateParamConverter
 
         if (param.Type == ItemTemplateParamType.String)
         {
-            return new CustomProperty
+            return new()
             {
                 Type = CustomPropertyType.String,
                 StringValue = param.Value
             };
         }
 
-        return new CustomProperty
+        return new()
         {
             Type = CustomPropertyType.Integer,
             IntegerValue = ItemTemplateYamlLoader.ParseLong(param.Value)

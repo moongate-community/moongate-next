@@ -1,10 +1,8 @@
 using Moongate.Core.Ids;
 using Moongate.Server.Services.Templates;
-using Moongate.UO.Data.Data;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Templates.Items;
-using Moongate.UO.Data.Types;
 using Moongate.UO.Data.Types.Properties;
 
 namespace Moongate.Server.Services.Items;
@@ -32,7 +30,7 @@ public sealed class ItemFactoryService : IItemFactoryService
         string templateId,
         CancellationToken cancellationToken = default
     )
-        => CreateInternalAsync(templateId, amount: null, cancellationToken);
+        => CreateInternalAsync(templateId, null, cancellationToken);
 
     public ValueTask<ItemEntity> CreateFromTemplateAsync(
         string templateId,
@@ -40,6 +38,31 @@ public sealed class ItemFactoryService : IItemFactoryService
         CancellationToken cancellationToken = default
     )
         => CreateInternalAsync(templateId, amount, cancellationToken);
+
+    internal static int SelectTemplateItemId(ItemTemplateDefinition template, Func<int, int>? nextIndex = null)
+    {
+        ArgumentNullException.ThrowIfNull(template);
+
+        if (template.GraphicVariants.Count == 0)
+        {
+            return template.ItemId;
+        }
+
+        var count = template.GraphicVariants.Count + 1;
+        var index = nextIndex?.Invoke(count) ?? Random.Shared.Next(count);
+
+        if ((uint)index >= (uint)count)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(nextIndex),
+                $"Graphic variant selector returned index {index}, but valid indexes are 0 through {count - 1}."
+            );
+        }
+
+        return index == 0
+                   ? template.ItemId
+                   : template.GraphicVariants[index - 1].ItemId;
+    }
 
     private async ValueTask<ItemEntity> CreateInternalAsync(
         string templateId,
@@ -79,13 +102,13 @@ public sealed class ItemFactoryService : IItemFactoryService
             item.SellValue = template.Value.EffectiveSell(template.Rarity);
         }
 
-        item.CustomProperties[ItemTemplateDefinitionKeys.TemplateId] = new CustomProperty
+        item.CustomProperties[ItemTemplateDefinitionKeys.TemplateId] = new()
         {
             Type = CustomPropertyType.String,
             StringValue = template.Id
         };
 
-        item.CustomProperties[ItemTemplateDefinition.ReservedIsMovableParamKey] = new CustomProperty
+        item.CustomProperties[ItemTemplateDefinition.ReservedIsMovableParamKey] = new()
         {
             Type = CustomPropertyType.Boolean,
             BooleanValue = template.IsMovable
@@ -97,30 +120,5 @@ public sealed class ItemFactoryService : IItemFactoryService
         }
 
         return await _items.CreateAsync(item, cancellationToken);
-    }
-
-    internal static int SelectTemplateItemId(ItemTemplateDefinition template, Func<int, int>? nextIndex = null)
-    {
-        ArgumentNullException.ThrowIfNull(template);
-
-        if (template.GraphicVariants.Count == 0)
-        {
-            return template.ItemId;
-        }
-
-        var count = template.GraphicVariants.Count + 1;
-        var index = nextIndex?.Invoke(count) ?? Random.Shared.Next(count);
-
-        if ((uint)index >= (uint)count)
-        {
-            throw new ArgumentOutOfRangeException(
-                nameof(nextIndex),
-                $"Graphic variant selector returned index {index}, but valid indexes are 0 through {count - 1}."
-            );
-        }
-
-        return index == 0
-                   ? template.ItemId
-                   : template.GraphicVariants[index - 1].ItemId;
     }
 }

@@ -1,5 +1,5 @@
-using Moongate.Plugins.Data;
 using Moongate.Plugin.Email.Data;
+using Moongate.Plugins.Data;
 
 namespace Moongate.Plugin.Email.Interfaces;
 

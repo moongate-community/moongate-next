@@ -22,8 +22,9 @@ public static class AnimationIndex
         {
             case 2:
                 baseIndex = body < 200
-                    ? body * 110
-                    : 22000 + (body - 200) * 65;
+                                ? body * 110
+                                : 22000 + (body - 200) * 65;
+
                 break;
 
             case 3:
@@ -60,8 +61,9 @@ public static class AnimationIndex
 
             case 5:
                 baseIndex = body < 200 && body != 34
-                    ? body * 110
-                    : 22000 + (body - 200) * 65;
+                                ? body * 110
+                                : 22000 + (body - 200) * 65;
+
                 break;
 
             default: // fileType 1 = anim.mul

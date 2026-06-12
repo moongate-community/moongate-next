@@ -9,28 +9,6 @@ namespace Moongate.Tests.Server.Loot;
 public sealed class LootTemplateProjectionServiceTests
 {
     [Fact]
-    public void Project_DirectItem_AddsItemImageAndAmount()
-    {
-        var service = new LootTemplateProjectionService([Item("gold_coin", 0x0EED, true, "Gold Coin")]);
-        var table = Table("orc_common", new LootNode { Item = "gold_coin", Amount = new(20, 90), Chance = 1.0 });
-
-        var detail = service.Project(table);
-
-        var row = Assert.Single(detail.Nodes);
-        Assert.Equal("item", row.Kind);
-        Assert.Equal("gold_coin", row.ItemTemplateId);
-        Assert.Equal("Gold Coin", row.Label);
-        Assert.Equal("Common", row.Rarity);
-        Assert.Equal("0x0EED", row.ItemIdHex);
-        Assert.Equal("/api/items/0x0EED.png", row.ImageUrl);
-        Assert.Equal(20, row.AmountMin);
-        Assert.Equal(90, row.AmountMax);
-        Assert.Equal(1.0, row.Chance);
-        Assert.Single(detail.PotentialItems);
-        Assert.Single(detail.PreviewItems);
-    }
-
-    [Fact]
     public void Project_Category_KeepsDefinitionSeparateFromPotentialItems()
     {
         var service = new LootTemplateProjectionService(
@@ -66,6 +44,28 @@ public sealed class LootTemplateProjectionServiceTests
             detail.PotentialItems.Select(static row => row.ItemTemplateId),
             detail.PreviewItems.Select(static row => row.ItemTemplateId)
         );
+    }
+
+    [Fact]
+    public void Project_DirectItem_AddsItemImageAndAmount()
+    {
+        var service = new LootTemplateProjectionService([Item("gold_coin", 0x0EED, true, "Gold Coin")]);
+        var table = Table("orc_common", new LootNode { Item = "gold_coin", Amount = new(20, 90), Chance = 1.0 });
+
+        var detail = service.Project(table);
+
+        var row = Assert.Single(detail.Nodes);
+        Assert.Equal("item", row.Kind);
+        Assert.Equal("gold_coin", row.ItemTemplateId);
+        Assert.Equal("Gold Coin", row.Label);
+        Assert.Equal("Common", row.Rarity);
+        Assert.Equal("0x0EED", row.ItemIdHex);
+        Assert.Equal("/api/items/0x0EED.png", row.ImageUrl);
+        Assert.Equal(20, row.AmountMin);
+        Assert.Equal(90, row.AmountMax);
+        Assert.Equal(1.0, row.Chance);
+        Assert.Single(detail.PotentialItems);
+        Assert.Single(detail.PreviewItems);
     }
 
     [Fact]

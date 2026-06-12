@@ -59,35 +59,10 @@ public static class BodyImageEndpointExtensions
         Directory.CreateDirectory(directory);
 
         var fileName = hue == 0
-            ? $"{body.ToString(CultureInfo.InvariantCulture)}.png"
-            : $"{body.ToString(CultureInfo.InvariantCulture)}_{hue.ToString(CultureInfo.InvariantCulture)}.png";
+                           ? $"{body.ToString(CultureInfo.InvariantCulture)}.png"
+                           : $"{body.ToString(CultureInfo.InvariantCulture)}_{hue.ToString(CultureInfo.InvariantCulture)}.png";
 
         return Path.Combine(directory, fileName);
-    }
-
-    internal static async Task<IResult> HandleGetBodyImageAsync(
-        string bodyText,
-        int? hue,
-        IAnimationService animationService,
-        DirectoriesConfig directories,
-        CancellationToken cancellationToken
-    )
-    {
-        ArgumentNullException.ThrowIfNull(animationService);
-        ArgumentNullException.ThrowIfNull(directories);
-
-        if (!TryParseBody(bodyText, out var body))
-        {
-            return TypedResults.BadRequest("body must be a non-negative integer");
-        }
-
-        var effectiveHue = hue.GetValueOrDefault() > 0 ? hue.GetValueOrDefault() : 0;
-
-        var result = await EnsureBodyImageAsync(body, effectiveHue, animationService, directories, cancellationToken);
-
-        return result.HasImage
-                   ? Results.File(result.CachePath, "image/png")
-                   : TypedResults.NotFound();
     }
 
     internal static async Task<IResult> HandleBuildBodyImagesAsync(
@@ -150,6 +125,31 @@ public static class BodyImageEndpointExtensions
         );
     }
 
+    internal static async Task<IResult> HandleGetBodyImageAsync(
+        string bodyText,
+        int? hue,
+        IAnimationService animationService,
+        DirectoriesConfig directories,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(animationService);
+        ArgumentNullException.ThrowIfNull(directories);
+
+        if (!TryParseBody(bodyText, out var body))
+        {
+            return TypedResults.BadRequest("body must be a non-negative integer");
+        }
+
+        var effectiveHue = hue.GetValueOrDefault() > 0 ? hue.GetValueOrDefault() : 0;
+
+        var result = await EnsureBodyImageAsync(body, effectiveHue, animationService, directories, cancellationToken);
+
+        return result.HasImage
+                   ? Results.File(result.CachePath, "image/png")
+                   : TypedResults.NotFound();
+    }
+
     private static async Task<(bool HasImage, bool Generated, string CachePath)> EnsureBodyImageAsync(
         int body,
         int hue,
@@ -165,7 +165,7 @@ public static class BodyImageEndpointExtensions
             return (true, false, cachePath);
         }
 
-        var generationLock = _generationLocks.GetOrAdd(cachePath, static _ => new SemaphoreSlim(1, 1));
+        var generationLock = _generationLocks.GetOrAdd(cachePath, static _ => new(1, 1));
         await generationLock.WaitAsync(cancellationToken);
 
         try

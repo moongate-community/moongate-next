@@ -16,6 +16,26 @@ public class BodyDataStoreTests
         """;
 
     [Fact]
+    public void GetClassifiedBodies_ReturnsEveryNonEmptyId()
+    {
+        var dir = Directory.CreateTempSubdirectory("nr-uo-");
+
+        try
+        {
+            File.WriteAllText(Path.Combine(dir.FullName, "bodies.yaml"), Yaml);
+            var store = new BodyDataStore(dir.FullName);
+
+            var ids = store.GetClassifiedBodies().OrderBy(x => x).ToArray();
+
+            Assert.Equal(new[] { 1, 2, 5, 6, 7, 150, 400, 401 }, ids);
+        }
+        finally
+        {
+            dir.Delete(true);
+        }
+    }
+
+    [Fact]
     public void Load_MapsBodyIdsToTypes()
     {
         var dir = Directory.CreateTempSubdirectory("nr-uo-");
@@ -50,26 +70,6 @@ public class BodyDataStoreTests
 
             Assert.Equal(0, store.Count);
             Assert.Equal(UoBodyType.Empty, store.GetBodyType(1));
-        }
-        finally
-        {
-            dir.Delete(true);
-        }
-    }
-
-    [Fact]
-    public void GetClassifiedBodies_ReturnsEveryNonEmptyId()
-    {
-        var dir = Directory.CreateTempSubdirectory("nr-uo-");
-
-        try
-        {
-            File.WriteAllText(Path.Combine(dir.FullName, "bodies.yaml"), Yaml);
-            var store = new BodyDataStore(dir.FullName);
-
-            var ids = store.GetClassifiedBodies().OrderBy(x => x).ToArray();
-
-            Assert.Equal(new[] { 1, 2, 5, 6, 7, 150, 400, 401 }, ids);
         }
         finally
         {

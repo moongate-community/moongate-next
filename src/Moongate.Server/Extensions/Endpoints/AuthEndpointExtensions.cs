@@ -143,53 +143,6 @@ public static class AuthEndpointExtensions
         return response is null ? TypedResults.Unauthorized() : TypedResults.Ok(response);
     }
 
-    internal static async Task<IResult> HandleRegisterAsync(
-        AuthRegisterRequest request,
-        IUserService users,
-        ServerConfig config,
-        CancellationToken cancellationToken
-    )
-    {
-        ArgumentNullException.ThrowIfNull(request);
-        ArgumentNullException.ThrowIfNull(users);
-        ArgumentNullException.ThrowIfNull(config);
-
-        if (!config.IsRegistrationAllowed)
-        {
-            return TypedResults.Forbid();
-        }
-
-        if (string.IsNullOrWhiteSpace(request.Username) ||
-            string.IsNullOrWhiteSpace(request.Email) ||
-            string.IsNullOrWhiteSpace(request.Password))
-        {
-            return TypedResults.BadRequest("username, email and password are required");
-        }
-
-        try
-        {
-            var user = await users.CreateAsync(
-                           request.Username,
-                           request.Email,
-                           request.Password,
-                           UserLevelType.Player,
-                           false,
-                           GenerateActivationId(),
-                           cancellationToken
-                       );
-
-            return TypedResults.Created((string?)null, ToAuthUserResponse(user));
-        }
-        catch (ArgumentException ex)
-        {
-            return TypedResults.BadRequest(ex.Message);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return TypedResults.Conflict(ex.Message);
-        }
-    }
-
     internal static async Task<IResult> HandleLogoutAsync(
         AuthLogoutRequest request,
         IAuthTokenService auth,
@@ -239,6 +192,53 @@ public static class AuthEndpointExtensions
         var response = await auth.RefreshAsync(request.RefreshToken, cancellationToken);
 
         return response is null ? TypedResults.Unauthorized() : TypedResults.Ok(response);
+    }
+
+    internal static async Task<IResult> HandleRegisterAsync(
+        AuthRegisterRequest request,
+        IUserService users,
+        ServerConfig config,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(users);
+        ArgumentNullException.ThrowIfNull(config);
+
+        if (!config.IsRegistrationAllowed)
+        {
+            return TypedResults.Forbid();
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Username) ||
+            string.IsNullOrWhiteSpace(request.Email) ||
+            string.IsNullOrWhiteSpace(request.Password))
+        {
+            return TypedResults.BadRequest("username, email and password are required");
+        }
+
+        try
+        {
+            var user = await users.CreateAsync(
+                           request.Username,
+                           request.Email,
+                           request.Password,
+                           UserLevelType.Player,
+                           false,
+                           GenerateActivationId(),
+                           cancellationToken
+                       );
+
+            return TypedResults.Created((string?)null, ToAuthUserResponse(user));
+        }
+        catch (ArgumentException ex)
+        {
+            return TypedResults.BadRequest(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return TypedResults.Conflict(ex.Message);
+        }
     }
 
     private static string GenerateActivationId()

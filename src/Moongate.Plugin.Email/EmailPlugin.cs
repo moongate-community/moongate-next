@@ -3,12 +3,12 @@ using Moongate.Abstractions.Configuration;
 using Moongate.Abstractions.Extensions.DryIoc;
 using Moongate.Abstractions.Interfaces.Services;
 using Moongate.Abstractions.Services.Secrets;
-using Moongate.Plugins.Configuration;
-using Moongate.Plugins.Data;
-using Moongate.Plugins.Interfaces.Plugins;
 using Moongate.Plugin.Email.Data;
 using Moongate.Plugin.Email.Interfaces;
 using Moongate.Plugin.Email.Services;
+using Moongate.Plugins.Configuration;
+using Moongate.Plugins.Data;
+using Moongate.Plugins.Interfaces.Plugins;
 using Moongate.UO.Domain.Events;
 using Serilog;
 
@@ -23,9 +23,7 @@ public sealed class EmailPlugin : ConfigurablePlugin<EmailPluginConfig>, IMoonga
     private EmailPluginRuntimePaths? _paths;
 
     public EmailPlugin()
-        : this((string?)null)
-    {
-    }
+        : this((string?)null) { }
 
     public EmailPlugin(string? defaultActivationBaseUrl)
     {
@@ -74,6 +72,26 @@ public sealed class EmailPlugin : ConfigurablePlugin<EmailPluginConfig>, IMoonga
         container.AddAsyncEventHandler<UserActivationEmailHandler, UserCreatedEvent>();
     }
 
+    public async ValueTask<PluginTestResult> TestAsync(CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var config = await LoadLatestConfigAsync(cancellationToken);
+            var errors = config.Validate().ToArray();
+
+            if (errors.Length > 0)
+            {
+                return new(false, "Email plugin config is invalid.", errors);
+            }
+
+            return await _testerFactory(config).TestAsync(config, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            return new(false, "Email plugin test failed.", [ex.Message]);
+        }
+    }
+
     protected override ValueTask<EmailPluginConfig> LoadConfigAsync(CancellationToken cancellationToken)
         => LoadLatestConfigAsync(cancellationToken);
 
@@ -105,26 +123,6 @@ public sealed class EmailPlugin : ConfigurablePlugin<EmailPluginConfig>, IMoonga
         _config = config;
 
         return new(true, true, [], null);
-    }
-
-    public async ValueTask<PluginTestResult> TestAsync(CancellationToken cancellationToken = default)
-    {
-        try
-        {
-            var config = await LoadLatestConfigAsync(cancellationToken);
-            var errors = config.Validate().ToArray();
-
-            if (errors.Length > 0)
-            {
-                return new(false, "Email plugin config is invalid.", errors);
-            }
-
-            return await _testerFactory(config).TestAsync(config, cancellationToken);
-        }
-        catch (Exception ex)
-        {
-            return new(false, "Email plugin test failed.", [ex.Message]);
-        }
     }
 
     private static string? BuildDefaultActivationUrlTemplate(string? baseUrl)

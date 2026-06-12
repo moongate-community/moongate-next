@@ -70,7 +70,7 @@ public static class MobileTemplateImageEndpointExtensions
             return Results.File(cachePath, "image/png");
         }
 
-        var generationLock = _generationLocks.GetOrAdd(cachePath, static _ => new SemaphoreSlim(1, 1));
+        var generationLock = _generationLocks.GetOrAdd(cachePath, static _ => new(1, 1));
         await generationLock.WaitAsync(cancellationToken);
 
         try

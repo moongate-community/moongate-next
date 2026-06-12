@@ -7,10 +7,20 @@ namespace Moongate.Tests.Hosting.Metrics;
 
 public class RuntimeMetricProviderTests
 {
+    private sealed class FakeSampler : IProcessRuntimeSampler
+    {
+        public int ProcessorCount { get; set; } = 1;
+
+        public ProcessRuntimeReading Reading { get; set; } = new() { Timestamp = DateTimeOffset.UnixEpoch };
+
+        public ProcessRuntimeReading Read()
+            => Reading;
+    }
+
     [Fact]
     public void Collect_FirstCall_ReportsZeroCpuAndEightSamples()
     {
-        var sampler = new FakeSampler { ProcessorCount = 2, Reading = Reading(cpuMs: 1000, t: 0) };
+        var sampler = new FakeSampler { ProcessorCount = 2, Reading = Reading(1000, 0) };
         var provider = new RuntimeMetricProvider(sampler);
 
         var samples = provider.Collect();
@@ -21,46 +31,17 @@ public class RuntimeMetricProviderTests
     }
 
     [Fact]
-    public void Collect_SecondCall_ComputesCpuFromDelta()
-    {
-        var sampler = new FakeSampler { ProcessorCount = 2 };
-        var provider = new RuntimeMetricProvider(sampler);
-
-        sampler.Reading = Reading(cpuMs: 10_000, t: 0);
-        provider.Collect();
-        sampler.Reading = Reading(cpuMs: 11_000, t: 2000);
-        var samples = provider.Collect();
-
-        // delta cpu 1000ms over wall 2000ms * 2 cores => 25%
-        Assert.Equal(25, ValueOf(samples, "cpu_percent"), 3);
-    }
-
-    [Fact]
     public void Collect_HugeCpuDelta_ClampsTo100()
     {
         var sampler = new FakeSampler { ProcessorCount = 1 };
         var provider = new RuntimeMetricProvider(sampler);
 
-        sampler.Reading = Reading(cpuMs: 0, t: 0);
+        sampler.Reading = Reading(0, 0);
         provider.Collect();
-        sampler.Reading = Reading(cpuMs: 100_000, t: 1000);
+        sampler.Reading = Reading(100_000, 1000);
         var samples = provider.Collect();
 
         Assert.Equal(100, ValueOf(samples, "cpu_percent"));
-    }
-
-    [Fact]
-    public void Collect_ZeroWallDelta_ReportsZeroCpu()
-    {
-        var sampler = new FakeSampler { ProcessorCount = 1 };
-        var provider = new RuntimeMetricProvider(sampler);
-
-        sampler.Reading = Reading(cpuMs: 1000, t: 5000);
-        provider.Collect();
-        sampler.Reading = Reading(cpuMs: 9000, t: 5000);
-        var samples = provider.Collect();
-
-        Assert.Equal(0, ValueOf(samples, "cpu_percent"));
     }
 
     [Fact]
@@ -69,7 +50,7 @@ public class RuntimeMetricProviderTests
         var sampler = new FakeSampler
         {
             ProcessorCount = 1,
-            Reading = new ProcessRuntimeReading
+            Reading = new()
             {
                 TotalProcessorTime = TimeSpan.Zero,
                 WorkingSetBytes = 1_000,
@@ -104,9 +85,38 @@ public class RuntimeMetricProviderTests
         var sampler = new FakeSampler { ProcessorCount = 1 };
         var provider = new RuntimeMetricProvider(sampler);
 
-        sampler.Reading = Reading(cpuMs: 9000, t: 0);
+        sampler.Reading = Reading(9000, 0);
         provider.Collect();
-        sampler.Reading = Reading(cpuMs: 1000, t: 1000);
+        sampler.Reading = Reading(1000, 1000);
+        var samples = provider.Collect();
+
+        Assert.Equal(0, ValueOf(samples, "cpu_percent"));
+    }
+
+    [Fact]
+    public void Collect_SecondCall_ComputesCpuFromDelta()
+    {
+        var sampler = new FakeSampler { ProcessorCount = 2 };
+        var provider = new RuntimeMetricProvider(sampler);
+
+        sampler.Reading = Reading(10_000, 0);
+        provider.Collect();
+        sampler.Reading = Reading(11_000, 2000);
+        var samples = provider.Collect();
+
+        // delta cpu 1000ms over wall 2000ms * 2 cores => 25%
+        Assert.Equal(25, ValueOf(samples, "cpu_percent"), 3);
+    }
+
+    [Fact]
+    public void Collect_ZeroWallDelta_ReportsZeroCpu()
+    {
+        var sampler = new FakeSampler { ProcessorCount = 1 };
+        var provider = new RuntimeMetricProvider(sampler);
+
+        sampler.Reading = Reading(1000, 5000);
+        provider.Collect();
+        sampler.Reading = Reading(9000, 5000);
         var samples = provider.Collect();
 
         Assert.Equal(0, ValueOf(samples, "cpu_percent"));
@@ -119,19 +129,9 @@ public class RuntimeMetricProviderTests
             Timestamp = DateTimeOffset.UnixEpoch.AddMilliseconds(t)
         };
 
-    private static double ValueOf(IReadOnlyList<MetricSample> samples, string name)
-        => samples.Single(s => s.Name == name).Value;
-
     private static MetricType TypeOf(IReadOnlyList<MetricSample> samples, string name)
         => samples.Single(s => s.Name == name).Type;
 
-    private sealed class FakeSampler : IProcessRuntimeSampler
-    {
-        public int ProcessorCount { get; set; } = 1;
-
-        public ProcessRuntimeReading Reading { get; set; } = new() { Timestamp = DateTimeOffset.UnixEpoch };
-
-        public ProcessRuntimeReading Read()
-            => Reading;
-    }
+    private static double ValueOf(IReadOnlyList<MetricSample> samples, string name)
+        => samples.Single(s => s.Name == name).Value;
 }

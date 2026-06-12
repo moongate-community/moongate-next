@@ -13,7 +13,7 @@ using Moongate.UO.Domain.Interfaces.Services;
 using Serilog;
 using ILogger = Serilog.ILogger;
 
-namespace Moongate.Server.Handlers;
+namespace Moongate.Server.Handlers.Auth;
 
 [RegisterPacketHandler]
 public class LoginHandler : PacketHandlerBase<LoginSeedPacket>, IPacketHandler<AccountLoginPacket>

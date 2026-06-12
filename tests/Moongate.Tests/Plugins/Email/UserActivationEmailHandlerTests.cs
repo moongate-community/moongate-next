@@ -1,4 +1,3 @@
-using Moongate.Core.Ids;
 using Moongate.Core.Types;
 using Moongate.Plugin.Email.Data;
 using Moongate.Plugin.Email.Interfaces;
@@ -37,6 +36,12 @@ public sealed class UserActivationEmailHandlerTests
         }
     }
 
+    private sealed class ThrowingEmailSender : IEmailSender
+    {
+        public ValueTask SendAsync(EmailMessage message, CancellationToken cancellationToken = default)
+            => throw new InvalidOperationException("SMTP failed");
+    }
+
     [Fact]
     public async Task HandleAsync_PendingUser_SendsActivationEmail()
     {
@@ -44,7 +49,7 @@ public sealed class UserActivationEmailHandlerTests
         var templates = new CapturingTemplateManager();
         var sender = new CapturingEmailSender();
         var handler = new UserActivationEmailHandler(config, templates, sender);
-        var evt = Created(isActive: false, email: "squid@example.com", activationId: "token value");
+        var evt = Created(false, "squid@example.com", "token value");
 
         await handler.HandleAsync(evt, CancellationToken.None);
 
@@ -66,14 +71,11 @@ public sealed class UserActivationEmailHandlerTests
             new ThrowingEmailSender()
         );
 
-        await handler.HandleAsync(Created(isActive: false, email: "squid@example.com", activationId: "token"), CancellationToken.None);
+        await handler.HandleAsync(Created(false, "squid@example.com", "token"), CancellationToken.None);
     }
 
-    [Theory]
-    [InlineData(false, true, "squid@example.com", "token")]
-    [InlineData(true, true, "squid@example.com", "token")]
-    [InlineData(true, false, "", "token")]
-    [InlineData(true, false, "squid@example.com", "")]
+    [Theory, InlineData(false, true, "squid@example.com", "token"), InlineData(true, true, "squid@example.com", "token"),
+     InlineData(true, false, "", "token"), InlineData(true, false, "squid@example.com", "")]
     public async Task HandleAsync_WhenNotEligible_DoesNotSend(
         bool enabled,
         bool isActive,
@@ -92,7 +94,7 @@ public sealed class UserActivationEmailHandlerTests
     }
 
     private static UserCreatedEvent Created(bool isActive, string? email, string? activationId)
-        => new(new Serial(1), "Squid", UserLevelType.Player, isActive, DateTimeOffset.UtcNow, email, activationId);
+        => new(new(1), "Squid", UserLevelType.Player, isActive, DateTimeOffset.UtcNow, email, activationId);
 
     private static EmailPluginConfig EnabledConfig()
         => new()
@@ -103,10 +105,4 @@ public sealed class UserActivationEmailHandlerTests
                 UrlTemplate = "https://example.com/activate?activation_id={activation_id}"
             }
         };
-
-    private sealed class ThrowingEmailSender : IEmailSender
-    {
-        public ValueTask SendAsync(EmailMessage message, CancellationToken cancellationToken = default)
-            => throw new InvalidOperationException("SMTP failed");
-    }
 }

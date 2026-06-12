@@ -11,6 +11,11 @@ public sealed class ActivationEmailConfig
     public string TemplateId { get; set; } = "account_activation";
 
     /// <summary>Activation URL template. Must contain <c>{activation_id}</c>.</summary>
-    [ConfigField("Activation URL template", Type = ConfigFieldType.TextArea, Required = true, Help = "Must contain {activation_id}.")]
+    [ConfigField(
+        "Activation URL template",
+        Type = ConfigFieldType.TextArea,
+        Required = true,
+        Help = "Must contain {activation_id}."
+    )]
     public string UrlTemplate { get; set; } = "https://example.com/activate?activation_id={activation_id}";
 }

@@ -17,8 +17,10 @@ public interface IAnimationService
     /// <param name="action">Animation action; 0 is idle/stand.</param>
     /// <param name="direction">Stored direction 0..4; 1 is the default front-ish facing.</param>
     /// <param name="frame">Frame within the action/direction; 0 is the first.</param>
-    /// <param name="hue">Optional caller hue (e.g. a mobile skin hue, 1-based packet id); when non-zero it
-    /// overrides the Body.def hue. 0 = use the Body.def hue (or none).</param>
+    /// <param name="hue">
+    /// Optional caller hue (e.g. a mobile skin hue, 1-based packet id); when non-zero it
+    /// overrides the Body.def hue. 0 = use the Body.def hue (or none).
+    /// </param>
     Image<Rgba32>? GetBodyFrame(int body, int action = 0, int direction = 1, int frame = 0, int hue = 0);
 
     /// <summary>

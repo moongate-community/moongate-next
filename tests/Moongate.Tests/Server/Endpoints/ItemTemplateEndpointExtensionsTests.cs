@@ -25,6 +25,12 @@ public sealed class ItemTemplateEndpointExtensionsTests
         public IReadOnlyCollection<ItemTemplateDefinition> GetAll()
             => _templates.Values.ToArray();
 
+        public void ReplaceAll(IEnumerable<ItemTemplateDefinition> templates)
+        {
+            _templates.Clear();
+            UpsertRange(templates);
+        }
+
         public bool TryGet(string id, out ItemTemplateDefinition? definition)
             => _templates.TryGetValue(id, out definition);
 
@@ -34,12 +40,6 @@ public sealed class ItemTemplateEndpointExtensionsTests
             {
                 _templates[template.Id] = template;
             }
-        }
-
-        public void ReplaceAll(IEnumerable<ItemTemplateDefinition> templates)
-        {
-            _templates.Clear();
-            UpsertRange(templates);
         }
     }
 
@@ -91,6 +91,39 @@ public sealed class ItemTemplateEndpointExtensionsTests
 
             return ValueTask.FromResult(UpdateResult);
         }
+    }
+
+    [Fact]
+    public async Task HandleCreate_InvalidRequest_ReturnsBadRequest()
+    {
+        var authoring = new FakeAuthoringService
+        {
+            CreateException = new InvalidOperationException("invalid template")
+        };
+
+        var result = await ItemTemplateEndpointExtensions.HandleCreateAsync(
+                         authoring,
+                         new() { Id = "", ItemId = -1 },
+                         CancellationToken.None
+                     );
+
+        var badRequest = Assert.IsType<BadRequest<string>>(result);
+        Assert.Equal("invalid template", badRequest.Value);
+    }
+
+    [Fact]
+    public async Task HandleCreate_ReturnsOkSaveResult()
+    {
+        var authoring = new FakeAuthoringService();
+
+        var result = await ItemTemplateEndpointExtensions.HandleCreateAsync(
+                         authoring,
+                         new() { Id = "web_crate", ItemId = 0x0E3F },
+                         CancellationToken.None
+                     );
+
+        var ok = Assert.IsType<Ok<ItemTemplateSaveResult>>(result);
+        Assert.Equal("web_crate", ok.Value!.Template.Id);
     }
 
     [Fact]
@@ -198,90 +231,6 @@ public sealed class ItemTemplateEndpointExtensionsTests
         Assert.Equal(["crate_base", "longsword"], ok.Value.Items.Select(static item => item.Id));
     }
 
-    [Fact]
-    public async Task HandleCreate_ReturnsOkSaveResult()
-    {
-        var authoring = new FakeAuthoringService();
-
-        var result = await ItemTemplateEndpointExtensions.HandleCreateAsync(
-            authoring,
-            new() { Id = "web_crate", ItemId = 0x0E3F },
-            CancellationToken.None
-        );
-
-        var ok = Assert.IsType<Ok<ItemTemplateSaveResult>>(result);
-        Assert.Equal("web_crate", ok.Value!.Template.Id);
-    }
-
-    [Fact]
-    public async Task HandleCreate_InvalidRequest_ReturnsBadRequest()
-    {
-        var authoring = new FakeAuthoringService
-        {
-            CreateException = new InvalidOperationException("invalid template")
-        };
-
-        var result = await ItemTemplateEndpointExtensions.HandleCreateAsync(
-            authoring,
-            new() { Id = "", ItemId = -1 },
-            CancellationToken.None
-        );
-
-        var badRequest = Assert.IsType<BadRequest<string>>(result);
-        Assert.Equal("invalid template", badRequest.Value);
-    }
-
-    [Fact]
-    public async Task HandleUpdate_ReturnsOkSaveResult()
-    {
-        var authoring = new FakeAuthoringService
-        {
-            UpdateResult = NewSaveResult("web_crate")
-        };
-
-        var result = await ItemTemplateEndpointExtensions.HandleUpdateAsync(
-            authoring,
-            "web_crate",
-            new() { Id = "web_crate", ItemId = 0x0E3F },
-            CancellationToken.None
-        );
-
-        var ok = Assert.IsType<Ok<ItemTemplateSaveResult>>(result);
-        Assert.Equal("web_crate", ok.Value!.Template.Id);
-    }
-
-    [Fact]
-    public async Task HandleUpdate_MissingTemplate_ReturnsNotFound()
-    {
-        var result = await ItemTemplateEndpointExtensions.HandleUpdateAsync(
-            new FakeAuthoringService(),
-            "missing",
-            new() { Id = "missing", ItemId = 0x0E3F },
-            CancellationToken.None
-        );
-
-        Assert.IsType<NotFound>(result);
-    }
-
-    [Fact]
-    public async Task HandleUpdate_IdMismatch_ReturnsBadRequest()
-    {
-        var authoring = new FakeAuthoringService
-        {
-            UpdateException = new InvalidOperationException("Route id must match the request id.")
-        };
-
-        var result = await ItemTemplateEndpointExtensions.HandleUpdateAsync(
-            authoring,
-            "crate",
-            new() { Id = "other", ItemId = 0x0E3F },
-            CancellationToken.None
-        );
-
-        var badRequest = Assert.IsType<BadRequest<string>>(result);
-        Assert.Contains("match", badRequest.Value);
-    }
-
     [Theory, InlineData("long", "longsword"), InlineData("Sharp", "longsword"), InlineData("weapon", "longsword"),
      InlineData("combat_script", "longsword"), InlineData("3937", "longsword"), InlineData("0x0F61", "longsword"),
      InlineData("0xF61", "longsword"), InlineData("125", "longsword"), InlineData("55", "longsword")]
@@ -302,6 +251,71 @@ public sealed class ItemTemplateEndpointExtensionsTests
         var ok = Assert.IsType<Ok<PagedResult<ItemTemplateSummary>>>(result);
         Assert.Equal(expectedId, Assert.Single(ok.Value!.Items).Id);
     }
+
+    [Fact]
+    public async Task HandleUpdate_IdMismatch_ReturnsBadRequest()
+    {
+        var authoring = new FakeAuthoringService
+        {
+            UpdateException = new InvalidOperationException("Route id must match the request id.")
+        };
+
+        var result = await ItemTemplateEndpointExtensions.HandleUpdateAsync(
+                         authoring,
+                         "crate",
+                         new() { Id = "other", ItemId = 0x0E3F },
+                         CancellationToken.None
+                     );
+
+        var badRequest = Assert.IsType<BadRequest<string>>(result);
+        Assert.Contains("match", badRequest.Value);
+    }
+
+    [Fact]
+    public async Task HandleUpdate_MissingTemplate_ReturnsNotFound()
+    {
+        var result = await ItemTemplateEndpointExtensions.HandleUpdateAsync(
+                         new FakeAuthoringService(),
+                         "missing",
+                         new() { Id = "missing", ItemId = 0x0E3F },
+                         CancellationToken.None
+                     );
+
+        Assert.IsType<NotFound>(result);
+    }
+
+    [Fact]
+    public async Task HandleUpdate_ReturnsOkSaveResult()
+    {
+        var authoring = new FakeAuthoringService
+        {
+            UpdateResult = NewSaveResult("web_crate")
+        };
+
+        var result = await ItemTemplateEndpointExtensions.HandleUpdateAsync(
+                         authoring,
+                         "web_crate",
+                         new() { Id = "web_crate", ItemId = 0x0E3F },
+                         CancellationToken.None
+                     );
+
+        var ok = Assert.IsType<Ok<ItemTemplateSaveResult>>(result);
+        Assert.Equal("web_crate", ok.Value!.Template.Id);
+    }
+
+    private static ItemTemplateSaveResult NewSaveResult(string id)
+        => new(
+            ItemTemplateDetail.FromDefinition(
+                new()
+                {
+                    Id = id,
+                    Name = id,
+                    ItemId = 0x0E3F
+                },
+                new FakeHueStore()
+            ),
+            "_web.yaml"
+        );
 
     private static FakeTemplateService SeedTemplates()
     {
@@ -348,18 +362,4 @@ public sealed class ItemTemplateEndpointExtensionsTests
 
         return service;
     }
-
-    private static ItemTemplateSaveResult NewSaveResult(string id)
-        => new(
-            ItemTemplateDetail.FromDefinition(
-                new()
-                {
-                    Id = id,
-                    Name = id,
-                    ItemId = 0x0E3F
-                },
-                new FakeHueStore()
-            ),
-            "_web.yaml"
-        );
 }

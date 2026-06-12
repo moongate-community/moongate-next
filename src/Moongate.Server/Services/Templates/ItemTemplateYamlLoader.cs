@@ -234,19 +234,6 @@ public sealed class ItemTemplateYamlLoader
         }
     }
 
-    private static ItemTemplateParamDefinition CloneParam(ItemTemplateParamDefinition param)
-        => new()
-        {
-            Type = param.Type,
-            Value = param.Value
-        };
-
-    private static ItemTemplateGraphicVariantDefinition CloneGraphicVariant(ItemTemplateGraphicVariantDefinition variant)
-        => new()
-        {
-            ItemId = variant.ItemId
-        };
-
     private static ItemTemplateContentsDefinition CloneContents(ItemTemplateContentsDefinition contents)
         => new()
         {
@@ -257,20 +244,24 @@ public sealed class ItemTemplateYamlLoader
             RefillScope = contents.RefillScope
         };
 
-    private static void NormalizeContents(ItemTemplateDefinition template)
-    {
-        if (template.Contents is null)
+    private static ItemTemplateGraphicVariantDefinition CloneGraphicVariant(ItemTemplateGraphicVariantDefinition variant)
+        => new()
         {
-            return;
-        }
+            ItemId = variant.ItemId
+        };
 
-        template.Contents.LootTemplate = template.Contents.LootTemplate.Trim();
-
-        if (string.IsNullOrWhiteSpace(template.Contents.LootTemplate))
+    private static ItemTemplateParamDefinition CloneParam(ItemTemplateParamDefinition param)
+        => new()
         {
-            template.Contents = null;
-        }
-    }
+            Type = param.Type,
+            Value = param.Value
+        };
+
+    private static bool IsReservedParamKey(string key)
+        => string.Equals(key, ItemTemplateDefinition.ReservedIsMovableParamKey, StringComparison.OrdinalIgnoreCase) ||
+           string.Equals(key, ItemTemplateDefinitionKeys.TemplateId, StringComparison.OrdinalIgnoreCase) ||
+           string.Equals(key, ItemTemplateDefinitionKeys.ContentsGeneratedAt, StringComparison.OrdinalIgnoreCase) ||
+           string.Equals(key, ItemTemplateDefinitionKeys.ContentsNextRefillAt, StringComparison.OrdinalIgnoreCase);
 
     private static Dictionary<string, ItemTemplateParamDefinition> MergeParams(
         Dictionary<string, ItemTemplateParamDefinition> parentParams,
@@ -290,6 +281,21 @@ public sealed class ItemTemplateYamlLoader
         }
 
         return merged;
+    }
+
+    private static void NormalizeContents(ItemTemplateDefinition template)
+    {
+        if (template.Contents is null)
+        {
+            return;
+        }
+
+        template.Contents.LootTemplate = template.Contents.LootTemplate.Trim();
+
+        if (string.IsNullOrWhiteSpace(template.Contents.LootTemplate))
+        {
+            template.Contents = null;
+        }
     }
 
     private static void ResolveBaseItems(List<ItemTemplateDefinition> templates)
@@ -345,6 +351,41 @@ public sealed class ItemTemplateYamlLoader
         states[template.Id] = ResolveState.Done;
     }
 
+    private static void ValidateGraphicVariants(
+        List<ItemTemplateDefinition> templates,
+        Dictionary<string, string> sources
+    )
+    {
+        foreach (var template in templates)
+        {
+            var itemIds = new HashSet<int>();
+
+            foreach (var variant in template.GraphicVariants)
+            {
+                if (variant.ItemId <= 0)
+                {
+                    throw new InvalidOperationException(
+                        $"Item template '{template.Id}' in '{sources[template.Id]}' has invalid graphic variant item_id '{variant.ItemId}'."
+                    );
+                }
+
+                if (variant.ItemId == template.ItemId)
+                {
+                    throw new InvalidOperationException(
+                        $"Item template '{template.Id}' in '{sources[template.Id]}' has graphic variant item_id '{variant.ItemId}' that matches primary item_id."
+                    );
+                }
+
+                if (!itemIds.Add(variant.ItemId))
+                {
+                    throw new InvalidOperationException(
+                        $"Item template '{template.Id}' in '{sources[template.Id]}' has duplicate graphic variant item_id '{variant.ItemId}'."
+                    );
+                }
+            }
+        }
+    }
+
     private static void ValidateParams(
         List<ItemTemplateDefinition> templates,
         Dictionary<string, string> sources
@@ -375,47 +416,6 @@ public sealed class ItemTemplateYamlLoader
                     throw new InvalidOperationException(
                         $"Item template '{template.Id}' in '{sources[template.Id]}' has invalid {param.Type} param '{key}' = '{param.Value}'.",
                         exception
-                    );
-                }
-            }
-        }
-    }
-
-    private static bool IsReservedParamKey(string key)
-        => string.Equals(key, ItemTemplateDefinition.ReservedIsMovableParamKey, StringComparison.OrdinalIgnoreCase) ||
-           string.Equals(key, ItemTemplateDefinitionKeys.TemplateId, StringComparison.OrdinalIgnoreCase) ||
-           string.Equals(key, ItemTemplateDefinitionKeys.ContentsGeneratedAt, StringComparison.OrdinalIgnoreCase) ||
-           string.Equals(key, ItemTemplateDefinitionKeys.ContentsNextRefillAt, StringComparison.OrdinalIgnoreCase);
-
-    private static void ValidateGraphicVariants(
-        List<ItemTemplateDefinition> templates,
-        Dictionary<string, string> sources
-    )
-    {
-        foreach (var template in templates)
-        {
-            var itemIds = new HashSet<int>();
-
-            foreach (var variant in template.GraphicVariants)
-            {
-                if (variant.ItemId <= 0)
-                {
-                    throw new InvalidOperationException(
-                        $"Item template '{template.Id}' in '{sources[template.Id]}' has invalid graphic variant item_id '{variant.ItemId}'."
-                    );
-                }
-
-                if (variant.ItemId == template.ItemId)
-                {
-                    throw new InvalidOperationException(
-                        $"Item template '{template.Id}' in '{sources[template.Id]}' has graphic variant item_id '{variant.ItemId}' that matches primary item_id."
-                    );
-                }
-
-                if (!itemIds.Add(variant.ItemId))
-                {
-                    throw new InvalidOperationException(
-                        $"Item template '{template.Id}' in '{sources[template.Id]}' has duplicate graphic variant item_id '{variant.ItemId}'."
                     );
                 }
             }

@@ -83,29 +83,11 @@ public sealed class MobileFigureRenderer : IMobileFigureRenderer
         }
     }
 
-    private void AddHairLayer(List<(int Priority, DecodedFrame Frame)> layers, int style, int hue, int direction, ItemLayerType layer)
-    {
-        if (style == 0)
-        {
-            return;
-        }
-
-        var animationId = _tileData.GetItem(style).Animation;
-
-        if (animationId <= 0)
-        {
-            return;
-        }
-
-        var frame = _animation.GetDecodedFrame(animationId, 0, direction, 0, hue);
-
-        if (frame is not null)
-        {
-            layers.Add((EquipmentDrawOrder.Priority(layer), frame));
-        }
-    }
-
-    private void AddEquipmentLayers(List<(int Priority, DecodedFrame Frame)> layers, MobileRenderRequest request, int direction)
+    private void AddEquipmentLayers(
+        List<(int Priority, DecodedFrame Frame)> layers,
+        MobileRenderRequest request,
+        int direction
+    )
     {
         foreach (var itemId in request.Equipment)
         {
@@ -148,6 +130,34 @@ public sealed class MobileFigureRenderer : IMobileFigureRenderer
             {
                 layers.Add((priority, frame));
             }
+        }
+    }
+
+    private void AddHairLayer(
+        List<(int Priority, DecodedFrame Frame)> layers,
+        int style,
+        int hue,
+        int direction,
+        ItemLayerType layer
+    )
+    {
+        if (style == 0)
+        {
+            return;
+        }
+
+        var animationId = _tileData.GetItem(style).Animation;
+
+        if (animationId <= 0)
+        {
+            return;
+        }
+
+        var frame = _animation.GetDecodedFrame(animationId, 0, direction, 0, hue);
+
+        if (frame is not null)
+        {
+            layers.Add((EquipmentDrawOrder.Priority(layer), frame));
         }
     }
 }

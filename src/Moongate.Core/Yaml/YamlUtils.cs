@@ -91,9 +91,7 @@ public static class YamlUtils
         }
 
         public void WriteYaml(IEmitter emitter, object? value, Type type, ObjectSerializer serializer)
-        {
-            serializer(value, type);
-        }
+            => serializer(value, type);
 
         private static string ToSnakeCase(string value)
         {

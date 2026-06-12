@@ -20,6 +20,7 @@ using Moongate.UO.Data.Interfaces.Localization;
 using Moongate.UO.Data.Interfaces.Maps;
 using Moongate.UO.Data.Interfaces.Multi;
 using Moongate.UO.Data.Interfaces.Races;
+using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Interfaces.Skills;
 using Moongate.UO.Data.Interfaces.Textures;
 using Moongate.UO.Data.Interfaces.Tiles;
@@ -98,12 +99,13 @@ public static class UoDataContainerExtensions
             {
                 var fileResolver = resolver.Resolve<IUoFileResolver>();
                 var bodyDefPath = fileResolver.Resolve("Body.def") ?? Path.Combine(dataDirectory, "uo_files", "Body.def");
-                var bodyConvPath = fileResolver.Resolve("Bodyconv.def") ?? Path.Combine(dataDirectory, "uo_files", "Bodyconv.def");
+                var bodyConvPath = fileResolver.Resolve("Bodyconv.def") ??
+                                   Path.Combine(dataDirectory, "uo_files", "Bodyconv.def");
 
                 return new AnimationService(
                     fileResolver,
-                    new BodyDefTable(bodyDefPath),
-                    new BodyConvTable(bodyConvPath),
+                    new(bodyDefPath),
+                    new(bodyConvPath),
                     resolver.Resolve<IHueStore>()
                 );
             },
@@ -114,13 +116,14 @@ public static class UoDataContainerExtensions
             resolver =>
             {
                 var fileResolver = resolver.Resolve<IUoFileResolver>();
-                var equipConvPath = fileResolver.Resolve("Equipconv.def") ?? Path.Combine(dataDirectory, "uo_files", "Equipconv.def");
+                var equipConvPath = fileResolver.Resolve("Equipconv.def") ??
+                                    Path.Combine(dataDirectory, "uo_files", "Equipconv.def");
 
                 return new MobileFigureRenderer(
                     resolver.Resolve<IAnimationService>(),
                     resolver.Resolve<ITileDataStore>(),
-                    resolver.Resolve<Moongate.UO.Data.Interfaces.Services.IItemTemplateService>(),
-                    new EquipConvTable(equipConvPath)
+                    resolver.Resolve<IItemTemplateService>(),
+                    new(equipConvPath)
                 );
             },
             Reuse.Singleton

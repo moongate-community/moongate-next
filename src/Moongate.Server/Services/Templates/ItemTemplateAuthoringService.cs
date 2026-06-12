@@ -108,6 +108,68 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
         }
     }
 
+    private static ItemTemplateGraphicVariantDefinition CloneGraphicVariant(ItemTemplateGraphicVariantDefinition variant)
+        => new() { ItemId = variant.ItemId };
+
+    private static void CopyDirectory(string sourceDirectory, string targetDirectory)
+    {
+        Directory.CreateDirectory(targetDirectory);
+
+        if (!Directory.Exists(sourceDirectory))
+        {
+            return;
+        }
+
+        foreach (var directory in Directory.GetDirectories(sourceDirectory, "*", SearchOption.AllDirectories))
+        {
+            Directory.CreateDirectory(Path.Combine(targetDirectory, Path.GetRelativePath(sourceDirectory, directory)));
+        }
+
+        foreach (var file in Directory.GetFiles(sourceDirectory, "*", SearchOption.AllDirectories))
+        {
+            var targetFile = Path.Combine(targetDirectory, Path.GetRelativePath(sourceDirectory, file));
+            var targetParent = Path.GetDirectoryName(targetFile);
+
+            if (!string.IsNullOrWhiteSpace(targetParent))
+            {
+                Directory.CreateDirectory(targetParent);
+            }
+
+            File.Copy(file, targetFile, true);
+        }
+    }
+
+    private static ItemTemplateContentsDefinition? NormalizeContents(ItemTemplateContentsDefinition? contents)
+    {
+        if (contents is null || string.IsNullOrWhiteSpace(contents.LootTemplate))
+        {
+            return null;
+        }
+
+        return new()
+        {
+            LootTemplate = contents.LootTemplate.Trim(),
+            Generate = contents.Generate,
+            RefillEvery = contents.RefillEvery,
+            RefillPolicy = contents.RefillPolicy,
+            RefillScope = contents.RefillScope
+        };
+    }
+
+    private void PublishLootRegistry(IReadOnlyList<ItemTemplateDefinition> templates)
+    {
+        var registry = new LootTableRegistry(_lootRegistryStore.Registry.GetAll(), templates);
+        _lootRegistryStore.SetRegistry(registry);
+
+        if (_lootService is LootService lootService)
+        {
+            lootService.SetRegistry(registry);
+        }
+    }
+
+    private string RelativeSourceFile(string sourceFile)
+        => Path.GetRelativePath(_itemsDirectory, sourceFile).Replace(Path.DirectorySeparatorChar, '/');
+
     private ItemTemplateSaveResult Save(
         ItemTemplateDefinition template,
         string sourceFile,
@@ -155,33 +217,6 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
                 Directory.Delete(tempDirectory, true);
             }
         }
-    }
-
-    private void PublishLootRegistry(IReadOnlyList<ItemTemplateDefinition> templates)
-    {
-        var registry = new LootTableRegistry(_lootRegistryStore.Registry.GetAll(), templates);
-        _lootRegistryStore.SetRegistry(registry);
-
-        if (_lootService is LootService lootService)
-        {
-            lootService.SetRegistry(registry);
-        }
-    }
-
-    private void ValidateCandidateContents(IReadOnlyList<ItemTemplateDefinition> templates)
-    {
-        var lootRegistry = _lootRegistryStore.Registry;
-        var candidateTemplateService = new ItemTemplateService();
-        candidateTemplateService.ReplaceAll(templates);
-        LootTableValidator.Validate(lootRegistry.GetAll(), candidateTemplateService);
-
-        if (!templates.Any(static template => template.Contents is not null))
-        {
-            return;
-        }
-
-        var candidateRegistry = new LootTableRegistry(lootRegistry.GetAll(), templates);
-        ItemTemplateContentsValidator.Validate(templates, candidateRegistry, _items);
     }
 
     private bool TemplateExists(string id)
@@ -244,26 +279,6 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
         };
     }
 
-    private static ItemTemplateGraphicVariantDefinition CloneGraphicVariant(ItemTemplateGraphicVariantDefinition variant)
-        => new() { ItemId = variant.ItemId };
-
-    private static ItemTemplateContentsDefinition? NormalizeContents(ItemTemplateContentsDefinition? contents)
-    {
-        if (contents is null || string.IsNullOrWhiteSpace(contents.LootTemplate))
-        {
-            return null;
-        }
-
-        return new()
-        {
-            LootTemplate = contents.LootTemplate.Trim(),
-            Generate = contents.Generate,
-            RefillEvery = contents.RefillEvery,
-            RefillPolicy = contents.RefillPolicy,
-            RefillScope = contents.RefillScope
-        };
-    }
-
     private static void Validate(ItemTemplateDefinition template)
     {
         if (!string.IsNullOrWhiteSpace(template.BaseItem))
@@ -305,6 +320,22 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
         ValidateParams(template);
     }
 
+    private void ValidateCandidateContents(IReadOnlyList<ItemTemplateDefinition> templates)
+    {
+        var lootRegistry = _lootRegistryStore.Registry;
+        var candidateTemplateService = new ItemTemplateService();
+        candidateTemplateService.ReplaceAll(templates);
+        LootTableValidator.Validate(lootRegistry.GetAll(), candidateTemplateService);
+
+        if (!templates.Any(static template => template.Contents is not null))
+        {
+            return;
+        }
+
+        var candidateRegistry = new LootTableRegistry(lootRegistry.GetAll(), templates);
+        ItemTemplateContentsValidator.Validate(templates, candidateRegistry, _items);
+    }
+
     private static void ValidateGraphicVariants(ItemTemplateDefinition template)
     {
         var itemIds = new HashSet<int>();
@@ -336,37 +367,6 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
             {
                 throw new InvalidOperationException("params keys must not be blank.");
             }
-        }
-    }
-
-    private string RelativeSourceFile(string sourceFile)
-        => Path.GetRelativePath(_itemsDirectory, sourceFile).Replace(Path.DirectorySeparatorChar, '/');
-
-    private static void CopyDirectory(string sourceDirectory, string targetDirectory)
-    {
-        Directory.CreateDirectory(targetDirectory);
-
-        if (!Directory.Exists(sourceDirectory))
-        {
-            return;
-        }
-
-        foreach (var directory in Directory.GetDirectories(sourceDirectory, "*", SearchOption.AllDirectories))
-        {
-            Directory.CreateDirectory(Path.Combine(targetDirectory, Path.GetRelativePath(sourceDirectory, directory)));
-        }
-
-        foreach (var file in Directory.GetFiles(sourceDirectory, "*", SearchOption.AllDirectories))
-        {
-            var targetFile = Path.Combine(targetDirectory, Path.GetRelativePath(sourceDirectory, file));
-            var targetParent = Path.GetDirectoryName(targetFile);
-
-            if (!string.IsNullOrWhiteSpace(targetParent))
-            {
-                Directory.CreateDirectory(targetParent);
-            }
-
-            File.Copy(file, targetFile, true);
         }
     }
 }

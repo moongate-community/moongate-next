@@ -1,10 +1,10 @@
 using Moongate.Core.Ids;
 using Moongate.Server.Services.Mobiles;
 using Moongate.Server.Services.Templates;
+using Moongate.UO.Data.Data.Mobiles;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Entities.Mobiles;
 using Moongate.UO.Data.Interfaces.Services;
-using Moongate.UO.Data.Templates.Items;
 using Moongate.UO.Data.Templates.Mobiles;
 using Moongate.UO.Data.Types.Items;
 using Moongate.UO.Data.Types.Mobiles;
@@ -21,14 +21,17 @@ public sealed class MobileFactoryServiceTests
 
         public List<(string Template, Serial Id)> Created { get; } = [];
 
-        public ValueTask<ItemEntity> CreateFromTemplateAsync(string templateId, CancellationToken cancellationToken = default)
+        public ValueTask<ItemEntity> CreateFromTemplateAsync(
+            string templateId,
+            CancellationToken cancellationToken = default
+        )
         {
             var id = new Serial(_next++);
             var itemId = templateId switch
             {
-                "katana" => 5119,
+                "katana"   => 5119,
                 "backpack" => 3701,
-                _ => 1
+                _          => 1
             };
             var item = new ItemEntity { Id = id, ItemId = itemId, IsStackable = false };
             Created.Add((templateId, id));
@@ -36,7 +39,11 @@ public sealed class MobileFactoryServiceTests
             return ValueTask.FromResult(item);
         }
 
-        public ValueTask<ItemEntity> CreateFromTemplateAsync(string templateId, int amount, CancellationToken cancellationToken = default)
+        public ValueTask<ItemEntity> CreateFromTemplateAsync(
+            string templateId,
+            int amount,
+            CancellationToken cancellationToken = default
+        )
             => CreateFromTemplateAsync(templateId, cancellationToken);
     }
 
@@ -46,17 +53,28 @@ public sealed class MobileFactoryServiceTests
 
         public List<(Serial MobileId, ItemLayerType Layer)> Equipped { get; } = [];
 
+        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
+            => throw new NotSupportedException();
+
         public ValueTask<MobileEntity> CreateAsync(MobileEntity mobile, CancellationToken cancellationToken = default)
         {
             if (!mobile.Id.IsValid)
             {
-                mobile.Id = new Serial(_next++);
+                mobile.Id = new(_next++);
             }
 
             return ValueTask.FromResult(mobile);
         }
 
-        public ValueTask<bool> EquipAsync(MobileEntity mobile, ItemEntity item, ItemLayerType layer, CancellationToken cancellationToken = default)
+        public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
+            => throw new NotSupportedException();
+
+        public ValueTask<bool> EquipAsync(
+            MobileEntity mobile,
+            ItemEntity item,
+            ItemLayerType layer,
+            CancellationToken cancellationToken = default
+        )
         {
             mobile.EquippedItemIds[layer] = item.Id;
             Equipped.Add((mobile.Id, layer));
@@ -64,76 +82,54 @@ public sealed class MobileFactoryServiceTests
             return ValueTask.FromResult(true);
         }
 
-        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public ValueTask<IReadOnlyList<MobileEntity>> GetByAccountIdAsync(Serial accountId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Moongate.UO.Data.Data.Mobiles.SkillEntry GetSkill(MobileEntity mobile, UOSkillName skill) => throw new NotSupportedException();
-        public ValueTask<Moongate.UO.Data.Data.Mobiles.SkillEntry> SetSkillAsync(MobileEntity mobile, UOSkillName skill, double value, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public ValueTask<bool> UnequipAsync(MobileEntity mobile, ItemLayerType layer, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public ValueTask<IReadOnlyList<MobileEntity>> GetByAccountIdAsync(
+            Serial accountId,
+            CancellationToken cancellationToken = default
+        )
+            => throw new NotSupportedException();
+
+        public ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
+            => throw new NotSupportedException();
+
+        public SkillEntry GetSkill(MobileEntity mobile, UOSkillName skill)
+            => throw new NotSupportedException();
+
+        public ValueTask<SkillEntry> SetSkillAsync(
+            MobileEntity mobile,
+            UOSkillName skill,
+            double value,
+            CancellationToken cancellationToken = default
+        )
+            => throw new NotSupportedException();
+
+        public ValueTask<bool> UnequipAsync(
+            MobileEntity mobile,
+            ItemLayerType layer,
+            CancellationToken cancellationToken = default
+        )
+            => throw new NotSupportedException();
     }
 
-    private static ItemTemplateService ItemTemplates()
+    [Fact]
+    public async Task CreateFromTemplateAsync_AbstractTemplate_Throws()
     {
-        var registry = new ItemTemplateService();
-        registry.UpsertRange(
-            [
-                new ItemTemplateDefinition { Id = "katana", ItemId = 5119, Layer = ItemLayerType.OneHanded },
-                new ItemTemplateDefinition { Id = "backpack", ItemId = 3701, Layer = ItemLayerType.Backpack }
-            ]
-        );
+        var def = Guard();
+        def.IsAbstract = true;
+        var (service, _, _) = New(def);
 
-        return registry;
+        await Assert.ThrowsAsync<InvalidOperationException>(() => service.CreateFromTemplateAsync("town_guard").AsTask());
     }
 
-    private static MobileTemplateService Registry(MobileTemplateDefinition definition)
+    [Fact]
+    public async Task CreateFromTemplateAsync_EquipsBackpackAndEquipment()
     {
-        var registry = new MobileTemplateService();
-        registry.UpsertRange([definition]);
+        var (service, _, mobiles) = New(Guard());
 
-        return registry;
-    }
+        var mobile = await service.CreateFromTemplateAsync("town_guard");
 
-    private static MobileTemplateDefinition Guard()
-    {
-        var m = new MobileTemplateDefinition
-        {
-            Id = "town_guard",
-            Name = "a guard",
-            Title = "the guard",
-            Body = 400,
-            Gender = GenderType.Male,
-            SkinHue = 1002,
-            Brain = "guard_brain",
-            Notoriety = NotorietyType.Criminal,
-            Karma = -500,
-            Fame = 1200,
-            FactionId = "town_britannia",
-            Stats = new MobileStatsTemplate { Strength = 100, Dexterity = 90, Intelligence = 50 },
-            Resources = new MobileResourcesTemplate { Hits = 120, Mana = 50, Stamina = 90 },
-            Resistances = new MobileResistancesTemplate { Physical = 40 },
-            BackpackTemplate = "backpack"
-        };
-        m.Skills["Swords"] = 90;
-        m.Equipment.Add(new MobileEquipmentEntry { Item = "katana" });
-        m.LootTables.Add("common");
-        m.Params["faction_rank"] = new ItemTemplateParamDefinition { Type = ItemTemplateParamType.Integer, Value = "3" };
-
-        return m;
-    }
-
-    private static (MobileFactoryService Service, FakeItemFactory Items, FakeMobileService Mobiles) New(MobileTemplateDefinition def)
-    {
-        var items = new FakeItemFactory();
-        var mobiles = new FakeMobileService();
-        var service = new MobileFactoryService(
-            Registry(def),
-            ItemTemplates(),
-            new Lazy<IMobileService>(() => mobiles),
-            new Lazy<IItemFactoryService>(() => items)
-        );
-
-        return (service, items, mobiles);
+        Assert.NotEqual(default, mobile.BackpackId);
+        Assert.Contains(mobiles.Equipped, e => e.Layer == ItemLayerType.Backpack);
+        Assert.Contains(mobiles.Equipped, e => e.Layer == ItemLayerType.OneHanded);
     }
 
     [Fact]
@@ -172,18 +168,6 @@ public sealed class MobileFactoryServiceTests
     }
 
     [Fact]
-    public async Task CreateFromTemplateAsync_EquipsBackpackAndEquipment()
-    {
-        var (service, _, mobiles) = New(Guard());
-
-        var mobile = await service.CreateFromTemplateAsync("town_guard");
-
-        Assert.NotEqual(default, mobile.BackpackId);
-        Assert.Contains(mobiles.Equipped, e => e.Layer == ItemLayerType.Backpack);
-        Assert.Contains(mobiles.Equipped, e => e.Layer == ItemLayerType.OneHanded);
-    }
-
-    [Fact]
     public async Task CreateFromTemplateAsync_StoresLootTablesAndParamsInCustomProperties()
     {
         var (service, _, _) = New(Guard());
@@ -204,13 +188,68 @@ public sealed class MobileFactoryServiceTests
         await Assert.ThrowsAsync<InvalidOperationException>(() => service.CreateFromTemplateAsync("missing").AsTask());
     }
 
-    [Fact]
-    public async Task CreateFromTemplateAsync_AbstractTemplate_Throws()
+    private static MobileTemplateDefinition Guard()
     {
-        var def = Guard();
-        def.IsAbstract = true;
-        var (service, _, _) = New(def);
+        var m = new MobileTemplateDefinition
+        {
+            Id = "town_guard",
+            Name = "a guard",
+            Title = "the guard",
+            Body = 400,
+            Gender = GenderType.Male,
+            SkinHue = 1002,
+            Brain = "guard_brain",
+            Notoriety = NotorietyType.Criminal,
+            Karma = -500,
+            Fame = 1200,
+            FactionId = "town_britannia",
+            Stats = new() { Strength = 100, Dexterity = 90, Intelligence = 50 },
+            Resources = new() { Hits = 120, Mana = 50, Stamina = 90 },
+            Resistances = new() { Physical = 40 },
+            BackpackTemplate = "backpack"
+        };
+        m.Skills["Swords"] = 90;
+        m.Equipment.Add(new() { Item = "katana" });
+        m.LootTables.Add("common");
+        m.Params["faction_rank"] = new() { Type = ItemTemplateParamType.Integer, Value = "3" };
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => service.CreateFromTemplateAsync("town_guard").AsTask());
+        return m;
+    }
+
+    private static ItemTemplateService ItemTemplates()
+    {
+        var registry = new ItemTemplateService();
+        registry.UpsertRange(
+            [
+                new() { Id = "katana", ItemId = 5119, Layer = ItemLayerType.OneHanded },
+                new() { Id = "backpack", ItemId = 3701, Layer = ItemLayerType.Backpack }
+            ]
+        );
+
+        return registry;
+    }
+
+    private static (MobileFactoryService Service, FakeItemFactory Items, FakeMobileService Mobiles) New(
+        MobileTemplateDefinition def
+    )
+    {
+        var items = new FakeItemFactory();
+        var mobiles = new FakeMobileService();
+        var service = new MobileFactoryService(
+            Registry(def),
+            ItemTemplates(),
+            new(() => mobiles),
+            new(() => items)
+        );
+
+        return (service, items, mobiles);
+    }
+
+    private static MobileTemplateService Registry(MobileTemplateDefinition definition)
+    {
+        var registry = new MobileTemplateService();
+        registry.UpsertRange([definition]);
+
+        return registry;
     }
 }

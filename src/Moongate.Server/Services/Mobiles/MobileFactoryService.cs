@@ -1,7 +1,5 @@
 using Moongate.Core.Ids;
 using Moongate.Server.Services.Templates;
-using Moongate.UO.Data.Data;
-using Moongate.UO.Data.Data.Mobiles;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Entities.Mobiles;
 using Moongate.UO.Data.Interfaces.Services;
@@ -97,13 +95,13 @@ public sealed class MobileFactoryService : IMobileFactoryService
             Karma = template.Karma,
             Fame = template.Fame,
             FactionId = template.FactionId,
-            BaseStats = new MobileStats
+            BaseStats = new()
             {
                 Strength = stats.Strength,
                 Dexterity = stats.Dexterity,
                 Intelligence = stats.Intelligence
             },
-            Resources = new MobileResources
+            Resources = new()
             {
                 Hits = resources.Hits,
                 MaxHits = resources.Hits,
@@ -112,7 +110,7 @@ public sealed class MobileFactoryService : IMobileFactoryService
                 Stamina = resources.Stamina,
                 MaxStamina = resources.Stamina
             },
-            Resistances = new MobileResistances
+            Resistances = new()
             {
                 Physical = resistances.Physical,
                 Fire = resistances.Fire,
@@ -124,13 +122,13 @@ public sealed class MobileFactoryService : IMobileFactoryService
 
         foreach (var (skillName, value) in template.Skills)
         {
-            var skill = Enum.Parse<UOSkillName>(skillName, ignoreCase: true);
-            mobile.Skills[skill] = new SkillEntry { Base = value, Value = value };
+            var skill = Enum.Parse<UOSkillName>(skillName, true);
+            mobile.Skills[skill] = new() { Base = value, Value = value };
         }
 
         if (template.LootTables.Count > 0)
         {
-            mobile.CustomProperties[MobileTemplateDefinitionKeys.LootTables] = new CustomProperty
+            mobile.CustomProperties[MobileTemplateDefinitionKeys.LootTables] = new()
             {
                 Type = CustomPropertyType.String,
                 StringValue = string.Join(',', template.LootTables)
@@ -190,9 +188,6 @@ public sealed class MobileFactoryService : IMobileFactoryService
         }
     }
 
-    private ItemLayerType? ResolveLayer(string itemTemplateId)
-        => _items.TryGet(itemTemplateId, out var item) ? item.Layer : null;
-
     private async ValueTask EquipOrWarnAsync(
         MobileEntity mobile,
         ItemEntity item,
@@ -207,4 +202,7 @@ public sealed class MobileFactoryService : IMobileFactoryService
             _logger.Warning("Could not equip '{Item}' on layer {Layer}", item.Id, layer);
         }
     }
+
+    private ItemLayerType? ResolveLayer(string itemTemplateId)
+        => _items.TryGet(itemTemplateId, out var item) ? item.Layer : null;
 }

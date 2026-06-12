@@ -37,7 +37,6 @@ public static class SeedContainerExtensions
                         "admin@moongate.local",
                         "admin",
                         UserLevelType.Administrator,
-                        true,
                         cancellationToken: cancellationToken
                     );
 

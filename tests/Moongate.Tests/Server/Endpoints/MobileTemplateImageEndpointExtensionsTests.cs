@@ -25,15 +25,19 @@ public sealed class MobileTemplateImageEndpointExtensionsTests : IDisposable
     {
         private readonly Dictionary<string, MobileTemplateDefinition> _map = new(StringComparer.OrdinalIgnoreCase);
 
-        public void Add(MobileTemplateDefinition def) => _map[def.Id] = def;
-
         public int Count => _map.Count;
 
-        public void Clear() => _map.Clear();
+        public void Add(MobileTemplateDefinition def)
+            => _map[def.Id] = def;
 
-        public IReadOnlyCollection<MobileTemplateDefinition> GetAll() => _map.Values.ToArray();
+        public void Clear()
+            => _map.Clear();
 
-        public bool TryGet(string id, out MobileTemplateDefinition? definition) => _map.TryGetValue(id, out definition);
+        public IReadOnlyCollection<MobileTemplateDefinition> GetAll()
+            => _map.Values.ToArray();
+
+        public bool TryGet(string id, out MobileTemplateDefinition? definition)
+            => _map.TryGetValue(id, out definition);
 
         public void UpsertRange(IEnumerable<MobileTemplateDefinition> templates)
         {
@@ -59,20 +63,55 @@ public sealed class MobileTemplateImageEndpointExtensionsTests : IDisposable
             if (!_hasImage) { return null; }
 
             var img = new Image<Rgba32>(3, 3);
-            img[1, 1] = new Rgba32(255, 255, 255, 255);
+            img[1, 1] = new(255, 255, 255, 255);
 
             return img;
         }
+    }
+
+    public void Dispose()
+    {
+        if (Directory.Exists(_root)) { Directory.Delete(_root, true); }
+    }
+
+    [Fact]
+    public async Task Get_CachedSecondCall_DoesNotRerender()
+    {
+        var templates = new FakeTemplates();
+        templates.Add(new() { Id = "town_guard", Body = 400 });
+        var renderer = new FakeRenderer(true);
+
+        await MobileTemplateImageEndpointExtensions.HandleGetTemplateImageAsync(
+            "town_guard",
+            templates,
+            renderer,
+            _directories,
+            CancellationToken.None
+        );
+        await MobileTemplateImageEndpointExtensions.HandleGetTemplateImageAsync(
+            "town_guard",
+            templates,
+            renderer,
+            _directories,
+            CancellationToken.None
+        );
+
+        Assert.Equal(1, renderer.RenderCount);
     }
 
     [Fact]
     public async Task Get_ExistingTemplate_ReturnsPngFile()
     {
         var templates = new FakeTemplates();
-        templates.Add(new MobileTemplateDefinition { Id = "town_guard", Body = 400 });
+        templates.Add(new() { Id = "town_guard", Body = 400 });
 
         var result = await MobileTemplateImageEndpointExtensions.HandleGetTemplateImageAsync(
-            "town_guard", templates, new FakeRenderer(true), _directories, CancellationToken.None);
+                         "town_guard",
+                         templates,
+                         new FakeRenderer(true),
+                         _directories,
+                         CancellationToken.None
+                     );
 
         Assert.Contains("PhysicalFile", result.GetType().Name, StringComparison.OrdinalIgnoreCase);
     }
@@ -81,7 +120,12 @@ public sealed class MobileTemplateImageEndpointExtensionsTests : IDisposable
     public async Task Get_MissingTemplate_ReturnsNotFound()
     {
         var result = await MobileTemplateImageEndpointExtensions.HandleGetTemplateImageAsync(
-            "ghost", new FakeTemplates(), new FakeRenderer(true), _directories, CancellationToken.None);
+                         "ghost",
+                         new FakeTemplates(),
+                         new FakeRenderer(true),
+                         _directories,
+                         CancellationToken.None
+                     );
 
         Assert.IsType<NotFound>(result);
     }
@@ -90,29 +134,16 @@ public sealed class MobileTemplateImageEndpointExtensionsTests : IDisposable
     public async Task Get_RendererReturnsNull_ReturnsNotFound()
     {
         var templates = new FakeTemplates();
-        templates.Add(new MobileTemplateDefinition { Id = "town_guard", Body = 400 });
+        templates.Add(new() { Id = "town_guard", Body = 400 });
 
         var result = await MobileTemplateImageEndpointExtensions.HandleGetTemplateImageAsync(
-            "town_guard", templates, new FakeRenderer(false), _directories, CancellationToken.None);
+                         "town_guard",
+                         templates,
+                         new FakeRenderer(false),
+                         _directories,
+                         CancellationToken.None
+                     );
 
         Assert.IsType<NotFound>(result);
-    }
-
-    [Fact]
-    public async Task Get_CachedSecondCall_DoesNotRerender()
-    {
-        var templates = new FakeTemplates();
-        templates.Add(new MobileTemplateDefinition { Id = "town_guard", Body = 400 });
-        var renderer = new FakeRenderer(true);
-
-        await MobileTemplateImageEndpointExtensions.HandleGetTemplateImageAsync("town_guard", templates, renderer, _directories, CancellationToken.None);
-        await MobileTemplateImageEndpointExtensions.HandleGetTemplateImageAsync("town_guard", templates, renderer, _directories, CancellationToken.None);
-
-        Assert.Equal(1, renderer.RenderCount);
-    }
-
-    public void Dispose()
-    {
-        if (Directory.Exists(_root)) { Directory.Delete(_root, true); }
     }
 }

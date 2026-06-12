@@ -20,6 +20,23 @@ public sealed class AuthTokenServiceTests
         private readonly Dictionary<Serial, UserEntity> _users = [];
         private uint _nextId = 1;
 
+        public ValueTask<UserEntity?> ActivateAsync(string activationId, CancellationToken cancellationToken = default)
+        {
+            var user = _users.Values.FirstOrDefault(
+                candidate => string.Equals(candidate.ActivationId, activationId.Trim(), StringComparison.Ordinal)
+            );
+
+            if (user is null)
+            {
+                return ValueTask.FromResult<UserEntity?>(null);
+            }
+
+            user.IsActive = true;
+            user.ActivationId = null;
+
+            return ValueTask.FromResult<UserEntity?>(user);
+        }
+
         public UserEntity Add(
             string username,
             string password,
@@ -44,23 +61,6 @@ public sealed class AuthTokenServiceTests
 
         public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
             => ValueTask.FromResult(_users.Count);
-
-        public ValueTask<UserEntity?> ActivateAsync(string activationId, CancellationToken cancellationToken = default)
-        {
-            var user = _users.Values.FirstOrDefault(
-                candidate => string.Equals(candidate.ActivationId, activationId.Trim(), StringComparison.Ordinal)
-            );
-
-            if (user is null)
-            {
-                return ValueTask.FromResult<UserEntity?>(null);
-            }
-
-            user.IsActive = true;
-            user.ActivationId = null;
-
-            return ValueTask.FromResult<UserEntity?>(user);
-        }
 
         public ValueTask<UserEntity> CreateAsync(
             string username,

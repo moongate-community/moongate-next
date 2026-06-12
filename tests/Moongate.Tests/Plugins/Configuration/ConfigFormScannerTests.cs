@@ -7,25 +7,8 @@ namespace Moongate.Tests.Plugins.Configuration;
 public class ConfigFormScannerTests
 {
     [Fact]
-    public void BuildForm_SectionsInDeclarationOrder_WithGeneralFirst()
-    {
-        var form = ConfigFormScanner.BuildForm(new FormSample());
-
-        Assert.Equal(["general", "sender", "smtp"], form.Sections.Select(section => section.Id).ToArray());
-        Assert.Equal("General", form.Sections[0].Label);
-        Assert.Equal("SMTP", form.Sections[2].Label);
-    }
-
-    [Fact]
-    public void BuildForm_TopLevelField_LandsInGeneral()
-    {
-        var form = ConfigFormScanner.BuildForm(new FormSample());
-
-        var general = form.Sections.Single(section => section.Id == "general");
-        var field = Assert.Single(general.Fields);
-        Assert.Equal("enabled", field.Path);
-        Assert.Equal(PluginConfigFieldTypes.Boolean, field.Type);
-    }
+    public void BuildForm_AutoOnUnsupportedType_Throws()
+        => Assert.Throws<NotSupportedException>(() => ConfigFormScanner.BuildForm(new FormUnsupportedSample()));
 
     [Fact]
     public void BuildForm_DerivesNestedPaths()
@@ -40,14 +23,11 @@ public class ConfigFormScannerTests
     }
 
     [Fact]
-    public void BuildForm_InfersTypes_AndHonorsOverride()
+    public void BuildForm_ExcludesUnannotatedProperties()
     {
         var form = ConfigFormScanner.BuildForm(new FormSample());
 
-        Assert.Equal(PluginConfigFieldTypes.Number, Find(form, "smtp.port").Type);
-        Assert.Equal(PluginConfigFieldTypes.Text, Find(form, "smtp.host").Type);
-        Assert.Equal(PluginConfigFieldTypes.Boolean, Find(form, "smtp.use_ssl").Type);
-        Assert.Equal(PluginConfigFieldTypes.TextArea, Find(form, "smtp.notes").Type);
+        Assert.DoesNotContain(AllFields(form), field => field.Path.StartsWith("secrets.", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -69,16 +49,36 @@ public class ConfigFormScannerTests
     }
 
     [Fact]
-    public void BuildForm_ExcludesUnannotatedProperties()
+    public void BuildForm_InfersTypes_AndHonorsOverride()
     {
         var form = ConfigFormScanner.BuildForm(new FormSample());
 
-        Assert.DoesNotContain(AllFields(form), field => field.Path.StartsWith("secrets.", StringComparison.Ordinal));
+        Assert.Equal(PluginConfigFieldTypes.Number, Find(form, "smtp.port").Type);
+        Assert.Equal(PluginConfigFieldTypes.Text, Find(form, "smtp.host").Type);
+        Assert.Equal(PluginConfigFieldTypes.Boolean, Find(form, "smtp.use_ssl").Type);
+        Assert.Equal(PluginConfigFieldTypes.TextArea, Find(form, "smtp.notes").Type);
     }
 
     [Fact]
-    public void BuildForm_AutoOnUnsupportedType_Throws()
-        => Assert.Throws<NotSupportedException>(() => ConfigFormScanner.BuildForm(new FormUnsupportedSample()));
+    public void BuildForm_SectionsInDeclarationOrder_WithGeneralFirst()
+    {
+        var form = ConfigFormScanner.BuildForm(new FormSample());
+
+        Assert.Equal(["general", "sender", "smtp"], form.Sections.Select(section => section.Id).ToArray());
+        Assert.Equal("General", form.Sections[0].Label);
+        Assert.Equal("SMTP", form.Sections[2].Label);
+    }
+
+    [Fact]
+    public void BuildForm_TopLevelField_LandsInGeneral()
+    {
+        var form = ConfigFormScanner.BuildForm(new FormSample());
+
+        var general = form.Sections.Single(section => section.Id == "general");
+        var field = Assert.Single(general.Fields);
+        Assert.Equal("enabled", field.Path);
+        Assert.Equal(PluginConfigFieldTypes.Boolean, field.Type);
+    }
 
     private static IEnumerable<PluginConfigField> AllFields(PluginConfigForm form)
         => form.Sections.SelectMany(section => section.Fields);

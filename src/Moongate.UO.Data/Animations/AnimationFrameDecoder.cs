@@ -24,7 +24,7 @@ public static class AnimationFrameDecoder
             return null;
         }
 
-        using var stream = new MemoryStream(block, writable: false);
+        using var stream = new MemoryStream(block, false);
         using var reader = new BinaryReader(stream);
 
         var palette = new Rgba32[256];
@@ -90,15 +90,13 @@ public static class AnimationFrameDecoder
             }
         }
 
-        return new DecodedFrame(image, xCenter, yCenter);
-    }
-
-    private static Rgba32 FromArgb1555(ushort value)
-    {
-        return new Rgba32(Expand5To8((value >> 10) & 0x1F), Expand5To8((value >> 5) & 0x1F), Expand5To8(value & 0x1F), 255);
+        return new(image, xCenter, yCenter);
     }
 
     // 5-bit -> 8-bit channel expansion via bit replication, so 0x1F maps to 0xFF (full range).
     private static byte Expand5To8(int value)
         => (byte)((value << 3) | (value >> 2));
+
+    private static Rgba32 FromArgb1555(ushort value)
+        => new(Expand5To8((value >> 10) & 0x1F), Expand5To8((value >> 5) & 0x1F), Expand5To8(value & 0x1F), 255);
 }

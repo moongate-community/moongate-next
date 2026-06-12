@@ -1,4 +1,3 @@
-using System.Threading;
 using Moongate.Abstractions.Data.Metrics;
 using Moongate.Abstractions.Interfaces.Metrics;
 using Moongate.Abstractions.Types.Metrics;
@@ -44,11 +43,20 @@ public sealed class RuntimeMetricProvider : IMetricProvider
             new("gc_gen1_collections", current.Gen1Collections, MetricType.Counter, Help: "Gen1 GC collections"),
             new("gc_gen2_collections", current.Gen2Collections, MetricType.Counter, Help: "Gen2 GC collections"),
             new("gc_heap_size_bytes", current.GcHeapSizeBytes, Help: "GC heap size in bytes"),
-            new("gc_allocated_bytes", current.AllocatedBytesTotal, MetricType.Counter, Help: "Total bytes allocated since start")
+            new(
+                "gc_allocated_bytes",
+                current.AllocatedBytesTotal,
+                MetricType.Counter,
+                Help: "Total bytes allocated since start"
+            )
         ];
     }
 
-    private static double ComputeCpuPercent(ProcessRuntimeReading? previous, ProcessRuntimeReading current, int processorCount)
+    private static double ComputeCpuPercent(
+        ProcessRuntimeReading? previous,
+        ProcessRuntimeReading current,
+        int processorCount
+    )
     {
         if (previous is null)
         {

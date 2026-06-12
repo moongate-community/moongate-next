@@ -1,3 +1,4 @@
+using DryIoc;
 using Moongate.Plugins.Data;
 using Moongate.Plugins.Interfaces.Plugins;
 using Moongate.Plugins.Services;
@@ -20,7 +21,7 @@ public sealed class PluginCatalogServiceTests : IDisposable
             Dependencies = ["moongate.core"]
         };
 
-        public void Configure(DryIoc.IContainer container, PluginContext context) { }
+        public void Configure(IContainer container, PluginContext context) { }
     }
 
     private sealed class FakeConfigurablePlugin : IMoongatePlugin, IConfigurablePlugin, ITestablePlugin
@@ -35,7 +36,7 @@ public sealed class PluginCatalogServiceTests : IDisposable
 
         public PluginConfigSaveRequest? LastRequest { get; private set; }
 
-        public void Configure(DryIoc.IContainer container, PluginContext context) { }
+        public void Configure(IContainer container, PluginContext context) { }
 
         public ValueTask<PluginConfigForm> GetConfigFormAsync(CancellationToken cancellationToken = default)
             => ValueTask.FromResult(new PluginConfigForm([new("general", "General", [])]));
@@ -52,6 +53,17 @@ public sealed class PluginCatalogServiceTests : IDisposable
 
         public ValueTask<PluginTestResult> TestAsync(CancellationToken cancellationToken = default)
             => ValueTask.FromResult(new PluginTestResult(true, "OK", []));
+    }
+
+    [Fact]
+    public async Task CapabilityMethods_UnsupportedPlugin_ReturnNull()
+    {
+        var plugin = CreateLoadedPlugin("catalog");
+        var service = new PluginCatalogService([plugin]);
+
+        Assert.Null(await service.GetConfigFormAsync("moongate.fixture.catalog"));
+        Assert.Null(await service.SaveConfigAsync("moongate.fixture.catalog", new(new())));
+        Assert.Null(await service.TestAsync("moongate.fixture.catalog"));
     }
 
     public void Dispose()
@@ -112,40 +124,6 @@ public sealed class PluginCatalogServiceTests : IDisposable
     }
 
     [Fact]
-    public void GetLoadedPlugins_ReturnsMetadata()
-    {
-        var plugin = CreateLoadedPlugin("catalog");
-        File.WriteAllText(Path.Combine(plugin.PluginDirectory, "plugin.yaml"), "enabled: true\n");
-        var service = new PluginCatalogService([plugin]);
-
-        var entry = Assert.Single(service.GetLoadedPlugins());
-
-        Assert.Equal("moongate.fixture.catalog", entry.Id);
-        Assert.Equal("Catalog Fixture", entry.Name);
-        Assert.Equal("1.2.3", entry.Version);
-        Assert.Equal("Moongate Tests", entry.Author);
-        Assert.Equal("Fixture plugin for catalog tests", entry.Description);
-        Assert.Equal(["moongate.core"], entry.Dependencies);
-        Assert.Equal("catalog", entry.DirectoryName);
-        Assert.True(entry.HasConfig);
-        Assert.False(entry.IsConfigurable);
-        Assert.False(entry.IsTestable);
-        Assert.Equal(typeof(FakePlugin).Assembly.GetName().Name, entry.AssemblyName);
-    }
-
-    [Fact]
-    public void GetLoadedPlugins_ReturnsCapabilityFlags()
-    {
-        var plugin = CreateLoadedPlugin("configurable", new FakeConfigurablePlugin());
-        var service = new PluginCatalogService([plugin]);
-
-        var entry = Assert.Single(service.GetLoadedPlugins());
-
-        Assert.True(entry.IsConfigurable);
-        Assert.True(entry.IsTestable);
-    }
-
-    [Fact]
     public async Task GetConfigAsync_UnknownPlugin_ReturnsNull()
     {
         var service = new PluginCatalogService([]);
@@ -168,6 +146,40 @@ public sealed class PluginCatalogServiceTests : IDisposable
     }
 
     [Fact]
+    public void GetLoadedPlugins_ReturnsCapabilityFlags()
+    {
+        var plugin = CreateLoadedPlugin("configurable", new FakeConfigurablePlugin());
+        var service = new PluginCatalogService([plugin]);
+
+        var entry = Assert.Single(service.GetLoadedPlugins());
+
+        Assert.True(entry.IsConfigurable);
+        Assert.True(entry.IsTestable);
+    }
+
+    [Fact]
+    public void GetLoadedPlugins_ReturnsMetadata()
+    {
+        var plugin = CreateLoadedPlugin("catalog");
+        File.WriteAllText(Path.Combine(plugin.PluginDirectory, "plugin.yaml"), "enabled: true\n");
+        var service = new PluginCatalogService([plugin]);
+
+        var entry = Assert.Single(service.GetLoadedPlugins());
+
+        Assert.Equal("moongate.fixture.catalog", entry.Id);
+        Assert.Equal("Catalog Fixture", entry.Name);
+        Assert.Equal("1.2.3", entry.Version);
+        Assert.Equal("Moongate Tests", entry.Author);
+        Assert.Equal("Fixture plugin for catalog tests", entry.Description);
+        Assert.Equal(["moongate.core"], entry.Dependencies);
+        Assert.Equal("catalog", entry.DirectoryName);
+        Assert.True(entry.HasConfig);
+        Assert.False(entry.IsConfigurable);
+        Assert.False(entry.IsTestable);
+        Assert.Equal(typeof(FakePlugin).Assembly.GetName().Name, entry.AssemblyName);
+    }
+
+    [Fact]
     public async Task SaveConfigAsync_ConfigurablePlugin_DelegatesAndReturnsSanitizedConfig()
     {
         var configurable = new FakeConfigurablePlugin();
@@ -175,7 +187,7 @@ public sealed class PluginCatalogServiceTests : IDisposable
         File.WriteAllText(Path.Combine(plugin.PluginDirectory, "plugin.yaml"), "enabled: true\npassword: secret\n");
         var service = new PluginCatalogService([plugin]);
         var request = new PluginConfigSaveRequest(
-            new Dictionary<string, object?>
+            new()
             {
                 ["enabled"] = false
             }
@@ -201,17 +213,6 @@ public sealed class PluginCatalogServiceTests : IDisposable
         Assert.NotNull(result);
         Assert.True(result!.Success);
         Assert.Equal("OK", result.Message);
-    }
-
-    [Fact]
-    public async Task CapabilityMethods_UnsupportedPlugin_ReturnNull()
-    {
-        var plugin = CreateLoadedPlugin("catalog");
-        var service = new PluginCatalogService([plugin]);
-
-        Assert.Null(await service.GetConfigFormAsync("moongate.fixture.catalog"));
-        Assert.Null(await service.SaveConfigAsync("moongate.fixture.catalog", new(new Dictionary<string, object?>())));
-        Assert.Null(await service.TestAsync("moongate.fixture.catalog"));
     }
 
     private LoadedPlugin CreateLoadedPlugin(string directoryName)
