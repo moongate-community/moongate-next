@@ -185,6 +185,11 @@ export function AdminMetricsPanel({ history, snapshot }: AdminMetricsPanelProps)
           ))}
         </div>
 
+        <div className="grid gap-2">
+          <h4 className="m-0 text-xs font-bold uppercase tracking-wide text-fg-muted">Garbage collection</h4>
+          <GcStatTiles metrics={points.at(-1)?.metrics ?? snapshot.metrics} />
+        </div>
+
         <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
           {chartConfigs.map((config) => (
             <MetricChart key={config.metricName} config={config} labels={labels} points={points} theme={theme} />
@@ -378,4 +383,30 @@ function formatMetric(value: number, config: MetricChartConfig): string {
 
 function withAlpha(hex: string, alpha: string): string {
   return `${hex}${alpha}`;
+}
+
+const gcTileConfigs: { label: string; metricName: string; scale: number; precision: number; unit: string }[] = [
+  { label: "GC gen0", metricName: "runtime_gc_gen0_collections_total", scale: 1, precision: 0, unit: "" },
+  { label: "GC gen1", metricName: "runtime_gc_gen1_collections_total", scale: 1, precision: 0, unit: "" },
+  { label: "GC gen2", metricName: "runtime_gc_gen2_collections_total", scale: 1, precision: 0, unit: "" },
+  { label: "GC heap", metricName: "runtime_gc_heap_size_bytes", scale: 1048576, precision: 1, unit: "MB" },
+  { label: "Allocated", metricName: "runtime_gc_allocated_bytes_total", scale: 1048576, precision: 1, unit: "MB" }
+];
+
+function GcStatTiles({ metrics }: { metrics: Record<string, number> }) {
+  return (
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
+      {gcTileConfigs.map((tile) => {
+        const value = (metrics[tile.metricName] ?? 0) / tile.scale;
+        const text = new Intl.NumberFormat("en-US", { maximumFractionDigits: tile.precision }).format(value);
+
+        return (
+          <Card key={tile.metricName} className="grid gap-1 rounded-md border-border bg-muted p-3 shadow-none">
+            <span className="text-xs font-medium text-fg-muted">{tile.label}</span>
+            <strong className="font-mono text-base font-bold text-fg">{tile.unit ? `${text} ${tile.unit}` : text}</strong>
+          </Card>
+        );
+      })}
+    </div>
+  );
 }
