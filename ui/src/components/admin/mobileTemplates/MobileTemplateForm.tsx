@@ -21,6 +21,7 @@ import type { MobileTemplateDetail } from "../../../types/mobileTemplates";
 import { notorietyColor } from "../../../lib/notorietyColors";
 import { ItemTemplatePickerDialog } from "../itemTemplates/ItemTemplatePickerDialog";
 import { MobileTemplatePickerDialog } from "./MobileTemplatePickerDialog";
+import { BodyPickerDialog } from "./BodyPickerDialog";
 
 type MobileTemplateFormProps = {
   accessToken: string;
@@ -36,6 +37,7 @@ export function MobileTemplateForm({ accessToken, mode, template, onCancel, onSa
   );
   const [baseMobilePickerOpen, setBaseMobilePickerOpen] = useState(false);
   const [equipmentPickerOpen, setEquipmentPickerOpen] = useState(false);
+  const [bodyPickerOpen, setBodyPickerOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -517,12 +519,24 @@ export function MobileTemplateForm({ accessToken, mode, template, onCancel, onSa
           <FormSection title="Appearance">
             <div className="grid gap-3">
               <Field label="Body" htmlFor="mobile-template-body">
-                <Input
-                  id="mobile-template-body"
-                  value={state.body}
-                  onChange={(event) => update("body", event.target.value)}
-                  className="h-9 bg-bg font-mono text-[13px]"
-                />
+                <div className="flex items-center gap-2">
+                  <Input
+                    id="mobile-template-body"
+                    value={state.body}
+                    onChange={(event) => update("body", event.target.value)}
+                    className="h-9 flex-1 bg-bg font-mono text-[13px]"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setBodyPickerOpen(true)}
+                    className="h-9 gap-1.5 border-border bg-bg px-2.5 text-[13px] font-semibold text-fg hover:bg-muted"
+                  >
+                    <Search size={14} aria-hidden />
+                    Browse
+                  </Button>
+                </div>
               </Field>
               {showBodyPreview && (
                 <img
@@ -613,6 +627,16 @@ export function MobileTemplateForm({ accessToken, mode, template, onCancel, onSa
         onSelect={(id) => {
           setState((current) => ({ ...current, equipment: [...current.equipment, id] }));
           setEquipmentPickerOpen(false);
+        }}
+      />
+
+      <BodyPickerDialog
+        open={bodyPickerOpen}
+        onOpenChange={setBodyPickerOpen}
+        accessToken={accessToken}
+        onSelect={(body) => {
+          update("body", String(body));
+          setBodyPickerOpen(false);
         }}
       />
     </form>
