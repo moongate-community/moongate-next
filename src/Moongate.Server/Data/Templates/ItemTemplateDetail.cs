@@ -27,6 +27,7 @@ public sealed record ItemTemplateDetail(
     bool IsStackable,
     bool IsMovable,
     int? GumpId,
+    ItemTemplateContentsSummary? Contents,
     IReadOnlyList<ItemTemplateParamSummary> Params
 )
 {
@@ -66,6 +67,7 @@ public sealed record ItemTemplateDetail(
             template.IsStackable,
             template.IsMovable,
             template.GumpId,
+            template.Contents is null ? null : ItemTemplateContentsSummary.FromDefinition(template.Contents),
             parameters
         );
     }

@@ -115,6 +115,32 @@ export function ItemTemplateDetailPanel({ template, loading, error }: ItemTempla
           />
         </InspectorSection>
 
+        <InspectorSection title="Contents">
+          {template.contents ? (
+            <PropertyRows
+              items={[
+                {
+                  term: "Loot",
+                  value: (
+                    <a
+                      href={`/admin?view=lootTemplates&lootTemplate=${encodeURIComponent(template.contents.lootTemplate)}`}
+                      className="font-mono text-accent hover:underline"
+                    >
+                      {template.contents.lootTemplate}
+                    </a>
+                  )
+                },
+                { term: "Generate", value: template.contents.generate },
+                { term: "Refill", value: template.contents.refillEvery ?? "-" },
+                { term: "Policy", value: template.contents.refillPolicy },
+                { term: "Scope", value: template.contents.refillScope }
+              ]}
+            />
+          ) : (
+            <span className="text-xs text-fg-muted">No contents</span>
+          )}
+        </InspectorSection>
+
         <InspectorSection title="Economy">
           <ItemValueDisplay value={template.value} mode="detail" />
         </InspectorSection>

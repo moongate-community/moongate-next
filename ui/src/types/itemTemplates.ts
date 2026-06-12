@@ -50,6 +50,14 @@ export type ItemTemplateParamSummary = {
   value: string;
 };
 
+export type ItemTemplateContentsSummary = {
+  lootTemplate: string;
+  generate: string;
+  refillEvery: string | null;
+  refillPolicy: string;
+  refillScope: string;
+};
+
 export type ItemTemplateDetail = ItemTemplateSummary & {
   comment: string;
   baseItem: string | null;
@@ -60,6 +68,7 @@ export type ItemTemplateDetail = ItemTemplateSummary & {
   isStackable: boolean;
   isMovable: boolean;
   gumpId: number | null;
+  contents: ItemTemplateContentsSummary | null;
   params: ItemTemplateParamSummary[];
 };
 
