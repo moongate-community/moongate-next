@@ -202,12 +202,13 @@ export function LootTemplateCatalogPanel({ accessToken, commandTarget }: LootTem
         <Button
           type="button"
           variant="ghost"
-          size="sm"
+          size="icon"
           onClick={() => void load()}
-          className="min-h-[30px] gap-1.5 px-2.5 text-[13px] font-medium text-fg-muted hover:bg-muted hover:text-fg"
+          title="Refresh"
+          aria-label="Refresh"
+          className="size-[30px] text-fg-muted hover:bg-muted hover:text-fg"
         >
           <RefreshCw size={14} aria-hidden />
-          Refresh
         </Button>
       }
     >

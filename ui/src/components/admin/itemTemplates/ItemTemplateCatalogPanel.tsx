@@ -257,20 +257,10 @@ export function ItemTemplateCatalogPanel({ accessToken, commandTarget }: ItemTem
         <div className="flex items-center gap-1.5">
           <Button
             type="button"
-            variant="ghost"
-            size="sm"
-            onClick={startCreate}
-            className="min-h-[30px] gap-1.5 px-2.5 text-[13px] font-medium text-fg-muted hover:bg-muted hover:text-fg"
-          >
-            <Plus size={14} aria-hidden />
-            New
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
+            variant="outline"
             size="sm"
             onClick={() => setPickerOpen(true)}
-            className="min-h-[30px] gap-1.5 px-2.5 text-[13px] font-medium text-fg-muted hover:bg-muted hover:text-fg"
+            className="min-h-[30px] gap-1.5 px-2.5 text-[13px] font-medium"
           >
             <Boxes size={14} aria-hidden />
             Browse items
@@ -278,12 +268,23 @@ export function ItemTemplateCatalogPanel({ accessToken, commandTarget }: ItemTem
           <Button
             type="button"
             variant="ghost"
-            size="sm"
+            size="icon"
             onClick={() => void load()}
-            className="min-h-[30px] gap-1.5 px-2.5 text-[13px] font-medium text-fg-muted hover:bg-muted hover:text-fg"
+            title="Refresh"
+            aria-label="Refresh"
+            className="size-[30px] text-fg-muted hover:bg-muted hover:text-fg"
           >
             <RefreshCw size={14} aria-hidden />
-            Refresh
+          </Button>
+          <Button
+            type="button"
+            variant="default"
+            size="sm"
+            onClick={startCreate}
+            className="min-h-[30px] gap-1.5 px-2.5 text-[13px] font-semibold"
+          >
+            <Plus size={14} aria-hidden />
+            New
           </Button>
           <ItemTemplatePickerDialog
             open={pickerOpen}
