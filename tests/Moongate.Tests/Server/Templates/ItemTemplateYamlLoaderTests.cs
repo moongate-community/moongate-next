@@ -631,6 +631,29 @@ public class ItemTemplateYamlLoaderTests
         Assert.Contains("is_movable", exception.Message);
     }
 
+    [Theory]
+    [InlineData("item_template_id")]
+    [InlineData("contents.generated_at")]
+    [InlineData("contents.next_refill_at")]
+    public void LoadAll_ReservedRuntimeItemParamKeys_Throws(string key)
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "reserved.yaml",
+            $$"""
+            item_templates:
+                - id: shirt
+                  params:
+                      {{key}}: { type: String, value: "reserved" }
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var exception = Assert.Throws<InvalidOperationException>(() => loader.LoadAll());
+
+        Assert.Contains(key, exception.Message);
+    }
+
     [Fact]
     public void LoadAll_PrimaryGraphicVariant_Throws()
     {

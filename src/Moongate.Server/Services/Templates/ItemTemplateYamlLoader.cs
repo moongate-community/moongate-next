@@ -1,5 +1,6 @@
 using System.Globalization;
 using Moongate.Core.Yaml;
+using Moongate.Server.Services.Items;
 using Moongate.UO.Data.Interfaces.Tiles;
 using Moongate.UO.Data.Templates.Items;
 using Moongate.UO.Data.Types.Items;
@@ -353,10 +354,10 @@ public sealed class ItemTemplateYamlLoader
         {
             foreach (var (key, param) in template.Params)
             {
-                if (string.Equals(key, ItemTemplateDefinition.ReservedIsMovableParamKey, StringComparison.OrdinalIgnoreCase))
+                if (IsReservedParamKey(key))
                 {
                     throw new InvalidOperationException(
-                        $"Item template '{template.Id}' in '{sources[template.Id]}' uses reserved param key '{ItemTemplateDefinition.ReservedIsMovableParamKey}'."
+                        $"Item template '{template.Id}' in '{sources[template.Id]}' uses reserved param key '{key}'."
                     );
                 }
 
@@ -379,6 +380,12 @@ public sealed class ItemTemplateYamlLoader
             }
         }
     }
+
+    private static bool IsReservedParamKey(string key)
+        => string.Equals(key, ItemTemplateDefinition.ReservedIsMovableParamKey, StringComparison.OrdinalIgnoreCase) ||
+           string.Equals(key, ItemTemplateDefinitionKeys.TemplateId, StringComparison.OrdinalIgnoreCase) ||
+           string.Equals(key, ItemTemplateDefinitionKeys.ContentsGeneratedAt, StringComparison.OrdinalIgnoreCase) ||
+           string.Equals(key, ItemTemplateDefinitionKeys.ContentsNextRefillAt, StringComparison.OrdinalIgnoreCase);
 
     private static void ValidateGraphicVariants(
         List<ItemTemplateDefinition> templates,
