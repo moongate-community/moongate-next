@@ -43,6 +43,7 @@ public static class HairImageEndpointExtensions
                  .WithTags("Mobiles")
                  .WithSummary("Returns a lazily generated PNG of a hair style rendered over a reference body.")
                  .Produces(StatusCodes.Status200OK, contentType: "image/png")
+                 .Produces(StatusCodes.Status400BadRequest)
                  .Produces(StatusCodes.Status404NotFound);
 
         endpoints.MapGet(
@@ -63,6 +64,7 @@ public static class HairImageEndpointExtensions
         var source = facial ? HairStyleCatalog.Facial : HairStyleCatalog.Hair;
 
         IEnumerable<HairStyleEntry> entries = source;
+        var catalogCount = source.Count;
 
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -86,7 +88,7 @@ public static class HairImageEndpointExtensions
                     )
                     .ToArray();
 
-        return TypedResults.Ok(new PagedResult<HairStyleSummary>(items, 1, items.Length == 0 ? 1 : items.Length, items.Length));
+        return TypedResults.Ok(new PagedResult<HairStyleSummary>(items, 1, catalogCount, items.Length));
     }
 
     internal static async Task<IResult> HandleGetHairImageAsync(

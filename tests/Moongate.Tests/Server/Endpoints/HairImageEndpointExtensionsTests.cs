@@ -90,7 +90,7 @@ public sealed class HairImageEndpointExtensionsTests : IDisposable
     }
 
     [Fact]
-    public async Task HandleGetHairImage_RendererNull_ReturnsNotFound()
+    public async Task HandleGetHairImage_RendererReturnsNull_ReturnsNotFound()
     {
         var result = await HairImageEndpointExtensions.HandleGetHairImageAsync(
                          0x203B,
