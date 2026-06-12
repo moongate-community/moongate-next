@@ -7,6 +7,7 @@ using Moongate.Server.Data.Mobiles;
 using Moongate.Server.Utils;
 using Moongate.UO.Data.Interfaces.Animations;
 using Moongate.UO.Data.Interfaces.Bodies;
+using Moongate.UO.Data.Types.Bodies;
 using SixLabors.ImageSharp.Formats.Png;
 
 namespace Moongate.Server.Extensions.Endpoints;
@@ -169,7 +170,9 @@ public static class BodyImageEndpointExtensions
         var pageNumber = page is > 0 ? page.Value : 1;
         var size = pageSize is > 0 and <= 200 ? pageSize.Value : 60;
 
-        IEnumerable<int> ids = bodies.GetClassifiedBodies().OrderBy(static id => id);
+        IEnumerable<int> ids = bodies.GetClassifiedBodies()
+                                     .Where(id => bodies.GetBodyType(id) != UoBodyType.Equipment)
+                                     .OrderBy(static id => id);
 
         if (!string.IsNullOrWhiteSpace(search))
         {

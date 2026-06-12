@@ -269,4 +269,8 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
     [Fact]
     public void HandleListBodies_PageBeyondEnd_ReturnsEmpty()
         => Assert.Empty(OkList(BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStore(UoBodyType.Human,1, 2), 9, 60, null)).Items);
+
+    [Fact]
+    public void HandleListBodies_ExcludesEquipmentBodies()
+        => Assert.Empty(OkList(BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStore(UoBodyType.Equipment, 400, 401), null, null, null)).Items);
 }
