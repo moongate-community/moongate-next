@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Moongate.Persistence.Data;
 using Moongate.Server.Data.Templates;
 using Moongate.Server.Extensions.Endpoints;
+using Moongate.Server.Interfaces.Services.Templates;
 using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Templates.Mobiles;
 using Moongate.UO.Data.Types.Mobiles;
@@ -11,6 +12,44 @@ namespace Moongate.Tests.Server.Endpoints;
 
 public sealed class MobileTemplateEndpointExtensionsTests
 {
+    private sealed class FakeMobileAuthoringService : IMobileTemplateAuthoringService
+    {
+        public MobileTemplateSaveResult? CreateResult { get; set; }
+
+        public MobileTemplateSaveResult? UpdateResult { get; set; }
+
+        public Exception? CreateException { get; set; }
+
+        public Exception? UpdateException { get; set; }
+
+        public ValueTask<MobileTemplateSaveResult> CreateAsync(
+            MobileTemplateEditRequest request,
+            CancellationToken cancellationToken = default
+        )
+        {
+            if (CreateException is not null)
+            {
+                throw CreateException;
+            }
+
+            return ValueTask.FromResult(CreateResult ?? NewSaveResult(request.Id));
+        }
+
+        public ValueTask<MobileTemplateSaveResult?> UpdateAsync(
+            string id,
+            MobileTemplateEditRequest request,
+            CancellationToken cancellationToken = default
+        )
+        {
+            if (UpdateException is not null)
+            {
+                throw UpdateException;
+            }
+
+            return ValueTask.FromResult(UpdateResult);
+        }
+    }
+
     private sealed class FakeMobileTemplateService : IMobileTemplateService
     {
         private readonly Dictionary<string, MobileTemplateDefinition> _templates = new(StringComparer.OrdinalIgnoreCase);
@@ -28,6 +67,15 @@ public sealed class MobileTemplateEndpointExtensionsTests
 
         public void UpsertRange(IEnumerable<MobileTemplateDefinition> templates)
         {
+            foreach (var template in templates)
+            {
+                _templates[template.Id] = template;
+            }
+        }
+
+        public void ReplaceAll(IEnumerable<MobileTemplateDefinition> templates)
+        {
+            _templates.Clear();
             foreach (var template in templates)
             {
                 _templates[template.Id] = template;
@@ -118,6 +166,103 @@ public sealed class MobileTemplateEndpointExtensionsTests
     public void HandleList_UnknownNotoriety_ReturnsBadRequest()
         => Assert.IsType<BadRequest<string>>(
             MobileTemplateEndpointExtensions.HandleList(Seed(), null, null, null, null, "Nope", null)
+        );
+
+    [Fact]
+    public async Task HandleCreate_ReturnsOkWithSaveResult()
+    {
+        var authoring = new FakeMobileAuthoringService();
+
+        var result = await MobileTemplateEndpointExtensions.HandleCreateAsync(
+                         authoring,
+                         new() { Id = "web_guard", Body = 400 },
+                         CancellationToken.None
+                     );
+
+        var ok = Assert.IsType<Ok<MobileTemplateSaveResult>>(result);
+        Assert.Equal("web_guard", ok.Value!.Template.Id);
+    }
+
+    [Fact]
+    public async Task HandleCreate_InvalidRequest_ReturnsBadRequest()
+    {
+        var authoring = new FakeMobileAuthoringService
+        {
+            CreateException = new InvalidOperationException("id is required")
+        };
+
+        var result = await MobileTemplateEndpointExtensions.HandleCreateAsync(
+                         authoring,
+                         new() { Id = "", Body = 0 },
+                         CancellationToken.None
+                     );
+
+        var badRequest = Assert.IsType<BadRequest<string>>(result);
+        Assert.Equal("id is required", badRequest.Value);
+    }
+
+    [Fact]
+    public async Task HandleUpdate_ExistingTemplate_ReturnsOkWithSaveResult()
+    {
+        var authoring = new FakeMobileAuthoringService
+        {
+            UpdateResult = NewSaveResult("web_guard")
+        };
+
+        var result = await MobileTemplateEndpointExtensions.HandleUpdateAsync(
+                         authoring,
+                         "web_guard",
+                         new() { Id = "web_guard", Body = 400 },
+                         CancellationToken.None
+                     );
+
+        var ok = Assert.IsType<Ok<MobileTemplateSaveResult>>(result);
+        Assert.Equal("web_guard", ok.Value!.Template.Id);
+    }
+
+    [Fact]
+    public async Task HandleUpdate_MissingTemplate_ReturnsNotFound()
+    {
+        var result = await MobileTemplateEndpointExtensions.HandleUpdateAsync(
+                         new FakeMobileAuthoringService(),
+                         "missing",
+                         new() { Id = "missing", Body = 0 },
+                         CancellationToken.None
+                     );
+
+        Assert.IsType<NotFound>(result);
+    }
+
+    [Fact]
+    public async Task HandleUpdate_InvalidRequest_ReturnsBadRequest()
+    {
+        var authoring = new FakeMobileAuthoringService
+        {
+            UpdateException = new InvalidOperationException("Route id must match the request id.")
+        };
+
+        var result = await MobileTemplateEndpointExtensions.HandleUpdateAsync(
+                         authoring,
+                         "guard",
+                         new() { Id = "other", Body = 400 },
+                         CancellationToken.None
+                     );
+
+        var badRequest = Assert.IsType<BadRequest<string>>(result);
+        Assert.Contains("match", badRequest.Value);
+    }
+
+    private static MobileTemplateSaveResult NewSaveResult(string id)
+        => new(
+            MobileTemplateDetail.FromDefinition(
+                new()
+                {
+                    Id = id,
+                    Name = id,
+                    Body = 400
+                }
+            ),
+            "_web.yaml"
         );
 
     private static PagedResult<MobileTemplateSummary> ListOk(IResult result)

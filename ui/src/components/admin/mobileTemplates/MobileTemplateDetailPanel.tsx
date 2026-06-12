@@ -1,5 +1,6 @@
-import { User } from "lucide-react";
+import { Pencil, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { MobileTemplateDetail } from "../../../types/mobileTemplates";
@@ -11,6 +12,7 @@ type MobileTemplateDetailPanelProps = {
   template: MobileTemplateDetail | null;
   loading: boolean;
   error: string | null;
+  onEdit?: () => void;
   onLootTemplateOpen?: (id: string) => void;
 };
 
@@ -18,6 +20,7 @@ export function MobileTemplateDetailPanel({
   template,
   loading,
   error,
+  onEdit,
   onLootTemplateOpen
 }: MobileTemplateDetailPanelProps) {
   if (loading) {
@@ -54,7 +57,19 @@ export function MobileTemplateDetailPanel({
 
   return (
     <Card className="gap-0 rounded-md border-border bg-surface py-0 shadow-none">
-      <CardHeader className="flex flex-row items-start gap-3 border-b border-border p-4">
+      <CardHeader className="relative flex flex-row items-start gap-3 border-b border-border p-4">
+        {onEdit && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={onEdit}
+            className="absolute right-3 top-3 min-h-[30px] gap-1.5 px-2.5 text-[13px] font-medium text-fg-muted hover:bg-muted hover:text-fg"
+          >
+            <Pencil size={14} aria-hidden />
+            Edit
+          </Button>
+        )}
         <BodyImageCell key={template.id} imageUrl={template.imageUrl} body={template.body} bodyHex={template.bodyHex} />
         <div className="min-w-0">
           <h3 className="m-0 text-base font-semibold text-fg">{template.name || template.id}</h3>

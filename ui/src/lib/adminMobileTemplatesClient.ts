@@ -5,9 +5,27 @@ import type {
   MobileTemplateSummary,
   PagedResult
 } from "../types/mobileTemplates";
+import type { MobileTemplateEditRequest, MobileTemplateSaveResult } from "./mobileTemplateFormModel";
 
-function authHeaders(accessToken: string): HeadersInit {
-  return { Authorization: `Bearer ${accessToken}` };
+export type { MobileTemplateSaveResult };
+
+function authHeaders(accessToken: string, json = false): HeadersInit {
+  const headers: Record<string, string> = { Authorization: `Bearer ${accessToken}` };
+
+  if (json) {
+    headers["Content-Type"] = "application/json";
+  }
+
+  return headers;
+}
+
+async function readWriteJson<T>(response: Response): Promise<T> {
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(body.trim() || `${response.status} ${response.statusText}`);
+  }
+
+  return (await response.json()) as T;
 }
 
 export async function listMobileTemplates(
@@ -48,4 +66,31 @@ export async function getMobileTemplate(accessToken: string, id: string): Promis
   });
 
   return readJson<MobileTemplateDetail>(response);
+}
+
+export async function createMobileTemplate(
+  accessToken: string,
+  request: MobileTemplateEditRequest
+): Promise<MobileTemplateSaveResult> {
+  const response = await fetch("/api/admin/mobile-templates", {
+    method: "POST",
+    headers: authHeaders(accessToken, true),
+    body: JSON.stringify(request)
+  });
+
+  return readWriteJson<MobileTemplateSaveResult>(response);
+}
+
+export async function updateMobileTemplate(
+  accessToken: string,
+  id: string,
+  request: MobileTemplateEditRequest
+): Promise<MobileTemplateSaveResult> {
+  const response = await fetch(`/api/admin/mobile-templates/${encodeURIComponent(id)}`, {
+    method: "PUT",
+    headers: authHeaders(accessToken, true),
+    body: JSON.stringify(request)
+  });
+
+  return readWriteJson<MobileTemplateSaveResult>(response);
 }

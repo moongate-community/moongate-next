@@ -1,14 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
-import { ArrowLeft, Boxes, RefreshCw, Search } from "lucide-react";
+import { ArrowLeft, Boxes, Plus, RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getMobileTemplate, listMobileTemplates } from "../../../lib/adminMobileTemplatesClient";
+import type { MobileTemplateSaveResult } from "../../../lib/mobileTemplateFormModel";
 import type { AdminCommandTarget } from "../../../types/adminCommandTarget";
 import type { MobileTemplateDetail, MobileTemplateFilters, MobileTemplateSummary } from "../../../types/mobileTemplates";
 import { Panel } from "../Panel";
 import { MobileTemplateDetailPanel } from "./MobileTemplateDetailPanel";
+import { MobileTemplateForm } from "./MobileTemplateForm";
 import { MobileTemplatePickerDialog } from "./MobileTemplatePickerDialog";
 import { MobileTemplateTable } from "./MobileTemplateTable";
 
@@ -60,6 +62,7 @@ export function MobileTemplateCatalogPanel({
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detail, setDetail] = useState<MobileTemplateDetail | null>(null);
   const [detailPageOpen, setDetailPageOpen] = useState(false);
+  const [editorMode, setEditorMode] = useState<"create" | "edit" | null>(null);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -101,6 +104,7 @@ export function MobileTemplateCatalogPanel({
     setSelectedId(id);
     setDetail(null);
     setDetailPageOpen(true);
+    setEditorMode(null);
     setDetailLoading(true);
     setDetailError(null);
 
@@ -134,11 +138,59 @@ export function MobileTemplateCatalogPanel({
     setDetail(null);
     setDetailError(null);
     setDetailPageOpen(false);
+    setEditorMode(null);
     replaceMobileTemplateUrl();
+  }
+
+  function startCreate() {
+    setSelectedId(null);
+    setDetail(null);
+    setDetailError(null);
+    setDetailPageOpen(false);
+    setEditorMode("create");
+    replaceMobileTemplateUrl();
+  }
+
+  function startEdit() {
+    if (!detail || detail.baseMobile) {
+      return;
+    }
+
+    setEditorMode("edit");
+  }
+
+  function cancelEditor() {
+    setEditorMode(null);
+
+    if (!selectedId) {
+      replaceMobileTemplateUrl();
+    }
+  }
+
+  function handleSaved(result: MobileTemplateSaveResult) {
+    setSelectedId(result.template.id);
+    setDetail(result.template);
+    setDetailError(null);
+    setDetailPageOpen(true);
+    setEditorMode(null);
+    replaceMobileTemplateUrl(result.template.id);
+    void load();
   }
 
   function updateFilter<K extends keyof MobileTemplateFilters>(key: K, value: MobileTemplateFilters[K]) {
     setFilters((current) => ({ ...current, [key]: value, page: 1 }));
+  }
+
+  if (editorMode) {
+    return (
+      <MobileTemplateForm
+        accessToken={accessToken}
+        mode={editorMode}
+        template={editorMode === "edit" ? detail : null}
+        onCancel={cancelEditor}
+        onSaved={handleSaved}
+      />
+    );
   }
 
   if (detailPageOpen) {
@@ -164,6 +216,7 @@ export function MobileTemplateCatalogPanel({
           template={detail}
           loading={detailLoading}
           error={detailError}
+          onEdit={detail && !detail.baseMobile ? startEdit : undefined}
           onLootTemplateOpen={onLootTemplateOpen}
         />
       </div>
@@ -195,6 +248,16 @@ export function MobileTemplateCatalogPanel({
             className="size-[30px] text-fg-muted hover:bg-muted hover:text-fg"
           >
             <RefreshCw size={14} aria-hidden />
+          </Button>
+          <Button
+            type="button"
+            variant="default"
+            size="sm"
+            onClick={startCreate}
+            className="min-h-[30px] gap-1.5 px-2.5 text-[13px] font-semibold"
+          >
+            <Plus size={14} aria-hidden />
+            New
           </Button>
           <MobileTemplatePickerDialog
             open={pickerOpen}

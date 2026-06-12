@@ -23,4 +23,11 @@ public interface IMobileTemplateService
 
     /// <summary>Adds or replaces templates by id.</summary>
     void UpsertRange(IEnumerable<MobileTemplateDefinition> templates);
+
+    /// <summary>
+    /// Atomically replaces the entire registry with <paramref name="templates"/>.
+    /// Equivalent to a clear followed by <see cref="UpsertRange"/>, but performed as a
+    /// single locked swap so concurrent readers never observe an empty registry.
+    /// </summary>
+    void ReplaceAll(IEnumerable<MobileTemplateDefinition> templates);
 }
