@@ -23,6 +23,7 @@ import { ItemTemplatePickerDialog } from "../itemTemplates/ItemTemplatePickerDia
 import { MobileTemplatePickerDialog } from "./MobileTemplatePickerDialog";
 import { BodyPickerDialog } from "./BodyPickerDialog";
 import { HuePickerDialog } from "./HuePickerDialog";
+import { HairStylePickerDialog } from "./HairStylePickerDialog";
 
 type MobileTemplateFormProps = {
   accessToken: string;
@@ -40,6 +41,8 @@ export function MobileTemplateForm({ accessToken, mode, template, onCancel, onSa
   const [equipmentPickerOpen, setEquipmentPickerOpen] = useState(false);
   const [bodyPickerOpen, setBodyPickerOpen] = useState(false);
   const [huePickerField, setHuePickerField] = useState<"skinHue" | "hairHue" | "facialHairHue" | null>(null);
+  const [hairPickerOpen, setHairPickerOpen] = useState(false);
+  const [facialHairPickerOpen, setFacialHairPickerOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -606,12 +609,24 @@ export function MobileTemplateForm({ accessToken, mode, template, onCancel, onSa
                 </div>
               </Field>
               <Field label="Hair style" htmlFor="mobile-template-hair-style">
-                <Input
-                  id="mobile-template-hair-style"
-                  value={state.hairStyle}
-                  onChange={(event) => update("hairStyle", event.target.value)}
-                  className="h-9 bg-bg font-mono text-[13px]"
-                />
+                <div className="flex items-center gap-2">
+                  <Input
+                    id="mobile-template-hair-style"
+                    value={state.hairStyle}
+                    onChange={(event) => update("hairStyle", event.target.value)}
+                    className="h-9 flex-1 bg-bg font-mono text-[13px]"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setHairPickerOpen(true)}
+                    className="h-9 gap-1.5 border-border bg-bg px-2.5 text-[13px] font-semibold text-fg hover:bg-muted"
+                  >
+                    <Search size={14} aria-hidden />
+                    Browse
+                  </Button>
+                </div>
               </Field>
               <Field label="Facial hair hue" htmlFor="mobile-template-facial-hair-hue">
                 <div className="flex items-center gap-2">
@@ -634,12 +649,24 @@ export function MobileTemplateForm({ accessToken, mode, template, onCancel, onSa
                 </div>
               </Field>
               <Field label="Facial hair style" htmlFor="mobile-template-facial-hair-style">
-                <Input
-                  id="mobile-template-facial-hair-style"
-                  value={state.facialHairStyle}
-                  onChange={(event) => update("facialHairStyle", event.target.value)}
-                  className="h-9 bg-bg font-mono text-[13px]"
-                />
+                <div className="flex items-center gap-2">
+                  <Input
+                    id="mobile-template-facial-hair-style"
+                    value={state.facialHairStyle}
+                    onChange={(event) => update("facialHairStyle", event.target.value)}
+                    className="h-9 flex-1 bg-bg font-mono text-[13px]"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setFacialHairPickerOpen(true)}
+                    className="h-9 gap-1.5 border-border bg-bg px-2.5 text-[13px] font-semibold text-fg hover:bg-muted"
+                  >
+                    <Search size={14} aria-hidden />
+                    Browse
+                  </Button>
+                </div>
               </Field>
             </div>
           </FormSection>
@@ -691,6 +718,28 @@ export function MobileTemplateForm({ accessToken, mode, template, onCancel, onSa
             update(huePickerField, String(hue));
           }
           setHuePickerField(null);
+        }}
+      />
+
+      <HairStylePickerDialog
+        open={hairPickerOpen}
+        onOpenChange={setHairPickerOpen}
+        accessToken={accessToken}
+        facial={false}
+        onSelect={(style) => {
+          update("hairStyle", String(style));
+          setHairPickerOpen(false);
+        }}
+      />
+
+      <HairStylePickerDialog
+        open={facialHairPickerOpen}
+        onOpenChange={setFacialHairPickerOpen}
+        accessToken={accessToken}
+        facial
+        onSelect={(style) => {
+          update("facialHairStyle", String(style));
+          setFacialHairPickerOpen(false);
         }}
       />
     </form>
