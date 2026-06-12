@@ -28,6 +28,7 @@ type MetricChartConfig = {
   label: string;
   metricName: string;
   precision: number;
+  scale?: number;
   unit: string;
 };
 
@@ -107,6 +108,35 @@ const chartConfigs: MetricChartConfig[] = [
     color: "#7a5268",
     colorDark: "#c98bab",
     description: "Latest persistence journal sequence"
+  },
+  {
+    label: "CPU usage",
+    metricName: "runtime_cpu_percent",
+    unit: "%",
+    precision: 1,
+    color: "#8a3b3b",
+    colorDark: "#f08a8a",
+    description: "Process CPU usage normalized over cores"
+  },
+  {
+    label: "Working set",
+    metricName: "runtime_memory_working_set_bytes",
+    unit: "MB",
+    precision: 1,
+    scale: 1048576,
+    color: "#3b5a8a",
+    colorDark: "#7fa8e6",
+    description: "Resident process memory"
+  },
+  {
+    label: "Managed heap",
+    metricName: "runtime_memory_managed_heap_bytes",
+    unit: "MB",
+    precision: 1,
+    scale: 1048576,
+    color: "#5a6f3b",
+    colorDark: "#a9c46a",
+    description: "Managed heap (GC.GetTotalMemory)"
   }
 ];
 
@@ -177,7 +207,10 @@ function MetricChart({
   theme: Theme;
 }) {
   const chartRef = useRef<HTMLDivElement | null>(null);
-  const values = useMemo(() => points.map((point) => point.metrics[config.metricName] ?? 0), [config.metricName, points]);
+  const values = useMemo(
+    () => points.map((point) => (point.metrics[config.metricName] ?? 0) / (config.scale ?? 1)),
+    [config.metricName, config.scale, points]
+  );
   const latest = values.at(-1) ?? 0;
   const seriesColor = theme === "dark" ? config.colorDark : config.color;
   const chartOption = useMemo(
