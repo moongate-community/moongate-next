@@ -71,7 +71,7 @@ export function ItemTemplatePickerDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex max-h-[80vh] w-full max-w-3xl flex-col gap-3 bg-surface">
+      <DialogContent className="flex max-h-[80vh] w-[60vw] max-w-[60vw] flex-col gap-3 bg-surface sm:max-w-[60vw]">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
