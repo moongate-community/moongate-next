@@ -16,7 +16,7 @@ type PanelProps = {
 export function Panel({ title, icon: Icon, action, children, className }: PanelProps) {
   return (
     <Card className={cn("animate-rise gap-0 rounded-md border-border bg-surface py-0 shadow-none", className)}>
-      <CardHeader className="flex min-h-[48px] flex-row items-center justify-between gap-2.5 border-b border-border px-4 py-0">
+      <CardHeader className="flex min-h-[48px] flex-row items-center justify-between gap-2.5 border-b border-border px-4 py-0 [.border-b]:pb-0">
         <div className="flex items-center gap-2.5">
           {Icon && <Icon size={16} aria-hidden className="text-fg-subtle" />}
           <h3 className="m-0 text-sm font-semibold tracking-tight text-fg">{title}</h3>
