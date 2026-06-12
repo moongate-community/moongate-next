@@ -17,11 +17,6 @@ namespace Moongate.Plugin.Email;
 /// <summary>Moongate email delivery plugin.</summary>
 public sealed class EmailPlugin : ConfigurablePlugin<EmailPluginConfig>, IMoongatePlugin, ITestablePlugin
 {
-    private const string BooleanField = "boolean";
-    private const string NumberField = "number";
-    private const string TextField = "text";
-    private const string TextAreaField = "textarea";
-
     private readonly string? _defaultActivationBaseUrl;
     private readonly Func<EmailPluginConfig, IEmailConfigurationTester> _testerFactory;
     private EmailPluginConfig _config = new();
@@ -169,48 +164,48 @@ public sealed class EmailPlugin : ConfigurablePlugin<EmailPluginConfig>, IMoonga
                     "general",
                     "General",
                     [
-                        Field("enabled", "Enabled", BooleanField, config.Enabled, false)
+                        Field("enabled", "Enabled", PluginConfigFieldTypes.Boolean, config.Enabled, false)
                     ]
                 ),
                 new(
                     "sender",
                     "Sender",
                     [
-                        Field("from.name", "From name", TextField, config.From.Name, true, defaultValue: "Moongate"),
-                        Field("from.address", "From address", TextField, config.From.Address, true)
+                        Field("from.name", "From name", PluginConfigFieldTypes.Text, config.From.Name, true, defaultValue: "Moongate"),
+                        Field("from.address", "From address", PluginConfigFieldTypes.Text, config.From.Address, true)
                     ]
                 ),
                 new(
                     "smtp",
                     "SMTP",
                     [
-                        Field("smtp.host", "Host", TextField, config.Smtp.Host, true),
-                        Field("smtp.port", "Port", NumberField, config.Smtp.Port, true, defaultValue: 587),
-                        Field("smtp.username", "Username", TextField, config.Smtp.Username, true),
+                        Field("smtp.host", "Host", PluginConfigFieldTypes.Text, config.Smtp.Host, true),
+                        Field("smtp.port", "Port", PluginConfigFieldTypes.Number, config.Smtp.Port, true, defaultValue: 587),
+                        Field("smtp.username", "Username", PluginConfigFieldTypes.Text, config.Smtp.Username, true),
                         Field(
                             "smtp.password_secret",
                             "Password secret",
-                            TextField,
+                            PluginConfigFieldTypes.Text,
                             config.Smtp.PasswordSecret,
                             true,
                             "Logical secret name resolved by the configured secret manager.",
                             "smtp_password",
                             true
                         ),
-                        Field("smtp.use_ssl", "Use SSL", BooleanField, config.Smtp.UseSsl, false),
-                        Field("smtp.start_tls", "STARTTLS", BooleanField, config.Smtp.StartTls, false),
-                        Field("smtp.timeout_seconds", "Timeout seconds", NumberField, config.Smtp.TimeoutSeconds, true, defaultValue: 30)
+                        Field("smtp.use_ssl", "Use SSL", PluginConfigFieldTypes.Boolean, config.Smtp.UseSsl, false),
+                        Field("smtp.start_tls", "STARTTLS", PluginConfigFieldTypes.Boolean, config.Smtp.StartTls, false),
+                        Field("smtp.timeout_seconds", "Timeout seconds", PluginConfigFieldTypes.Number, config.Smtp.TimeoutSeconds, true, defaultValue: 30)
                     ]
                 ),
                 new(
                     "activation",
                     "Activation",
                     [
-                        Field("activation.template_id", "Template id", TextField, config.Activation.TemplateId, true, defaultValue: "account_activation"),
+                        Field("activation.template_id", "Template id", PluginConfigFieldTypes.Text, config.Activation.TemplateId, true, defaultValue: "account_activation"),
                         Field(
                             "activation.url_template",
                             "Activation URL template",
-                            TextAreaField,
+                            PluginConfigFieldTypes.TextArea,
                             config.Activation.UrlTemplate,
                             true,
                             "Must contain {activation_id}."
@@ -221,8 +216,8 @@ public sealed class EmailPlugin : ConfigurablePlugin<EmailPluginConfig>, IMoonga
                     "templates",
                     "Templates",
                     [
-                        Field("templates.directory", "Directory", TextField, config.Templates.Directory, true, defaultValue: "templates"),
-                        Field("templates.reload_on_change", "Reload on change", BooleanField, config.Templates.ReloadOnChange, false)
+                        Field("templates.directory", "Directory", PluginConfigFieldTypes.Text, config.Templates.Directory, true, defaultValue: "templates"),
+                        Field("templates.reload_on_change", "Reload on change", PluginConfigFieldTypes.Boolean, config.Templates.ReloadOnChange, false)
                     ]
                 )
             ]
