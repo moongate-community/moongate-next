@@ -107,8 +107,7 @@ public sealed class MobileTemplateAuthoringService : IMobileTemplateAuthoringSer
         _documents.Upsert(sourceFile, def);
 
         var reloaded = new MobileTemplateYamlLoader(_mobilesDirectory).LoadAll();
-        _templates.Clear();
-        _templates.UpsertRange(reloaded);
+        _templates.ReplaceAll(reloaded);
 
         var saved = reloaded.Single(
             t => string.Equals(t.Id, def.Id, StringComparison.OrdinalIgnoreCase)
