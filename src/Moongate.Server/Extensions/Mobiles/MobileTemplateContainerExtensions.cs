@@ -2,6 +2,7 @@ using DryIoc;
 using Moongate.Core.Data.Directories;
 using Moongate.Core.Types;
 using Moongate.Server.Extensions.Hosting;
+using Moongate.Server.Interfaces.Services.Templates;
 using Moongate.Server.Services.Mobiles;
 using Moongate.UO.Data.Interfaces.Services;
 
@@ -23,6 +24,7 @@ public static class MobileTemplateContainerExtensions
         ArgumentNullException.ThrowIfNull(container);
 
         container.Register<IMobileTemplateService, MobileTemplateService>(Reuse.Singleton);
+        container.Register<IMobileTemplateAuthoringService, MobileTemplateAuthoringService>(Reuse.Singleton);
         container.Register<IMobileFactoryService, MobileFactoryService>(Reuse.Singleton);
         container.RegisterDelegate(
             static resolver => new MobileTemplateYamlLoader(
