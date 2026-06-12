@@ -1,15 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { listMobileTemplates } from "./adminMobileTemplatesClient";
-import type { MobileTemplateSummary } from "../types/mobileTemplates";
+import type { PagedResult } from "../types/itemTemplates";
 
-type UseMobileTemplateSearchOptions = {
-  search: string;
-  includeAbstract: boolean;
-  pageSize?: number;
-};
-
-type UseMobileTemplateSearchResult = {
-  items: MobileTemplateSummary[];
+type UsePagedSearchResult<T> = {
+  items: T[];
   loading: boolean;
   error: string | null;
   hasMore: boolean;
@@ -18,15 +11,12 @@ type UseMobileTemplateSearchResult = {
 };
 
 /**
- * Server-side paged mobile-template search with append-on-load-more semantics.
- * Resets to page 1 whenever the token, search or abstract scope changes; stale
+ * Generic server-side paged search with append-on-load-more semantics. Resets to page 1 whenever
+ * the `load` callback identity changes (callers memoize it over search/filter state); stale
  * responses are dropped so fast typing never shows out-of-order results.
  */
-export function useMobileTemplateSearch(
-  accessToken: string,
-  { search, includeAbstract, pageSize = 60 }: UseMobileTemplateSearchOptions
-): UseMobileTemplateSearchResult {
-  const [items, setItems] = useState<MobileTemplateSummary[]>([]);
+export function usePagedSearch<T>(load: (page: number) => Promise<PagedResult<T>>): UsePagedSearchResult<T> {
+  const [items, setItems] = useState<T[]>([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -41,14 +31,7 @@ export function useMobileTemplateSearch(
       setError(null);
 
       try {
-        const result = await listMobileTemplates(accessToken, {
-          page: target,
-          pageSize,
-          search: search.trim(),
-          tag: "",
-          notoriety: "",
-          abstract: includeAbstract ? "all" : "false"
-        });
+        const result = await load(target);
 
         if (token !== requestRef.current) {
           return;
@@ -62,14 +45,14 @@ export function useMobileTemplateSearch(
           return;
         }
 
-        setError(cause instanceof Error ? cause.message : "Failed to load mobile templates.");
+        setError(cause instanceof Error ? cause.message : "Failed to load results.");
       } finally {
         if (token === requestRef.current) {
           setLoading(false);
         }
       }
     },
-    [accessToken, search, includeAbstract, pageSize]
+    [load]
   );
 
   useEffect(() => {
