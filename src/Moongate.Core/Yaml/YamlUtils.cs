@@ -21,6 +21,7 @@ public static class YamlUtils
     private static readonly IDeserializer Deserializer = new DeserializerBuilder()
                                                          .WithNamingConvention(UnderscoredNamingConvention.Instance)
                                                          .WithTypeConverter(new TimeSpanYamlConverter())
+                                                         .WithTypeConverter(new SnakeCaseEnumYamlConverter())
                                                          .IgnoreUnmatchedProperties()
                                                          .Build();
 
@@ -51,6 +52,71 @@ public static class YamlUtils
             }
 
             emitter.Emit(new Scalar(((TimeSpan)value).ToString("c", CultureInfo.InvariantCulture)));
+        }
+    }
+
+    private sealed class SnakeCaseEnumYamlConverter : IYamlTypeConverter
+    {
+        public bool Accepts(Type type)
+        {
+            var enumType = Nullable.GetUnderlyingType(type) ?? type;
+
+            return enumType.IsEnum;
+        }
+
+        public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
+        {
+            var scalar = parser.Consume<Scalar>();
+            var enumType = Nullable.GetUnderlyingType(type) ?? type;
+
+            if (string.IsNullOrWhiteSpace(scalar.Value) && Nullable.GetUnderlyingType(type) is not null)
+            {
+                return null;
+            }
+
+            if (Enum.TryParse(enumType, scalar.Value, true, out var parsed))
+            {
+                return parsed;
+            }
+
+            foreach (var name in Enum.GetNames(enumType))
+            {
+                if (string.Equals(ToSnakeCase(name), scalar.Value, StringComparison.OrdinalIgnoreCase))
+                {
+                    return Enum.Parse(enumType, name);
+                }
+            }
+
+            throw new YamlException($"Value '{scalar.Value}' is not valid for enum {enumType.Name}.");
+        }
+
+        public void WriteYaml(IEmitter emitter, object? value, Type type, ObjectSerializer serializer)
+        {
+            serializer(value, type);
+        }
+
+        private static string ToSnakeCase(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return value;
+            }
+
+            var chars = new List<char>(value.Length + 4);
+
+            for (var index = 0; index < value.Length; index++)
+            {
+                var character = value[index];
+
+                if (index > 0 && char.IsUpper(character))
+                {
+                    chars.Add('_');
+                }
+
+                chars.Add(char.ToLowerInvariant(character));
+            }
+
+            return new(chars.ToArray());
         }
     }
 

@@ -82,6 +82,119 @@ public class ItemTemplateYamlLoaderTests
     }
 
     [Fact]
+    public void LoadAll_MapsContents()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "containers.yaml",
+            """
+            item_templates:
+                - id: wooden_chest
+                  item_id: 3651
+                  contents:
+                      loot_template: common
+                      generate: on_open
+                      refill_every: 6h
+                      refill_policy: when_empty
+                      refill_scope: world_only
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var template = Assert.Single(loader.LoadAll());
+
+        Assert.NotNull(template.Contents);
+        Assert.Equal("common", template.Contents.LootTemplate);
+        Assert.Equal(ItemTemplateContentGenerateType.OnOpen, template.Contents.Generate);
+        Assert.Equal(TimeSpan.FromHours(6), template.Contents.RefillEvery);
+        Assert.Equal(ItemTemplateContentRefillPolicy.WhenEmpty, template.Contents.RefillPolicy);
+        Assert.Equal(ItemTemplateContentRefillScope.WorldOnly, template.Contents.RefillScope);
+    }
+
+    [Fact]
+    public void LoadAll_InheritsContentsFromBaseTemplate()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "containers.yaml",
+            """
+            item_templates:
+                - id: base_container
+                  is_abstract: true
+                  item_id: 3651
+                  contents:
+                      loot_template: common
+                      refill_every: 6h
+                - id: wooden_chest
+                  base_item: base_container
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var templates = loader.LoadAll();
+
+        var parent = templates.Single(template => template.Id == "base_container");
+        var child = templates.Single(template => template.Id == "wooden_chest");
+        Assert.NotNull(parent.Contents);
+        Assert.NotNull(child.Contents);
+        Assert.NotSame(parent.Contents, child.Contents);
+        Assert.Equal("common", child.Contents.LootTemplate);
+        Assert.Equal(TimeSpan.FromHours(6), child.Contents.RefillEvery);
+    }
+
+    [Fact]
+    public void LoadAll_ChildContentsOverridesBaseTemplate()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "containers.yaml",
+            """
+            item_templates:
+                - id: base_container
+                  is_abstract: true
+                  item_id: 3651
+                  contents:
+                      loot_template: common
+                      refill_every: 6h
+                - id: fancy_chest
+                  base_item: base_container
+                  contents:
+                      loot_template: rare
+                      refill_every: 12h
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var templates = loader.LoadAll();
+
+        var chest = templates.Single(template => template.Id == "fancy_chest");
+        Assert.NotNull(chest.Contents);
+        Assert.Equal("rare", chest.Contents.LootTemplate);
+        Assert.Equal(TimeSpan.FromHours(12), chest.Contents.RefillEvery);
+    }
+
+    [Fact]
+    public void LoadAll_BlankContentsLootTemplateClearsContents()
+    {
+        using var dir = new TempTemplateDirectory();
+        dir.WriteFile(
+            "containers.yaml",
+            """
+            item_templates:
+                - id: wooden_chest
+                  item_id: 3651
+                  contents:
+                      loot_template: ""
+            """
+        );
+        var loader = new ItemTemplateYamlLoader(dir.Path);
+
+        var template = Assert.Single(loader.LoadAll());
+
+        Assert.Null(template.Contents);
+    }
+
+    [Fact]
     public void LoadAll_ChildValues_WinOverParent()
     {
         using var dir = new TempTemplateDirectory();

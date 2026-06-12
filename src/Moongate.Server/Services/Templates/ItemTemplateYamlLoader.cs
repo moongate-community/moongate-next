@@ -108,6 +108,7 @@ public sealed class ItemTemplateYamlLoader
 
                 template.Tags ??= [];
                 template.GraphicVariants ??= [];
+                NormalizeContents(template);
 
                 sources[template.Id] = file;
                 templates.Add(template);
@@ -189,6 +190,7 @@ public sealed class ItemTemplateYamlLoader
         }
 
         child.Value ??= parent.Value?.Clone();
+        child.Contents ??= parent.Contents is null ? null : CloneContents(parent.Contents);
 
         if (child.Visibility == default)
         {
@@ -243,6 +245,31 @@ public sealed class ItemTemplateYamlLoader
         {
             ItemId = variant.ItemId
         };
+
+    private static ItemTemplateContentsDefinition CloneContents(ItemTemplateContentsDefinition contents)
+        => new()
+        {
+            LootTemplate = contents.LootTemplate,
+            Generate = contents.Generate,
+            RefillEvery = contents.RefillEvery,
+            RefillPolicy = contents.RefillPolicy,
+            RefillScope = contents.RefillScope
+        };
+
+    private static void NormalizeContents(ItemTemplateDefinition template)
+    {
+        if (template.Contents is null)
+        {
+            return;
+        }
+
+        template.Contents.LootTemplate = template.Contents.LootTemplate.Trim();
+
+        if (string.IsNullOrWhiteSpace(template.Contents.LootTemplate))
+        {
+            template.Contents = null;
+        }
+    }
 
     private static Dictionary<string, ItemTemplateParamDefinition> MergeParams(
         Dictionary<string, ItemTemplateParamDefinition> parentParams,
