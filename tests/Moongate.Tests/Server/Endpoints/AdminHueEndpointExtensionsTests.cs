@@ -39,6 +39,7 @@ public sealed class AdminHueEndpointExtensionsTests
 
         var ok = Assert.IsType<Ok<HueSummary>>(result);
         Assert.True(ok.Value!.IsKnown);
+        Assert.Equal(32, ok.Value!.Colors.Count);
     }
 
     [Fact]
