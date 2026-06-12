@@ -7,3 +7,16 @@ item_templates:
         gump_id: 60
         layer: Backpack
         tags: [ container ]
+    -   id: wooden_box
+        name: Wooden Box
+        item_id: 3651
+        weight: 4
+        is_movable: true
+        gump_id: 60
+        tags: [ container ]
+        contents:
+            loot_template: common
+            generate: on_open
+            refill_every: 6h
+            refill_policy: when_empty
+            refill_scope: world_only
