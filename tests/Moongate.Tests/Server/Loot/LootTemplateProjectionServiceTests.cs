@@ -1,4 +1,5 @@
 using Moongate.Server.Services.Loot;
+using Moongate.Server.Services.Templates;
 using Moongate.UO.Data.Templates.Items;
 using Moongate.UO.Data.Templates.Loot;
 using Moongate.UO.Data.Types.Items;
@@ -65,6 +66,20 @@ public sealed class LootTemplateProjectionServiceTests
             detail.PotentialItems.Select(static row => row.ItemTemplateId),
             detail.PreviewItems.Select(static row => row.ItemTemplateId)
         );
+    }
+
+    [Fact]
+    public void Project_UsesCurrentItemTemplateSnapshot()
+    {
+        var templates = new ItemTemplateService();
+        templates.ReplaceAll([Item("ruby", 0x0F13, false, "Ruby", "gem")]);
+        var service = new LootTemplateProjectionService(templates);
+        templates.ReplaceAll([Item("sapphire", 0x0F19, false, "Sapphire", "gem")]);
+
+        var detail = service.Project(Table("gems", new LootNode { Category = "gem" }));
+
+        var candidate = Assert.Single(detail.PotentialItems, static row => row.Kind == "category_candidate");
+        Assert.Equal("sapphire", candidate.ItemTemplateId);
     }
 
     private static ItemTemplateDefinition Item(

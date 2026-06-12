@@ -28,6 +28,9 @@ internal static class WebHostExtensions
     {
         // ASP.NET Core services (OpenAPI, Kestrel, routing, ...) register through IServiceCollection.
         builder.Services.AddEndpointsApiExplorer();
+        builder.Services.ConfigureHttpJsonOptions(
+            options => options.SerializerOptions.Converters.Add(new JsonStringEnumConverter())
+        );
         builder.Services.AddSwaggerGen(
             options =>
             {
@@ -83,6 +86,7 @@ internal static class WebHostExtensions
         app.MapMoongateAdminPlugins();
         app.MapMoongateAdminUsers();
         app.MapMoongateItemTemplates();
+        app.MapMoongateUoItems();
         app.MapMoongateMobileTemplates();
         app.MapMoongateLootTemplates();
         app.MapMoongateAdminHues();

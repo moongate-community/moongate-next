@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Moongate.Persistence.Data;
 using Moongate.Server.Data.Templates;
 using Moongate.Server.Extensions.Endpoints;
+using Moongate.Server.Interfaces.Services.Templates;
 using Moongate.UO.Data.Data.Hues;
 using Moongate.UO.Data.Interfaces.Hues;
 using Moongate.UO.Data.Interfaces.Services;
@@ -34,6 +35,12 @@ public sealed class ItemTemplateEndpointExtensionsTests
                 _templates[template.Id] = template;
             }
         }
+
+        public void ReplaceAll(IEnumerable<ItemTemplateDefinition> templates)
+        {
+            _templates.Clear();
+            UpsertRange(templates);
+        }
     }
 
     private sealed class FakeHueStore : IHueStore
@@ -46,6 +53,44 @@ public sealed class ItemTemplateEndpointExtensionsTests
 
         public Hue? GetHue(int index)
             => index >= 0 && index < _hues.Count ? _hues[index] : null;
+    }
+
+    private sealed class FakeAuthoringService : IItemTemplateAuthoringService
+    {
+        public ItemTemplateSaveResult? CreateResult { get; set; }
+
+        public ItemTemplateSaveResult? UpdateResult { get; set; }
+
+        public Exception? CreateException { get; set; }
+
+        public Exception? UpdateException { get; set; }
+
+        public ValueTask<ItemTemplateSaveResult> CreateAsync(
+            ItemTemplateEditRequest request,
+            CancellationToken cancellationToken = default
+        )
+        {
+            if (CreateException is not null)
+            {
+                throw CreateException;
+            }
+
+            return ValueTask.FromResult(CreateResult ?? NewSaveResult(request.Id));
+        }
+
+        public ValueTask<ItemTemplateSaveResult?> UpdateAsync(
+            string id,
+            ItemTemplateEditRequest request,
+            CancellationToken cancellationToken = default
+        )
+        {
+            if (UpdateException is not null)
+            {
+                throw UpdateException;
+            }
+
+            return ValueTask.FromResult(UpdateResult);
+        }
     }
 
     [Fact]
@@ -153,6 +198,90 @@ public sealed class ItemTemplateEndpointExtensionsTests
         Assert.Equal(["crate_base", "longsword"], ok.Value.Items.Select(static item => item.Id));
     }
 
+    [Fact]
+    public async Task HandleCreate_ReturnsOkSaveResult()
+    {
+        var authoring = new FakeAuthoringService();
+
+        var result = await ItemTemplateEndpointExtensions.HandleCreateAsync(
+            authoring,
+            new() { Id = "web_crate", ItemId = 0x0E3F },
+            CancellationToken.None
+        );
+
+        var ok = Assert.IsType<Ok<ItemTemplateSaveResult>>(result);
+        Assert.Equal("web_crate", ok.Value!.Template.Id);
+    }
+
+    [Fact]
+    public async Task HandleCreate_InvalidRequest_ReturnsBadRequest()
+    {
+        var authoring = new FakeAuthoringService
+        {
+            CreateException = new InvalidOperationException("invalid template")
+        };
+
+        var result = await ItemTemplateEndpointExtensions.HandleCreateAsync(
+            authoring,
+            new() { Id = "", ItemId = -1 },
+            CancellationToken.None
+        );
+
+        var badRequest = Assert.IsType<BadRequest<string>>(result);
+        Assert.Equal("invalid template", badRequest.Value);
+    }
+
+    [Fact]
+    public async Task HandleUpdate_ReturnsOkSaveResult()
+    {
+        var authoring = new FakeAuthoringService
+        {
+            UpdateResult = NewSaveResult("web_crate")
+        };
+
+        var result = await ItemTemplateEndpointExtensions.HandleUpdateAsync(
+            authoring,
+            "web_crate",
+            new() { Id = "web_crate", ItemId = 0x0E3F },
+            CancellationToken.None
+        );
+
+        var ok = Assert.IsType<Ok<ItemTemplateSaveResult>>(result);
+        Assert.Equal("web_crate", ok.Value!.Template.Id);
+    }
+
+    [Fact]
+    public async Task HandleUpdate_MissingTemplate_ReturnsNotFound()
+    {
+        var result = await ItemTemplateEndpointExtensions.HandleUpdateAsync(
+            new FakeAuthoringService(),
+            "missing",
+            new() { Id = "missing", ItemId = 0x0E3F },
+            CancellationToken.None
+        );
+
+        Assert.IsType<NotFound>(result);
+    }
+
+    [Fact]
+    public async Task HandleUpdate_IdMismatch_ReturnsBadRequest()
+    {
+        var authoring = new FakeAuthoringService
+        {
+            UpdateException = new InvalidOperationException("Route id must match the request id.")
+        };
+
+        var result = await ItemTemplateEndpointExtensions.HandleUpdateAsync(
+            authoring,
+            "crate",
+            new() { Id = "other", ItemId = 0x0E3F },
+            CancellationToken.None
+        );
+
+        var badRequest = Assert.IsType<BadRequest<string>>(result);
+        Assert.Contains("match", badRequest.Value);
+    }
+
     [Theory, InlineData("long", "longsword"), InlineData("Sharp", "longsword"), InlineData("weapon", "longsword"),
      InlineData("combat_script", "longsword"), InlineData("3937", "longsword"), InlineData("0x0F61", "longsword"),
      InlineData("0xF61", "longsword"), InlineData("125", "longsword"), InlineData("55", "longsword")]
@@ -219,4 +348,18 @@ public sealed class ItemTemplateEndpointExtensionsTests
 
         return service;
     }
+
+    private static ItemTemplateSaveResult NewSaveResult(string id)
+        => new(
+            ItemTemplateDetail.FromDefinition(
+                new()
+                {
+                    Id = id,
+                    Name = id,
+                    ItemId = 0x0E3F
+                },
+                new FakeHueStore()
+            ),
+            "_web.yaml"
+        );
 }

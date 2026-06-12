@@ -58,6 +58,19 @@ public sealed class ItemTemplateServiceTests
         Assert.Equal("Replaced", definition!.Name);
     }
 
+    [Fact]
+    public void ReplaceAll_ReplacesSnapshot()
+    {
+        var service = new ItemTemplateService();
+        service.UpsertRange([NewTemplate("old")]);
+
+        service.ReplaceAll([NewTemplate("new")]);
+
+        Assert.Equal(1, service.Count);
+        Assert.False(service.TryGet("old", out _));
+        Assert.True(service.TryGet("new", out _));
+    }
+
     private static ItemTemplateDefinition NewTemplate(string id)
         => new() { Id = id, Name = id };
 }

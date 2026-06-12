@@ -1,5 +1,7 @@
 using System.Globalization;
 using Moongate.Server.Data.Templates;
+using Moongate.Server.Services.Templates;
+using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Templates.Items;
 using Moongate.UO.Data.Templates.Loot;
 
@@ -7,40 +9,44 @@ namespace Moongate.Server.Services.Loot;
 
 public sealed class LootTemplateProjectionService
 {
-    private readonly IReadOnlyList<ItemTemplateDefinition> _templates;
-    private readonly Dictionary<string, ItemTemplateDefinition> _byId;
-    private readonly Dictionary<string, IReadOnlyList<ItemTemplateDefinition>> _byTag;
+    private readonly IItemTemplateService _templates;
 
     public LootTemplateProjectionService(IEnumerable<ItemTemplateDefinition> templates)
+        : this(NewTemplateService(templates))
+    {
+    }
+
+    public LootTemplateProjectionService(IItemTemplateService templates)
     {
         ArgumentNullException.ThrowIfNull(templates);
 
-        _templates = templates.ToArray();
-        _byId = _templates.ToDictionary(static template => template.Id, StringComparer.OrdinalIgnoreCase);
-        _byTag = _templates
-                 .Where(static template => !template.IsAbstract)
-                 .SelectMany(static template => template.Tags.Select(tag => (Tag: tag, Template: template)))
-                 .GroupBy(static pair => pair.Tag, StringComparer.OrdinalIgnoreCase)
-                 .ToDictionary(
-                     static group => group.Key,
-                     static group => (IReadOnlyList<ItemTemplateDefinition>)group
-                         .Select(static pair => pair.Template)
-                         .OrderBy(static template => template.Id, StringComparer.OrdinalIgnoreCase)
-                         .ToArray(),
-                     StringComparer.OrdinalIgnoreCase
-                 );
+        _templates = templates;
     }
 
     public LootTemplateDetail Project(LootTableDefinition table)
     {
         ArgumentNullException.ThrowIfNull(table);
 
+        var templates = _templates.GetAll();
+        var byId = templates.ToDictionary(static template => template.Id, StringComparer.OrdinalIgnoreCase);
+        var byTag = templates
+                    .Where(static template => !template.IsAbstract)
+                    .SelectMany(static template => template.Tags.Select(tag => (Tag: tag, Template: template)))
+                    .GroupBy(static pair => pair.Tag, StringComparer.OrdinalIgnoreCase)
+                    .ToDictionary(
+                        static group => group.Key,
+                        static group => (IReadOnlyList<ItemTemplateDefinition>)group
+                            .Select(static pair => pair.Template)
+                            .OrderBy(static template => template.Id, StringComparer.OrdinalIgnoreCase)
+                            .ToArray(),
+                        StringComparer.OrdinalIgnoreCase
+                    );
         var rows = new List<LootTemplateNodeSummary>();
         var potentialItems = new List<LootTemplateNodeSummary>();
 
         for (var i = 0; i < table.Content.Count; i++)
         {
-            AddNode(rows, potentialItems, table.Content[i], "", 0, i);
+            AddNode(rows, potentialItems, byId, byTag, table.Content[i], "", 0, i);
         }
 
         var previewItems = potentialItems
@@ -53,6 +59,14 @@ public sealed class LootTemplateProjectionService
         return new(table.Id, table.Content.Count, rows, potentialItems, previewItems);
     }
 
+    private static ItemTemplateService NewTemplateService(IEnumerable<ItemTemplateDefinition> templates)
+    {
+        var service = new ItemTemplateService();
+        service.ReplaceAll(templates);
+
+        return service;
+    }
+
     private static string FormatItemId(int itemId)
         => $"0x{itemId.ToString("X4", CultureInfo.InvariantCulture)}";
 
@@ -61,12 +75,13 @@ public sealed class LootTemplateProjectionService
 
     private void AddCategoryChildren(
         List<LootTemplateNodeSummary> potentialItems,
+        IReadOnlyDictionary<string, IReadOnlyList<ItemTemplateDefinition>> byTag,
         LootNode node,
         string parentId,
         int depth
     )
     {
-        if (node.Category is null || !_byTag.TryGetValue(node.Category, out var matches))
+        if (node.Category is null || !byTag.TryGetValue(node.Category, out var matches))
         {
             return;
         }
@@ -85,6 +100,8 @@ public sealed class LootTemplateProjectionService
     private void AddNode(
         List<LootTemplateNodeSummary> rows,
         List<LootTemplateNodeSummary> potentialItems,
+        IReadOnlyDictionary<string, ItemTemplateDefinition> byId,
+        IReadOnlyDictionary<string, IReadOnlyList<ItemTemplateDefinition>> byTag,
         LootNode node,
         string parentId,
         int depth,
@@ -95,7 +112,7 @@ public sealed class LootTemplateProjectionService
                      ? index.ToString(CultureInfo.InvariantCulture)
                      : $"{parentId}.{index.ToString(CultureInfo.InvariantCulture)}";
         var kind = ResolveKind(node);
-        var row = CreateRow(id, parentId, depth, kind, node);
+        var row = CreateRow(byId, id, parentId, depth, kind, node);
         rows.Add(row);
 
         if (row.ItemTemplateId is not null)
@@ -107,7 +124,7 @@ public sealed class LootTemplateProjectionService
         {
             for (var i = 0; i < node.Group.Count; i++)
             {
-                AddNode(rows, potentialItems, node.Group[i], id, depth + 1, i);
+                AddNode(rows, potentialItems, byId, byTag, node.Group[i], id, depth + 1, i);
             }
         }
 
@@ -115,17 +132,24 @@ public sealed class LootTemplateProjectionService
         {
             for (var i = 0; i < node.PickOneOf.Count; i++)
             {
-                AddNode(rows, potentialItems, node.PickOneOf[i], id, depth + 1, i);
+                AddNode(rows, potentialItems, byId, byTag, node.PickOneOf[i], id, depth + 1, i);
             }
         }
 
         if (node.Category is not null)
         {
-            AddCategoryChildren(potentialItems, node, id, depth + 1);
+            AddCategoryChildren(potentialItems, byTag, node, id, depth + 1);
         }
     }
 
-    private LootTemplateNodeSummary CreateRow(string id, string parentId, int depth, string kind, LootNode node)
+    private static LootTemplateNodeSummary CreateRow(
+        IReadOnlyDictionary<string, ItemTemplateDefinition> byId,
+        string id,
+        string parentId,
+        int depth,
+        string kind,
+        LootNode node
+    )
     {
         var amountMin = node.Amount?.Min ?? 1;
         var amountMax = node.Amount?.Max ?? 1;
@@ -135,7 +159,7 @@ public sealed class LootTemplateProjectionService
         string? imageUrl = null;
         var stackable = false;
 
-        if (node.Item is not null && _byId.TryGetValue(node.Item, out var template))
+        if (node.Item is not null && byId.TryGetValue(node.Item, out var template))
         {
             label = string.IsNullOrWhiteSpace(template.Name) ? template.Id : template.Name;
             rarity = template.Rarity.ToString();

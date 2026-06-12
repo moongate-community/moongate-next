@@ -28,7 +28,7 @@ public static class LootContainerExtensions
         container.Register<ILootService, LootService>(Reuse.Singleton);
         container.Register<LootTableRegistryStore>(Reuse.Singleton);
         container.RegisterDelegate<LootTemplateProjectionService>(
-            resolver => new(resolver.Resolve<IItemTemplateService>().GetAll()),
+            resolver => new(resolver.Resolve<IItemTemplateService>()),
             Reuse.Singleton
         );
         container.RegisterDelegate(

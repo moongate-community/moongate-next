@@ -44,8 +44,18 @@ export type ItemTemplateValueSummary = {
   effectiveSell: number;
 };
 
+export type ItemTemplateValueEdit = {
+  buy: number;
+  sell: number;
+};
+
 export type ItemTemplateParamSummary = {
   key: string;
+  type: string;
+  value: string;
+};
+
+export type ItemTemplateParamEdit = {
   type: string;
   value: string;
 };
@@ -56,6 +66,18 @@ export type ItemTemplateContentsSummary = {
   refillEvery: string | null;
   refillPolicy: string;
   refillScope: string;
+};
+
+export type ItemTemplateContentsEdit = {
+  lootTemplate: string;
+  generate: string;
+  refillEvery: string | null;
+  refillPolicy: string;
+  refillScope: string;
+};
+
+export type ItemTemplateGraphicVariantEdit = {
+  itemId: number;
 };
 
 export type ItemTemplateDetail = ItemTemplateSummary & {
@@ -70,6 +92,35 @@ export type ItemTemplateDetail = ItemTemplateSummary & {
   gumpId: number | null;
   contents: ItemTemplateContentsSummary | null;
   params: ItemTemplateParamSummary[];
+};
+
+export type ItemTemplateEditRequest = {
+  id: string;
+  baseItem: string | null;
+  isAbstract: boolean;
+  name: string;
+  comment: string;
+  itemId: number;
+  graphicVariants: ItemTemplateGraphicVariantEdit[];
+  hue: number;
+  weight: number;
+  amount: number;
+  isStackable: boolean;
+  isMovable: boolean;
+  gumpId: number | null;
+  layer: string | null;
+  scriptId: string;
+  rarity: string;
+  value: ItemTemplateValueEdit | null;
+  contents: ItemTemplateContentsEdit | null;
+  visibility: string;
+  tags: string[];
+  params: Record<string, ItemTemplateParamEdit>;
+};
+
+export type ItemTemplateSaveResult = {
+  template: ItemTemplateDetail;
+  sourceFile: string;
 };
 
 export type ItemTemplateFilters = {

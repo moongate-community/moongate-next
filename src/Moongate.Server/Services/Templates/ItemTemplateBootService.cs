@@ -30,8 +30,7 @@ public sealed class ItemTemplateBootService : IMoongateService
 
         var loaded = _loader.LoadAll();
 
-        _templates.Clear();
-        _templates.UpsertRange(loaded);
+        _templates.ReplaceAll(loaded);
 
         _logger.Information("Item template registry ready with {Count} templates", _templates.Count);
 

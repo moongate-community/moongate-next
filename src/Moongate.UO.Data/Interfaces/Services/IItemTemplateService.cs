@@ -23,4 +23,7 @@ public interface IItemTemplateService
 
     /// <summary>Adds or replaces templates by id.</summary>
     void UpsertRange(IEnumerable<ItemTemplateDefinition> templates);
+
+    /// <summary>Atomically replaces all registered templates with a new snapshot.</summary>
+    void ReplaceAll(IEnumerable<ItemTemplateDefinition> templates);
 }

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
-import { Box } from "lucide-react";
+import { Box, Pencil } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { ItemTemplateDetail } from "../../../types/itemTemplates";
@@ -14,6 +15,7 @@ type ItemTemplateDetailPanelProps = {
   template: ItemTemplateDetail | null;
   loading: boolean;
   error: string | null;
+  onEdit?: () => void;
 };
 
 type PropertyItem = {
@@ -22,7 +24,7 @@ type PropertyItem = {
   mono?: boolean;
 };
 
-export function ItemTemplateDetailPanel({ template, loading, error }: ItemTemplateDetailPanelProps) {
+export function ItemTemplateDetailPanel({ template, loading, error, onEdit }: ItemTemplateDetailPanelProps) {
   if (loading) {
     return (
       <Card className="rounded-md border-border bg-surface py-0 shadow-none">
@@ -59,7 +61,19 @@ export function ItemTemplateDetailPanel({ template, loading, error }: ItemTempla
 
   return (
     <Card className="gap-0 rounded-md border-border bg-surface py-0 shadow-none">
-      <CardHeader className="grid gap-3 border-b border-border p-4 text-center">
+      <CardHeader className="relative grid gap-3 border-b border-border p-4 text-center">
+        {onEdit && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={onEdit}
+            className="absolute right-3 top-3 min-h-[30px] gap-1.5 px-2.5 text-[13px] font-medium text-fg-muted hover:bg-muted hover:text-fg"
+          >
+            <Pencil size={14} aria-hidden />
+            Edit
+          </Button>
+        )}
         <div className="mx-auto">
           <ItemImageCell src={template.imageUrl} alt={template.name || template.id} size="hero" />
         </div>
