@@ -26,6 +26,13 @@ public static class ConfigYamlOptions
                                                         .IgnoreUnmatchedProperties()
                                                         .Build();
 
+    /// <summary>
+    /// Maps a CLR property name to the config key used in YAML and in dotted config paths
+    /// (e.g. <c>UseSsl</c> → <c>use_ssl</c>), using the same naming convention as the serializer.
+    /// </summary>
+    public static string ToConfigKey(string name)
+        => UnderscoredNamingConvention.Instance.Apply(name);
+
     private sealed class Point3DYamlConverter : IYamlTypeConverter
     {
         public bool Accepts(Type type)
