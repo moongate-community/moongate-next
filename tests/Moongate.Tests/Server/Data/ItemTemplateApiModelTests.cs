@@ -84,6 +84,11 @@ public sealed class ItemTemplateApiModelTests
             IsMovable = true,
             IsStackable = false,
             GumpId = 42,
+            Contents = new()
+            {
+                LootTemplate = "common",
+                RefillEvery = TimeSpan.FromHours(6)
+            },
             Params =
             {
                 ["capacity"] = new() { Type = ItemTemplateParamType.Integer, Value = "125" }
@@ -101,6 +106,12 @@ public sealed class ItemTemplateApiModelTests
         Assert.True(detail.IsMovable);
         Assert.False(detail.IsStackable);
         Assert.Equal(42, detail.GumpId);
+        Assert.NotNull(detail.Contents);
+        Assert.Equal("common", detail.Contents.LootTemplate);
+        Assert.Equal("OnOpen", detail.Contents.Generate);
+        Assert.Equal(TimeSpan.FromHours(6), detail.Contents.RefillEvery);
+        Assert.Equal("WhenEmpty", detail.Contents.RefillPolicy);
+        Assert.Equal("WorldOnly", detail.Contents.RefillScope);
         var variant = Assert.Single(detail.GraphicVariants);
         Assert.Equal(0x0E40, variant.ItemId);
         Assert.Equal("0x0E40", variant.ItemIdHex);

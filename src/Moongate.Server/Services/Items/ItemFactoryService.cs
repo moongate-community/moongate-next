@@ -79,6 +79,12 @@ public sealed class ItemFactoryService : IItemFactoryService
             item.SellValue = template.Value.EffectiveSell(template.Rarity);
         }
 
+        item.CustomProperties[ItemTemplateDefinitionKeys.TemplateId] = new CustomProperty
+        {
+            Type = CustomPropertyType.String,
+            StringValue = template.Id
+        };
+
         item.CustomProperties[ItemTemplateDefinition.ReservedIsMovableParamKey] = new CustomProperty
         {
             Type = CustomPropertyType.Boolean,

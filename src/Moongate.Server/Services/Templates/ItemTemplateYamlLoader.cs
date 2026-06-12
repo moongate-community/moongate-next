@@ -1,5 +1,6 @@
 using System.Globalization;
 using Moongate.Core.Yaml;
+using Moongate.Server.Services.Items;
 using Moongate.UO.Data.Interfaces.Tiles;
 using Moongate.UO.Data.Templates.Items;
 using Moongate.UO.Data.Types.Items;
@@ -108,6 +109,7 @@ public sealed class ItemTemplateYamlLoader
 
                 template.Tags ??= [];
                 template.GraphicVariants ??= [];
+                NormalizeContents(template);
 
                 sources[template.Id] = file;
                 templates.Add(template);
@@ -189,6 +191,7 @@ public sealed class ItemTemplateYamlLoader
         }
 
         child.Value ??= parent.Value?.Clone();
+        child.Contents ??= parent.Contents is null ? null : CloneContents(parent.Contents);
 
         if (child.Visibility == default)
         {
@@ -243,6 +246,31 @@ public sealed class ItemTemplateYamlLoader
         {
             ItemId = variant.ItemId
         };
+
+    private static ItemTemplateContentsDefinition CloneContents(ItemTemplateContentsDefinition contents)
+        => new()
+        {
+            LootTemplate = contents.LootTemplate,
+            Generate = contents.Generate,
+            RefillEvery = contents.RefillEvery,
+            RefillPolicy = contents.RefillPolicy,
+            RefillScope = contents.RefillScope
+        };
+
+    private static void NormalizeContents(ItemTemplateDefinition template)
+    {
+        if (template.Contents is null)
+        {
+            return;
+        }
+
+        template.Contents.LootTemplate = template.Contents.LootTemplate.Trim();
+
+        if (string.IsNullOrWhiteSpace(template.Contents.LootTemplate))
+        {
+            template.Contents = null;
+        }
+    }
 
     private static Dictionary<string, ItemTemplateParamDefinition> MergeParams(
         Dictionary<string, ItemTemplateParamDefinition> parentParams,
@@ -326,10 +354,10 @@ public sealed class ItemTemplateYamlLoader
         {
             foreach (var (key, param) in template.Params)
             {
-                if (string.Equals(key, ItemTemplateDefinition.ReservedIsMovableParamKey, StringComparison.OrdinalIgnoreCase))
+                if (IsReservedParamKey(key))
                 {
                     throw new InvalidOperationException(
-                        $"Item template '{template.Id}' in '{sources[template.Id]}' uses reserved param key '{ItemTemplateDefinition.ReservedIsMovableParamKey}'."
+                        $"Item template '{template.Id}' in '{sources[template.Id]}' uses reserved param key '{key}'."
                     );
                 }
 
@@ -352,6 +380,12 @@ public sealed class ItemTemplateYamlLoader
             }
         }
     }
+
+    private static bool IsReservedParamKey(string key)
+        => string.Equals(key, ItemTemplateDefinition.ReservedIsMovableParamKey, StringComparison.OrdinalIgnoreCase) ||
+           string.Equals(key, ItemTemplateDefinitionKeys.TemplateId, StringComparison.OrdinalIgnoreCase) ||
+           string.Equals(key, ItemTemplateDefinitionKeys.ContentsGeneratedAt, StringComparison.OrdinalIgnoreCase) ||
+           string.Equals(key, ItemTemplateDefinitionKeys.ContentsNextRefillAt, StringComparison.OrdinalIgnoreCase);
 
     private static void ValidateGraphicVariants(
         List<ItemTemplateDefinition> templates,

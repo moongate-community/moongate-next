@@ -1,5 +1,6 @@
 using Moongate.Core.Types;
 using Moongate.UO.Data.Types.Items;
+using YamlDotNet.Serialization;
 
 namespace Moongate.UO.Data.Templates.Items;
 
@@ -51,6 +52,9 @@ public sealed class ItemTemplateDefinition
     public ItemRarity Rarity { get; set; } = ItemRarity.Common;
 
     public ItemTemplateValueDefinition? Value { get; set; }
+
+    [YamlMember(Alias = "contents")]
+    public ItemTemplateContentsDefinition? Contents { get; set; }
 
     public UserLevelType Visibility { get; set; }
 
