@@ -24,6 +24,8 @@ import { MobileTemplatePickerDialog } from "./MobileTemplatePickerDialog";
 import { BodyPickerDialog } from "./BodyPickerDialog";
 import { HuePickerDialog } from "./HuePickerDialog";
 import { HairStylePickerDialog } from "./HairStylePickerDialog";
+import { HueFieldPreview } from "./HueFieldPreview";
+import { HairFieldPreview } from "./HairFieldPreview";
 
 type MobileTemplateFormProps = {
   accessToken: string;
@@ -587,6 +589,7 @@ export function MobileTemplateForm({ accessToken, mode, template, onCancel, onSa
                     Browse
                   </Button>
                 </div>
+                <HueFieldPreview accessToken={accessToken} value={state.skinHue} />
               </Field>
               <Field label="Hair hue" htmlFor="mobile-template-hair-hue">
                 <div className="flex items-center gap-2">
@@ -607,6 +610,7 @@ export function MobileTemplateForm({ accessToken, mode, template, onCancel, onSa
                     Browse
                   </Button>
                 </div>
+                <HueFieldPreview accessToken={accessToken} value={state.hairHue} />
               </Field>
               <Field label="Hair style" htmlFor="mobile-template-hair-style">
                 <div className="flex items-center gap-2">
@@ -627,6 +631,7 @@ export function MobileTemplateForm({ accessToken, mode, template, onCancel, onSa
                     Browse
                   </Button>
                 </div>
+                <HairFieldPreview style={state.hairStyle} hue={state.hairHue} facial={false} />
               </Field>
               <Field label="Facial hair hue" htmlFor="mobile-template-facial-hair-hue">
                 <div className="flex items-center gap-2">
@@ -647,6 +652,7 @@ export function MobileTemplateForm({ accessToken, mode, template, onCancel, onSa
                     Browse
                   </Button>
                 </div>
+                <HueFieldPreview accessToken={accessToken} value={state.facialHairHue} />
               </Field>
               <Field label="Facial hair style" htmlFor="mobile-template-facial-hair-style">
                 <div className="flex items-center gap-2">
@@ -667,6 +673,7 @@ export function MobileTemplateForm({ accessToken, mode, template, onCancel, onSa
                     Browse
                   </Button>
                 </div>
+                <HairFieldPreview style={state.facialHairStyle} hue={state.facialHairHue} facial={true} />
               </Field>
             </div>
           </FormSection>

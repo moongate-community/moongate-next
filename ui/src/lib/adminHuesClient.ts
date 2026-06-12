@@ -5,6 +5,14 @@ function authHeaders(accessToken: string): HeadersInit {
   return { Authorization: `Bearer ${accessToken}` };
 }
 
+export async function getHue(accessToken: string, value: number): Promise<HueSummary> {
+  const response = await fetch(`/api/admin/hues/${value}`, {
+    headers: authHeaders(accessToken)
+  });
+
+  return readJson<HueSummary>(response);
+}
+
 export async function listHues(
   accessToken: string,
   page: number,
