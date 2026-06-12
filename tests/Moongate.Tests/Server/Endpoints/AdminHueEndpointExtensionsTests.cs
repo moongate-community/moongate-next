@@ -94,4 +94,17 @@ public sealed class AdminHueEndpointExtensionsTests
         Assert.Equal(1, page.TotalCount);
         Assert.Equal(2, page.Items[0].Value);
     }
+
+    [Fact]
+    public void HandleListHues_SearchByHex_Filters()
+    {
+        var page = Ok(AdminHueEndpointExtensions.HandleListHues(new FakeHueStore("a", "b", "c"), null, null, "0x2"));
+
+        Assert.Equal(1, page.TotalCount);
+        Assert.Equal(2, page.Items[0].Value);
+    }
+
+    [Fact]
+    public void HandleListHues_PageBeyondEnd_ReturnsEmpty()
+        => Assert.Empty(Ok(AdminHueEndpointExtensions.HandleListHues(new FakeHueStore("a", "b"), 9, 60, null)).Items);
 }

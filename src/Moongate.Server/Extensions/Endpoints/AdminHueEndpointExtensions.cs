@@ -20,7 +20,8 @@ public static class AdminHueEndpointExtensions
                      HandleListHues(hues, page, pageSize, search)
              )
              .WithName("ListAdminHues")
-             .WithSummary("Returns a paged list of UO hues for the hue picker.");
+             .WithSummary("Returns a paged list of UO hues for the hue picker.")
+             .Produces<PagedResult<HueSummary>>();
 
         group.MapGet(
                  "/{hue:int}",
