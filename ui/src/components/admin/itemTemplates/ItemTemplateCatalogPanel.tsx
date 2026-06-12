@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { ArrowLeft, Check, ChevronsUpDown, RefreshCw, Search } from "lucide-react";
+import { ArrowLeft, Boxes, Check, ChevronsUpDown, RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,7 @@ import type { AdminCommandTarget } from "../../../types/adminCommandTarget";
 import type { ItemTemplateDetail, ItemTemplateFilters, ItemTemplateSummary } from "../../../types/itemTemplates";
 import { Panel } from "../Panel";
 import { ItemTemplateDetailPanel } from "./ItemTemplateDetailPanel";
+import { ItemTemplatePickerDialog } from "./ItemTemplatePickerDialog";
 import { ItemTemplateTable } from "./ItemTemplateTable";
 
 type ItemTemplateCatalogPanelProps = {
@@ -88,6 +89,7 @@ export function ItemTemplateCatalogPanel({ accessToken, commandTarget }: ItemTem
   const [layerSearch, setLayerSearch] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [detailError, setDetailError] = useState<string | null>(null);
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -196,16 +198,37 @@ export function ItemTemplateCatalogPanel({ accessToken, commandTarget }: ItemTem
     <Panel
       title="Item Templates"
       action={
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => void load()}
-          className="min-h-[30px] gap-1.5 px-2.5 text-[13px] font-medium text-fg-muted hover:bg-muted hover:text-fg"
-        >
-          <RefreshCw size={14} aria-hidden />
-          Refresh
-        </Button>
+        <div className="flex items-center gap-1.5">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => setPickerOpen(true)}
+            className="min-h-[30px] gap-1.5 px-2.5 text-[13px] font-medium text-fg-muted hover:bg-muted hover:text-fg"
+          >
+            <Boxes size={14} aria-hidden />
+            Browse items
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => void load()}
+            className="min-h-[30px] gap-1.5 px-2.5 text-[13px] font-medium text-fg-muted hover:bg-muted hover:text-fg"
+          >
+            <RefreshCw size={14} aria-hidden />
+            Refresh
+          </Button>
+          <ItemTemplatePickerDialog
+            open={pickerOpen}
+            onOpenChange={setPickerOpen}
+            accessToken={accessToken}
+            onSelect={(id) => {
+              setPickerOpen(false);
+              void openTemplateDetail(id);
+            }}
+          />
+        </div>
       }
     >
       <div className="grid gap-3">
