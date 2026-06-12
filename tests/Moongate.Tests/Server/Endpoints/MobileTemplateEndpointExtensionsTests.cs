@@ -72,6 +72,15 @@ public sealed class MobileTemplateEndpointExtensionsTests
                 _templates[template.Id] = template;
             }
         }
+
+        public void ReplaceAll(IEnumerable<MobileTemplateDefinition> templates)
+        {
+            _templates.Clear();
+            foreach (var template in templates)
+            {
+                _templates[template.Id] = template;
+            }
+        }
     }
 
     [Fact]

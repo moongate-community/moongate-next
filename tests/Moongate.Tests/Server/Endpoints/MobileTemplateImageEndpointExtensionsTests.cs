@@ -43,6 +43,12 @@ public sealed class MobileTemplateImageEndpointExtensionsTests : IDisposable
         {
             foreach (var t in templates) { _map[t.Id] = t; }
         }
+
+        public void ReplaceAll(IEnumerable<MobileTemplateDefinition> templates)
+        {
+            _map.Clear();
+            foreach (var t in templates) { _map[t.Id] = t; }
+        }
     }
 
     private sealed class FakeRenderer : IMobileFigureRenderer
