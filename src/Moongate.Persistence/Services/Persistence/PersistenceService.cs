@@ -51,6 +51,15 @@ public sealed class PersistenceService : IPersistenceService, IMetricProvider, I
         _config = config;
         _eventBus = eventBus;
         _registrations = registrations;
+
+        // Register descriptors eagerly so the registry is usable as soon as the service is
+        // constructed, independent of when StartAsync runs. Boot services that resolve entity
+        // data access before persistence starts (lower priority) must still find their descriptor.
+        foreach (var registration in _registrations)
+        {
+            RegisterDescriptor(registration.Descriptor);
+        }
+
         _journal = new(Path.Combine(saveDirectory, config.JournalFileName), config.EnableFileLock);
         _snapshot = new(saveDirectory, config.SnapshotFileSuffix);
 
@@ -221,11 +230,6 @@ public sealed class PersistenceService : IPersistenceService, IMetricProvider, I
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        foreach (var registration in _registrations)
-        {
-            RegisterDescriptor(registration.Descriptor);
-        }
-
         _registry.Freeze();
         await InitializeAsync(cancellationToken);
     }
