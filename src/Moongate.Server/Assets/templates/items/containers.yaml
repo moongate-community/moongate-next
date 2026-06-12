@@ -20,3 +20,17 @@ item_templates:
             refill_every: 6h
             refill_policy: when_empty
             refill_scope: world_only
+    -   id: sample_loot_crate
+        name: Sample Loot Crate
+        comment: Example world-owned container that lazily generates common loot when opened.
+        item_id: 3644
+        weight: 10
+        is_movable: false
+        gump_id: 60
+        tags: [ container ]
+        contents:
+            loot_template: common
+            generate: on_open
+            refill_every: 6h
+            refill_policy: when_empty
+            refill_scope: world_only
