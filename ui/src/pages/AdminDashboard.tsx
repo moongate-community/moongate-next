@@ -120,25 +120,11 @@ export function AdminDashboard({
             commandTarget={commandTarget?.kind === "user" ? commandTarget : null}
           />
         )}
-        {activeView === "itemTemplates" && (
-          <ItemTemplateCatalogPanel
-            accessToken={accessToken}
-            commandTarget={commandTarget?.kind === "itemTemplate" ? commandTarget : null}
-          />
-        )}
+        {activeView === "itemTemplates" && <ItemTemplateCatalogPanel accessToken={accessToken} />}
         {activeView === "mobileTemplates" && (
-          <MobileTemplateCatalogPanel
-            accessToken={accessToken}
-            commandTarget={commandTarget?.kind === "mobileTemplate" ? commandTarget : null}
-            onLootTemplateOpen={onLootTemplateOpen}
-          />
+          <MobileTemplateCatalogPanel accessToken={accessToken} onLootTemplateOpen={onLootTemplateOpen} />
         )}
-        {activeView === "lootTemplates" && (
-          <LootTemplateCatalogPanel
-            accessToken={accessToken}
-            commandTarget={commandTarget?.kind === "lootTemplate" ? commandTarget : null}
-          />
-        )}
+        {activeView === "lootTemplates" && <LootTemplateCatalogPanel accessToken={accessToken} />}
         {activeView === "plugins" && <PluginManagementPanel accessToken={accessToken} />}
 
         {activeView === "overview" ? (

@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, PackageOpen, RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Panel } from "../Panel";
 import { getLootTemplate, listLootTemplates } from "../../../lib/adminLootTemplatesClient";
-import type { AdminCommandTarget } from "../../../types/adminCommandTarget";
+import { adminPathFor } from "../../../data/navigation";
 import type {
   LootTemplateDetail,
   LootTemplateFilters,
@@ -15,7 +16,6 @@ import { LootTemplateDetailPanel } from "./LootTemplateDetailPanel";
 
 type LootTemplateCatalogPanelProps = {
   accessToken: string;
-  commandTarget?: Extract<AdminCommandTarget, { kind: "lootTemplate" }> | null;
 };
 
 type LootTemplateListProps = {
@@ -31,16 +31,6 @@ const defaultFilters: LootTemplateFilters = {
   pageSize: PAGE_SIZE,
   search: ""
 };
-
-function replaceLootTemplateUrl(id?: string) {
-  const params = new URLSearchParams({ view: "lootTemplates" });
-
-  if (id) {
-    params.set("lootTemplate", id);
-  }
-
-  window.history.replaceState(null, "", `/admin?${params.toString()}`);
-}
 
 function LootTemplateList({ templates, selectedId, onSelect }: LootTemplateListProps) {
   if (templates.length === 0) {
@@ -75,7 +65,9 @@ function LootTemplateList({ templates, selectedId, onSelect }: LootTemplateListP
   );
 }
 
-export function LootTemplateCatalogPanel({ accessToken, commandTarget }: LootTemplateCatalogPanelProps) {
+export function LootTemplateCatalogPanel({ accessToken }: LootTemplateCatalogPanelProps) {
+  const navigate = useNavigate();
+  const { id: routeId } = useParams();
   const [filters, setFilters] = useState<LootTemplateFilters>(defaultFilters);
   const [search, setSearch] = useState("");
   const [templates, setTemplates] = useState<LootTemplateSummary[]>([]);
@@ -119,7 +111,7 @@ export function LootTemplateCatalogPanel({ accessToken, commandTarget }: LootTem
     void load();
   }, [load]);
 
-  const openTemplateDetail = useCallback(async (id: string, updateUrl = true) => {
+  const openTemplateDetail = useCallback(async (id: string) => {
     const requestSequence = detailRequestSequence.current + 1;
     detailRequestSequence.current = requestSequence;
 
@@ -128,10 +120,6 @@ export function LootTemplateCatalogPanel({ accessToken, commandTarget }: LootTem
     setDetailPageOpen(true);
     setDetailLoading(true);
     setDetailError(null);
-
-    if (updateUrl) {
-      replaceLootTemplateUrl(id);
-    }
 
     try {
       const nextDetail = await getLootTemplate(accessToken, id);
@@ -150,25 +138,28 @@ export function LootTemplateCatalogPanel({ accessToken, commandTarget }: LootTem
     }
   }, [accessToken]);
 
-  useEffect(() => {
-    if (!commandTarget) {
-      return;
-    }
-
-    void openTemplateDetail(commandTarget.id, false);
-  }, [commandTarget?.id, commandTarget?.sequence, openTemplateDetail]);
-
-  async function selectTemplate(template: LootTemplateSummary) {
-    await openTemplateDetail(template.id);
-  }
-
-  function closeDetailPage() {
+  const resetDetailState = useCallback(() => {
     detailRequestSequence.current += 1;
     setSelectedId(null);
     setDetail(null);
     setDetailError(null);
     setDetailPageOpen(false);
-    replaceLootTemplateUrl();
+  }, []);
+
+  useEffect(() => {
+    if (routeId) {
+      void openTemplateDetail(routeId);
+    } else {
+      resetDetailState();
+    }
+  }, [routeId, openTemplateDetail, resetDetailState]);
+
+  function selectTemplate(template: LootTemplateSummary) {
+    navigate(adminPathFor("lootTemplates", template.id));
+  }
+
+  function closeDetailPage() {
+    navigate(adminPathFor("lootTemplates"));
   }
 
   if (detailPageOpen) {
