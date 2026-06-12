@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { ArrowLeft, Boxes, Check, ChevronsUpDown, RefreshCw, Search } from "lucide-react";
+import { ArrowLeft, Boxes, Check, ChevronsUpDown, Plus, RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,7 @@ import type { AdminCommandTarget } from "../../../types/adminCommandTarget";
 import type { ItemTemplateDetail, ItemTemplateFilters, ItemTemplateSummary } from "../../../types/itemTemplates";
 import { Panel } from "../Panel";
 import { ItemTemplateDetailPanel } from "./ItemTemplateDetailPanel";
+import { ItemTemplateForm } from "./ItemTemplateForm";
 import { ItemTemplatePickerDialog } from "./ItemTemplatePickerDialog";
 import { ItemTemplateTable } from "./ItemTemplateTable";
 
@@ -81,6 +82,7 @@ export function ItemTemplateCatalogPanel({ accessToken, commandTarget }: ItemTem
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detail, setDetail] = useState<ItemTemplateDetail | null>(null);
   const [detailPageOpen, setDetailPageOpen] = useState(false);
+  const [editorMode, setEditorMode] = useState<"create" | "edit" | null>(null);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -124,6 +126,7 @@ export function ItemTemplateCatalogPanel({ accessToken, commandTarget }: ItemTem
     setSelectedId(id);
     setDetail(null);
     setDetailPageOpen(true);
+    setEditorMode(null);
     setDetailLoading(true);
     setDetailError(null);
 
@@ -157,7 +160,43 @@ export function ItemTemplateCatalogPanel({ accessToken, commandTarget }: ItemTem
     setDetail(null);
     setDetailError(null);
     setDetailPageOpen(false);
+    setEditorMode(null);
     replaceItemTemplateUrl();
+  }
+
+  function startCreate() {
+    setSelectedId(null);
+    setDetail(null);
+    setDetailError(null);
+    setDetailPageOpen(false);
+    setEditorMode("create");
+    replaceItemTemplateUrl();
+  }
+
+  function startEdit() {
+    if (!detail) {
+      return;
+    }
+
+    setEditorMode("edit");
+  }
+
+  function cancelEditor() {
+    setEditorMode(null);
+
+    if (!selectedId) {
+      replaceItemTemplateUrl();
+    }
+  }
+
+  function handleSaved(result: { template: ItemTemplateDetail }) {
+    setSelectedId(result.template.id);
+    setDetail(result.template);
+    setDetailError(null);
+    setDetailPageOpen(true);
+    setEditorMode(null);
+    replaceItemTemplateUrl(result.template.id);
+    void load();
   }
 
   function updateFilter<K extends keyof ItemTemplateFilters>(key: K, value: ItemTemplateFilters[K]) {
@@ -168,6 +207,18 @@ export function ItemTemplateCatalogPanel({ accessToken, commandTarget }: ItemTem
     updateFilter("layer", layer);
     setLayerSearch("");
     setLayerOpen(false);
+  }
+
+  if (editorMode) {
+    return (
+      <ItemTemplateForm
+        accessToken={accessToken}
+        mode={editorMode}
+        template={editorMode === "edit" ? detail : null}
+        onCancel={cancelEditor}
+        onSaved={handleSaved}
+      />
+    );
   }
 
   if (detailPageOpen) {
@@ -189,7 +240,7 @@ export function ItemTemplateCatalogPanel({ accessToken, commandTarget }: ItemTem
             All items
           </Button>
         </div>
-        <ItemTemplateDetailPanel template={detail} loading={detailLoading} error={detailError} />
+        <ItemTemplateDetailPanel template={detail} loading={detailLoading} error={detailError} onEdit={detail ? startEdit : undefined} />
       </div>
     );
   }
@@ -199,6 +250,16 @@ export function ItemTemplateCatalogPanel({ accessToken, commandTarget }: ItemTem
       title="Item Templates"
       action={
         <div className="flex items-center gap-1.5">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={startCreate}
+            className="min-h-[30px] gap-1.5 px-2.5 text-[13px] font-medium text-fg-muted hover:bg-muted hover:text-fg"
+          >
+            <Plus size={14} aria-hidden />
+            New
+          </Button>
           <Button
             type="button"
             variant="ghost"
