@@ -101,4 +101,21 @@ public sealed class JobServiceTests
 
         Assert.False(Assert.Single(jobs.GetJobs()).Repeat);
     }
+
+    [Fact]
+    public void RegisterOnce_FiresOnce_AndStopsRepeating()
+    {
+        var wheel = NewWheel();
+        var jobs = new JobService(wheel);
+        var runs = 0;
+
+        jobs.RegisterOnce("once", TimeSpan.FromMilliseconds(8), () => runs++);
+
+        wheel.UpdateTicksDelta(0);
+        wheel.UpdateTicksDelta(8);
+        wheel.UpdateTicksDelta(16);
+        wheel.UpdateTicksDelta(24);
+
+        Assert.Equal(1, runs);
+    }
 }

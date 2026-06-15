@@ -40,12 +40,13 @@ public sealed class JobService : IJobService
 
         var entry = NewEntry(name, description, source, interval, repeat: true, handler);
         var delay = runImmediately ? TimeSpan.FromMilliseconds(1) : interval;
+        var timerId = _timers.RegisterTimer(name, interval, () => Execute(entry), delay, repeat: true);
 
         lock (_sync)
         {
-            _jobs[entry.Id] = entry;
+            entry.TimerId = timerId;
             entry.NextRunAt = DateTimeOffset.UtcNow + delay;
-            entry.TimerId = _timers.RegisterTimer(name, interval, () => Execute(entry), delay, repeat: true);
+            _jobs[entry.Id] = entry;
         }
 
         return entry.Id;
@@ -63,12 +64,13 @@ public sealed class JobService : IJobService
         ArgumentNullException.ThrowIfNull(handler);
 
         var entry = NewEntry(name, description, source, delay, repeat: false, handler);
+        var timerId = _timers.RegisterTimer(name, delay, () => Execute(entry), delay, repeat: false);
 
         lock (_sync)
         {
-            _jobs[entry.Id] = entry;
+            entry.TimerId = timerId;
             entry.NextRunAt = DateTimeOffset.UtcNow + delay;
-            entry.TimerId = _timers.RegisterTimer(name, delay, () => Execute(entry), delay, repeat: false);
+            _jobs[entry.Id] = entry;
         }
 
         return entry.Id;
@@ -99,6 +101,10 @@ public sealed class JobService : IJobService
         return true;
     }
 
+    /// <summary>
+    /// Cancels and removes a job and its recurring timer. An already-scheduled <see cref="RunNow" />
+    /// one-shot for this job may still fire once after cancellation (harmless: it updates a detached entry).
+    /// </summary>
     public bool Cancel(string jobId)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(jobId);
