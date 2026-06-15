@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Bot, CalendarClock, Code2, Play, RefreshCw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { listJobs, runJob } from "../../../lib/adminJobsClient";
 import type { JobSummary } from "../../../types/jobs";
@@ -80,7 +81,7 @@ export function JobsPanel({ accessToken }: JobsPanelProps) {
           variant="outline"
           size="sm"
           onClick={() => { void load(); }}
-          disabled={loading}
+          disabled={loading || runningId !== null}
           className="min-h-[32px] gap-1.5 border-border bg-surface font-semibold text-fg hover:bg-muted"
         >
           <RefreshCw size={14} aria-hidden />
@@ -93,7 +94,12 @@ export function JobsPanel({ accessToken }: JobsPanelProps) {
           <p className="m-0 rounded-md bg-danger/10 p-3 text-[13px] font-semibold text-danger">{error}</p>
         )}
 
-        {jobs.length === 0 && !loading ? (
+        {loading && jobs.length === 0 ? (
+          <div className="grid gap-2 rounded-md bg-muted p-4">
+            <Skeleton className="h-4 w-40" />
+            <Skeleton className="h-24 w-full" />
+          </div>
+        ) : jobs.length === 0 ? (
           <p className="m-0 rounded-md bg-muted p-4 text-[13px] leading-relaxed text-fg-muted">
             No jobs registered.
           </p>
