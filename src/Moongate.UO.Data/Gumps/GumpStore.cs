@@ -13,6 +13,7 @@ public sealed class GumpStore : IGumpStore
     private const int GumpFileId = 12;
 
     private readonly FileIndex _index;
+    private readonly Lock _sync = new();
 
     public GumpStore(IUoFileResolver resolver)
     {
@@ -34,36 +35,39 @@ public sealed class GumpStore : IGumpStore
             return null;
         }
 
-        var stream = _index.Seek(gumpId, out var length, out var extra, out _);
-
-        if (stream is null || length <= 0 || extra <= 0)
+        lock (_sync)
         {
-            return null;
-        }
+            var stream = _index.Seek(gumpId, out var length, out var extra, out _);
 
-        var width = (extra >> 16) & 0xFFFF;
-        var height = extra & 0xFFFF;
-
-        if (width <= 0 || height <= 0)
-        {
-            return null;
-        }
-
-        var buffer = new byte[length];
-        var read = 0;
-
-        while (read < length)
-        {
-            var n = stream.Read(buffer, read, length - read);
-
-            if (n <= 0)
+            if (stream is null || length <= 0 || extra <= 0)
             {
-                break;
+                return null;
             }
 
-            read += n;
-        }
+            var width = (extra >> 16) & 0xFFFF;
+            var height = extra & 0xFFFF;
 
-        return read < length ? null : GumpDecoder.Decode(buffer, width, height);
+            if (width <= 0 || height <= 0)
+            {
+                return null;
+            }
+
+            var buffer = new byte[length];
+            var read = 0;
+
+            while (read < length)
+            {
+                var n = stream.Read(buffer, read, length - read);
+
+                if (n <= 0)
+                {
+                    break;
+                }
+
+                read += n;
+            }
+
+            return read < length ? null : GumpDecoder.Decode(buffer, width, height);
+        }
     }
 }
