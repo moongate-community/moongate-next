@@ -37,6 +37,7 @@ public sealed class JobService : IJobService
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         ArgumentNullException.ThrowIfNull(handler);
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(interval, TimeSpan.Zero);
 
         var entry = NewEntry(name, description, source, interval, repeat: true, handler);
         var delay = runImmediately ? TimeSpan.FromMilliseconds(1) : interval;
@@ -62,6 +63,7 @@ public sealed class JobService : IJobService
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         ArgumentNullException.ThrowIfNull(handler);
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(delay, TimeSpan.Zero);
 
         var entry = NewEntry(name, description, source, delay, repeat: false, handler);
         var timerId = _timers.RegisterTimer(name, delay, () => Execute(entry), delay, repeat: false);

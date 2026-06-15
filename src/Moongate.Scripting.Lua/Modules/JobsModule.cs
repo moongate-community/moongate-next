@@ -51,19 +51,6 @@ public sealed class JobsModule : IDisposable
         return _jobs.TryRemove(name, out var id) && _service.Cancel(id);
     }
 
-    public void Dispose()
-    {
-        if (_service is not null)
-        {
-            foreach (var (_, id) in _jobs)
-            {
-                _service.Cancel(id);
-            }
-        }
-
-        _jobs.Clear();
-    }
-
     private static TimeSpan ParseInterval(string interval)
     {
         if (TimeSpan.TryParse(interval, CultureInfo.InvariantCulture, out var parsed) && parsed > TimeSpan.Zero)
@@ -106,5 +93,18 @@ public sealed class JobsModule : IDisposable
         _jobs[name] = id;
 
         return id;
+    }
+
+    public void Dispose()
+    {
+        if (_service is not null)
+        {
+            foreach (var (_, id) in _jobs)
+            {
+                _service.Cancel(id);
+            }
+        }
+
+        _jobs.Clear();
     }
 }
