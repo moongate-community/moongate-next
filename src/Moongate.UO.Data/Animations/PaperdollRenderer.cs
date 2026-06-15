@@ -77,13 +77,28 @@ public sealed class PaperdollRenderer : IPaperdollRenderer
         var height = ordered.Max(image => image.Height);
         var canvas = new Image<Rgba32>(width, height);
 
-        foreach (var image in ordered)
+        try
         {
-            canvas.Mutate(context => context.DrawImage(image, new Point(0, 0), 1f));
-            image.Dispose();
-        }
+            foreach (var image in ordered)
+            {
+                canvas.Mutate(context => context.DrawImage(image, new Point(0, 0), 1f));
+            }
 
-        return canvas;
+            return canvas;
+        }
+        catch
+        {
+            canvas.Dispose();
+
+            throw;
+        }
+        finally
+        {
+            foreach (var image in ordered)
+            {
+                image.Dispose();
+            }
+        }
     }
 
     private void AddGenderGump(List<(int, Image<Rgba32>)> layers, int style, int hue, int priority, bool female)
@@ -105,7 +120,7 @@ public sealed class PaperdollRenderer : IPaperdollRenderer
     {
         foreach (var id in request.Equipment)
         {
-            if (!_itemTemplates.TryGet(id, out var definition) || definition?.Layer is null)
+            if (!_itemTemplates.TryGet(id, out var definition) || definition.Layer is null)
             {
                 continue;
             }

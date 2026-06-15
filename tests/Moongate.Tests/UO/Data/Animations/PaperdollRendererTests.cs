@@ -31,7 +31,15 @@ public sealed class PaperdollRendererTests
         {
             Requested.Add(gumpId);
 
-            return Available.Contains(gumpId) ? new Image<Rgba32>(4, 4) : null;
+            if (!Available.Contains(gumpId))
+            {
+                return null;
+            }
+
+            var img = new Image<Rgba32>(4, 4);
+            img[0, 0] = new Rgba32(128, 128, 128, 255);
+
+            return img;
         }
     }
 
@@ -92,10 +100,25 @@ public sealed class PaperdollRendererTests
         public Hue? GetHue(int index) => null;
     }
 
+    /// <summary>Returns a hue that maps every shade to pure red (RGB555 0x7C00).</summary>
+    private sealed class RecoloringHueStore : IHueStore
+    {
+        private static readonly Hue RedHue = new(
+            Enumerable.Repeat((ushort)0x7C00, 32).ToArray(),
+            0,
+            31,
+            "red"
+        );
+
+        public IReadOnlyList<Hue> Hues => [RedHue];
+        public int Count => 1;
+        public Hue? GetHue(int index) => RedHue;
+    }
+
     // ─── Helpers ─────────────────────────────────────────────────────────────
 
-    private static PaperdollRenderer BuildRenderer(FakeGumpStore gumps, FakeItemTemplates? items = null, FakeTileData? tiles = null)
-        => new(gumps, items ?? new FakeItemTemplates(), tiles ?? new FakeTileData(), new NullHueStore());
+    private static PaperdollRenderer BuildRenderer(FakeGumpStore gumps, FakeItemTemplates? items = null, FakeTileData? tiles = null, IHueStore? hues = null)
+        => new(gumps, items ?? new FakeItemTemplates(), tiles ?? new FakeTileData(), hues ?? new NullHueStore());
 
     private static PaperdollRenderRequest MakeRequest(
         GenderType gender = GenderType.Male,
@@ -192,5 +215,26 @@ public sealed class PaperdollRendererTests
 
         Assert.NotNull(result);
         Assert.DoesNotContain(MaleGump, gumps.Requested);
+    }
+
+    [Fact]
+    public void Render_AppliesSkinHue_ToBody()
+    {
+        // The body gump is available and returns an opaque gray pixel at [0,0].
+        // RecoloringHueStore maps every shade to pure red.
+        // SkinHue=2 → index=(2 & 0x3FFF)-1=1 → GetHue(1) returns the red hue.
+        // After compositing, pixel [0,0] on the canvas should be reddish.
+        var gumps = new FakeGumpStore();
+        gumps.Available.Add(MaleBody);
+
+        var renderer = BuildRenderer(gumps, hues: new RecoloringHueStore());
+        var request = new PaperdollRenderRequest(GenderType.Male, 2, 0, 0, 0, 0, [], false);
+
+        using var result = renderer.Render(request);
+
+        Assert.NotNull(result);
+        Assert.True(result[0, 0].R > 200, "Expected red channel > 200 after hue application");
+        Assert.True(result[0, 0].G < 80, "Expected green channel < 80 after hue application");
+        Assert.True(result[0, 0].B < 80, "Expected blue channel < 80 after hue application");
     }
 }
