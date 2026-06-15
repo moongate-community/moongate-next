@@ -108,7 +108,16 @@ public sealed class PaperdollRenderer : IPaperdollRenderer
             return;
         }
 
-        var image = LoadGenderGump(style, hue, female);
+        // Hair/beard paperdoll gumps are derived from the style item's animation id (like equipment),
+        // not from the raw style id.
+        var anim = _tileData.GetItem(style).Animation;
+
+        if (anim <= 0)
+        {
+            return;
+        }
+
+        var image = LoadGenderGump(anim, hue, female);
 
         if (image is not null)
         {
