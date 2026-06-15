@@ -5,6 +5,7 @@ import { AdminRuntimePanel } from "../components/admin/AdminRuntimePanel";
 import { AdminSecurityPanel } from "../components/admin/AdminSecurityPanel";
 import { ConsolePanel } from "../components/admin/ConsolePanel";
 import { ItemTemplateCatalogPanel } from "../components/admin/itemTemplates/ItemTemplateCatalogPanel";
+import { JobsPanel } from "../components/admin/jobs/JobsPanel";
 import { LootTemplateCatalogPanel } from "../components/admin/lootTemplates/LootTemplateCatalogPanel";
 import { MobileTemplateCatalogPanel } from "../components/admin/mobileTemplates/MobileTemplateCatalogPanel";
 import { PluginManagementPanel } from "../components/admin/plugins/PluginManagementPanel";
@@ -134,6 +135,7 @@ export function AdminDashboard({
         )}
         {activeView === "lootTemplates" && <LootTemplateCatalogPanel accessToken={accessToken} detailId={detailId} />}
         {activeView === "plugins" && <PluginManagementPanel accessToken={accessToken} />}
+        {activeView === "jobs" && <JobsPanel accessToken={accessToken} />}
 
         {activeView === "overview" ? (
           <div className="grid gap-4 lg:grid-cols-2">
