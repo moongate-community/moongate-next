@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Boxes, Check, ChevronsUpDown, Plus, RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
@@ -18,6 +18,7 @@ import { ItemTemplateTable } from "./ItemTemplateTable";
 
 type ItemTemplateCatalogPanelProps = {
   accessToken: string;
+  detailId?: string | null;
 };
 
 const PAGE_SIZE = 50;
@@ -65,9 +66,8 @@ const layerOptions = [
   "Bank"
 ];
 
-export function ItemTemplateCatalogPanel({ accessToken }: ItemTemplateCatalogPanelProps) {
+export function ItemTemplateCatalogPanel({ accessToken, detailId }: ItemTemplateCatalogPanelProps) {
   const navigate = useNavigate();
-  const { id: routeId } = useParams();
   const [filters, setFilters] = useState<ItemTemplateFilters>(defaultFilters);
   const [search, setSearch] = useState("");
   const [templates, setTemplates] = useState<ItemTemplateSummary[]>([]);
@@ -140,12 +140,12 @@ export function ItemTemplateCatalogPanel({ accessToken }: ItemTemplateCatalogPan
   }, []);
 
   useEffect(() => {
-    if (routeId) {
-      void openTemplateDetail(routeId);
+    if (detailId) {
+      void openTemplateDetail(detailId);
     } else {
       resetDetailState();
     }
-  }, [routeId, openTemplateDetail, resetDetailState]);
+  }, [detailId, openTemplateDetail, resetDetailState]);
 
   function selectTemplate(template: ItemTemplateSummary) {
     navigate(adminPathFor("itemTemplates", template.id));

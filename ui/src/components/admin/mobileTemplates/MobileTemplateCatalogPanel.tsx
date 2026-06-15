@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Boxes, Plus, RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +17,7 @@ import { MobileTemplateTable } from "./MobileTemplateTable";
 
 type MobileTemplateCatalogPanelProps = {
   accessToken: string;
+  detailId?: string | null;
   onLootTemplateOpen?: (id: string) => void;
 };
 
@@ -43,10 +44,10 @@ const notorietyOptions = [
 
 export function MobileTemplateCatalogPanel({
   accessToken,
+  detailId,
   onLootTemplateOpen
 }: MobileTemplateCatalogPanelProps) {
   const navigate = useNavigate();
-  const { id: routeId } = useParams();
   const [filters, setFilters] = useState<MobileTemplateFilters>(defaultFilters);
   const [search, setSearch] = useState("");
   const [templates, setTemplates] = useState<MobileTemplateSummary[]>([]);
@@ -117,12 +118,12 @@ export function MobileTemplateCatalogPanel({
   }, []);
 
   useEffect(() => {
-    if (routeId) {
-      void openTemplateDetail(routeId);
+    if (detailId) {
+      void openTemplateDetail(detailId);
     } else {
       resetDetailState();
     }
-  }, [routeId, openTemplateDetail, resetDetailState]);
+  }, [detailId, openTemplateDetail, resetDetailState]);
 
   function selectTemplate(id: string) {
     navigate(adminPathFor("mobileTemplates", id));

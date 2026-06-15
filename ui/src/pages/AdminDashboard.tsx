@@ -24,6 +24,7 @@ const AdminMetricsPanel = lazy(() =>
 
 type AdminDashboardProps = {
   activeView: AdminNavId;
+  detailId?: string | null;
   accessToken: string;
   accessTokenExpiresAt: string;
   commandTarget?: AdminCommandTarget | null;
@@ -34,6 +35,7 @@ type AdminDashboardProps = {
 
 export function AdminDashboard({
   activeView,
+  detailId,
   accessToken,
   accessTokenExpiresAt,
   commandTarget,
@@ -120,11 +122,17 @@ export function AdminDashboard({
             commandTarget={commandTarget?.kind === "user" ? commandTarget : null}
           />
         )}
-        {activeView === "itemTemplates" && <ItemTemplateCatalogPanel accessToken={accessToken} />}
-        {activeView === "mobileTemplates" && (
-          <MobileTemplateCatalogPanel accessToken={accessToken} onLootTemplateOpen={onLootTemplateOpen} />
+        {activeView === "itemTemplates" && (
+          <ItemTemplateCatalogPanel accessToken={accessToken} detailId={detailId} />
         )}
-        {activeView === "lootTemplates" && <LootTemplateCatalogPanel accessToken={accessToken} />}
+        {activeView === "mobileTemplates" && (
+          <MobileTemplateCatalogPanel
+            accessToken={accessToken}
+            detailId={detailId}
+            onLootTemplateOpen={onLootTemplateOpen}
+          />
+        )}
+        {activeView === "lootTemplates" && <LootTemplateCatalogPanel accessToken={accessToken} detailId={detailId} />}
         {activeView === "plugins" && <PluginManagementPanel accessToken={accessToken} />}
 
         {activeView === "overview" ? (

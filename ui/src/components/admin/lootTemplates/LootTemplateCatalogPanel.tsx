@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ArrowLeft, PackageOpen, RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +16,7 @@ import { LootTemplateDetailPanel } from "./LootTemplateDetailPanel";
 
 type LootTemplateCatalogPanelProps = {
   accessToken: string;
+  detailId?: string | null;
 };
 
 type LootTemplateListProps = {
@@ -65,9 +66,8 @@ function LootTemplateList({ templates, selectedId, onSelect }: LootTemplateListP
   );
 }
 
-export function LootTemplateCatalogPanel({ accessToken }: LootTemplateCatalogPanelProps) {
+export function LootTemplateCatalogPanel({ accessToken, detailId }: LootTemplateCatalogPanelProps) {
   const navigate = useNavigate();
-  const { id: routeId } = useParams();
   const [filters, setFilters] = useState<LootTemplateFilters>(defaultFilters);
   const [search, setSearch] = useState("");
   const [templates, setTemplates] = useState<LootTemplateSummary[]>([]);
@@ -147,12 +147,12 @@ export function LootTemplateCatalogPanel({ accessToken }: LootTemplateCatalogPan
   }, []);
 
   useEffect(() => {
-    if (routeId) {
-      void openTemplateDetail(routeId);
+    if (detailId) {
+      void openTemplateDetail(detailId);
     } else {
       resetDetailState();
     }
-  }, [routeId, openTemplateDetail, resetDetailState]);
+  }, [detailId, openTemplateDetail, resetDetailState]);
 
   function selectTemplate(template: LootTemplateSummary) {
     navigate(adminPathFor("lootTemplates", template.id));

@@ -1,3 +1,4 @@
+using System.IO;
 using Moongate.UO.Data.Data.Hues;
 using Moongate.UO.Data.Interfaces.Animations;
 using Moongate.UO.Data.Interfaces.Files;
@@ -137,6 +138,19 @@ public sealed class AnimationService : IAnimationService
             read += n;
         }
 
-        return read < length ? null : AnimationFrameDecoder.DecodeFrame(buffer, frame);
+        if (read < length)
+        {
+            return null;
+        }
+
+        try
+        {
+            return AnimationFrameDecoder.DecodeFrame(buffer, frame);
+        }
+        catch (EndOfStreamException)
+        {
+            // Malformed or truncated frame data: treat as "no image" rather than crashing the request.
+            return null;
+        }
     }
 }
