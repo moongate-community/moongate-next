@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { MobileTemplateDetail } from "../../../types/mobileTemplates";
 import { DefinitionList } from "../DefinitionList";
+import { Paperdoll } from "../../common/Paperdoll";
 import { BodyImageCell } from "./BodyImageCell";
 import { NotorietyBadge } from "./NotorietyBadge";
 
@@ -58,20 +59,8 @@ export function MobileTemplateDetailPanel({
   return (
     <Card className="gap-0 rounded-md border-border bg-surface py-0 shadow-none">
       <CardHeader className="relative flex flex-row items-start gap-3 border-b border-border p-4">
-        {onEdit && (
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={onEdit}
-            className="absolute right-3 top-3 min-h-[30px] gap-1.5 px-2.5 text-[13px] font-medium text-fg-muted hover:bg-muted hover:text-fg"
-          >
-            <Pencil size={14} aria-hidden />
-            Edit
-          </Button>
-        )}
         <BodyImageCell key={template.id} imageUrl={template.imageUrl} body={template.body} bodyHex={template.bodyHex} />
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <h3 className="m-0 text-base font-semibold text-fg">{template.name || template.id}</h3>
           {template.title && (
             <p className="m-0 mt-0.5 text-[13px] leading-snug text-fg-muted">{template.title}</p>
@@ -85,7 +74,26 @@ export function MobileTemplateDetailPanel({
               <Badge variant="outline" className="rounded-md border-transparent bg-muted px-1.5 py-0.5 text-[11px] font-medium text-fg-muted">Abstract</Badge>
             )}
           </div>
+          {onEdit && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={onEdit}
+              className="mt-2 min-h-[30px] gap-1.5 px-2.5 text-[13px] font-medium text-fg-muted hover:bg-muted hover:text-fg"
+            >
+              <Pencil size={14} aria-hidden />
+              Edit
+            </Button>
+          )}
         </div>
+        {template.paperdollImageUrl && (
+          <Paperdoll
+            src={template.paperdollImageUrl}
+            alt={template.name}
+            className="h-80 w-auto shrink-0 self-start object-contain"
+          />
+        )}
       </CardHeader>
 
       <CardContent className="grid gap-4 p-4">

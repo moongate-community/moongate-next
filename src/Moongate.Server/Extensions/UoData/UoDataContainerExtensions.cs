@@ -5,6 +5,8 @@ using Moongate.Server.Extensions.Hosting;
 using Moongate.Server.Services.UoData;
 using Moongate.UO.Data.Animations;
 using Moongate.UO.Data.Art;
+using Moongate.UO.Data.Gumps;
+using Moongate.UO.Data.Interfaces.Gumps;
 using Moongate.UO.Data.Bodies;
 using Moongate.UO.Data.Data;
 using Moongate.UO.Data.Expansions;
@@ -144,6 +146,21 @@ public static class UoDataContainerExtensions
         );
         container.RegisterDelegate<ITextureStore>(
             resolver => new TextureStore(resolver.Resolve<IUoFileResolver>()),
+            Reuse.Singleton
+        );
+
+        container.RegisterDelegate<IGumpStore>(
+            resolver => new GumpStore(resolver.Resolve<IUoFileResolver>()),
+            Reuse.Singleton
+        );
+
+        container.RegisterDelegate<IPaperdollRenderer>(
+            resolver => new PaperdollRenderer(
+                resolver.Resolve<IGumpStore>(),
+                resolver.Resolve<IItemTemplateService>(),
+                resolver.Resolve<ITileDataStore>(),
+                resolver.Resolve<IHueStore>()
+            ),
             Reuse.Singleton
         );
 
