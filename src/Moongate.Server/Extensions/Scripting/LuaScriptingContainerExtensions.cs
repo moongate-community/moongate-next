@@ -59,6 +59,7 @@ public static class LuaScriptingContainerExtensions
         container.RegisterScriptModule<LogModule>();
         container.RegisterScriptModule<RandomModule>();
         container.RegisterScriptModule<TimersModule>();
+        container.RegisterScriptModule<JobsModule>();
 
         container.AddTickEventHandler<LuaServerStartedEventHandler, ServerStartedEvent>();
         container.AddTickEventHandler<LuaPlayerConnectedEventHandler, PlayerConnectedEvent>();

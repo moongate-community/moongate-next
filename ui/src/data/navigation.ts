@@ -1,6 +1,7 @@
 import {
   Activity,
   Bot,
+  CalendarClock,
   ChartSpline,
   KeyRound,
   PackageOpen,
@@ -64,6 +65,11 @@ export const adminItems = [
     id: "console",
     label: "Console",
     icon: TerminalSquare
+  },
+  {
+    id: "jobs",
+    label: "Jobs",
+    icon: CalendarClock
   }
 ] as const;
 
@@ -74,7 +80,7 @@ export const adminGroups = [
   },
   {
     label: "Operations",
-    itemIds: ["persistence", "plugins", "console"]
+    itemIds: ["persistence", "plugins", "console", "jobs"]
   },
   {
     label: "World data",
@@ -119,7 +125,8 @@ export const adminPathSegments: Record<AdminNavId, string> = {
   itemTemplates: "item-templates",
   mobileTemplates: "mobile-templates",
   lootTemplates: "loot-templates",
-  console: "console"
+  console: "console",
+  jobs: "jobs"
 };
 
 const adminNavIdBySegment = new Map<string, AdminNavId>(

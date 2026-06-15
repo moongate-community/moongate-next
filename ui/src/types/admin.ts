@@ -8,7 +8,8 @@ export type AdminNavId =
   | "itemTemplates"
   | "mobileTemplates"
   | "lootTemplates"
-  | "console";
+  | "console"
+  | "jobs";
 
 export type AdminStatus = "healthy" | "warning" | "offline";
 
