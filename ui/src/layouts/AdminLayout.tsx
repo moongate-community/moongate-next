@@ -24,7 +24,7 @@ export function AdminLayout() {
     return <Navigate to="/login" replace />;
   }
 
-  const { view } = parseAdminLocation(location.pathname);
+  const { view, detailId } = parseAdminLocation(location.pathname);
   const openUser = (location.state as { openUser?: AdminUser } | null)?.openUser ?? null;
   let commandTarget: AdminCommandTarget | null = null;
 
@@ -45,6 +45,7 @@ export function AdminLayout() {
     >
       <AdminDashboard
         activeView={view}
+        detailId={detailId}
         accessToken={session.accessToken}
         accessTokenExpiresAt={session.accessTokenExpiresAt}
         user={session.user}
