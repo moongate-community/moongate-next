@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Boxes, Plus, RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { getMobileTemplate, listMobileTemplates } from "../../../lib/adminMobileTemplatesClient";
 import type { MobileTemplateSaveResult } from "../../../lib/mobileTemplateFormModel";
-import type { AdminCommandTarget } from "../../../types/adminCommandTarget";
+import { adminPathFor } from "../../../data/navigation";
 import type { MobileTemplateDetail, MobileTemplateFilters, MobileTemplateSummary } from "../../../types/mobileTemplates";
 import { Panel } from "../Panel";
 import { MobileTemplateDetailPanel } from "./MobileTemplateDetailPanel";
@@ -16,7 +17,6 @@ import { MobileTemplateTable } from "./MobileTemplateTable";
 
 type MobileTemplateCatalogPanelProps = {
   accessToken: string;
-  commandTarget?: Extract<AdminCommandTarget, { kind: "mobileTemplate" }> | null;
   onLootTemplateOpen?: (id: string) => void;
 };
 
@@ -41,21 +41,12 @@ const notorietyOptions = [
   "Invulnerable"
 ];
 
-function replaceMobileTemplateUrl(id?: string) {
-  const params = new URLSearchParams({ view: "mobileTemplates" });
-
-  if (id) {
-    params.set("mobileTemplate", id);
-  }
-
-  window.history.replaceState(null, "", `/admin?${params.toString()}`);
-}
-
 export function MobileTemplateCatalogPanel({
   accessToken,
-  commandTarget,
   onLootTemplateOpen
 }: MobileTemplateCatalogPanelProps) {
+  const navigate = useNavigate();
+  const { id: routeId } = useParams();
   const [filters, setFilters] = useState<MobileTemplateFilters>(defaultFilters);
   const [search, setSearch] = useState("");
   const [templates, setTemplates] = useState<MobileTemplateSummary[]>([]);
@@ -100,17 +91,13 @@ export function MobileTemplateCatalogPanel({
     void load();
   }, [load]);
 
-  const openTemplateDetail = useCallback(async (id: string, updateUrl = true) => {
+  const openTemplateDetail = useCallback(async (id: string) => {
     setSelectedId(id);
     setDetail(null);
     setDetailPageOpen(true);
     setEditorMode(null);
     setDetailLoading(true);
     setDetailError(null);
-
-    if (updateUrl) {
-      replaceMobileTemplateUrl(id);
-    }
 
     try {
       setDetail(await getMobileTemplate(accessToken, id));
@@ -121,25 +108,28 @@ export function MobileTemplateCatalogPanel({
     }
   }, [accessToken]);
 
-  useEffect(() => {
-    if (!commandTarget) {
-      return;
-    }
-
-    void openTemplateDetail(commandTarget.id, false);
-  }, [commandTarget?.id, commandTarget?.sequence, openTemplateDetail]);
-
-  async function selectTemplate(id: string) {
-    await openTemplateDetail(id);
-  }
-
-  function closeDetailPage() {
+  const resetDetailState = useCallback(() => {
     setSelectedId(null);
     setDetail(null);
     setDetailError(null);
     setDetailPageOpen(false);
     setEditorMode(null);
-    replaceMobileTemplateUrl();
+  }, []);
+
+  useEffect(() => {
+    if (routeId) {
+      void openTemplateDetail(routeId);
+    } else {
+      resetDetailState();
+    }
+  }, [routeId, openTemplateDetail, resetDetailState]);
+
+  function selectTemplate(id: string) {
+    navigate(adminPathFor("mobileTemplates", id));
+  }
+
+  function closeDetailPage() {
+    navigate(adminPathFor("mobileTemplates"));
   }
 
   function startCreate() {
@@ -148,7 +138,6 @@ export function MobileTemplateCatalogPanel({
     setDetailError(null);
     setDetailPageOpen(false);
     setEditorMode("create");
-    replaceMobileTemplateUrl();
   }
 
   function startEdit() {
@@ -161,10 +150,6 @@ export function MobileTemplateCatalogPanel({
 
   function cancelEditor() {
     setEditorMode(null);
-
-    if (!selectedId) {
-      replaceMobileTemplateUrl();
-    }
   }
 
   function handleSaved(result: MobileTemplateSaveResult) {
@@ -173,7 +158,7 @@ export function MobileTemplateCatalogPanel({
     setDetailError(null);
     setDetailPageOpen(true);
     setEditorMode(null);
-    replaceMobileTemplateUrl(result.template.id);
+    navigate(adminPathFor("mobileTemplates", result.template.id));
     void load();
   }
 

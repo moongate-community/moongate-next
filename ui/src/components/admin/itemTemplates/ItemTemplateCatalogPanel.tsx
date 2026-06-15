@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Boxes, Check, ChevronsUpDown, Plus, RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
@@ -7,7 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getItemTemplate, listItemTemplates } from "../../../lib/adminItemTemplatesClient";
-import type { AdminCommandTarget } from "../../../types/adminCommandTarget";
+import { adminPathFor } from "../../../data/navigation";
 import type { ItemTemplateDetail, ItemTemplateFilters, ItemTemplateSummary } from "../../../types/itemTemplates";
 import { Panel } from "../Panel";
 import { ItemTemplateDetailPanel } from "./ItemTemplateDetailPanel";
@@ -17,7 +18,6 @@ import { ItemTemplateTable } from "./ItemTemplateTable";
 
 type ItemTemplateCatalogPanelProps = {
   accessToken: string;
-  commandTarget?: Extract<AdminCommandTarget, { kind: "itemTemplate" }> | null;
 };
 
 const PAGE_SIZE = 50;
@@ -65,17 +65,9 @@ const layerOptions = [
   "Bank"
 ];
 
-function replaceItemTemplateUrl(id?: string) {
-  const params = new URLSearchParams({ view: "itemTemplates" });
-
-  if (id) {
-    params.set("itemTemplate", id);
-  }
-
-  window.history.replaceState(null, "", `/admin?${params.toString()}`);
-}
-
-export function ItemTemplateCatalogPanel({ accessToken, commandTarget }: ItemTemplateCatalogPanelProps) {
+export function ItemTemplateCatalogPanel({ accessToken }: ItemTemplateCatalogPanelProps) {
+  const navigate = useNavigate();
+  const { id: routeId } = useParams();
   const [filters, setFilters] = useState<ItemTemplateFilters>(defaultFilters);
   const [search, setSearch] = useState("");
   const [templates, setTemplates] = useState<ItemTemplateSummary[]>([]);
@@ -122,17 +114,13 @@ export function ItemTemplateCatalogPanel({ accessToken, commandTarget }: ItemTem
     void load();
   }, [load]);
 
-  const openTemplateDetail = useCallback(async (id: string, updateUrl = true) => {
+  const openTemplateDetail = useCallback(async (id: string) => {
     setSelectedId(id);
     setDetail(null);
     setDetailPageOpen(true);
     setEditorMode(null);
     setDetailLoading(true);
     setDetailError(null);
-
-    if (updateUrl) {
-      replaceItemTemplateUrl(id);
-    }
 
     try {
       setDetail(await getItemTemplate(accessToken, id));
@@ -143,25 +131,28 @@ export function ItemTemplateCatalogPanel({ accessToken, commandTarget }: ItemTem
     }
   }, [accessToken]);
 
-  useEffect(() => {
-    if (!commandTarget) {
-      return;
-    }
-
-    void openTemplateDetail(commandTarget.id, false);
-  }, [commandTarget?.id, commandTarget?.sequence, openTemplateDetail]);
-
-  async function selectTemplate(template: ItemTemplateSummary) {
-    await openTemplateDetail(template.id);
-  }
-
-  function closeDetailPage() {
+  const resetDetailState = useCallback(() => {
     setSelectedId(null);
     setDetail(null);
     setDetailError(null);
     setDetailPageOpen(false);
     setEditorMode(null);
-    replaceItemTemplateUrl();
+  }, []);
+
+  useEffect(() => {
+    if (routeId) {
+      void openTemplateDetail(routeId);
+    } else {
+      resetDetailState();
+    }
+  }, [routeId, openTemplateDetail, resetDetailState]);
+
+  function selectTemplate(template: ItemTemplateSummary) {
+    navigate(adminPathFor("itemTemplates", template.id));
+  }
+
+  function closeDetailPage() {
+    navigate(adminPathFor("itemTemplates"));
   }
 
   function startCreate() {
@@ -170,7 +161,6 @@ export function ItemTemplateCatalogPanel({ accessToken, commandTarget }: ItemTem
     setDetailError(null);
     setDetailPageOpen(false);
     setEditorMode("create");
-    replaceItemTemplateUrl();
   }
 
   function startEdit() {
@@ -183,10 +173,6 @@ export function ItemTemplateCatalogPanel({ accessToken, commandTarget }: ItemTem
 
   function cancelEditor() {
     setEditorMode(null);
-
-    if (!selectedId) {
-      replaceItemTemplateUrl();
-    }
   }
 
   function handleSaved(result: { template: ItemTemplateDetail }) {
@@ -195,7 +181,7 @@ export function ItemTemplateCatalogPanel({ accessToken, commandTarget }: ItemTem
     setDetailError(null);
     setDetailPageOpen(true);
     setEditorMode(null);
-    replaceItemTemplateUrl(result.template.id);
+    navigate(adminPathFor("itemTemplates", result.template.id));
     void load();
   }
 

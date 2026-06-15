@@ -1,11 +1,21 @@
 import { useState, type ReactNode } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import { Activity, LogOut, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { adminGroups, adminItems, playerGroups, playerItems } from "../data/navigation";
+import {
+  adminGroups,
+  adminItems,
+  adminPathFor,
+  parseAdminLocation,
+  playerGroups,
+  playerItems,
+  playerPathFor,
+  type PlayerNavId
+} from "../data/navigation";
 import { useTheme } from "../lib/useTheme";
 import type { AdminNavId, AdminRuntimeSnapshot } from "../types/admin";
 import type { AuthUser } from "../types/auth";
@@ -13,14 +23,11 @@ import { CommandPaletteButton } from "./CommandPalette";
 import { ThemeToggle } from "./ThemeToggle";
 
 type AppSection = "admin" | "player";
-type PlayerNavId = (typeof playerItems)[number]["id"];
 
 type AppShellProps = {
   user: AuthUser;
   section: AppSection;
-  activeItemId: AdminNavId | PlayerNavId;
   runtimeSnapshot?: AdminRuntimeSnapshot | null;
-  onItemChange: (itemId: AdminNavId | PlayerNavId) => void;
   onLogout: () => Promise<void>;
   children: ReactNode;
 };
@@ -38,14 +45,17 @@ function initialsOf(value: string): string {
 export function AppShell({
   user,
   section,
-  activeItemId,
   runtimeSnapshot = null,
-  onItemChange,
   onLogout,
   children
 }: AppShellProps) {
+  const location = useLocation();
   const items = section === "admin" ? adminItems : playerItems;
   const groups = section === "admin" ? adminGroups : playerGroups;
+  const activeItemId: string =
+    section === "admin"
+      ? parseAdminLocation(location.pathname).view
+      : location.pathname.replace(/^\/player\/?/, "").split("/")[0] || "profile";
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const { theme, toggleTheme } = useTheme();
 
@@ -112,16 +122,17 @@ export function AppShell({
                   const isActive = activeItemId === item.id;
                   const collapsed = isSidebarCollapsed;
 
+                  const to =
+                    section === "admin"
+                      ? adminPathFor(item.id as AdminNavId)
+                      : playerPathFor(item.id as PlayerNavId);
+
                   return (
                     <Button
                       key={item.id}
-                      type="button"
+                      asChild
                       variant="ghost"
                       size="sm"
-                      onClick={() => onItemChange(item.id)}
-                      aria-label={item.label}
-                      aria-current={isActive ? "page" : undefined}
-                      title={collapsed ? item.label : undefined}
                       className={cn(
                         "group relative h-auto min-h-[34px] shrink-0 justify-start gap-2 px-2 text-[13px] font-medium",
                         collapsed && "md:justify-center md:px-0",
@@ -130,8 +141,15 @@ export function AppShell({
                           : "text-fg-muted hover:bg-muted hover:text-fg"
                       )}
                     >
-                      <item.icon size={16} aria-hidden className="shrink-0" />
-                      <span className={cn(collapsed && "md:hidden")}>{item.label}</span>
+                      <NavLink
+                        to={to}
+                        aria-label={item.label}
+                        aria-current={isActive ? "page" : undefined}
+                        title={collapsed ? item.label : undefined}
+                      >
+                        <item.icon size={16} aria-hidden className="shrink-0" />
+                        <span className={cn(collapsed && "md:hidden")}>{item.label}</span>
+                      </NavLink>
                     </Button>
                   );
                 })}
