@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { MobileTemplateDetail } from "../../../types/mobileTemplates";
 import { DefinitionList } from "../DefinitionList";
+import { Paperdoll } from "../../common/Paperdoll";
 import { BodyImageCell } from "./BodyImageCell";
 import { NotorietyBadge } from "./NotorietyBadge";
 
@@ -110,6 +111,11 @@ export function MobileTemplateDetailPanel({
         {/* Appearance */}
         <section>
           <h4 className="mb-2 text-[11px] font-medium text-fg-subtle">Appearance</h4>
+          {template.paperdollImageUrl && (
+            <div className="mb-3 flex justify-center">
+              <Paperdoll src={template.paperdollImageUrl} alt={template.name} className="h-48 w-auto object-contain" />
+            </div>
+          )}
           <DefinitionList
             items={[
               { term: "Skin hue", value: String(template.skinHue), mono: true },

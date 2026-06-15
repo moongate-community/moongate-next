@@ -34,6 +34,7 @@ export type MobileSkillSummary = { name: string; value: number };
 export type MobileTemplateParamSummary = { key: string; type: string; value: string };
 
 export type MobileTemplateDetail = MobileTemplateSummary & {
+  paperdollImageUrl: string;
   baseMobile: string | null;
   raceIndex: number;
   skinHue: number;
