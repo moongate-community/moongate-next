@@ -26,6 +26,7 @@ using Moongate.Server.Extensions.Scripting;
 using Moongate.Server.Extensions.Seed;
 using Moongate.Server.Extensions.Sessions;
 using Moongate.Server.Extensions.Templates;
+using Moongate.Server.Extensions.Jobs;
 using Moongate.Server.Extensions.Timing;
 using Moongate.Server.Extensions.UoData;
 using Moongate.Server.Extensions.Users;
@@ -139,6 +140,7 @@ internal static class BootstrapRegistrationExtensions
 
         // Metrics: needs the timer wheel for the background refresh.
         container.AddMoongateTimerWheel();
+        container.AddMoongateJobs();
         container.AddMoongateMetrics();
         container.AddMetricProvider<EventBusService>();
         container.AddMetricProvider<GameLoopService>();
