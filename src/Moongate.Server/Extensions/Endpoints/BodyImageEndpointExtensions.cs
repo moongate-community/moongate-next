@@ -198,21 +198,6 @@ public static class BodyImageEndpointExtensions
         return TypedResults.Ok(new PagedResult<BodySummary>(items, pageNumber, size, ordered.Length));
     }
 
-    private static bool MatchesBody(int id, string term)
-    {
-        if (term.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
-        {
-            return int.TryParse(term[2..], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var hex) && hex == id;
-        }
-
-        if (int.TryParse(term, NumberStyles.Integer, CultureInfo.InvariantCulture, out var dec))
-        {
-            return dec == id;
-        }
-
-        return $"0x{id:X4}".Contains(term, StringComparison.OrdinalIgnoreCase);
-    }
-
     private static async Task<(bool HasImage, bool Generated, string CachePath)> EnsureBodyImageAsync(
         int body,
         int hue,
@@ -271,6 +256,21 @@ public static class BodyImageEndpointExtensions
         {
             generationLock.Release();
         }
+    }
+
+    private static bool MatchesBody(int id, string term)
+    {
+        if (term.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+        {
+            return int.TryParse(term[2..], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var hex) && hex == id;
+        }
+
+        if (int.TryParse(term, NumberStyles.Integer, CultureInfo.InvariantCulture, out var dec))
+        {
+            return dec == id;
+        }
+
+        return $"0x{id:X4}".Contains(term, StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool TryParseBody(string bodyText, out int body)

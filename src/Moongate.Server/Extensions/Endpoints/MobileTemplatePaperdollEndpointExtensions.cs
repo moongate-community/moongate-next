@@ -87,7 +87,7 @@ public static class MobileTemplatePaperdollEndpointExtensions
                 template.FacialHairStyle,
                 template.FacialHairHue,
                 template.Equipment.Select(entry => entry.Item).ToArray(),
-                IncludeBackground: true
+                true
             );
 
             using var image = renderer.Render(request);

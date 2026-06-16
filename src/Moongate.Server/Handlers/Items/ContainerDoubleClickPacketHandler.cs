@@ -15,7 +15,6 @@ public sealed class ContainerDoubleClickPacketHandler : IPacketHandler<DoubleCli
 
     public ContainerDoubleClickPacketHandler(IItemService items, IContainerContentService contents)
     {
-
         _items = items;
         _contents = contents;
     }

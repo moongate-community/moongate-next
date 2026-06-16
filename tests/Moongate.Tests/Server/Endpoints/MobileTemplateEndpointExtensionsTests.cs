@@ -62,6 +62,16 @@ public sealed class MobileTemplateEndpointExtensionsTests
         public IReadOnlyCollection<MobileTemplateDefinition> GetAll()
             => _templates.Values.ToArray();
 
+        public void ReplaceAll(IEnumerable<MobileTemplateDefinition> templates)
+        {
+            _templates.Clear();
+
+            foreach (var template in templates)
+            {
+                _templates[template.Id] = template;
+            }
+        }
+
         public bool TryGet(string id, out MobileTemplateDefinition? definition)
             => _templates.TryGetValue(id, out definition);
 
@@ -72,15 +82,39 @@ public sealed class MobileTemplateEndpointExtensionsTests
                 _templates[template.Id] = template;
             }
         }
+    }
 
-        public void ReplaceAll(IEnumerable<MobileTemplateDefinition> templates)
+    [Fact]
+    public async Task HandleCreate_InvalidRequest_ReturnsBadRequest()
+    {
+        var authoring = new FakeMobileAuthoringService
         {
-            _templates.Clear();
-            foreach (var template in templates)
-            {
-                _templates[template.Id] = template;
-            }
-        }
+            CreateException = new InvalidOperationException("id is required")
+        };
+
+        var result = await MobileTemplateEndpointExtensions.HandleCreateAsync(
+                         authoring,
+                         new() { Id = "", Body = 0 },
+                         CancellationToken.None
+                     );
+
+        var badRequest = Assert.IsType<BadRequest<string>>(result);
+        Assert.Equal("id is required", badRequest.Value);
+    }
+
+    [Fact]
+    public async Task HandleCreate_ReturnsOkWithSaveResult()
+    {
+        var authoring = new FakeMobileAuthoringService();
+
+        var result = await MobileTemplateEndpointExtensions.HandleCreateAsync(
+                         authoring,
+                         new() { Id = "web_guard", Body = 400 },
+                         CancellationToken.None
+                     );
+
+        var ok = Assert.IsType<Ok<MobileTemplateSaveResult>>(result);
+        Assert.Equal("web_guard", ok.Value!.Template.Id);
     }
 
     [Fact]
@@ -169,39 +203,6 @@ public sealed class MobileTemplateEndpointExtensionsTests
         );
 
     [Fact]
-    public async Task HandleCreate_ReturnsOkWithSaveResult()
-    {
-        var authoring = new FakeMobileAuthoringService();
-
-        var result = await MobileTemplateEndpointExtensions.HandleCreateAsync(
-                         authoring,
-                         new() { Id = "web_guard", Body = 400 },
-                         CancellationToken.None
-                     );
-
-        var ok = Assert.IsType<Ok<MobileTemplateSaveResult>>(result);
-        Assert.Equal("web_guard", ok.Value!.Template.Id);
-    }
-
-    [Fact]
-    public async Task HandleCreate_InvalidRequest_ReturnsBadRequest()
-    {
-        var authoring = new FakeMobileAuthoringService
-        {
-            CreateException = new InvalidOperationException("id is required")
-        };
-
-        var result = await MobileTemplateEndpointExtensions.HandleCreateAsync(
-                         authoring,
-                         new() { Id = "", Body = 0 },
-                         CancellationToken.None
-                     );
-
-        var badRequest = Assert.IsType<BadRequest<string>>(result);
-        Assert.Equal("id is required", badRequest.Value);
-    }
-
-    [Fact]
     public async Task HandleUpdate_ExistingTemplate_ReturnsOkWithSaveResult()
     {
         var authoring = new FakeMobileAuthoringService
@@ -218,19 +219,6 @@ public sealed class MobileTemplateEndpointExtensionsTests
 
         var ok = Assert.IsType<Ok<MobileTemplateSaveResult>>(result);
         Assert.Equal("web_guard", ok.Value!.Template.Id);
-    }
-
-    [Fact]
-    public async Task HandleUpdate_MissingTemplate_ReturnsNotFound()
-    {
-        var result = await MobileTemplateEndpointExtensions.HandleUpdateAsync(
-                         new FakeMobileAuthoringService(),
-                         "missing",
-                         new() { Id = "missing", Body = 0 },
-                         CancellationToken.None
-                     );
-
-        Assert.IsType<NotFound>(result);
     }
 
     [Fact]
@@ -252,6 +240,22 @@ public sealed class MobileTemplateEndpointExtensionsTests
         Assert.Contains("match", badRequest.Value);
     }
 
+    [Fact]
+    public async Task HandleUpdate_MissingTemplate_ReturnsNotFound()
+    {
+        var result = await MobileTemplateEndpointExtensions.HandleUpdateAsync(
+                         new FakeMobileAuthoringService(),
+                         "missing",
+                         new() { Id = "missing", Body = 0 },
+                         CancellationToken.None
+                     );
+
+        Assert.IsType<NotFound>(result);
+    }
+
+    private static PagedResult<MobileTemplateSummary> ListOk(IResult result)
+        => Assert.IsType<Ok<PagedResult<MobileTemplateSummary>>>(result).Value!;
+
     private static MobileTemplateSaveResult NewSaveResult(string id)
         => new(
             MobileTemplateDetail.FromDefinition(
@@ -264,9 +268,6 @@ public sealed class MobileTemplateEndpointExtensionsTests
             ),
             "_web.yaml"
         );
-
-    private static PagedResult<MobileTemplateSummary> ListOk(IResult result)
-        => Assert.IsType<Ok<PagedResult<MobileTemplateSummary>>>(result).Value!;
 
     private static FakeMobileTemplateService Seed()
     {

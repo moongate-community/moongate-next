@@ -27,9 +27,6 @@ public sealed class AdminHueEndpointExtensionsTests
             => index >= 0 && index < _hues.Count ? _hues[index] : null;
     }
 
-    private static PagedResult<HueSummary> Ok(IResult result)
-        => Assert.IsType<Ok<PagedResult<HueSummary>>>(result).Value!;
-
     [Fact]
     public void HandleGetHue_KnownHue_ReturnsColors()
     {
@@ -60,15 +57,8 @@ public sealed class AdminHueEndpointExtensionsTests
     }
 
     [Fact]
-    public void HandleListHues_ProjectsValuesOneBased()
-    {
-        var page = Ok(AdminHueEndpointExtensions.HandleListHues(new FakeHueStore("Red", "Blue"), null, null, null));
-
-        Assert.Equal(2, page.TotalCount);
-        Assert.Equal(1, page.Items[0].Value); // packet id = index + 1
-        Assert.Equal("Red", page.Items[0].Name);
-        Assert.Equal(2, page.Items[1].Value);
-    }
+    public void HandleListHues_PageBeyondEnd_ReturnsEmpty()
+        => Assert.Empty(Ok(AdminHueEndpointExtensions.HandleListHues(new FakeHueStore("a", "b"), 9, 60, null)).Items);
 
     [Fact]
     public void HandleListHues_Pagination_Bounds()
@@ -83,16 +73,14 @@ public sealed class AdminHueEndpointExtensionsTests
     }
 
     [Fact]
-    public void HandleListHues_SearchByName_IsCaseInsensitive()
-        => Assert.Equal(1, Ok(AdminHueEndpointExtensions.HandleListHues(new FakeHueStore("Crimson", "Azure"), null, null, "crim")).TotalCount);
-
-    [Fact]
-    public void HandleListHues_SearchByValue_Filters()
+    public void HandleListHues_ProjectsValuesOneBased()
     {
-        var page = Ok(AdminHueEndpointExtensions.HandleListHues(new FakeHueStore("a", "b", "c"), null, null, "2"));
+        var page = Ok(AdminHueEndpointExtensions.HandleListHues(new FakeHueStore("Red", "Blue"), null, null, null));
 
-        Assert.Equal(1, page.TotalCount);
-        Assert.Equal(2, page.Items[0].Value);
+        Assert.Equal(2, page.TotalCount);
+        Assert.Equal(1, page.Items[0].Value); // packet id = index + 1
+        Assert.Equal("Red", page.Items[0].Name);
+        Assert.Equal(2, page.Items[1].Value);
     }
 
     [Fact]
@@ -105,6 +93,22 @@ public sealed class AdminHueEndpointExtensionsTests
     }
 
     [Fact]
-    public void HandleListHues_PageBeyondEnd_ReturnsEmpty()
-        => Assert.Empty(Ok(AdminHueEndpointExtensions.HandleListHues(new FakeHueStore("a", "b"), 9, 60, null)).Items);
+    public void HandleListHues_SearchByName_IsCaseInsensitive()
+        => Assert.Equal(
+            1,
+            Ok(AdminHueEndpointExtensions.HandleListHues(new FakeHueStore("Crimson", "Azure"), null, null, "crim"))
+                .TotalCount
+        );
+
+    [Fact]
+    public void HandleListHues_SearchByValue_Filters()
+    {
+        var page = Ok(AdminHueEndpointExtensions.HandleListHues(new FakeHueStore("a", "b", "c"), null, null, "2"));
+
+        Assert.Equal(1, page.TotalCount);
+        Assert.Equal(2, page.Items[0].Value);
+    }
+
+    private static PagedResult<HueSummary> Ok(IResult result)
+        => Assert.IsType<Ok<PagedResult<HueSummary>>>(result).Value!;
 }

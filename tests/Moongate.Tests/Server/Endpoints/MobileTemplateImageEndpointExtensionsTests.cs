@@ -36,17 +36,18 @@ public sealed class MobileTemplateImageEndpointExtensionsTests : IDisposable
         public IReadOnlyCollection<MobileTemplateDefinition> GetAll()
             => _map.Values.ToArray();
 
+        public void ReplaceAll(IEnumerable<MobileTemplateDefinition> templates)
+        {
+            _map.Clear();
+
+            foreach (var t in templates) { _map[t.Id] = t; }
+        }
+
         public bool TryGet(string id, out MobileTemplateDefinition? definition)
             => _map.TryGetValue(id, out definition);
 
         public void UpsertRange(IEnumerable<MobileTemplateDefinition> templates)
         {
-            foreach (var t in templates) { _map[t.Id] = t; }
-        }
-
-        public void ReplaceAll(IEnumerable<MobileTemplateDefinition> templates)
-        {
-            _map.Clear();
             foreach (var t in templates) { _map[t.Id] = t; }
         }
     }

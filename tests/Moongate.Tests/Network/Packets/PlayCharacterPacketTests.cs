@@ -1,5 +1,5 @@
+using System.Text;
 using Moongate.Network.UO.Packets.Incoming.Login;
-using Xunit;
 
 namespace Moongate.Tests.Network.Packets;
 
@@ -8,7 +8,7 @@ public sealed class PlayCharacterPacketTests
     [Fact]
     public void ParsePayload_ReadsSlotAndName()
     {
-        var raw = BuildPlayCharacter(slot: 2, name: "Tom");
+        var raw = BuildPlayCharacter(2, "Tom");
 
         var packet = new PlayCharacterPacket();
         var parsed = packet.TryParse(raw);
@@ -34,9 +34,10 @@ public sealed class PlayCharacterPacketTests
         var buffer = new byte[73];
         buffer[0] = 0x5D;
         WriteInt32(buffer, 1, unchecked((int)0xEDEDEDED));
-        var nameBytes = System.Text.Encoding.ASCII.GetBytes(name);
-        System.Array.Copy(nameBytes, 0, buffer, 5, nameBytes.Length); // 30-byte ascii at 5..34
+        var nameBytes = Encoding.ASCII.GetBytes(name);
+        Array.Copy(nameBytes, 0, buffer, 5, nameBytes.Length); // 30-byte ascii at 5..34
         WriteInt32(buffer, 65, slot);
+
         return buffer;
     }
 

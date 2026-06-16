@@ -24,15 +24,15 @@ public class PlayCharacterPacket : BaseGameNetworkPacket
             return false;
         }
 
-        reader.ReadInt32();                 // pattern1
+        reader.ReadInt32(); // pattern1
         CharacterName = reader.ReadAscii(30);
-        reader.ReadUInt16();                // unknown0
-        reader.ReadUInt32();                // client flags
-        reader.ReadInt32();                 // unknown1
-        reader.ReadInt32();                 // login count
-        reader.ReadBytes(16);               // unknown2
+        reader.ReadUInt16();  // unknown0
+        reader.ReadUInt32();  // client flags
+        reader.ReadInt32();   // unknown1
+        reader.ReadInt32();   // login count
+        reader.ReadBytes(16); // unknown2
         Slot = reader.ReadInt32();
-        reader.ReadUInt32();                // client ip
+        reader.ReadUInt32(); // client ip
 
         return reader.Remaining == 0;
     }

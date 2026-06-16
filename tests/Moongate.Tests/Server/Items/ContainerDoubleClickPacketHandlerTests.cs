@@ -4,7 +4,6 @@ using Moongate.Core.Ids;
 using Moongate.Network.UO.Packets.Incoming.Interaction;
 using Moongate.Server.Handlers.Items;
 using Moongate.Server.Interfaces.Services.Items;
-using Moongate.Server.Services.Items;
 using Moongate.Tests.Support;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Interfaces.Services;

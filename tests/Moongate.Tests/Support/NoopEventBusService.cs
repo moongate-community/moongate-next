@@ -1,4 +1,3 @@
-using Moongate.Abstractions.Interfaces.EventHandlers;
 using Moongate.Abstractions.Interfaces.Events;
 using Moongate.Abstractions.Interfaces.Services;
 

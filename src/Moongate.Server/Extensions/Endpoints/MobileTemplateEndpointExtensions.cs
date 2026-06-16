@@ -95,29 +95,6 @@ public static class MobileTemplateEndpointExtensions
         }
     }
 
-    internal static async Task<IResult> HandleUpdateAsync(
-        IMobileTemplateAuthoringService authoring,
-        string id,
-        MobileTemplateEditRequest request,
-        CancellationToken cancellationToken
-    )
-    {
-        ArgumentNullException.ThrowIfNull(authoring);
-        ArgumentException.ThrowIfNullOrWhiteSpace(id);
-        ArgumentNullException.ThrowIfNull(request);
-
-        try
-        {
-            var result = await authoring.UpdateAsync(id, request, cancellationToken);
-
-            return result is null ? TypedResults.NotFound() : TypedResults.Ok(result);
-        }
-        catch (InvalidOperationException exception)
-        {
-            return TypedResults.BadRequest(exception.Message);
-        }
-    }
-
     internal static IResult HandleDetail(IMobileTemplateService templates, string id)
     {
         ArgumentNullException.ThrowIfNull(templates);
@@ -175,6 +152,29 @@ public static class MobileTemplateEndpointExtensions
         var result = InMemoryListQuery.Apply(ordered, request, SearchFields, filters);
 
         return TypedResults.Ok(result.Select(MobileTemplateSummary.FromDefinition));
+    }
+
+    internal static async Task<IResult> HandleUpdateAsync(
+        IMobileTemplateAuthoringService authoring,
+        string id,
+        MobileTemplateEditRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        ArgumentNullException.ThrowIfNull(authoring);
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+        ArgumentNullException.ThrowIfNull(request);
+
+        try
+        {
+            var result = await authoring.UpdateAsync(id, request, cancellationToken);
+
+            return result is null ? TypedResults.NotFound() : TypedResults.Ok(result);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return TypedResults.BadRequest(exception.Message);
+        }
     }
 
     private static IEnumerable<string?> SearchFields(MobileTemplateDefinition template)

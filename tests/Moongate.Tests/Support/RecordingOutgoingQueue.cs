@@ -22,5 +22,5 @@ public sealed class RecordingOutgoingQueue : IOutgoingPacketQueue
 
     public void Enqueue<TPacket>(long sessionId, TPacket packet)
         where TPacket : IGameNetworkPacket
-        => Sent.Add((sessionId, (IGameNetworkPacket)packet));
+        => Sent.Add((sessionId, packet));
 }

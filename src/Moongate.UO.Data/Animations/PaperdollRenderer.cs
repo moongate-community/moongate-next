@@ -69,7 +69,13 @@ public sealed class PaperdollRenderer : IPaperdollRenderer
         layers.Add((PaperdollDrawOrder.BodyPriority, body));
 
         AddGenderGump(layers, request.HairStyle, request.HairHue, PaperdollDrawOrder.Priority(ItemLayerType.Hair), female);
-        AddGenderGump(layers, request.FacialHairStyle, request.FacialHairHue, PaperdollDrawOrder.Priority(ItemLayerType.FacialHair), female);
+        AddGenderGump(
+            layers,
+            request.FacialHairStyle,
+            request.FacialHairHue,
+            PaperdollDrawOrder.Priority(ItemLayerType.FacialHair),
+            female
+        );
         AddEquipment(layers, request, female);
 
         var ordered = layers.OrderBy(layer => layer.Priority).Select(layer => layer.Image).ToArray();
@@ -98,30 +104,6 @@ public sealed class PaperdollRenderer : IPaperdollRenderer
             {
                 image.Dispose();
             }
-        }
-    }
-
-    private void AddGenderGump(List<(int, Image<Rgba32>)> layers, int style, int hue, int priority, bool female)
-    {
-        if (style <= 0)
-        {
-            return;
-        }
-
-        // Hair/beard paperdoll gumps are derived from the style item's animation id (like equipment),
-        // not from the raw style id.
-        var anim = _tileData.GetItem(style).Animation;
-
-        if (anim <= 0)
-        {
-            return;
-        }
-
-        var image = LoadGenderGump(anim, hue, female);
-
-        if (image is not null)
-        {
-            layers.Add((priority, image));
         }
     }
 
@@ -154,6 +136,38 @@ public sealed class PaperdollRenderer : IPaperdollRenderer
             {
                 layers.Add((priority, image));
             }
+        }
+    }
+
+    private void AddGenderGump(List<(int, Image<Rgba32>)> layers, int style, int hue, int priority, bool female)
+    {
+        if (style <= 0)
+        {
+            return;
+        }
+
+        // Hair/beard paperdoll gumps are derived from the style item's animation id (like equipment),
+        // not from the raw style id.
+        var anim = _tileData.GetItem(style).Animation;
+
+        if (anim <= 0)
+        {
+            return;
+        }
+
+        var image = LoadGenderGump(anim, hue, female);
+
+        if (image is not null)
+        {
+            layers.Add((priority, image));
+        }
+    }
+
+    private static void DisposeAll(List<(int Priority, Image<Rgba32> Image)> layers)
+    {
+        foreach (var layer in layers)
+        {
+            layer.Image.Dispose();
         }
     }
 
@@ -191,13 +205,5 @@ public sealed class PaperdollRenderer : IPaperdollRenderer
         }
 
         return image;
-    }
-
-    private static void DisposeAll(List<(int Priority, Image<Rgba32> Image)> layers)
-    {
-        foreach (var layer in layers)
-        {
-            layer.Image.Dispose();
-        }
     }
 }

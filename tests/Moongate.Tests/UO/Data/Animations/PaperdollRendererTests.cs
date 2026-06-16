@@ -37,7 +37,7 @@ public sealed class PaperdollRendererTests
             }
 
             var img = new Image<Rgba32>(4, 4);
-            img[0, 0] = new Rgba32(128, 128, 128, 255);
+            img[0, 0] = new(128, 128, 128, 255);
 
             return img;
         }
@@ -50,7 +50,7 @@ public sealed class PaperdollRendererTests
         public int Count => _map.Count;
 
         public void Add(string id, int itemId, ItemLayerType layer)
-            => _map[id] = new ItemTemplateDefinition { Id = id, ItemId = itemId, Layer = layer };
+            => _map[id] = new() { Id = id, ItemId = itemId, Layer = layer };
 
         public void Clear()
             => _map.Clear();
@@ -83,21 +83,23 @@ public sealed class PaperdollRendererTests
         public IReadOnlyList<LandData> LandTable => [];
         public IReadOnlyList<ItemData> ItemTable => [];
 
-        public void SetAnimation(int itemId, int animation)
-            => _animMap[itemId] = animation;
-
         public ItemData GetItem(int id)
             => new() { Animation = _animMap.GetValueOrDefault(id) };
 
         public LandData GetLand(int id)
             => new();
+
+        public void SetAnimation(int itemId, int animation)
+            => _animMap[itemId] = animation;
     }
 
     private sealed class NullHueStore : IHueStore
     {
         public IReadOnlyList<Hue> Hues => [];
         public int Count => 0;
-        public Hue? GetHue(int index) => null;
+
+        public Hue? GetHue(int index)
+            => null;
     }
 
     /// <summary>Returns a hue that maps every shade to pure red (RGB555 0x7C00).</summary>
@@ -112,84 +114,30 @@ public sealed class PaperdollRendererTests
 
         public IReadOnlyList<Hue> Hues => [RedHue];
         public int Count => 1;
-        public Hue? GetHue(int index) => RedHue;
-    }
 
-    // ─── Helpers ─────────────────────────────────────────────────────────────
-
-    private static PaperdollRenderer BuildRenderer(FakeGumpStore gumps, FakeItemTemplates? items = null, FakeTileData? tiles = null, IHueStore? hues = null)
-        => new(gumps, items ?? new FakeItemTemplates(), tiles ?? new FakeTileData(), hues ?? new NullHueStore());
-
-    private static PaperdollRenderRequest MakeRequest(
-        GenderType gender = GenderType.Male,
-        IReadOnlyList<string>? equipment = null
-    ) => new(gender, 0, 0, 0, 0, 0, equipment ?? [], false);
-
-    // ─── Tests ───────────────────────────────────────────────────────────────
-
-    [Fact]
-    public void Render_ReturnsNull_WhenBodyGumpUnavailable()
-    {
-        var gumps = new FakeGumpStore(); // nothing available
-        var renderer = BuildRenderer(gumps);
-
-        var result = renderer.Render(MakeRequest());
-
-        Assert.Null(result);
+        public Hue? GetHue(int index)
+            => RedHue;
     }
 
     [Fact]
-    public void Render_MaleBody_ReturnsNonNull_AndRequestsMaleBodyGump()
+    public void Render_AppliesSkinHue_ToBody()
     {
+        // The body gump is available and returns an opaque gray pixel at [0,0].
+        // RecoloringHueStore maps every shade to pure red.
+        // SkinHue=2 → index=(2 & 0x3FFF)-1=1 → GetHue(1) returns the red hue.
+        // After compositing, pixel [0,0] on the canvas should be reddish.
         var gumps = new FakeGumpStore();
         gumps.Available.Add(MaleBody);
-        var renderer = BuildRenderer(gumps);
 
-        using var result = renderer.Render(MakeRequest(GenderType.Male));
-
-        Assert.NotNull(result);
-        Assert.Contains(MaleBody, gumps.Requested);
-    }
-
-    [Fact]
-    public void Render_FemaleBody_ReturnsNonNull_AndRequestsFemaleBodyGump()
-    {
-        var gumps = new FakeGumpStore();
-        gumps.Available.Add(FemaleBody);
-        var renderer = BuildRenderer(gumps);
-
-        using var result = renderer.Render(MakeRequest(GenderType.Female));
-
-        Assert.NotNull(result);
-        Assert.Contains(FemaleBody, gumps.Requested);
-    }
-
-    [Fact]
-    public void Render_FemaleEquipGumpMissing_FallsBackToMaleOffset()
-    {
-        // anim 100: female gump (100+60000) missing, male gump (100+50000) present
-        const int Anim = 100;
-        const int MaleGump = Anim + 50000;  // 50100
-        const int FemaleGump = Anim + 60000; // 60100
-
-        var gumps = new FakeGumpStore();
-        gumps.Available.Add(FemaleBody);
-        gumps.Available.Add(MaleGump); // only male offset available
-
-        var items = new FakeItemTemplates();
-        items.Add("sword", 7, ItemLayerType.OneHanded);
-
-        var tiles = new FakeTileData();
-        tiles.SetAnimation(7, Anim);
-
-        var renderer = BuildRenderer(gumps, items, tiles);
-        var request = new PaperdollRenderRequest(GenderType.Female, 0, 0, 0, 0, 0, ["sword"], false);
+        var renderer = BuildRenderer(gumps, hues: new RecoloringHueStore());
+        var request = new PaperdollRenderRequest(GenderType.Male, 2, 0, 0, 0, 0, [], false);
 
         using var result = renderer.Render(request);
 
         Assert.NotNull(result);
-        Assert.Contains(FemaleGump, gumps.Requested); // tried female first
-        Assert.Contains(MaleGump, gumps.Requested);   // then fell back to male
+        Assert.True(result[0, 0].R > 200, "Expected red channel > 200 after hue application");
+        Assert.True(result[0, 0].G < 80, "Expected green channel < 80 after hue application");
+        Assert.True(result[0, 0].B < 80, "Expected blue channel < 80 after hue application");
     }
 
     [Fact]
@@ -218,23 +166,85 @@ public sealed class PaperdollRendererTests
     }
 
     [Fact]
-    public void Render_AppliesSkinHue_ToBody()
+    public void Render_FemaleBody_ReturnsNonNull_AndRequestsFemaleBodyGump()
     {
-        // The body gump is available and returns an opaque gray pixel at [0,0].
-        // RecoloringHueStore maps every shade to pure red.
-        // SkinHue=2 → index=(2 & 0x3FFF)-1=1 → GetHue(1) returns the red hue.
-        // After compositing, pixel [0,0] on the canvas should be reddish.
         var gumps = new FakeGumpStore();
-        gumps.Available.Add(MaleBody);
+        gumps.Available.Add(FemaleBody);
+        var renderer = BuildRenderer(gumps);
 
-        var renderer = BuildRenderer(gumps, hues: new RecoloringHueStore());
-        var request = new PaperdollRenderRequest(GenderType.Male, 2, 0, 0, 0, 0, [], false);
+        using var result = renderer.Render(MakeRequest(GenderType.Female));
+
+        Assert.NotNull(result);
+        Assert.Contains(FemaleBody, gumps.Requested);
+    }
+
+    [Fact]
+    public void Render_FemaleEquipGumpMissing_FallsBackToMaleOffset()
+    {
+        // anim 100: female gump (100+60000) missing, male gump (100+50000) present
+        const int Anim = 100;
+        const int MaleGump = Anim + 50000;   // 50100
+        const int FemaleGump = Anim + 60000; // 60100
+
+        var gumps = new FakeGumpStore();
+        gumps.Available.Add(FemaleBody);
+        gumps.Available.Add(MaleGump); // only male offset available
+
+        var items = new FakeItemTemplates();
+        items.Add("sword", 7, ItemLayerType.OneHanded);
+
+        var tiles = new FakeTileData();
+        tiles.SetAnimation(7, Anim);
+
+        var renderer = BuildRenderer(gumps, items, tiles);
+        var request = new PaperdollRenderRequest(GenderType.Female, 0, 0, 0, 0, 0, ["sword"], false);
 
         using var result = renderer.Render(request);
 
         Assert.NotNull(result);
-        Assert.True(result[0, 0].R > 200, "Expected red channel > 200 after hue application");
-        Assert.True(result[0, 0].G < 80, "Expected green channel < 80 after hue application");
-        Assert.True(result[0, 0].B < 80, "Expected blue channel < 80 after hue application");
+        Assert.Contains(FemaleGump, gumps.Requested); // tried female first
+        Assert.Contains(MaleGump, gumps.Requested);   // then fell back to male
     }
+
+    [Fact]
+    public void Render_MaleBody_ReturnsNonNull_AndRequestsMaleBodyGump()
+    {
+        var gumps = new FakeGumpStore();
+        gumps.Available.Add(MaleBody);
+        var renderer = BuildRenderer(gumps);
+
+        using var result = renderer.Render(MakeRequest());
+
+        Assert.NotNull(result);
+        Assert.Contains(MaleBody, gumps.Requested);
+    }
+
+    // ─── Tests ───────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void Render_ReturnsNull_WhenBodyGumpUnavailable()
+    {
+        var gumps = new FakeGumpStore(); // nothing available
+        var renderer = BuildRenderer(gumps);
+
+        var result = renderer.Render(MakeRequest());
+
+        Assert.Null(result);
+    }
+
+    // ─── Helpers ─────────────────────────────────────────────────────────────
+
+    private static PaperdollRenderer BuildRenderer(
+        FakeGumpStore gumps,
+        FakeItemTemplates? items = null,
+        FakeTileData? tiles = null,
+        IHueStore? hues = null
+    )
+        => new(gumps, items ?? new FakeItemTemplates(), tiles ?? new FakeTileData(), hues ?? new NullHueStore());
+
+    private static PaperdollRenderRequest MakeRequest(
+        GenderType gender = GenderType.Male,
+        IReadOnlyList<string>? equipment = null
+    )
+        => new(gender, 0, 0, 0, 0, 0, equipment ?? [], false);
 }

@@ -74,9 +74,6 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
             => _bodies;
     }
 
-    private static PagedResult<BodySummary> OkList(IResult result)
-        => Assert.IsType<Ok<PagedResult<BodySummary>>>(result).Value!;
-
     [Fact]
     public async Task Build_TalliesGeneratedAndSkipped()
     {
@@ -230,9 +227,25 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
     }
 
     [Fact]
+    public void HandleListBodies_ExcludesEquipmentBodies()
+        => Assert.Empty(
+            OkList(
+                    BodyImageEndpointExtensions.HandleListBodies(
+                        new FakeBodyDataStore(UoBodyType.Equipment, 400, 401),
+                        null,
+                        null,
+                        null
+                    )
+                )
+                .Items
+        );
+
+    [Fact]
     public void HandleListBodies_OrdersAscending_AndProjectsSummary()
     {
-        var page = OkList(BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStore(UoBodyType.Human,401, 400), null, null, null));
+        var page = OkList(
+            BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStore(UoBodyType.Human, 401, 400), null, null, null)
+        );
 
         Assert.Equal(2, page.TotalCount);
         Assert.Equal(400, page.Items[0].Body);
@@ -242,9 +255,21 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
     }
 
     [Fact]
+    public void HandleListBodies_PageBeyondEnd_ReturnsEmpty()
+        => Assert.Empty(
+            OkList(BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStore(UoBodyType.Human, 1, 2), 9, 60, null))
+                .Items
+        );
+
+    [Fact]
     public void HandleListBodies_Pagination_Bounds()
     {
-        var page = BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStore(UoBodyType.Human,1, 2, 3, 4, 5), 2, 2, null);
+        var page = BodyImageEndpointExtensions.HandleListBodies(
+            new FakeBodyDataStore(UoBodyType.Human, 1, 2, 3, 4, 5),
+            2,
+            2,
+            null
+        );
 
         var value = OkList(page);
         Assert.Equal(2, value.Items.Count);
@@ -255,22 +280,35 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
 
     [Fact]
     public void HandleListBodies_SearchByDecimalId_Filters()
-        => Assert.Equal(1, OkList(BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStore(UoBodyType.Human,400, 401), null, null, "401")).TotalCount);
+        => Assert.Equal(
+            1,
+            OkList(
+                    BodyImageEndpointExtensions.HandleListBodies(
+                        new FakeBodyDataStore(UoBodyType.Human, 400, 401),
+                        null,
+                        null,
+                        "401"
+                    )
+                )
+                .TotalCount
+        );
 
     [Fact]
     public void HandleListBodies_SearchByHex_Filters()
     {
-        var page = OkList(BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStore(UoBodyType.Human,400, 401), null, null, "0x0190"));
+        var page = OkList(
+            BodyImageEndpointExtensions.HandleListBodies(
+                new FakeBodyDataStore(UoBodyType.Human, 400, 401),
+                null,
+                null,
+                "0x0190"
+            )
+        );
 
         Assert.Equal(1, page.TotalCount);
         Assert.Equal(400, page.Items[0].Body);
     }
 
-    [Fact]
-    public void HandleListBodies_PageBeyondEnd_ReturnsEmpty()
-        => Assert.Empty(OkList(BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStore(UoBodyType.Human,1, 2), 9, 60, null)).Items);
-
-    [Fact]
-    public void HandleListBodies_ExcludesEquipmentBodies()
-        => Assert.Empty(OkList(BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStore(UoBodyType.Equipment, 400, 401), null, null, null)).Items);
+    private static PagedResult<BodySummary> OkList(IResult result)
+        => Assert.IsType<Ok<PagedResult<BodySummary>>>(result).Value!;
 }

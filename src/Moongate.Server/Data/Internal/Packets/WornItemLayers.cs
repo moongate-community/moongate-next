@@ -13,7 +13,9 @@ public static class WornItemLayers
     {
         ArgumentNullException.ThrowIfNull(mobile);
 
-        return mobile.EquippedItemIds.Where(static kv =>
-            kv.Key != ItemLayerType.Backpack && kv.Key != ItemLayerType.Bank);
+        return mobile.EquippedItemIds.Where(
+            static kv =>
+                kv.Key != ItemLayerType.Backpack && kv.Key != ItemLayerType.Bank
+        );
     }
 }

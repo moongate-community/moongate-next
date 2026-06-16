@@ -47,7 +47,11 @@ public sealed class WorldEntryService : IWorldEntryService
         _events = events;
     }
 
-    public async ValueTask EnterWorldAsync(long sessionId, MobileEntity mobile, CancellationToken cancellationToken = default)
+    public async ValueTask EnterWorldAsync(
+        long sessionId,
+        MobileEntity mobile,
+        CancellationToken cancellationToken = default
+    )
     {
         ArgumentNullException.ThrowIfNull(mobile);
 

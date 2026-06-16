@@ -33,6 +33,15 @@ public static class AdminHueEndpointExtensions
         return endpoints;
     }
 
+    internal static IResult HandleGetHue(IHueStore hues, int hue)
+    {
+        ArgumentNullException.ThrowIfNull(hues);
+
+        var summary = HueSummary.FromValue(hue, hues);
+
+        return summary.IsKnown ? TypedResults.Ok(summary) : TypedResults.NotFound();
+    }
+
     internal static IResult HandleListHues(IHueStore hues, int? page, int? pageSize, string? search)
     {
         ArgumentNullException.ThrowIfNull(hues);
@@ -40,7 +49,7 @@ public static class AdminHueEndpointExtensions
         var pageNumber = page is > 0 ? page.Value : 1;
         var size = pageSize is > 0 and <= 200 ? pageSize.Value : 60;
 
-        IEnumerable<int> values = Enumerable.Range(1, hues.Count);
+        var values = Enumerable.Range(1, hues.Count);
 
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -59,20 +68,12 @@ public static class AdminHueEndpointExtensions
         return TypedResults.Ok(new PagedResult<HueSummary>(items, pageNumber, size, ordered.Length));
     }
 
-    internal static IResult HandleGetHue(IHueStore hues, int hue)
-    {
-        ArgumentNullException.ThrowIfNull(hues);
-
-        var summary = HueSummary.FromValue(hue, hues);
-
-        return summary.IsKnown ? TypedResults.Ok(summary) : TypedResults.NotFound();
-    }
-
     private static bool MatchesHue(int value, string term, IHueStore hues)
     {
         if (term.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
         {
-            return int.TryParse(term[2..], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var hex) && hex == value;
+            return int.TryParse(term[2..], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var hex) &&
+                   hex == value;
         }
 
         if (int.TryParse(term, NumberStyles.Integer, CultureInfo.InvariantCulture, out var dec))

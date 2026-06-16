@@ -31,7 +31,7 @@ public sealed class MobileTemplateAuthoringService : IMobileTemplateAuthoringSer
         ArgumentNullException.ThrowIfNull(lootRegistryStore);
 
         _mobilesDirectory = directories[DirectoryType.Templates_Mobiles];
-        _documents = new MobileTemplateYamlDocumentStore(_mobilesDirectory);
+        _documents = new(_mobilesDirectory);
         _templates = templates;
         _itemTemplates = itemTemplates;
         _lootRegistryStore = lootRegistryStore;
@@ -109,14 +109,12 @@ public sealed class MobileTemplateAuthoringService : IMobileTemplateAuthoringSer
         var reloaded = new MobileTemplateYamlLoader(_mobilesDirectory).LoadAll();
         _templates.ReplaceAll(reloaded);
 
-        var saved = reloaded.Single(
-            t => string.Equals(t.Id, def.Id, StringComparison.OrdinalIgnoreCase)
-        );
+        var saved = reloaded.Single(t => string.Equals(t.Id, def.Id, StringComparison.OrdinalIgnoreCase));
 
         var relative = Path.GetRelativePath(_mobilesDirectory, sourceFile)
                            .Replace(Path.DirectorySeparatorChar, '/');
 
-        return new MobileTemplateSaveResult(MobileTemplateDetail.FromDefinition(saved), relative);
+        return new(MobileTemplateDetail.FromDefinition(saved), relative);
     }
 
     private static MobileTemplateDefinition ToDefinition(MobileTemplateEditRequest r)
@@ -140,7 +138,7 @@ public sealed class MobileTemplateAuthoringService : IMobileTemplateAuthoringSer
 
         foreach (var (key, param) in r.Params ?? new(StringComparer.OrdinalIgnoreCase))
         {
-            parameters[key.Trim()] = new ItemTemplateParamDefinition
+            parameters[key.Trim()] = new()
             {
                 Type = param.Type,
                 Value = param.Value
@@ -157,7 +155,7 @@ public sealed class MobileTemplateAuthoringService : IMobileTemplateAuthoringSer
                          .Where(static id => id.Length > 0)
                          .ToList();
 
-        return new MobileTemplateDefinition
+        return new()
         {
             Id = id,
             BaseMobile = string.IsNullOrWhiteSpace(r.BaseMobile) ? null : r.BaseMobile.Trim(),

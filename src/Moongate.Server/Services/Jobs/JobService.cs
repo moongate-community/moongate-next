@@ -26,83 +26,6 @@ public sealed class JobService : IJobService
         _timers = timers;
     }
 
-    public string RegisterRecurring(
-        string name,
-        TimeSpan interval,
-        Action handler,
-        string? description = null,
-        bool runImmediately = false,
-        JobSourceType source = JobSourceType.CSharp
-    )
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(name);
-        ArgumentNullException.ThrowIfNull(handler);
-        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(interval, TimeSpan.Zero);
-
-        var entry = NewEntry(name, description, source, interval, repeat: true, handler);
-        var delay = runImmediately ? TimeSpan.FromMilliseconds(1) : interval;
-        var timerId = _timers.RegisterTimer(name, interval, () => Execute(entry), delay, repeat: true);
-
-        lock (_sync)
-        {
-            entry.TimerId = timerId;
-            entry.NextRunAt = DateTimeOffset.UtcNow + delay;
-            _jobs[entry.Id] = entry;
-        }
-
-        return entry.Id;
-    }
-
-    public string RegisterOnce(
-        string name,
-        TimeSpan delay,
-        Action handler,
-        string? description = null,
-        JobSourceType source = JobSourceType.CSharp
-    )
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(name);
-        ArgumentNullException.ThrowIfNull(handler);
-        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(delay, TimeSpan.Zero);
-
-        var entry = NewEntry(name, description, source, delay, repeat: false, handler);
-        var timerId = _timers.RegisterTimer(name, delay, () => Execute(entry), delay, repeat: false);
-
-        lock (_sync)
-        {
-            entry.TimerId = timerId;
-            entry.NextRunAt = DateTimeOffset.UtcNow + delay;
-            _jobs[entry.Id] = entry;
-        }
-
-        return entry.Id;
-    }
-
-    public bool RunNow(string jobId)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(jobId);
-
-        JobEntry? entry;
-
-        lock (_sync)
-        {
-            if (!_jobs.TryGetValue(jobId, out entry))
-            {
-                return false;
-            }
-        }
-
-        _timers.RegisterTimer(
-            entry.Name,
-            entry.Interval,
-            () => Execute(entry),
-            TimeSpan.FromMilliseconds(1),
-            repeat: false
-        );
-
-        return true;
-    }
-
     /// <summary>
     /// Cancels and removes a job and its recurring timer. An already-scheduled <see cref="RunNow" />
     /// one-shot for this job may still fire once after cancellation (harmless: it updates a detached entry).
@@ -153,30 +76,88 @@ public sealed class JobService : IJobService
         }
     }
 
+    public string RegisterOnce(
+        string name,
+        TimeSpan delay,
+        Action handler,
+        string? description = null,
+        JobSourceType source = JobSourceType.CSharp
+    )
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        ArgumentNullException.ThrowIfNull(handler);
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(delay, TimeSpan.Zero);
+
+        var entry = NewEntry(name, description, source, delay, false, handler);
+        var timerId = _timers.RegisterTimer(name, delay, () => Execute(entry), delay, false);
+
+        lock (_sync)
+        {
+            entry.TimerId = timerId;
+            entry.NextRunAt = DateTimeOffset.UtcNow + delay;
+            _jobs[entry.Id] = entry;
+        }
+
+        return entry.Id;
+    }
+
+    public string RegisterRecurring(
+        string name,
+        TimeSpan interval,
+        Action handler,
+        string? description = null,
+        bool runImmediately = false,
+        JobSourceType source = JobSourceType.CSharp
+    )
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        ArgumentNullException.ThrowIfNull(handler);
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(interval, TimeSpan.Zero);
+
+        var entry = NewEntry(name, description, source, interval, true, handler);
+        var delay = runImmediately ? TimeSpan.FromMilliseconds(1) : interval;
+        var timerId = _timers.RegisterTimer(name, interval, () => Execute(entry), delay, true);
+
+        lock (_sync)
+        {
+            entry.TimerId = timerId;
+            entry.NextRunAt = DateTimeOffset.UtcNow + delay;
+            _jobs[entry.Id] = entry;
+        }
+
+        return entry.Id;
+    }
+
+    public bool RunNow(string jobId)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(jobId);
+
+        JobEntry? entry;
+
+        lock (_sync)
+        {
+            if (!_jobs.TryGetValue(jobId, out entry))
+            {
+                return false;
+            }
+        }
+
+        _timers.RegisterTimer(
+            entry.Name,
+            entry.Interval,
+            () => Execute(entry),
+            TimeSpan.FromMilliseconds(1),
+            false
+        );
+
+        return true;
+    }
+
     public Task StartAsync(CancellationToken cancellationToken)
         => Task.CompletedTask;
 
     public Task StopAsync(CancellationToken cancellationToken)
         => Task.CompletedTask;
-
-    private static JobEntry NewEntry(
-        string name,
-        string? description,
-        JobSourceType source,
-        TimeSpan interval,
-        bool repeat,
-        Action handler
-    )
-        => new()
-        {
-            Id = Guid.NewGuid().ToString("N"),
-            Name = name,
-            Description = description,
-            Source = source,
-            Interval = interval,
-            Repeat = repeat,
-            Handler = handler
-        };
 
     private void Execute(JobEntry entry)
     {
@@ -208,4 +189,23 @@ public sealed class JobService : IJobService
             entry.NextRunAt = entry.Repeat ? entry.LastRunAt + entry.Interval : null;
         }
     }
+
+    private static JobEntry NewEntry(
+        string name,
+        string? description,
+        JobSourceType source,
+        TimeSpan interval,
+        bool repeat,
+        Action handler
+    )
+        => new()
+        {
+            Id = Guid.NewGuid().ToString("N"),
+            Name = name,
+            Description = description,
+            Source = source,
+            Interval = interval,
+            Repeat = repeat,
+            Handler = handler
+        };
 }

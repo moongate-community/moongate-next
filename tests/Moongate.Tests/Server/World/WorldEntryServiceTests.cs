@@ -1,6 +1,3 @@
-using Moongate.Abstractions.Interfaces.EventHandlers;
-using Moongate.Abstractions.Interfaces.Services;
-using Moongate.Core.Geometry;
 using Moongate.Core.Ids;
 using Moongate.Network.UO.Packets.Outgoing.Entity;
 using Moongate.Network.UO.Packets.Outgoing.Login;
@@ -13,7 +10,6 @@ using Moongate.UO.Data.Entities.Mobiles;
 using Moongate.UO.Data.Interfaces.Maps;
 using Moongate.UO.Data.Maps;
 using Moongate.UO.Data.Types.Items;
-using Xunit;
 
 namespace Moongate.Tests.Server.World;
 
@@ -22,15 +18,15 @@ public sealed class WorldEntryServiceTests
     [Fact]
     public async Task EnterWorldAsync_SendsCoreSequence_AndPublishesEvent()
     {
-        var torso = new ItemEntity { Id = new Serial(Serial.ItemOffset + 2), ItemId = 0x1F03 };
-        var backpack = new ItemEntity { Id = new Serial(Serial.ItemOffset + 3) };
-        var pack = new ItemEntity { Id = new Serial(Serial.ItemOffset + 4), ItemId = 0x0EED, Amount = 1 };
+        var torso = new ItemEntity { Id = new(Serial.ItemOffset + 2), ItemId = 0x1F03 };
+        var backpack = new ItemEntity { Id = new(Serial.ItemOffset + 3) };
+        var pack = new ItemEntity { Id = new(Serial.ItemOffset + 4), ItemId = 0x0EED, Amount = 1 };
         backpack.ContainedItemIds.Add(pack.Id);
 
         var mobile = new MobileEntity
         {
-            Id = new Serial(7), Name = "Tom", AccountId = new Serial(99),
-            MapId = 0, Location = new Point3D(1, 2, 0), BackpackId = backpack.Id
+            Id = new(7), Name = "Tom", AccountId = new(99),
+            MapId = 0, Location = new(1, 2, 0), BackpackId = backpack.Id
         };
         mobile.EquippedItemIds[ItemLayerType.OuterTorso] = torso.Id;
         mobile.EquippedItemIds[ItemLayerType.Backpack] = backpack.Id;
@@ -58,9 +54,9 @@ public sealed class WorldEntryServiceTests
         Assert.True(types.IndexOf(typeof(LoginConfirmPacket)) < types.IndexOf(typeof(LoginCompletePacket)));
 
         var containerContent = outgoing.Sent
-            .Select(s => s.Packet)
-            .OfType<ContainerContentPacket>()
-            .Single();
+                                       .Select(s => s.Packet)
+                                       .OfType<ContainerContentPacket>()
+                                       .Single();
         Assert.Contains(containerContent.Items, i => i.Id == pack.Id);
     }
 }

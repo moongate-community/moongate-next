@@ -95,7 +95,7 @@ public sealed class MobileFactoryService : IMobileFactoryService
             Name = packet.CharacterName,
             AccountId = accountId,
             Direction = DirectionType.South,
-            Location = city is null ? Point3D.Zero : new Point3D(city.X, city.Y, city.Z),
+            Location = city is null ? Point3D.Zero : new(city.X, city.Y, city.Z),
             MapId = city?.MapIndex ?? 0,
             IsPlayer = true,
             IsAlive = true,

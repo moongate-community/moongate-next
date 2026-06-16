@@ -6,8 +6,17 @@ namespace Moongate.Tests.UO.Data.Animations;
 public sealed class PaperdollDrawOrderTests
 {
     [Fact]
+    public void BodyAndBackground_SortBeforeEquipment()
+    {
+        Assert.True(PaperdollDrawOrder.BackgroundPriority < PaperdollDrawOrder.BodyPriority);
+        Assert.True(PaperdollDrawOrder.BodyPriority < PaperdollDrawOrder.Priority(ItemLayerType.Shirt));
+    }
+
+    [Fact]
     public void Cloak_DrawsBehind_OuterTorso()
-        => Assert.True(PaperdollDrawOrder.Priority(ItemLayerType.Cloak) < PaperdollDrawOrder.Priority(ItemLayerType.OuterTorso));
+        => Assert.True(
+            PaperdollDrawOrder.Priority(ItemLayerType.Cloak) < PaperdollDrawOrder.Priority(ItemLayerType.OuterTorso)
+        );
 
     [Fact]
     public void Helm_DrawsInFrontOf_Hair()
@@ -16,11 +25,4 @@ public sealed class PaperdollDrawOrderTests
     [Fact]
     public void NonPaperdollLayer_IsSkipped()
         => Assert.Equal(PaperdollDrawOrder.Skip, PaperdollDrawOrder.Priority(ItemLayerType.Backpack));
-
-    [Fact]
-    public void BodyAndBackground_SortBeforeEquipment()
-    {
-        Assert.True(PaperdollDrawOrder.BackgroundPriority < PaperdollDrawOrder.BodyPriority);
-        Assert.True(PaperdollDrawOrder.BodyPriority < PaperdollDrawOrder.Priority(ItemLayerType.Shirt));
-    }
 }

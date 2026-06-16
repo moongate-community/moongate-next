@@ -59,36 +59,18 @@ public static class HairImageEndpointExtensions
         return endpoints;
     }
 
-    internal static IResult HandleListHairStyles(bool facial, string? search)
+    internal static string GetCachePath(DirectoriesConfig directories, int style, int hue, int body, bool facial)
     {
-        var source = facial ? HairStyleCatalog.Facial : HairStyleCatalog.Hair;
+        ArgumentNullException.ThrowIfNull(directories);
 
-        IEnumerable<HairStyleEntry> entries = source;
-        var catalogCount = source.Count;
+        var directory = Path.Combine(directories[DirectoryType.Cache], "images", "hair");
+        Directory.CreateDirectory(directory);
 
-        if (!string.IsNullOrWhiteSpace(search))
-        {
-            var term = search.Trim();
-            entries = entries.Where(
-                entry => entry.Name.Contains(term, StringComparison.OrdinalIgnoreCase)
-                         || entry.StyleHex.Contains(term, StringComparison.OrdinalIgnoreCase)
-                         || entry.Style.ToString(CultureInfo.InvariantCulture).Contains(term)
-            );
-        }
+        var prefix = facial ? "f" : "h";
+        var fileName =
+            $"{prefix}{style.ToString(CultureInfo.InvariantCulture)}_{hue.ToString(CultureInfo.InvariantCulture)}_{body.ToString(CultureInfo.InvariantCulture)}.png";
 
-        var items = entries
-                    .Select(
-                        entry => new HairStyleSummary(
-                            entry.Style,
-                            entry.StyleHex,
-                            entry.Name,
-                            entry.IsFacial,
-                            $"/api/mobiles/hair/{entry.Style.ToString(CultureInfo.InvariantCulture)}.png?facial={entry.IsFacial.ToString().ToLowerInvariant()}"
-                        )
-                    )
-                    .ToArray();
-
-        return TypedResults.Ok(new PagedResult<HairStyleSummary>(items, 1, catalogCount, items.Length));
+        return Path.Combine(directory, fileName);
     }
 
     internal static async Task<IResult> HandleGetHairImageAsync(
@@ -167,18 +149,36 @@ public static class HairImageEndpointExtensions
         }
     }
 
-    internal static string GetCachePath(DirectoriesConfig directories, int style, int hue, int body, bool facial)
+    internal static IResult HandleListHairStyles(bool facial, string? search)
     {
-        ArgumentNullException.ThrowIfNull(directories);
+        var source = facial ? HairStyleCatalog.Facial : HairStyleCatalog.Hair;
 
-        var directory = Path.Combine(directories[DirectoryType.Cache], "images", "hair");
-        Directory.CreateDirectory(directory);
+        IEnumerable<HairStyleEntry> entries = source;
+        var catalogCount = source.Count;
 
-        var prefix = facial ? "f" : "h";
-        var fileName =
-            $"{prefix}{style.ToString(CultureInfo.InvariantCulture)}_{hue.ToString(CultureInfo.InvariantCulture)}_{body.ToString(CultureInfo.InvariantCulture)}.png";
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var term = search.Trim();
+            entries = entries.Where(
+                entry => entry.Name.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                         entry.StyleHex.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                         entry.Style.ToString(CultureInfo.InvariantCulture).Contains(term)
+            );
+        }
 
-        return Path.Combine(directory, fileName);
+        var items = entries
+                    .Select(
+                        entry => new HairStyleSummary(
+                            entry.Style,
+                            entry.StyleHex,
+                            entry.Name,
+                            entry.IsFacial,
+                            $"/api/mobiles/hair/{entry.Style.ToString(CultureInfo.InvariantCulture)}.png?facial={entry.IsFacial.ToString().ToLowerInvariant()}"
+                        )
+                    )
+                    .ToArray();
+
+        return TypedResults.Ok(new PagedResult<HairStyleSummary>(items, 1, catalogCount, items.Length));
     }
 
     private static bool TryParseStyle(string text, out int style)

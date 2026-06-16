@@ -22,22 +22,6 @@ public sealed class JobsModule : IDisposable
         _service = service;
     }
 
-    [ScriptFunction("every", "Registers a repeating job.")]
-    public string Every(string name, string interval, Closure callback, string? description = null)
-        => Register(name, interval, callback, repeat: true, description);
-
-    [ScriptFunction("once", "Registers a one-shot job.")]
-    public string Once(string name, string interval, Closure callback, string? description = null)
-        => Register(name, interval, callback, repeat: false, description);
-
-    [ScriptFunction("run_now", "Schedules an immediate run of a job by id.")]
-    public bool RunNow(string id)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(id);
-
-        return _service is not null && _service.RunNow(id);
-    }
-
     [ScriptFunction("cancel", "Cancels a job by Lua job name.")]
     public bool Cancel(string name)
     {
@@ -49,6 +33,35 @@ public sealed class JobsModule : IDisposable
         }
 
         return _jobs.TryRemove(name, out var id) && _service.Cancel(id);
+    }
+
+    public void Dispose()
+    {
+        if (_service is not null)
+        {
+            foreach (var (_, id) in _jobs)
+            {
+                _service.Cancel(id);
+            }
+        }
+
+        _jobs.Clear();
+    }
+
+    [ScriptFunction("every", "Registers a repeating job.")]
+    public string Every(string name, string interval, Closure callback, string? description = null)
+        => Register(name, interval, callback, true, description);
+
+    [ScriptFunction("once", "Registers a one-shot job.")]
+    public string Once(string name, string interval, Closure callback, string? description = null)
+        => Register(name, interval, callback, false, description);
+
+    [ScriptFunction("run_now", "Schedules an immediate run of a job by id.")]
+    public bool RunNow(string id)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+
+        return _service is not null && _service.RunNow(id);
     }
 
     private static TimeSpan ParseInterval(string interval)
@@ -87,24 +100,11 @@ public sealed class JobsModule : IDisposable
                          parsed,
                          () => _events.Invoke(callback, LuaPayloadBuilder.Timer(name, repeat)),
                          description,
-                         source: JobSourceType.Lua
+                         JobSourceType.Lua
                      );
 
         _jobs[name] = id;
 
         return id;
-    }
-
-    public void Dispose()
-    {
-        if (_service is not null)
-        {
-            foreach (var (_, id) in _jobs)
-            {
-                _service.Cancel(id);
-            }
-        }
-
-        _jobs.Clear();
     }
 }

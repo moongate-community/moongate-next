@@ -16,10 +16,29 @@ public sealed class JobEndpointExtensionsTests
 
         public bool RunResult { get; set; } = true;
 
-        public string RegisterRecurring(string name, TimeSpan interval, Action handler, string? description = null, bool runImmediately = false, JobSourceType source = JobSourceType.CSharp)
+        public bool Cancel(string jobId)
+            => true;
+
+        public IReadOnlyList<JobSnapshot> GetJobs()
+            => Jobs;
+
+        public string RegisterOnce(
+            string name,
+            TimeSpan delay,
+            Action handler,
+            string? description = null,
+            JobSourceType source = JobSourceType.CSharp
+        )
             => "id";
 
-        public string RegisterOnce(string name, TimeSpan delay, Action handler, string? description = null, JobSourceType source = JobSourceType.CSharp)
+        public string RegisterRecurring(
+            string name,
+            TimeSpan interval,
+            Action handler,
+            string? description = null,
+            bool runImmediately = false,
+            JobSourceType source = JobSourceType.CSharp
+        )
             => "id";
 
         public bool RunNow(string jobId)
@@ -28,12 +47,6 @@ public sealed class JobEndpointExtensionsTests
 
             return RunResult;
         }
-
-        public bool Cancel(string jobId)
-            => true;
-
-        public IReadOnlyList<JobSnapshot> GetJobs()
-            => Jobs;
 
         public Task StartAsync(CancellationToken cancellationToken)
             => Task.CompletedTask;
@@ -46,7 +59,22 @@ public sealed class JobEndpointExtensionsTests
     public void HandleList_ReturnsJobs()
     {
         var svc = new FakeJobService();
-        svc.Jobs.Add(new("id", "save", null, JobSourceType.CSharp, 1000, true, null, null, null, JobStatusType.NeverRun, null, 0));
+        svc.Jobs.Add(
+            new(
+                "id",
+                "save",
+                null,
+                JobSourceType.CSharp,
+                1000,
+                true,
+                null,
+                null,
+                null,
+                JobStatusType.NeverRun,
+                null,
+                0
+            )
+        );
 
         var ok = Assert.IsType<Ok<IReadOnlyList<JobSnapshot>>>(JobEndpointExtensions.HandleList(svc));
 

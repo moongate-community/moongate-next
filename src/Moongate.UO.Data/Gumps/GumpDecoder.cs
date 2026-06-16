@@ -70,6 +70,6 @@ public static class GumpDecoder
         var g = (byte)(((value >> 5) & 0x1F) * 255 / 31);
         var b = (byte)((value & 0x1F) * 255 / 31);
 
-        return new Rgba32(r, g, b, 255);
+        return new(r, g, b, 255);
     }
 }

@@ -23,14 +23,6 @@ public sealed class FakeMobileService : IMobileService
         _mobiles = mobiles;
     }
 
-    public ValueTask<IReadOnlyList<MobileEntity>> GetByAccountIdAsync(
-        Serial accountId,
-        CancellationToken cancellationToken = default
-    )
-        => ValueTask.FromResult(
-            accountId.Equals(_accountId) ? _mobiles : (IReadOnlyList<MobileEntity>)[]
-        );
-
     public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
         => throw new NotSupportedException();
 
@@ -47,6 +39,12 @@ public sealed class FakeMobileService : IMobileService
         CancellationToken cancellationToken = default
     )
         => throw new NotSupportedException();
+
+    public ValueTask<IReadOnlyList<MobileEntity>> GetByAccountIdAsync(
+        Serial accountId,
+        CancellationToken cancellationToken = default
+    )
+        => ValueTask.FromResult(accountId.Equals(_accountId) ? _mobiles : []);
 
     public ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
         => throw new NotSupportedException();

@@ -36,17 +36,18 @@ public sealed class MobileTemplatePaperdollEndpointExtensionsTests : IDisposable
         public IReadOnlyCollection<MobileTemplateDefinition> GetAll()
             => _map.Values.ToArray();
 
+        public void ReplaceAll(IEnumerable<MobileTemplateDefinition> templates)
+        {
+            _map.Clear();
+
+            foreach (var t in templates) { _map[t.Id] = t; }
+        }
+
         public bool TryGet(string id, out MobileTemplateDefinition? definition)
             => _map.TryGetValue(id, out definition);
 
         public void UpsertRange(IEnumerable<MobileTemplateDefinition> templates)
         {
-            foreach (var t in templates) { _map[t.Id] = t; }
-        }
-
-        public void ReplaceAll(IEnumerable<MobileTemplateDefinition> templates)
-        {
-            _map.Clear();
             foreach (var t in templates) { _map[t.Id] = t; }
         }
     }
@@ -78,6 +79,31 @@ public sealed class MobileTemplatePaperdollEndpointExtensionsTests : IDisposable
     public void Dispose()
     {
         if (Directory.Exists(_root)) { Directory.Delete(_root, true); }
+    }
+
+    [Fact]
+    public async Task Get_CachedSecondCall_DoesNotRerender()
+    {
+        var templates = new FakeTemplates();
+        templates.Add(new() { Id = "town_guard", Body = 400 });
+        var renderer = new FakeRenderer(true);
+
+        await MobileTemplatePaperdollEndpointExtensions.HandleGetPaperdollAsync(
+            "town_guard",
+            templates,
+            renderer,
+            _directories,
+            CancellationToken.None
+        );
+        await MobileTemplatePaperdollEndpointExtensions.HandleGetPaperdollAsync(
+            "town_guard",
+            templates,
+            renderer,
+            _directories,
+            CancellationToken.None
+        );
+
+        Assert.Equal(1, renderer.RenderCount);
     }
 
     [Fact]
@@ -126,30 +152,5 @@ public sealed class MobileTemplatePaperdollEndpointExtensionsTests : IDisposable
                      );
 
         Assert.IsType<NotFound>(result);
-    }
-
-    [Fact]
-    public async Task Get_CachedSecondCall_DoesNotRerender()
-    {
-        var templates = new FakeTemplates();
-        templates.Add(new() { Id = "town_guard", Body = 400 });
-        var renderer = new FakeRenderer(true);
-
-        await MobileTemplatePaperdollEndpointExtensions.HandleGetPaperdollAsync(
-            "town_guard",
-            templates,
-            renderer,
-            _directories,
-            CancellationToken.None
-        );
-        await MobileTemplatePaperdollEndpointExtensions.HandleGetPaperdollAsync(
-            "town_guard",
-            templates,
-            renderer,
-            _directories,
-            CancellationToken.None
-        );
-
-        Assert.Equal(1, renderer.RenderCount);
     }
 }

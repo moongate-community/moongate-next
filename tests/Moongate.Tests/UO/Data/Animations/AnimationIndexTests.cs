@@ -19,7 +19,7 @@ public sealed class AnimationIndexTests
     // animal base
     // 22000 + 1*65 + 0*5 + 1
     // human base
-     // 35000 + 1*175 + 2*5 + 3
+    // 35000 + 1*175 + 2*5 + 3
     public void GetIndex_KnownValues(int body, int action, int direction, int expected)
         => Assert.Equal(expected, AnimationIndex.GetIndex(body, action, direction));
 

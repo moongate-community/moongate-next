@@ -1,20 +1,13 @@
 using Moongate.Abstractions.Data.Network;
 using Moongate.Abstractions.Data.Player;
 using Moongate.Abstractions.Data.Version;
-using Moongate.Abstractions.Interfaces.Network;
 using Moongate.Abstractions.Interfaces.Player;
-using Moongate.Abstractions.Interfaces.Services;
 using Moongate.Core.Ids;
 using Moongate.Network.UO.Packets.Incoming.Login;
 using Moongate.Server.Handlers.Characters;
 using Moongate.Server.Interfaces.Services;
 using Moongate.Tests.Support;
-using Moongate.UO.Data.Data.Mobiles;
-using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Entities.Mobiles;
-using Moongate.UO.Data.Interfaces.Services;
-using Moongate.UO.Data.Types.Items;
-using Moongate.UO.Data.Types.Skills;
 using ZLinq;
 using ZLinq.Linq;
 
@@ -24,80 +17,6 @@ public sealed class PlayCharacterHandlerTests
 {
     private const long ConnectedSessionId = 42;
     private static readonly Serial AccountId = new(99);
-
-    [Fact]
-    public async Task HandleAsync_ValidSlot_BindsSessionAndEntersWorld()
-    {
-        var mobile = new MobileEntity { Id = new(7), Name = "Hero", AccountId = AccountId };
-        var sessions = new FakePlayerSessionService();
-        var mobiles = new FakeMobileService(AccountId, mobile);
-        var worldEntry = new RecordingWorldEntryService();
-        var handler = new PlayCharacterHandler(
-            new NoopEventBusService(),
-            new NoopNetworkSessionManager(),
-            sessions,
-            mobiles,
-            worldEntry
-        );
-
-        await handler.HandleAsync(Context(0));
-
-        Assert.True(sessions.EnterWorldCalled);
-        Assert.Equal(mobile.Id, sessions.EnteredCharacterSerial);
-        Assert.Same(mobile, worldEntry.Mobile);
-        Assert.Equal(ConnectedSessionId, worldEntry.SessionId);
-    }
-
-    [Fact]
-    public async Task HandleAsync_InvalidSlot_DoesNothing()
-    {
-        var mobile = new MobileEntity { Id = new(7), Name = "Hero", AccountId = AccountId };
-        var sessions = new FakePlayerSessionService();
-        var mobiles = new FakeMobileService(AccountId, mobile);
-        var worldEntry = new RecordingWorldEntryService();
-        var handler = new PlayCharacterHandler(
-            new NoopEventBusService(),
-            new NoopNetworkSessionManager(),
-            sessions,
-            mobiles,
-            worldEntry
-        );
-
-        await handler.HandleAsync(Context(5));
-
-        Assert.False(sessions.EnterWorldCalled);
-        Assert.Null(worldEntry.Mobile);
-    }
-
-    [Fact]
-    public async Task HandleAsync_UnauthenticatedSession_DoesNothing()
-    {
-        var mobile = new MobileEntity { Id = new Serial(7), AccountId = new Serial(99) };
-        var mobiles = new FakeMobileService(AccountId, mobile);
-        var sessions = new FakePlayerSessionService(authenticated: false);
-        var worldEntry = new RecordingWorldEntryService();
-        var handler = new PlayCharacterHandler(
-            new NoopEventBusService(),
-            new NoopNetworkSessionManager(),
-            sessions,
-            mobiles,
-            worldEntry
-        );
-
-        await handler.HandleAsync(Context(0));
-
-        Assert.Null(worldEntry.Mobile);
-        Assert.False(sessions.EnterWorldCalled);
-    }
-
-    private static PacketContext<PlayCharacterPacket> Context(int slot)
-        => new(
-            new FakeGameSession { SessionId = ConnectedSessionId },
-            new() { Slot = slot, CharacterName = "Hero" },
-            DateTimeOffset.UtcNow,
-            static (_, _, _) => Task.CompletedTask,
-            static () => [ConnectedSessionId]
-        );
 
     private sealed class RecordingWorldEntryService : IWorldEntryService
     {
@@ -150,7 +69,7 @@ public sealed class PlayCharacterHandlerTests
             EnterWorldCalled = true;
             EnteredCharacterSerial = characterSerial;
 
-            return new PlayerSession { SessionId = sessionId, CharacterSerial = characterSerial };
+            return new() { SessionId = sessionId, CharacterSerial = characterSerial };
         }
 
         public IReadOnlyCollection<PlayerSession> GetAll()
@@ -172,7 +91,7 @@ public sealed class PlayCharacterHandlerTests
         {
             if (sessionId == ConnectedSessionId)
             {
-                session = new PlayerSession { SessionId = ConnectedSessionId, UserId = _userId };
+                session = new() { SessionId = ConnectedSessionId, UserId = _userId };
 
                 return true;
             }
@@ -185,4 +104,78 @@ public sealed class PlayCharacterHandlerTests
         public PlayerSession UpdateClient(long sessionId, ClientVersion? clientVersion = null, int? viewRange = null)
             => throw new NotSupportedException();
     }
+
+    [Fact]
+    public async Task HandleAsync_InvalidSlot_DoesNothing()
+    {
+        var mobile = new MobileEntity { Id = new(7), Name = "Hero", AccountId = AccountId };
+        var sessions = new FakePlayerSessionService();
+        var mobiles = new FakeMobileService(AccountId, mobile);
+        var worldEntry = new RecordingWorldEntryService();
+        var handler = new PlayCharacterHandler(
+            new NoopEventBusService(),
+            new NoopNetworkSessionManager(),
+            sessions,
+            mobiles,
+            worldEntry
+        );
+
+        await handler.HandleAsync(Context(5));
+
+        Assert.False(sessions.EnterWorldCalled);
+        Assert.Null(worldEntry.Mobile);
+    }
+
+    [Fact]
+    public async Task HandleAsync_UnauthenticatedSession_DoesNothing()
+    {
+        var mobile = new MobileEntity { Id = new(7), AccountId = new(99) };
+        var mobiles = new FakeMobileService(AccountId, mobile);
+        var sessions = new FakePlayerSessionService(false);
+        var worldEntry = new RecordingWorldEntryService();
+        var handler = new PlayCharacterHandler(
+            new NoopEventBusService(),
+            new NoopNetworkSessionManager(),
+            sessions,
+            mobiles,
+            worldEntry
+        );
+
+        await handler.HandleAsync(Context(0));
+
+        Assert.Null(worldEntry.Mobile);
+        Assert.False(sessions.EnterWorldCalled);
+    }
+
+    [Fact]
+    public async Task HandleAsync_ValidSlot_BindsSessionAndEntersWorld()
+    {
+        var mobile = new MobileEntity { Id = new(7), Name = "Hero", AccountId = AccountId };
+        var sessions = new FakePlayerSessionService();
+        var mobiles = new FakeMobileService(AccountId, mobile);
+        var worldEntry = new RecordingWorldEntryService();
+        var handler = new PlayCharacterHandler(
+            new NoopEventBusService(),
+            new NoopNetworkSessionManager(),
+            sessions,
+            mobiles,
+            worldEntry
+        );
+
+        await handler.HandleAsync(Context(0));
+
+        Assert.True(sessions.EnterWorldCalled);
+        Assert.Equal(mobile.Id, sessions.EnteredCharacterSerial);
+        Assert.Same(mobile, worldEntry.Mobile);
+        Assert.Equal(ConnectedSessionId, worldEntry.SessionId);
+    }
+
+    private static PacketContext<PlayCharacterPacket> Context(int slot)
+        => new(
+            new FakeGameSession { SessionId = ConnectedSessionId },
+            new() { Slot = slot, CharacterName = "Hero" },
+            DateTimeOffset.UtcNow,
+            static (_, _, _) => Task.CompletedTask,
+            static () => [ConnectedSessionId]
+        );
 }

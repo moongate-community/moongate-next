@@ -1,6 +1,5 @@
 using Moongate.Network.UO.Packets.Outgoing.World;
 using Moongate.Tests.Support;
-using Xunit;
 
 namespace Moongate.Tests.Network.Packets;
 

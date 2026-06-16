@@ -57,38 +57,6 @@ public sealed class HairImageEndpointExtensionsTests : IDisposable
         }
     }
 
-    private static PagedResult<HairStyleSummary> Ok(IResult result)
-        => Assert.IsType<Ok<PagedResult<HairStyleSummary>>>(result).Value!;
-
-    [Fact]
-    public void HandleListHairStyles_NonFacial_ReturnsHairCatalog()
-    {
-        var page = Ok(HairImageEndpointExtensions.HandleListHairStyles(false, null));
-
-        Assert.Equal(10, page.TotalCount);
-        Assert.All(page.Items, item => Assert.False(item.IsFacial));
-        Assert.StartsWith("/api/mobiles/hair/", page.Items[0].ImageUrl);
-    }
-
-    [Fact]
-    public void HandleListHairStyles_Facial_ReturnsFacialCatalog()
-        => Assert.Equal(7, Ok(HairImageEndpointExtensions.HandleListHairStyles(true, null)).TotalCount);
-
-    [Fact]
-    public void HandleListHairStyles_Search_FiltersByName()
-        => Assert.Equal(1, Ok(HairImageEndpointExtensions.HandleListHairStyles(false, "topknot")).TotalCount);
-
-    [Fact]
-    public async Task HandleGetHairImage_RendersAndCaches()
-    {
-        var renderer = new FakeRenderer(true);
-
-        await HairImageEndpointExtensions.HandleGetHairImageAsync(0x203B, 0, null, false, renderer, _directories, CancellationToken.None);
-        await HairImageEndpointExtensions.HandleGetHairImageAsync(0x203B, 0, null, false, renderer, _directories, CancellationToken.None);
-
-        Assert.Equal(1, renderer.RenderCount);
-    }
-
     [Fact]
     public async Task HandleGetHairImage_RendererReturnsNull_ReturnsNotFound()
     {
@@ -104,4 +72,52 @@ public sealed class HairImageEndpointExtensionsTests : IDisposable
 
         Assert.IsType<NotFound>(result);
     }
+
+    [Fact]
+    public async Task HandleGetHairImage_RendersAndCaches()
+    {
+        var renderer = new FakeRenderer(true);
+
+        await HairImageEndpointExtensions.HandleGetHairImageAsync(
+            0x203B,
+            0,
+            null,
+            false,
+            renderer,
+            _directories,
+            CancellationToken.None
+        );
+        await HairImageEndpointExtensions.HandleGetHairImageAsync(
+            0x203B,
+            0,
+            null,
+            false,
+            renderer,
+            _directories,
+            CancellationToken.None
+        );
+
+        Assert.Equal(1, renderer.RenderCount);
+    }
+
+    [Fact]
+    public void HandleListHairStyles_Facial_ReturnsFacialCatalog()
+        => Assert.Equal(7, Ok(HairImageEndpointExtensions.HandleListHairStyles(true, null)).TotalCount);
+
+    [Fact]
+    public void HandleListHairStyles_NonFacial_ReturnsHairCatalog()
+    {
+        var page = Ok(HairImageEndpointExtensions.HandleListHairStyles(false, null));
+
+        Assert.Equal(10, page.TotalCount);
+        Assert.All(page.Items, item => Assert.False(item.IsFacial));
+        Assert.StartsWith("/api/mobiles/hair/", page.Items[0].ImageUrl);
+    }
+
+    [Fact]
+    public void HandleListHairStyles_Search_FiltersByName()
+        => Assert.Equal(1, Ok(HairImageEndpointExtensions.HandleListHairStyles(false, "topknot")).TotalCount);
+
+    private static PagedResult<HairStyleSummary> Ok(IResult result)
+        => Assert.IsType<Ok<PagedResult<HairStyleSummary>>>(result).Value!;
 }

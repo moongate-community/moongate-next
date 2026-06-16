@@ -18,16 +18,16 @@ public interface IMobileTemplateService
     /// <summary>Returns all registered templates.</summary>
     IReadOnlyCollection<MobileTemplateDefinition> GetAll();
 
+    /// <summary>
+    /// Atomically replaces the entire registry with <paramref name="templates" />.
+    /// Equivalent to a clear followed by <see cref="UpsertRange" />, but performed as a
+    /// single locked swap so concurrent readers never observe an empty registry.
+    /// </summary>
+    void ReplaceAll(IEnumerable<MobileTemplateDefinition> templates);
+
     /// <summary>Gets a template by id; returns false when absent.</summary>
     bool TryGet(string id, [NotNullWhen(true)] out MobileTemplateDefinition? definition);
 
     /// <summary>Adds or replaces templates by id.</summary>
     void UpsertRange(IEnumerable<MobileTemplateDefinition> templates);
-
-    /// <summary>
-    /// Atomically replaces the entire registry with <paramref name="templates"/>.
-    /// Equivalent to a clear followed by <see cref="UpsertRange"/>, but performed as a
-    /// single locked swap so concurrent readers never observe an empty registry.
-    /// </summary>
-    void ReplaceAll(IEnumerable<MobileTemplateDefinition> templates);
 }

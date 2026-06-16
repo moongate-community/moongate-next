@@ -26,7 +26,7 @@ public sealed class GumpStore : IGumpStore
     {
         ArgumentNullException.ThrowIfNull(resolver);
 
-        _index = new FileIndex(
+        _index = new(
             resolver.Resolve("gumpidx.mul"),
             resolver.Resolve("gumpart.mul"),
             resolver.Resolve("gumpartLegacyMUL.uop"),
@@ -120,24 +120,6 @@ public sealed class GumpStore : IGumpStore
         return TryReadGump(bwt);
     }
 
-    private static Image<Rgba32>? TryReadGump(byte[] data)
-    {
-        if (data.Length < 8)
-        {
-            return null;
-        }
-
-        var w = BinaryPrimitives.ReadUInt32LittleEndian(data.AsSpan(0, 4));
-        var h = BinaryPrimitives.ReadUInt32LittleEndian(data.AsSpan(4, 4));
-
-        if (w == 0 || w > 2048 || h == 0 || h > 4096)
-        {
-            return null;
-        }
-
-        return GumpDecoder.Decode(data.AsSpan(8), (int)w, (int)h);
-    }
-
     private static byte[]? ReadExactly(Stream stream, int length)
     {
         var buffer = new byte[length];
@@ -156,5 +138,23 @@ public sealed class GumpStore : IGumpStore
         }
 
         return read < length ? null : buffer;
+    }
+
+    private static Image<Rgba32>? TryReadGump(byte[] data)
+    {
+        if (data.Length < 8)
+        {
+            return null;
+        }
+
+        var w = BinaryPrimitives.ReadUInt32LittleEndian(data.AsSpan(0, 4));
+        var h = BinaryPrimitives.ReadUInt32LittleEndian(data.AsSpan(4, 4));
+
+        if (w == 0 || w > 2048 || h == 0 || h > 4096)
+        {
+            return null;
+        }
+
+        return GumpDecoder.Decode(data.AsSpan(8), (int)w, (int)h);
     }
 }

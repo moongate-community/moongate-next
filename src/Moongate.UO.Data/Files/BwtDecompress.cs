@@ -72,6 +72,35 @@ public static class BwtDecompress
         table.Sort();
     }
 
+    private static void Frequency(Span<int> input, Span<char> output)
+    {
+        Span<int> tmp = stackalloc int[256];
+        input.Slice(0, tmp.Length).CopyTo(tmp);
+
+        for (var i = 0; i < 256; i++)
+        {
+            uint value = 0;
+            byte index = 0;
+
+            for (var j = 0; j < 256; j++)
+            {
+                if (tmp[j] > value)
+                {
+                    index = (byte)j;
+                    value = (uint)tmp[j];
+                }
+            }
+
+            if (value == 0)
+            {
+                break;
+            }
+
+            output[i] = (char)index;
+            tmp[index] = 0;
+        }
+    }
+
     private static byte[] InternalDecompress(Span<byte> input, uint len)
     {
         Span<char> symbolTable = stackalloc char[256];
@@ -117,7 +146,10 @@ public static class BwtDecompress
 
         Frequency(partialInput, frequency);
 
-        for (int i = 0, m = 0; i < nonZeroCount; ++i)
+        for (int i = 0,
+                 m = 0;
+             i < nonZeroCount;
+             ++i)
         {
             var freq = (byte)frequency[i];
             symbolTable[input[m + 1024]] = (char)freq;
@@ -161,35 +193,6 @@ public static class BwtDecompress
         }
 
         return output;
-    }
-
-    private static void Frequency(Span<int> input, Span<char> output)
-    {
-        Span<int> tmp = stackalloc int[256];
-        input.Slice(0, tmp.Length).CopyTo(tmp);
-
-        for (var i = 0; i < 256; i++)
-        {
-            uint value = 0;
-            byte index = 0;
-
-            for (var j = 0; j < 256; j++)
-            {
-                if (tmp[j] > value)
-                {
-                    index = (byte)j;
-                    value = (uint)tmp[j];
-                }
-            }
-
-            if (value == 0)
-            {
-                break;
-            }
-
-            output[i] = (char)index;
-            tmp[index] = 0;
-        }
     }
 
     private static void ShiftLeft(Span<char> input, int max)
