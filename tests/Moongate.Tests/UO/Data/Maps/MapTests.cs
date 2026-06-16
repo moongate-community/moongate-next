@@ -23,7 +23,7 @@ public class MapTests
                 [new(1, 1, 0x15, 3)],
                 []
             );
-            var definition = new MapDefinition(0, 0, 0, 8, 8, "Test", MapRulesType.FeluccaRules);
+            var definition = new MapDefinition(0, 0, 0, 8, 8, "Test", MapRulesType.FeluccaRules, SeasonType.Spring);
             var map = new Map(definition, new UoFileResolver(dir.FullName));
 
             var tile = map.GetLandTile(1, 1);

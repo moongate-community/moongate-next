@@ -4,7 +4,7 @@ namespace Moongate.UO.Data.Data.Maps;
 
 /// <summary>
 /// Static metadata describing a UO map facet: its identity, the client file index it reads from,
-/// its dimensions in tiles, a display name, and its gameplay rules.
+/// its dimensions in tiles, a display name, its gameplay rules, and its default season.
 /// </summary>
 public sealed record MapDefinition(
     int Index,
@@ -13,5 +13,6 @@ public sealed record MapDefinition(
     int Width,
     int Height,
     string Name,
-    MapRulesType Rules
+    MapRulesType Rules,
+    SeasonType Season
 );
