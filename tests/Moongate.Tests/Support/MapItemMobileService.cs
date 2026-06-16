@@ -9,19 +9,19 @@ using Moongate.UO.Data.Types.Skills;
 namespace Moongate.Tests.Support;
 
 /// <summary>
-/// IMobileService stub that resolves a single supplied mobile by its serial.
+/// IMobileService stub that resolves the supplied mobiles by their serial (others return null).
 /// </summary>
 public sealed class MapItemMobileService : IMobileService
 {
-    private readonly MobileEntity _mobile;
+    private readonly Dictionary<Serial, MobileEntity> _mobiles;
 
-    public MapItemMobileService(MobileEntity mobile)
+    public MapItemMobileService(params MobileEntity[] mobiles)
     {
-        _mobile = mobile;
+        _mobiles = mobiles.ToDictionary(static mobile => mobile.Id);
     }
 
     public ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
-        => new(id == _mobile.Id ? _mobile : null);
+        => new(_mobiles.GetValueOrDefault(id));
 
     public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
         => throw new NotSupportedException();
