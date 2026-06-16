@@ -1,6 +1,7 @@
 using Moongate.Server.Data.World;
 using Moongate.Server.Interfaces.Services.World;
 using Moongate.Server.Services.World;
+using Moongate.UO.Data.Types.Maps;
 
 namespace Moongate.Tests.Server.World;
 
@@ -31,13 +32,13 @@ public sealed class RegionResolverServiceTests
     }
 
     [Fact]
-    public void GetMusic_ReturnsResolvedRegionMusicOrEmpty()
+    public void GetMusic_ReturnsResolvedRegionMusicType()
     {
-        var data = new FakeRegionDataService(RegionWithMusic("withMusic", 0, 1, new(0, 0, 10, 10), "Britain"));
+        var data = new FakeRegionDataService(RegionWithMusic("withMusic", 0, 1, new(0, 0, 10, 10), "Britain1"));
         var resolver = new RegionResolverService(data);
 
-        Assert.Equal("Britain", resolver.GetMusic(0, new(5, 5, 0)));
-        Assert.Equal("", resolver.GetMusic(0, new(999, 999, 0)));
+        Assert.Equal(MusicType.Britain1, resolver.GetMusic(0, new(5, 5, 0)));
+        Assert.Equal(MusicType.NoMusic, resolver.GetMusic(0, new(999, 999, 0)));
     }
 
     [Fact]

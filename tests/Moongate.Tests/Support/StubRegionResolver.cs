@@ -1,6 +1,7 @@
 using Moongate.Core.Geometry;
 using Moongate.Server.Data.World;
 using Moongate.Server.Interfaces.Services.World;
+using Moongate.UO.Data.Types.Maps;
 
 namespace Moongate.Tests.Support;
 
@@ -16,8 +17,8 @@ public sealed class StubRegionResolver : IRegionResolverService
         _region = region;
     }
 
-    public string GetMusic(int mapId, Point3D location)
-        => throw new NotSupportedException();
+    public MusicType GetMusic(int mapId, Point3D location)
+        => MusicTypeParser.FromName(_region?.Music);
 
     public RegionEntry? GetRegionByName(string name)
         => throw new NotSupportedException();

@@ -2,6 +2,7 @@ using Moongate.Core.Geometry;
 using Moongate.Server.Data.World;
 using Moongate.Server.Data.World.Internal;
 using Moongate.Server.Interfaces.Services.World;
+using Moongate.UO.Data.Types.Maps;
 
 namespace Moongate.Server.Services.World;
 
@@ -21,8 +22,8 @@ public sealed class RegionResolverService : IRegionResolverService
         _regionData = regionData;
     }
 
-    public string GetMusic(int mapId, Point3D location)
-        => ResolveRegion(mapId, location)?.Music ?? string.Empty;
+    public MusicType GetMusic(int mapId, Point3D location)
+        => MusicTypeParser.FromName(ResolveRegion(mapId, location)?.Music);
 
     public RegionEntry? GetRegionByName(string name)
     {
