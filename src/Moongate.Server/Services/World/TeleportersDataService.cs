@@ -3,6 +3,7 @@ using Moongate.Server.Data.World;
 using Moongate.Server.Interfaces.Services.World;
 using Moongate.Server.Services.World.Internal;
 using Moongate.Server.Services.WorldData;
+using Moongate.UO.Data.Utils;
 
 namespace Moongate.Server.Services.World;
 
@@ -11,8 +12,6 @@ namespace Moongate.Server.Services.World;
 /// </summary>
 public class TeleportersDataService : LazyDataService, ITeleportersDataService
 {
-    private const int SectorShift = 4;
-
     private readonly ServerAssetDataLoader? _loader;
     private readonly Lock _sync = new();
     private List<TeleporterEntry> _entries = [];
@@ -87,8 +86,8 @@ public class TeleportersDataService : LazyDataService, ITeleportersDataService
                                      .GroupBy(
                                          static entry => (
                                                              entry.SourceMapId,
-                                                             entry.SourceLocation.X >> SectorShift,
-                                                             entry.SourceLocation.Y >> SectorShift
+                                                             entry.SourceLocation.X >> MapSectorConsts.SectorShift,
+                                                             entry.SourceLocation.Y >> MapSectorConsts.SectorShift
                                                          )
                                      )
                                      .ToDictionary(
@@ -102,8 +101,8 @@ public class TeleportersDataService : LazyDataService, ITeleportersDataService
 
     public bool TryGetEntryAtLocation(int mapId, Point3D location, out TeleporterEntry entry)
     {
-        var sectorX = location.X >> SectorShift;
-        var sectorY = location.Y >> SectorShift;
+        var sectorX = location.X >> MapSectorConsts.SectorShift;
+        var sectorY = location.Y >> MapSectorConsts.SectorShift;
         var candidates = GetEntriesBySourceSector(mapId, sectorX, sectorY);
 
         for (var index = 0; index < candidates.Count; index++)

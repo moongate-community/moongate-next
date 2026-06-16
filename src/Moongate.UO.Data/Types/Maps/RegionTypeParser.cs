@@ -5,6 +5,7 @@ namespace Moongate.UO.Data.Types.Maps;
 /// </summary>
 public static class RegionTypeParser
 {
+    /// <summary>Maps a server-asset region type string to a <see cref="RegionType" /> (case-insensitive; null/unknown → Unknown).</summary>
     public static RegionType FromAssetType(string? assetType)
         => assetType?.Trim().ToLowerInvariant() switch
         {

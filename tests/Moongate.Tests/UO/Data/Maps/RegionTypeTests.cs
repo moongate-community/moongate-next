@@ -1,4 +1,3 @@
-using Moongate.Core.Geometry;
 using Moongate.Server.Data.World;
 using Moongate.UO.Data.Types.Maps;
 using Xunit;

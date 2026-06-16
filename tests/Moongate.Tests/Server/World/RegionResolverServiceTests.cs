@@ -73,9 +73,9 @@ public sealed class RegionResolverServiceTests
 
         for (var mapId = 0; mapId <= 1; mapId++)
         {
-            for (var x = 0; x <= 130; x += 7)
+            for (var x = 0; x <= 130; x += 4) // step 4 hits every sector boundary (multiples of 16) plus interior tiles
             {
-                for (var y = 0; y <= 130; y += 7)
+                for (var y = 0; y <= 130; y += 4)
                 {
                     var expected = BruteForce(regions, mapId, x, y);
                     var actual = resolver.ResolveRegion(mapId, new Point3D(x, y, 0));
