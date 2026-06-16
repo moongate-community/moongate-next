@@ -84,6 +84,25 @@ public sealed class WorldEntryServiceTests
         var season = outgoing.Sent.Select(s => s.Packet).OfType<SeasonPacket>().Single();
         Assert.Equal(SeasonType.Summer, season.Season);
     }
+
+    [Fact]
+    public async Task EnterWorldAsync_UnresolvedMap_FallsBackToSpring()
+    {
+        var mobile = new MobileEntity { Id = new Serial(7), Name = "Tom", AccountId = new Serial(99), MapId = 0 };
+
+        var outgoing = new RecordingOutgoingQueue();
+        var service = new WorldEntryService(
+            outgoing,
+            new MapItemService(Array.Empty<ItemEntity>()),
+            new NoopContainerContentService(),
+            new FakeMapService(),
+            new RecordingEventBus());
+
+        await service.EnterWorldAsync(42, mobile, CancellationToken.None);
+
+        var season = outgoing.Sent.Select(s => s.Packet).OfType<SeasonPacket>().Single();
+        Assert.Equal(SeasonType.Spring, season.Season);
+    }
 }
 
 /// <summary>
@@ -111,7 +130,7 @@ internal sealed class FakeMapService : IMapService
     public IReadOnlyList<Map> Maps => _map is null ? Array.Empty<Map>() : new[] { _map };
 
     public Map? GetMap(int mapId)
-        => _map;
+        => _map is not null && _map.MapId == mapId ? _map : null;
 }
 
 /// <summary>
