@@ -56,6 +56,7 @@ public sealed class MobileFactoryServiceTests
         private uint _next = 1;
 
         public List<(Serial MobileId, ItemLayerType Layer)> Equipped { get; } = [];
+        public MobileEntity? LastCreated { get; private set; }
 
         public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
             => throw new NotSupportedException();
@@ -66,6 +67,8 @@ public sealed class MobileFactoryServiceTests
             {
                 mobile.Id = new(_next++);
             }
+
+            LastCreated = mobile;
 
             return ValueTask.FromResult(mobile);
         }
@@ -252,7 +255,7 @@ public sealed class MobileFactoryServiceTests
     [Fact]
     public async Task CreatePlayerMobile_MapsAppearanceStatsAndPersists()
     {
-        var (factory, _, _) = New(Guard());
+        var (factory, _, mobiles) = New(Guard());
         var accountId = new Serial(42);
         var packet = MakeCreationPacket(
             name: "Hero",
@@ -296,6 +299,9 @@ public sealed class MobileFactoryServiceTests
         Assert.Equal(500d, mobile.Skills[UOSkillName.Swords].Base);
         Assert.Equal(300d, mobile.Skills[UOSkillName.Tactics].Value);
         Assert.Equal(4L, mobile.CustomProperties["profession"].IntegerValue);
+        Assert.Equal(0x203E, mobile.FacialHairStyle);
+        Assert.Equal((Hue)1110, mobile.FacialHairHue);
+        Assert.Same(mobile, mobiles.LastCreated);
     }
 
     [Fact]

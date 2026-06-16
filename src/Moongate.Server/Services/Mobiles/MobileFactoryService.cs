@@ -23,6 +23,10 @@ namespace Moongate.Server.Services.Mobiles;
 /// </summary>
 public sealed class MobileFactoryService : IMobileFactoryService
 {
+    private const int DefaultMaleBodyId = 400;
+    private const int DefaultFemaleBodyId = 401;
+    private const string ProfessionPropertyKey = "profession";
+
     private readonly ILogger _logger = Log.ForContext<MobileFactoryService>();
     private readonly IMobileTemplateService _templates;
     private readonly IItemTemplateService _items;
@@ -83,7 +87,7 @@ public sealed class MobileFactoryService : IMobileFactoryService
         ArgumentNullException.ThrowIfNull(packet);
 
         var female = packet.Gender == GenderType.Female;
-        var bodyId = packet.Race?.AliveBody(female) ?? (female ? 401 : 400);
+        var bodyId = packet.Race?.AliveBody(female) ?? (female ? DefaultFemaleBodyId : DefaultMaleBodyId);
         var city = packet.StartingCity;
 
         var mobile = new MobileEntity
@@ -121,7 +125,7 @@ public sealed class MobileFactoryService : IMobileFactoryService
             }
         };
 
-        mobile.CustomProperties["profession"] = new()
+        mobile.CustomProperties[ProfessionPropertyKey] = new()
         {
             Type = CustomPropertyType.Integer,
             IntegerValue = packet.ProfessionId
