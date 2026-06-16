@@ -1,8 +1,10 @@
 using DryIoc;
 using Moongate.Core.Ids;
 using Moongate.Persistence.Extensions.DryIoc;
+using Moongate.Server.Interfaces.Services;
 using Moongate.Server.Interfaces.Services.Items;
 using Moongate.Server.Services.Items;
+using Moongate.Server.Services.World;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Interfaces.Services;
 
@@ -25,6 +27,7 @@ public static class ItemContainerExtensions
         container.Register<IItemService, ItemService>(Reuse.Singleton);
         container.Register<IItemFactoryService, ItemFactoryService>(Reuse.Singleton);
         container.Register<IContainerContentService, ContainerContentService>(Reuse.Singleton);
+        container.Register<IWorldEntryService, WorldEntryService>(Reuse.Singleton);
 
         return container;
     }
