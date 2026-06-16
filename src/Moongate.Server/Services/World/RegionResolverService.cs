@@ -21,6 +21,24 @@ public sealed class RegionResolverService : IRegionResolverService
         _regionData = regionData;
     }
 
+    public string GetMusic(int mapId, Point3D location)
+        => ResolveRegion(mapId, location)?.Music ?? string.Empty;
+
+    public RegionEntry? GetRegionByName(string name)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+
+        foreach (var region in _regionData.GetAllEntries())
+        {
+            if (string.Equals(region.Name, name, StringComparison.OrdinalIgnoreCase))
+            {
+                return region;
+            }
+        }
+
+        return null;
+    }
+
     public RegionEntry? ResolveRegion(int mapId, Point3D location)
     {
         var key = RegionSectorIndex.SectorKey(mapId, location.X, location.Y);
@@ -38,24 +56,6 @@ public sealed class RegionResolverService : IRegionResolverService
                 {
                     return region;
                 }
-            }
-        }
-
-        return null;
-    }
-
-    public string GetMusic(int mapId, Point3D location)
-        => ResolveRegion(mapId, location)?.Music ?? string.Empty;
-
-    public RegionEntry? GetRegionByName(string name)
-    {
-        ArgumentNullException.ThrowIfNull(name);
-
-        foreach (var region in _regionData.GetAllEntries())
-        {
-            if (string.Equals(region.Name, name, StringComparison.OrdinalIgnoreCase))
-            {
-                return region;
             }
         }
 

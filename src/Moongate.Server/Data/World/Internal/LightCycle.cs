@@ -21,17 +21,17 @@ public static class LightCycle
             _    => NightLevel
         };
 
-    /// <summary>Elapsed UO minutes since the world start, given the real-seconds-per-UO-minute rate.</summary>
-    public static double TotalUoMinutes(DateTime utcNow, DateTime worldStartUtc, double secondsPerUoMinute)
-        => (utcNow - worldStartUtc).TotalSeconds / secondsPerUoMinute;
-
     /// <summary>Normalizes total UO minutes to a 24-hour time-of-day (wraps negatives).</summary>
     public static (int Hour, int Minute, int Second) TimeOfDay(double totalUoMinutes)
     {
         var whole = (long)Math.Floor(totalUoMinutes);
-        var normalized = (int)(((whole % MinutesPerDay) + MinutesPerDay) % MinutesPerDay);
+        var normalized = (int)((whole % MinutesPerDay + MinutesPerDay) % MinutesPerDay);
         var second = (int)((totalUoMinutes - whole) * 60);
 
         return (normalized / 60, normalized % 60, second);
     }
+
+    /// <summary>Elapsed UO minutes since the world start, given the real-seconds-per-UO-minute rate.</summary>
+    public static double TotalUoMinutes(DateTime utcNow, DateTime worldStartUtc, double secondsPerUoMinute)
+        => (utcNow - worldStartUtc).TotalSeconds / secondsPerUoMinute;
 }

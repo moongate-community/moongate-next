@@ -1,6 +1,5 @@
 using Moongate.Network.UO.Packets.Incoming.Player;
 using Moongate.Network.UO.Types.Player;
-using Xunit;
 
 namespace Moongate.Tests.Network.Packets;
 
@@ -9,7 +8,7 @@ public sealed class GetPlayerStatusPacketTests
     [Fact]
     public void ParsePayload_ReadsStatusTypeAndSerial()
     {
-        var raw = BuildGetPlayerStatus(GetPlayerStatusType.BasicStatus, serial: 0x00000001);
+        var raw = BuildGetPlayerStatus(GetPlayerStatusType.BasicStatus, 0x00000001);
 
         var packet = new GetPlayerStatusPacket();
         var parsed = packet.TryParse(raw);

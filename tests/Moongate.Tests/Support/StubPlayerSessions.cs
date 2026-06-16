@@ -22,17 +22,11 @@ public sealed class StubPlayerSessions : IPlayerSessionService
 
     public int Count => _sessions.Length;
 
-    public void Set(params PlayerSession[] sessions)
-        => _sessions = sessions ?? [];
+    public PlayerSession Authenticate(long sessionId, Serial userId, string username, DateTimeOffset authenticatedAt)
+        => throw new NotSupportedException();
 
     public void Clear()
         => _sessions = [];
-
-    public IReadOnlyCollection<PlayerSession> GetAll()
-        => _sessions;
-
-    public PlayerSession Authenticate(long sessionId, Serial userId, string username, DateTimeOffset authenticatedAt)
-        => throw new NotSupportedException();
 
     public bool Disconnect(long sessionId, DateTimeOffset disconnectedAt)
         => throw new NotSupportedException();
@@ -45,6 +39,9 @@ public sealed class StubPlayerSessions : IPlayerSessionService
     )
         => throw new NotSupportedException();
 
+    public IReadOnlyCollection<PlayerSession> GetAll()
+        => _sessions;
+
     public PlayerSession GetOrCreateConnected(long sessionId, string? remoteEndPoint, DateTimeOffset connectedAt)
         => throw new NotSupportedException();
 
@@ -53,6 +50,9 @@ public sealed class StubPlayerSessions : IPlayerSessionService
 
     public bool Remove(long sessionId)
         => throw new NotSupportedException();
+
+    public void Set(params PlayerSession[] sessions)
+        => _sessions = sessions ?? [];
 
     public bool TryGetByMobileSerial(Serial mobileSerial, out PlayerSession session)
         => throw new NotSupportedException();

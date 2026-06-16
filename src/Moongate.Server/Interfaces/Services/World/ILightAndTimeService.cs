@@ -16,6 +16,9 @@ public interface ILightAndTimeService : IMoongateService
     DateTime GetWorldTime(DateTime? utcNow = null);
 
     /// <summary>Forces a global light level (0-255), or clears the override with null.</summary>
-    /// <remarks><paramref name="applyImmediately" /> = true triggers a synchronous broadcast pass; do not call it from the network I/O thread or an async context.</remarks>
+    /// <remarks>
+    /// <paramref name="applyImmediately" /> = true triggers a synchronous broadcast pass; do not call it from the network
+    /// I/O thread or an async context.
+    /// </remarks>
     void SetGlobalLightOverride(int? lightLevel, bool applyImmediately = true);
 }

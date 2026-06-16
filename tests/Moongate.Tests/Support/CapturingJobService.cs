@@ -11,6 +11,24 @@ public sealed class CapturingJobService : IJobService
 {
     private Action? _handler;
 
+    public bool Cancel(string jobId)
+        => true;
+
+    public IReadOnlyList<JobSnapshot> GetJobs()
+        => [];
+
+    public void Invoke()
+        => _handler?.Invoke();
+
+    public string RegisterOnce(
+        string name,
+        TimeSpan delay,
+        Action handler,
+        string? description = null,
+        JobSourceType source = JobSourceType.CSharp
+    )
+        => throw new NotSupportedException();
+
     public string RegisterRecurring(
         string name,
         TimeSpan interval,
@@ -24,24 +42,6 @@ public sealed class CapturingJobService : IJobService
 
         return "capturing-job";
     }
-
-    public void Invoke()
-        => _handler?.Invoke();
-
-    public bool Cancel(string jobId)
-        => true;
-
-    public IReadOnlyList<JobSnapshot> GetJobs()
-        => [];
-
-    public string RegisterOnce(
-        string name,
-        TimeSpan delay,
-        Action handler,
-        string? description = null,
-        JobSourceType source = JobSourceType.CSharp
-    )
-        => throw new NotSupportedException();
 
     public bool RunNow(string jobId)
         => throw new NotSupportedException();

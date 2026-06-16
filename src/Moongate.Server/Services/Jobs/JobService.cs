@@ -89,7 +89,7 @@ public sealed class JobService : IJobService
         ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(delay, TimeSpan.Zero);
 
         var entry = NewEntry(name, description, source, delay, false, handler);
-        var timerId = _timers.RegisterTimer(name, delay, () => Execute(entry), delay, false);
+        var timerId = _timers.RegisterTimer(name, delay, () => Execute(entry), delay);
 
         lock (_sync)
         {
@@ -146,8 +146,7 @@ public sealed class JobService : IJobService
             entry.Name,
             entry.Interval,
             () => Execute(entry),
-            TimeSpan.FromMilliseconds(1),
-            false
+            TimeSpan.FromMilliseconds(1)
         );
 
         return true;

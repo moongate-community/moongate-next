@@ -211,21 +211,7 @@ public sealed class MobileFactoryServiceTests
     {
         var (factory, _, mobiles) = New(Guard());
         var accountId = new Serial(42);
-        var packet = MakeCreationPacket(
-            "Hero",
-            GenderType.Male,
-            0,
-            60,
-            50,
-            25,
-            1002,
-            0x203B,
-            1110,
-            0x203E,
-            1110,
-            4,
-            skills: [(UOSkillName.Swords, 50), (UOSkillName.Tactics, 30)]
-        );
+        var packet = MakeCreationPacket(skills: [(UOSkillName.Swords, 50), (UOSkillName.Tactics, 30)]);
 
         var mobile = await factory.CreatePlayerMobile(packet, accountId);
 

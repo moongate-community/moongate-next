@@ -7,6 +7,33 @@ namespace Moongate.Tests.UO.Data.Maps;
 public class MapServiceTests
 {
     [Fact]
+    public void GetMap_ExposesSeasonRulesAndInternalFacet()
+    {
+        var dir = Directory.CreateTempSubdirectory("nr-uo-");
+
+        try
+        {
+            var service = new MapService(new UoFileResolver(dir.FullName));
+
+            Assert.Equal(SeasonType.Desolation, service.GetMap(0)!.Season);
+            Assert.Equal(MapRulesType.FeluccaRules, service.GetMap(0)!.Rules);
+            Assert.Equal(SeasonType.Spring, service.GetMap(1)!.Season);
+            Assert.Equal(MapRulesType.TrammelRules, service.GetMap(1)!.Rules);
+            Assert.Equal(SeasonType.Summer, service.GetMap(2)!.Season);
+
+            var internalMap = service.GetMap(0x7F);
+            Assert.NotNull(internalMap);
+            Assert.Equal("Internal", internalMap!.Name);
+            Assert.Equal(SeasonType.Spring, internalMap.Season);
+            Assert.Equal(MapRulesType.Internal, internalMap.Rules);
+        }
+        finally
+        {
+            dir.Delete(true);
+        }
+    }
+
+    [Fact]
     public void GetMap_StandardFacet_ReturnsExpectedDimensions()
     {
         var dir = Directory.CreateTempSubdirectory("nr-uo-");
@@ -39,33 +66,6 @@ public class MapServiceTests
             var service = new MapService(new UoFileResolver(dir.FullName));
 
             Assert.Null(service.GetMap(999));
-        }
-        finally
-        {
-            dir.Delete(true);
-        }
-    }
-
-    [Fact]
-    public void GetMap_ExposesSeasonRulesAndInternalFacet()
-    {
-        var dir = Directory.CreateTempSubdirectory("nr-uo-");
-
-        try
-        {
-            var service = new MapService(new UoFileResolver(dir.FullName));
-
-            Assert.Equal(SeasonType.Desolation, service.GetMap(0)!.Season);
-            Assert.Equal(MapRulesType.FeluccaRules, service.GetMap(0)!.Rules);
-            Assert.Equal(SeasonType.Spring, service.GetMap(1)!.Season);
-            Assert.Equal(MapRulesType.TrammelRules, service.GetMap(1)!.Rules);
-            Assert.Equal(SeasonType.Summer, service.GetMap(2)!.Season);
-
-            var internalMap = service.GetMap(0x7F);
-            Assert.NotNull(internalMap);
-            Assert.Equal("Internal", internalMap!.Name);
-            Assert.Equal(SeasonType.Spring, internalMap.Season);
-            Assert.Equal(MapRulesType.Internal, internalMap.Rules);
         }
         finally
         {

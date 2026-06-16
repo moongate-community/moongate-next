@@ -66,31 +66,9 @@ public sealed class WorldEntryServiceTests
     }
 
     [Fact]
-    public async Task EnterWorldAsync_UsesMapSeason()
-    {
-        var mobile = new MobileEntity { Id = new Serial(7), Name = "Tom", AccountId = new Serial(99), MapId = 0 };
-        var definition = new MapDefinition(0, 0, 0, 7168, 4096, "Felucca", MapRulesType.FeluccaRules, SeasonType.Summer);
-        var map = new Map(definition, new NoopFileResolver());
-
-        var outgoing = new RecordingOutgoingQueue();
-        var service = new WorldEntryService(
-            outgoing,
-            new MapItemService(Array.Empty<ItemEntity>()),
-            new NoopContainerContentService(),
-            new FakeMapService(map),
-            new RecordingEventBus(),
-            new FakeLightAndTimeService());
-
-        await service.EnterWorldAsync(42, mobile, CancellationToken.None);
-
-        var season = outgoing.Sent.Select(s => s.Packet).OfType<SeasonPacket>().Single();
-        Assert.Equal(SeasonType.Summer, season.Season);
-    }
-
-    [Fact]
     public async Task EnterWorldAsync_UnresolvedMap_FallsBackToSpring()
     {
-        var mobile = new MobileEntity { Id = new Serial(7), Name = "Tom", AccountId = new Serial(99), MapId = 0 };
+        var mobile = new MobileEntity { Id = new(7), Name = "Tom", AccountId = new(99), MapId = 0 };
 
         var outgoing = new RecordingOutgoingQueue();
         var service = new WorldEntryService(
@@ -99,7 +77,8 @@ public sealed class WorldEntryServiceTests
             new NoopContainerContentService(),
             new FakeMapService(),
             new RecordingEventBus(),
-            new FakeLightAndTimeService());
+            new FakeLightAndTimeService()
+        );
 
         await service.EnterWorldAsync(42, mobile, CancellationToken.None);
 
@@ -110,7 +89,7 @@ public sealed class WorldEntryServiceTests
     [Fact]
     public async Task EnterWorldAsync_UsesLightAndTimeService()
     {
-        var mobile = new MobileEntity { Id = new Serial(7), Name = "Tom", AccountId = new Serial(99), MapId = 0 };
+        var mobile = new MobileEntity { Id = new(7), Name = "Tom", AccountId = new(99), MapId = 0 };
         var outgoing = new RecordingOutgoingQueue();
         var service = new WorldEntryService(
             outgoing,
@@ -118,15 +97,39 @@ public sealed class WorldEntryServiceTests
             new NoopContainerContentService(),
             new FakeMapService(),
             new RecordingEventBus(),
-            new FakeLightAndTimeService());
+            new FakeLightAndTimeService()
+        );
 
         await service.EnterWorldAsync(42, mobile, CancellationToken.None);
 
         var overall = outgoing.Sent.Select(s => s.Packet).OfType<OverallLightLevelPacket>().Single();
-        Assert.Equal((LightLevelType)(byte)12, overall.LightLevel);
+        Assert.Equal((LightLevelType)12, overall.LightLevel);
 
         var setTime = outgoing.Sent.Select(s => s.Packet).OfType<SetTimePacket>().Single();
         Assert.Equal(18, setTime.Time.Hour);
+    }
+
+    [Fact]
+    public async Task EnterWorldAsync_UsesMapSeason()
+    {
+        var mobile = new MobileEntity { Id = new(7), Name = "Tom", AccountId = new(99), MapId = 0 };
+        var definition = new MapDefinition(0, 0, 0, 7168, 4096, "Felucca", MapRulesType.FeluccaRules, SeasonType.Summer);
+        var map = new Map(definition, new NoopFileResolver());
+
+        var outgoing = new RecordingOutgoingQueue();
+        var service = new WorldEntryService(
+            outgoing,
+            new MapItemService(Array.Empty<ItemEntity>()),
+            new NoopContainerContentService(),
+            new FakeMapService(map),
+            new RecordingEventBus(),
+            new FakeLightAndTimeService()
+        );
+
+        await service.EnterWorldAsync(42, mobile, CancellationToken.None);
+
+        var season = outgoing.Sent.Select(s => s.Packet).OfType<SeasonPacket>().Single();
+        Assert.Equal(SeasonType.Summer, season.Season);
     }
 }
 
@@ -171,4 +174,3 @@ internal sealed class NoopFileResolver : IUoFileResolver
     public string? Resolve(string fileName)
         => null;
 }
-

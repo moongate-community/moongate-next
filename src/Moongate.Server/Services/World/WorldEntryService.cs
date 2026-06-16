@@ -3,7 +3,6 @@ using Moongate.Network.UO.Packets.Outgoing.Entity;
 using Moongate.Network.UO.Packets.Outgoing.Login;
 using Moongate.Network.UO.Packets.Outgoing.World;
 using Moongate.Network.UO.Types.Environment;
-using Moongate.UO.Data.Types.Maps;
 using Moongate.Server.Data.Events;
 using Moongate.Server.Data.Internal.Packets;
 using Moongate.Server.Interfaces.Network;
@@ -14,6 +13,7 @@ using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Entities.Mobiles;
 using Moongate.UO.Data.Interfaces.Maps;
 using Moongate.UO.Data.Interfaces.Services;
+using Moongate.UO.Data.Types.Maps;
 
 namespace Moongate.Server.Services.World;
 
@@ -108,9 +108,13 @@ public sealed class WorldEntryService : IWorldEntryService
         }
 
         _outgoing.Enqueue(sessionId, new WarModePacket());
-        _outgoing.Enqueue(sessionId, new OverallLightLevelPacket(
-            (LightLevelType)(byte)_lightAndTime.ComputeGlobalLightLevel(mobile.MapId, mobile.Location)));
-        _outgoing.Enqueue(sessionId, new PersonalLightLevelPacket(mobile.Id, (LightLevelType)0));
+        _outgoing.Enqueue(
+            sessionId,
+            new OverallLightLevelPacket(
+                (LightLevelType)(byte)_lightAndTime.ComputeGlobalLightLevel(mobile.MapId, mobile.Location)
+            )
+        );
+        _outgoing.Enqueue(sessionId, new PersonalLightLevelPacket(mobile.Id, 0));
         _outgoing.Enqueue(sessionId, new PaperdollPacket(mobile, mobile.Name ?? string.Empty));
         _outgoing.Enqueue(sessionId, new LoginCompletePacket());
         _outgoing.Enqueue(sessionId, new SetTimePacket(_lightAndTime.GetWorldTime()));

@@ -36,7 +36,7 @@ public class PingHandler : PacketHandlerBase<PingMessagePacket>
 
             playerSession.PingSequence += 1;
 
-            var pongPacket = new PingMessagePacket()
+            var pongPacket = new PingMessagePacket
             {
                 Sequence = playerSession.PingSequence
             };

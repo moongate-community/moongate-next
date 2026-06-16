@@ -22,6 +22,5 @@ public readonly record struct RegionAreaEntry
     }
 
     public bool Contains(int x, int y)
-        => x >= Math.Min(X1, X2) && x <= Math.Max(X1, X2)
-        && y >= Math.Min(Y1, Y2) && y <= Math.Max(Y1, Y2);
+        => x >= Math.Min(X1, X2) && x <= Math.Max(X1, X2) && y >= Math.Min(Y1, Y2) && y <= Math.Max(Y1, Y2);
 }

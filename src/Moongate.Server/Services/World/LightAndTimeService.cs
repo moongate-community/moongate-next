@@ -1,3 +1,4 @@
+using System.Globalization;
 using Moongate.Abstractions.Interfaces.Jobs;
 using Moongate.Abstractions.Interfaces.Player;
 using Moongate.Abstractions.Types.Player;
@@ -62,13 +63,14 @@ public sealed class LightAndTimeService : ILightAndTimeService
 
         _secondsPerUoMinute = config.LightSecondsPerUoMinute > 0 ? config.LightSecondsPerUoMinute : 5.0;
         _worldStartUtc = DateTime.TryParse(
-            config.LightWorldStartUtc,
-            null,
-            System.Globalization.DateTimeStyles.AdjustToUniversal | System.Globalization.DateTimeStyles.AssumeUniversal,
-            out var parsed
-        )
-            ? parsed
-            : new DateTime(1997, 9, 1, 0, 0, 0, DateTimeKind.Utc);
+                             config.LightWorldStartUtc,
+                             null,
+                             DateTimeStyles.AdjustToUniversal |
+                             DateTimeStyles.AssumeUniversal,
+                             out var parsed
+                         )
+                             ? parsed
+                             : new(1997, 9, 1, 0, 0, 0, DateTimeKind.Utc);
     }
 
     public int ComputeGlobalLightLevel(int mapId, Point3D location, DateTime? utcNow = null)
@@ -91,9 +93,7 @@ public sealed class LightAndTimeService : ILightAndTimeService
         }
 
         var now = utcNow?.ToUniversalTime() ?? DateTime.UtcNow;
-        var minutes = LightCycle.TotalUoMinutes(now, _worldStartUtc, _secondsPerUoMinute)
-                      + mapId * 320
-                      + location.X / 16.0;
+        var minutes = LightCycle.TotalUoMinutes(now, _worldStartUtc, _secondsPerUoMinute) + mapId * 320 + location.X / 16.0;
         var (hour, minute, _) = LightCycle.TimeOfDay(minutes);
 
         return Math.Clamp(LightCycle.LevelFromHourMinute(hour, minute), 0, byte.MaxValue);
@@ -177,9 +177,13 @@ public sealed class LightAndTimeService : ILightAndTimeService
                     _lastBySession[session.SessionId] = level;
                 }
 
-                _outgoing.Enqueue(session.SessionId, new OverallLightLevelPacket((LightLevelType)(byte)level));
+                _outgoing.Enqueue(session.SessionId, new OverallLightLevelPacket((LightLevelType)level));
+
                 // Personal light stays 0 in the MVP (no personal light sources yet); resent alongside any overall change.
-                _outgoing.Enqueue(session.SessionId, new PersonalLightLevelPacket(mobile.Id, (LightLevelType)PersonalLightLevel));
+                _outgoing.Enqueue(
+                    session.SessionId,
+                    new PersonalLightLevelPacket(mobile.Id, PersonalLightLevel)
+                );
             }
             catch (Exception ex)
             {

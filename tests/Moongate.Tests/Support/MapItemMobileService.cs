@@ -20,9 +20,6 @@ public sealed class MapItemMobileService : IMobileService
         _mobiles = mobiles.ToDictionary(static mobile => mobile.Id);
     }
 
-    public ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
-        => new(_mobiles.GetValueOrDefault(id));
-
     public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
         => throw new NotSupportedException();
 
@@ -45,6 +42,9 @@ public sealed class MapItemMobileService : IMobileService
         CancellationToken cancellationToken = default
     )
         => throw new NotSupportedException();
+
+    public ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
+        => new(_mobiles.GetValueOrDefault(id));
 
     public SkillEntry GetSkill(MobileEntity mobile, UOSkillName skill)
         => throw new NotSupportedException();
