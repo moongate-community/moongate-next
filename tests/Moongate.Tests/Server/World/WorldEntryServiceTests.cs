@@ -1,15 +1,19 @@
 using Moongate.Core.Ids;
 using Moongate.Network.UO.Packets.Outgoing.Entity;
 using Moongate.Network.UO.Packets.Outgoing.Login;
+using Moongate.Network.UO.Packets.Outgoing.World;
 using Moongate.Server.Data.Events;
 using Moongate.Server.Interfaces.Services.Items;
 using Moongate.Server.Services.World;
 using Moongate.Tests.Support;
+using Moongate.UO.Data.Data.Maps;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Entities.Mobiles;
+using Moongate.UO.Data.Interfaces.Files;
 using Moongate.UO.Data.Interfaces.Maps;
 using Moongate.UO.Data.Maps;
 using Moongate.UO.Data.Types.Items;
+using Moongate.UO.Data.Types.Maps;
 
 namespace Moongate.Tests.Server.World;
 
@@ -59,6 +63,46 @@ public sealed class WorldEntryServiceTests
                                        .Single();
         Assert.Contains(containerContent.Items, i => i.Id == pack.Id);
     }
+
+    [Fact]
+    public async Task EnterWorldAsync_UsesMapSeason()
+    {
+        var mobile = new MobileEntity { Id = new Serial(7), Name = "Tom", AccountId = new Serial(99), MapId = 0 };
+        var definition = new MapDefinition(0, 0, 0, 7168, 4096, "Felucca", MapRulesType.FeluccaRules, SeasonType.Summer);
+        var map = new Map(definition, new NoopFileResolver());
+
+        var outgoing = new RecordingOutgoingQueue();
+        var service = new WorldEntryService(
+            outgoing,
+            new MapItemService(Array.Empty<ItemEntity>()),
+            new NoopContainerContentService(),
+            new FakeMapService(map),
+            new RecordingEventBus());
+
+        await service.EnterWorldAsync(42, mobile, CancellationToken.None);
+
+        var season = outgoing.Sent.Select(s => s.Packet).OfType<SeasonPacket>().Single();
+        Assert.Equal(SeasonType.Summer, season.Season);
+    }
+
+    [Fact]
+    public async Task EnterWorldAsync_UnresolvedMap_FallsBackToSpring()
+    {
+        var mobile = new MobileEntity { Id = new Serial(7), Name = "Tom", AccountId = new Serial(99), MapId = 0 };
+
+        var outgoing = new RecordingOutgoingQueue();
+        var service = new WorldEntryService(
+            outgoing,
+            new MapItemService(Array.Empty<ItemEntity>()),
+            new NoopContainerContentService(),
+            new FakeMapService(),
+            new RecordingEventBus());
+
+        await service.EnterWorldAsync(42, mobile, CancellationToken.None);
+
+        var season = outgoing.Sent.Select(s => s.Packet).OfType<SeasonPacket>().Single();
+        Assert.Equal(SeasonType.Spring, season.Season);
+    }
 }
 
 /// <summary>
@@ -71,13 +115,34 @@ internal sealed class NoopContainerContentService : IContainerContentService
 }
 
 /// <summary>
-/// IMapService stub. Map has no usable public constructor, so GetMap returns null
-/// and the service falls back to width/height 0.
+/// IMapService stub. When constructed without a map, GetMap returns null
+/// and the service falls back to width/height 0. Supply a map to test season forwarding.
 /// </summary>
 internal sealed class FakeMapService : IMapService
 {
-    public IReadOnlyList<Map> Maps => Array.Empty<Map>();
+    private readonly Map? _map;
+
+    public FakeMapService(Map? map = null)
+    {
+        _map = map;
+    }
+
+    public IReadOnlyList<Map> Maps => _map is null ? Array.Empty<Map>() : new[] { _map };
 
     public Map? GetMap(int mapId)
+        => _map is not null && _map.MapId == mapId ? _map : null;
+}
+
+/// <summary>
+/// IUoFileResolver stub. Tiles are never queried in unit tests so all members are no-ops.
+/// </summary>
+internal sealed class NoopFileResolver : IUoFileResolver
+{
+    public string RootDirectory => string.Empty;
+
+    public bool Contains(string fileName)
+        => false;
+
+    public string? Resolve(string fileName)
         => null;
 }

@@ -158,7 +158,7 @@ public class MapImageServiceTests
     private static MapImageService BuildService(string directory, ItemData staticTileData = default)
     {
         var resolver = new UoFileResolver(directory);
-        var map = new Map(new(0, 0, 0, 8, 8, "Test", MapRulesType.FeluccaRules), resolver);
+        var map = new Map(new(0, 0, 0, 8, 8, "Test", MapRulesType.FeluccaRules, SeasonType.Spring), resolver);
 
         return new(
             new TestMapService(map),

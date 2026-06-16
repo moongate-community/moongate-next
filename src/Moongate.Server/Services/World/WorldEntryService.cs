@@ -3,6 +3,7 @@ using Moongate.Network.UO.Packets.Outgoing.Entity;
 using Moongate.Network.UO.Packets.Outgoing.Login;
 using Moongate.Network.UO.Packets.Outgoing.World;
 using Moongate.Network.UO.Types.Environment;
+using Moongate.UO.Data.Types.Maps;
 using Moongate.Server.Data.Events;
 using Moongate.Server.Data.Internal.Packets;
 using Moongate.Server.Interfaces.Network;
@@ -62,7 +63,7 @@ public sealed class WorldEntryService : IWorldEntryService
         _outgoing.Enqueue(sessionId, new SupportFeaturesPacket());
         _outgoing.Enqueue(sessionId, new LoginConfirmPacket(mobile, mapWidth, mapHeight));
         _outgoing.Enqueue(sessionId, new SetMapPacket(mobile.MapId));
-        _outgoing.Enqueue(sessionId, new SeasonPacket(SeasonType.Spring));
+        _outgoing.Enqueue(sessionId, new SeasonPacket(map?.Season ?? SeasonType.Spring));
         _outgoing.Enqueue(sessionId, new DrawPlayerPacket(mobile));
         _outgoing.Enqueue(sessionId, new PlayerStatusPacket(mobile));
 

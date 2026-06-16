@@ -2,6 +2,7 @@ using Moongate.UO.Data.Data.Maps;
 using Moongate.UO.Data.Data.Tiles;
 using Moongate.UO.Data.Interfaces.Files;
 using Moongate.UO.Data.Tiles;
+using Moongate.UO.Data.Types.Maps;
 
 namespace Moongate.UO.Data.Maps;
 
@@ -33,6 +34,10 @@ public sealed class Map
     public int Width => _definition.Width;
 
     public int Height => _definition.Height;
+
+    public MapRulesType Rules => _definition.Rules;
+
+    public SeasonType Season => _definition.Season;
 
     public TileMatrix Tiles
         => _tiles ??= new(
