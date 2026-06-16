@@ -26,7 +26,7 @@ public readonly record struct RegionEntry
 
     public Point3D? GoLocation { get; }
 
-    public RegionType Kind => RegionTypeExtensions.FromAssetType(Type);
+    public RegionType Kind => RegionTypeParser.FromAssetType(Type);
 
     public RegionEntry(
         string type,

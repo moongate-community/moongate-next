@@ -20,7 +20,7 @@ public sealed class RegionTypeTests
     [InlineData("", RegionType.Unknown)]
     [InlineData(null, RegionType.Unknown)]
     public void FromAssetType_MapsKnownStrings(string? assetType, RegionType expected)
-        => Assert.Equal(expected, RegionTypeExtensions.FromAssetType(assetType));
+        => Assert.Equal(expected, RegionTypeParser.FromAssetType(assetType));
 
     [Fact]
     public void RegionEntry_Kind_ReflectsType()
@@ -29,8 +29,16 @@ public sealed class RegionTypeTests
             new[] { new RegionAreaEntry(0, 0, 10, 10) }, "", null, null);
 
         Assert.Equal(RegionType.Jail, entry.Kind);
-        Assert.True(entry.Area[0].Contains(5, 5));
-        Assert.True(entry.Area[0].Contains(0, 10));
-        Assert.False(entry.Area[0].Contains(11, 5));
+    }
+
+    [Fact]
+    public void RegionAreaEntry_Contains_IsInclusiveAndOrderRobust()
+    {
+        var area = new RegionAreaEntry(0, 0, 10, 10);
+
+        Assert.True(area.Contains(5, 5));
+        Assert.True(area.Contains(0, 10));   // inclusive
+        Assert.False(area.Contains(11, 5));
+        Assert.True(new RegionAreaEntry(10, 10, 0, 0).Contains(5, 5)); // order-robust
     }
 }
