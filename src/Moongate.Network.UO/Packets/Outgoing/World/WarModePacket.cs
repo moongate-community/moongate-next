@@ -1,14 +1,13 @@
 using Moongate.Network.Spans;
-using Moongate.Network.UO.Attributes;
 using Moongate.Network.UO.Base;
-using Moongate.Network.UO.Types.Packets;
 
 namespace Moongate.Network.UO.Packets.Outgoing.World;
 
 /// <summary>
 /// Outgoing "War Mode" (0x72): reports the player's combat stance (MVP: always peace).
+/// Outgoing-only: carries no <c>[PacketHandler]</c> because opcode 0x72 is already registered
+/// inbound by <c>RequestWarModePacket</c> (the packet registry rejects duplicate opcodes).
 /// </summary>
-[PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "War Mode")]
 public class WarModePacket : BaseGameNetworkPacket
 {
     private const byte OpCodeValue = 0x72;
