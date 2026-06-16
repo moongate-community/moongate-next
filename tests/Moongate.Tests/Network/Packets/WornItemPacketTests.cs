@@ -20,8 +20,11 @@ public sealed class WornItemPacketTests
 
         Assert.Equal(15, bytes.Length);
         Assert.Equal(0x2E, bytes[0]);
+        Assert.Equal(0x40000009u, ((uint)bytes[1] << 24) | ((uint)bytes[2] << 16) | ((uint)bytes[3] << 8) | bytes[4]);   // Item.Id @1..4
         Assert.Equal(0x1F03, (bytes[5] << 8) | bytes[6]);
+        Assert.Equal(0x00, bytes[7]); // padding byte
         Assert.Equal((byte)ItemLayerType.OuterTorso, bytes[8]);
+        Assert.Equal(0x55u, ((uint)bytes[9] << 24) | ((uint)bytes[10] << 16) | ((uint)bytes[11] << 8) | bytes[12]);      // Mobile.Id @9..12
         Assert.Equal(0x44, (bytes[13] << 8) | bytes[14]);
     }
 }

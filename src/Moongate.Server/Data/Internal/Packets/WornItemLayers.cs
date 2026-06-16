@@ -5,7 +5,7 @@ using Moongate.UO.Data.Types.Items;
 namespace Moongate.Server.Data.Internal.Packets;
 
 /// <summary>
-/// Selects the equipped layers that should be sent to clients as visible worn items.
+/// Selects the equipped layer/serial pairs that should be sent to clients as visible worn items.
 /// </summary>
 public static class WornItemLayers
 {
