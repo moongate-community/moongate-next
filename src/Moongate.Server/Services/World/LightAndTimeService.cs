@@ -149,7 +149,8 @@ public sealed class LightAndTimeService : ILightAndTimeService
                 continue;
             }
 
-            var mobile = _mobiles.Value.GetByIdAsync(serial).GetAwaiter().GetResult();
+            // AsTask() materializes the ValueTask before blocking (safe even if it is IValueTaskSource-backed).
+            var mobile = _mobiles.Value.GetByIdAsync(serial).AsTask().GetAwaiter().GetResult();
 
             if (mobile is null)
             {
@@ -171,6 +172,7 @@ public sealed class LightAndTimeService : ILightAndTimeService
             }
 
             _outgoing.Enqueue(session.SessionId, new OverallLightLevelPacket((LightLevelType)(byte)level));
+            // Personal light stays 0 in the MVP (no personal light sources yet); resent alongside any overall change.
             _outgoing.Enqueue(session.SessionId, new PersonalLightLevelPacket(mobile.Id, (LightLevelType)PersonalLightLevel));
         }
 
