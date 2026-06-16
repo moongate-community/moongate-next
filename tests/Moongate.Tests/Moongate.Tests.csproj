@@ -38,6 +38,7 @@
         <ProjectReference Include="..\Moongate.PluginFixtures.Empty\Moongate.PluginFixtures.Empty.csproj"/>
         <ProjectReference Include="..\Moongate.PluginFixtures.Multiple\Moongate.PluginFixtures.Multiple.csproj"/>
         <ProjectReference Include="..\..\src\Moongate.UO.Data\Moongate.UO.Data.csproj"/>
+        <ProjectReference Include="..\..\src\Moongate.Network.UO\Moongate.Network.UO.csproj"/>
     </ItemGroup>
 
 </Project>
