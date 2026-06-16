@@ -10,6 +10,8 @@ using Moongate.Server.Interfaces.Network;
 using Moongate.Server.Interfaces.Services.World;
 using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Types.Maps;
+using Serilog;
+using ILogger = Serilog.ILogger;
 
 namespace Moongate.Server.Services.World;
 
@@ -23,6 +25,7 @@ public sealed class LightAndTimeService : ILightAndTimeService
     private const int PersonalLightLevel = 0;
     private const string JobName = "light_and_time_update";
 
+    private readonly ILogger _logger = Log.ForContext<LightAndTimeService>();
     private readonly IPlayerSessionService _playerSessions;
     private readonly Lazy<IMobileService> _mobiles;
     private readonly IOutgoingPacketQueue _outgoing;
@@ -149,31 +152,44 @@ public sealed class LightAndTimeService : ILightAndTimeService
                 continue;
             }
 
-            // AsTask() materializes the ValueTask before blocking (safe even if it is IValueTaskSource-backed).
-            var mobile = _mobiles.Value.GetByIdAsync(serial).AsTask().GetAwaiter().GetResult();
-
-            if (mobile is null)
+            // A single bad session/mobile must not fail the whole recurring job for everyone.
+            try
             {
-                continue;
-            }
+                // AsTask() materializes the ValueTask before blocking (safe even if it is IValueTaskSource-backed).
+                var mobile = _mobiles.Value.GetByIdAsync(serial).AsTask().GetAwaiter().GetResult();
 
-            activeSessionIds.Add(session.SessionId);
-
-            var level = ComputeGlobalLightLevel(mobile.MapId, mobile.Location);
-
-            lock (_sync)
-            {
-                if (_lastBySession.TryGetValue(session.SessionId, out var last) && last == level)
+                if (mobile is null)
                 {
                     continue;
                 }
 
-                _lastBySession[session.SessionId] = level;
-            }
+                activeSessionIds.Add(session.SessionId);
 
-            _outgoing.Enqueue(session.SessionId, new OverallLightLevelPacket((LightLevelType)(byte)level));
-            // Personal light stays 0 in the MVP (no personal light sources yet); resent alongside any overall change.
-            _outgoing.Enqueue(session.SessionId, new PersonalLightLevelPacket(mobile.Id, (LightLevelType)PersonalLightLevel));
+                var level = ComputeGlobalLightLevel(mobile.MapId, mobile.Location);
+
+                lock (_sync)
+                {
+                    if (_lastBySession.TryGetValue(session.SessionId, out var last) && last == level)
+                    {
+                        continue;
+                    }
+
+                    _lastBySession[session.SessionId] = level;
+                }
+
+                _outgoing.Enqueue(session.SessionId, new OverallLightLevelPacket((LightLevelType)(byte)level));
+                // Personal light stays 0 in the MVP (no personal light sources yet); resent alongside any overall change.
+                _outgoing.Enqueue(session.SessionId, new PersonalLightLevelPacket(mobile.Id, (LightLevelType)PersonalLightLevel));
+            }
+            catch (Exception ex)
+            {
+                _logger.Warning(
+                    ex,
+                    "Light update failed for session {SessionId} (mobile {MobileSerial}); skipping",
+                    session.SessionId,
+                    serial
+                );
+            }
         }
 
         lock (_sync)
