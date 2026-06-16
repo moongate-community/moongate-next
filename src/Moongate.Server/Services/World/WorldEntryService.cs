@@ -9,6 +9,7 @@ using Moongate.Server.Data.Internal.Packets;
 using Moongate.Server.Interfaces.Network;
 using Moongate.Server.Interfaces.Services;
 using Moongate.Server.Interfaces.Services.Items;
+using Moongate.Server.Interfaces.Services.World;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Entities.Mobiles;
 using Moongate.UO.Data.Interfaces.Maps;
@@ -26,13 +27,15 @@ public sealed class WorldEntryService : IWorldEntryService
     private readonly IContainerContentService _contents;
     private readonly IMapService _maps;
     private readonly IEventBusService _events;
+    private readonly ILightAndTimeService _lightAndTime;
 
     public WorldEntryService(
         IOutgoingPacketQueue outgoing,
         IItemService items,
         IContainerContentService contents,
         IMapService maps,
-        IEventBusService events
+        IEventBusService events,
+        ILightAndTimeService lightAndTime
     )
     {
         ArgumentNullException.ThrowIfNull(outgoing);
@@ -40,12 +43,14 @@ public sealed class WorldEntryService : IWorldEntryService
         ArgumentNullException.ThrowIfNull(contents);
         ArgumentNullException.ThrowIfNull(maps);
         ArgumentNullException.ThrowIfNull(events);
+        ArgumentNullException.ThrowIfNull(lightAndTime);
 
         _outgoing = outgoing;
         _items = items;
         _contents = contents;
         _maps = maps;
         _events = events;
+        _lightAndTime = lightAndTime;
     }
 
     public async ValueTask EnterWorldAsync(
@@ -103,11 +108,12 @@ public sealed class WorldEntryService : IWorldEntryService
         }
 
         _outgoing.Enqueue(sessionId, new WarModePacket());
-        _outgoing.Enqueue(sessionId, new OverallLightLevelPacket(LightLevelType.Day));
-        _outgoing.Enqueue(sessionId, new PersonalLightLevelPacket(mobile.Id, LightLevelType.Day));
+        _outgoing.Enqueue(sessionId, new OverallLightLevelPacket(
+            (LightLevelType)(byte)_lightAndTime.ComputeGlobalLightLevel(mobile.MapId, mobile.Location)));
+        _outgoing.Enqueue(sessionId, new PersonalLightLevelPacket(mobile.Id, (LightLevelType)0));
         _outgoing.Enqueue(sessionId, new PaperdollPacket(mobile, mobile.Name ?? string.Empty));
         _outgoing.Enqueue(sessionId, new LoginCompletePacket());
-        _outgoing.Enqueue(sessionId, new SetTimePacket());
+        _outgoing.Enqueue(sessionId, new SetTimePacket(_lightAndTime.GetWorldTime()));
 
         _events.Publish(new PlayerCharacterLoggedInEvent(sessionId, mobile.AccountId, mobile.Id));
     }

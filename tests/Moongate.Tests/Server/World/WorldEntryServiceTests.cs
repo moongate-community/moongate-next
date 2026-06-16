@@ -2,6 +2,7 @@ using Moongate.Core.Ids;
 using Moongate.Network.UO.Packets.Outgoing.Entity;
 using Moongate.Network.UO.Packets.Outgoing.Login;
 using Moongate.Network.UO.Packets.Outgoing.World;
+using Moongate.Network.UO.Types.Environment;
 using Moongate.Server.Data.Events;
 using Moongate.Server.Interfaces.Services.Items;
 using Moongate.Server.Services.World;
@@ -40,7 +41,7 @@ public sealed class WorldEntryServiceTests
         var contents = new NoopContainerContentService();
         var maps = new FakeMapService();
         var events = new RecordingEventBus();
-        var service = new WorldEntryService(outgoing, items, contents, maps, events);
+        var service = new WorldEntryService(outgoing, items, contents, maps, events, new FakeLightAndTimeService());
 
         await service.EnterWorldAsync(42, mobile, CancellationToken.None);
 
@@ -77,7 +78,8 @@ public sealed class WorldEntryServiceTests
             new MapItemService(Array.Empty<ItemEntity>()),
             new NoopContainerContentService(),
             new FakeMapService(map),
-            new RecordingEventBus());
+            new RecordingEventBus(),
+            new FakeLightAndTimeService());
 
         await service.EnterWorldAsync(42, mobile, CancellationToken.None);
 
@@ -96,12 +98,35 @@ public sealed class WorldEntryServiceTests
             new MapItemService(Array.Empty<ItemEntity>()),
             new NoopContainerContentService(),
             new FakeMapService(),
-            new RecordingEventBus());
+            new RecordingEventBus(),
+            new FakeLightAndTimeService());
 
         await service.EnterWorldAsync(42, mobile, CancellationToken.None);
 
         var season = outgoing.Sent.Select(s => s.Packet).OfType<SeasonPacket>().Single();
         Assert.Equal(SeasonType.Spring, season.Season);
+    }
+
+    [Fact]
+    public async Task EnterWorldAsync_UsesLightAndTimeService()
+    {
+        var mobile = new MobileEntity { Id = new Serial(7), Name = "Tom", AccountId = new Serial(99), MapId = 0 };
+        var outgoing = new RecordingOutgoingQueue();
+        var service = new WorldEntryService(
+            outgoing,
+            new MapItemService(Array.Empty<ItemEntity>()),
+            new NoopContainerContentService(),
+            new FakeMapService(),
+            new RecordingEventBus(),
+            new FakeLightAndTimeService());
+
+        await service.EnterWorldAsync(42, mobile, CancellationToken.None);
+
+        var overall = outgoing.Sent.Select(s => s.Packet).OfType<OverallLightLevelPacket>().Single();
+        Assert.Equal((LightLevelType)(byte)12, overall.LightLevel);
+
+        var setTime = outgoing.Sent.Select(s => s.Packet).OfType<SetTimePacket>().Single();
+        Assert.Equal(18, setTime.Time.Hour);
     }
 }
 
@@ -146,3 +171,4 @@ internal sealed class NoopFileResolver : IUoFileResolver
     public string? Resolve(string fileName)
         => null;
 }
+
