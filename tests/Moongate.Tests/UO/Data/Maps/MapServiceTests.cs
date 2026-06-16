@@ -59,6 +59,7 @@ public class MapServiceTests
             Assert.Equal(MapRulesType.FeluccaRules, service.GetMap(0)!.Rules);
             Assert.Equal(SeasonType.Spring, service.GetMap(1)!.Season);
             Assert.Equal(MapRulesType.TrammelRules, service.GetMap(1)!.Rules);
+            Assert.Equal(SeasonType.Summer, service.GetMap(2)!.Season);
 
             var internalMap = service.GetMap(0x7F);
             Assert.NotNull(internalMap);
