@@ -16,8 +16,16 @@ public sealed class RegionResolverServiceTests
             Region("inner", 0, 50, new RegionAreaEntry(40, 40, 60, 60)));
         var resolver = new RegionResolverService(data);
 
-        Assert.Equal("inner", resolver.ResolveRegion(0, new Point3D(50, 50, 0))!.Value.Name);
+        Assert.Equal("inner", resolver.ResolveRegion(0, new Point3D(50, 50, 0))!.Value.Name); // not "broad"
         Assert.Equal("broad", resolver.ResolveRegion(0, new Point3D(10, 10, 0))!.Value.Name);
+    }
+
+    [Fact]
+    public void GetRegionByName_NullName_Throws()
+    {
+        var resolver = new RegionResolverService(new FakeRegionDataService());
+
+        Assert.Throws<ArgumentNullException>(() => resolver.GetRegionByName(null!));
     }
 
     [Fact]
