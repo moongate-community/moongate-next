@@ -10,6 +10,8 @@ public sealed class LightCycleTests
     [InlineData(12, 0, 0)]    // day
     [InlineData(5, 0, 6)]     // dawn midpoint: 12 + (60)*(0-12)/120 = 6
     [InlineData(23, 0, 6)]    // dusk midpoint: 0 + (60)*(12-0)/120 = 6
+    [InlineData(6, 0, 0)]     // dawn complete: full day
+    [InlineData(22, 0, 0)]    // dusk start: still full day
     [InlineData(0, 0, 12)]    // pre-dawn night
     public void LevelFromHourMinute_FollowsDayNightCurve(int hour, int minute, int expected)
         => Assert.Equal(expected, LightCycle.LevelFromHourMinute(hour, minute));
