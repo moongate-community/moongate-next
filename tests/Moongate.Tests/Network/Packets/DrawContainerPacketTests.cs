@@ -19,4 +19,14 @@ public sealed class DrawContainerPacketTests
         Assert.Equal(0x24, bytes[0]);
         Assert.Equal(0x3C, (bytes[5] << 8) | bytes[6]); // gump fallback @5..6
     }
+
+    [Fact]
+    public void Write_UsesExplicitGumpId_WhenSet()
+    {
+        var container = new ItemEntity { Id = new Serial(Serial.ItemOffset + 1), GumpId = 0x49 };
+
+        var bytes = PacketSerializer.Serialize(new DrawContainerPacket(container));
+
+        Assert.Equal(0x49, (bytes[5] << 8) | bytes[6]); // explicit gump id, not the 0x3C fallback
+    }
 }

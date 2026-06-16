@@ -15,6 +15,7 @@ public class DrawContainerPacket : BaseGameNetworkPacket
     private const byte OpCodeValue = 0x24;
     private const int LengthValue = 9;
     private const int DefaultBackpackGumpId = 0x3C;
+    private const short ContainerDisplayFlag = 0x7D; // UO protocol trailer (standard container value)
 
     public ItemEntity Container { get; }
 
@@ -31,7 +32,7 @@ public class DrawContainerPacket : BaseGameNetworkPacket
         writer.Write(OpCode);
         writer.Write(Container.Id.Value);
         writer.Write((ushort)(Container.GumpId ?? DefaultBackpackGumpId));
-        writer.Write((short)0x7D);
+        writer.Write(ContainerDisplayFlag);
     }
 
     protected override bool ParsePayload(ref SpanReader reader)
