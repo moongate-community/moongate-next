@@ -1,19 +1,16 @@
 using Moongate.Abstractions.Interfaces.EventHandlers;
-using Moongate.Abstractions.Interfaces.Events;
-using Moongate.Abstractions.Interfaces.Network;
 using Moongate.Abstractions.Interfaces.Services;
 using Moongate.Core.Geometry;
 using Moongate.Core.Ids;
 using Moongate.Network.UO.Packets.Outgoing.Entity;
 using Moongate.Network.UO.Packets.Outgoing.Login;
 using Moongate.Server.Data.Events;
-using Moongate.Server.Interfaces.Network;
 using Moongate.Server.Interfaces.Services.Items;
 using Moongate.Server.Services.World;
+using Moongate.Tests.Support;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Entities.Mobiles;
 using Moongate.UO.Data.Interfaces.Maps;
-using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Maps;
 using Moongate.UO.Data.Types.Items;
 using Xunit;
@@ -59,78 +56,13 @@ public sealed class WorldEntryServiceTests
         Assert.True(outgoing.Sent.All(s => s.SessionId == 42));
         Assert.Single(events.Published.OfType<PlayerCharacterLoggedInEvent>());
         Assert.True(types.IndexOf(typeof(LoginConfirmPacket)) < types.IndexOf(typeof(LoginCompletePacket)));
+
+        var containerContent = outgoing.Sent
+            .Select(s => s.Packet)
+            .OfType<ContainerContentPacket>()
+            .Single();
+        Assert.Contains(containerContent.Items, i => i.Id == pack.Id);
     }
-}
-
-/// <summary>
-/// IOutgoingPacketQueue stub that records every enqueued packet with its session id.
-/// </summary>
-internal sealed class RecordingOutgoingQueue : IOutgoingPacketQueue
-{
-    public List<(long SessionId, IGameNetworkPacket Packet)> Sent { get; } = [];
-
-    public int Count => Sent.Count;
-
-    public int Clear(Action<Moongate.Server.Data.Network.OutgoingPacketEnvelope>? handler = null)
-        => throw new NotSupportedException();
-
-    public int Drain(int maxItems, Func<Moongate.Server.Data.Network.OutgoingPacketEnvelope, bool> handler)
-        => throw new NotSupportedException();
-
-    public void Enqueue<TPacket>(long sessionId, TPacket packet)
-        where TPacket : IGameNetworkPacket
-        => Sent.Add((sessionId, packet));
-}
-
-/// <summary>
-/// IItemService stub that resolves items from a fixed map; all other members throw.
-/// </summary>
-internal sealed class MapItemService : IItemService
-{
-    private readonly Dictionary<Serial, ItemEntity> _items;
-
-    public MapItemService(IEnumerable<ItemEntity> items)
-    {
-        _items = items.ToDictionary(item => item.Id);
-    }
-
-    public ValueTask<bool> AddItemAsync(
-        ItemEntity container,
-        ItemEntity child,
-        Point2D position,
-        CancellationToken cancellationToken = default
-    )
-        => throw new NotSupportedException();
-
-    public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
-        => throw new NotSupportedException();
-
-    public ValueTask<ItemEntity> CreateAsync(ItemEntity item, CancellationToken cancellationToken = default)
-        => throw new NotSupportedException();
-
-    public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
-        => throw new NotSupportedException();
-
-    public ValueTask<ItemEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
-        => new(_items.GetValueOrDefault(id));
-
-    public bool IsContainer(ItemEntity item)
-        => throw new NotSupportedException();
-
-    public bool IsContainer(int itemId)
-        => throw new NotSupportedException();
-
-    public bool IsDoor(ItemEntity item)
-        => throw new NotSupportedException();
-
-    public bool IsDoor(int itemId)
-        => throw new NotSupportedException();
-
-    public ValueTask<bool> RemoveItemAsync(ItemEntity container, Serial itemId, CancellationToken cancellationToken = default)
-        => throw new NotSupportedException();
-
-    public ValueTask<int> TotalWeightAsync(ItemEntity item, CancellationToken cancellationToken = default)
-        => throw new NotSupportedException();
 }
 
 /// <summary>
@@ -152,33 +84,4 @@ internal sealed class FakeMapService : IMapService
 
     public Map? GetMap(int mapId)
         => null;
-}
-
-/// <summary>
-/// IEventBusService stub that records every published event; other members throw.
-/// </summary>
-internal sealed class RecordingEventBus : IEventBusService
-{
-    public List<object> Published { get; } = [];
-
-    public Action<Type, Exception, IMoongateEvent>? OnEventError { get; set; }
-
-    public int CurrentTickQueueDepth => throw new NotSupportedException();
-
-    public int DrainTickEvents(int maxItems)
-        => throw new NotSupportedException();
-
-    public void Publish<TEvent>(TEvent evt)
-        where TEvent : ITickEvent
-        => Published.Add(evt!);
-
-    public Task PublishAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
-        where TEvent : IAsyncEvent
-        => throw new NotSupportedException();
-
-    public Task StartAsync(CancellationToken cancellationToken)
-        => Task.CompletedTask;
-
-    public Task StopAsync(CancellationToken cancellationToken)
-        => Task.CompletedTask;
 }
