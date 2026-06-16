@@ -8,6 +8,7 @@ namespace Moongate.Server.Data.World.Internal;
 /// </summary>
 public static class RegionSectorIndex
 {
+    /// <summary>Returns the sector bucket key for a tile coordinate on a map.</summary>
     public static (int MapId, int SectorX, int SectorY) SectorKey(int mapId, int x, int y)
         => (mapId, x >> MapSectorConsts.SectorShift, y >> MapSectorConsts.SectorShift);
 

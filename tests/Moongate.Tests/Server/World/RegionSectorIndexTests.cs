@@ -60,6 +60,22 @@ public sealed class RegionSectorIndexTests
         Assert.Single(index[(1, 0, 0)]);
     }
 
+    [Fact]
+    public void Build_UnnormalizedRect_IsBucketedByMinMax()
+    {
+        // X1>X2 and Y1>Y2: must span sectors 0..2 just like the normalized form
+        var region = Region("R", 0, 1, new RegionAreaEntry(40, 40, 0, 0));
+        var index = RegionSectorIndex.Build(new[] { region });
+
+        for (var sx = 0; sx <= 2; sx++)
+        {
+            for (var sy = 0; sy <= 2; sy++)
+            {
+                Assert.True(index.ContainsKey((0, sx, sy)), $"missing sector {sx},{sy}");
+            }
+        }
+    }
+
     private static RegionEntry Region(string name, int mapId, int priority, params RegionAreaEntry[] area)
         => new("BaseRegion", mapId, "Map", name, priority, area, "", null, null);
 }
