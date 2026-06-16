@@ -63,7 +63,7 @@ public sealed class WorldEntryService : IWorldEntryService
         _outgoing.Enqueue(sessionId, new SupportFeaturesPacket());
         _outgoing.Enqueue(sessionId, new LoginConfirmPacket(mobile, mapWidth, mapHeight));
         _outgoing.Enqueue(sessionId, new SetMapPacket(mobile.MapId));
-        _outgoing.Enqueue(sessionId, new SeasonPacket(SeasonType.Spring));
+        _outgoing.Enqueue(sessionId, new SeasonPacket(map?.Season ?? SeasonType.Spring));
         _outgoing.Enqueue(sessionId, new DrawPlayerPacket(mobile));
         _outgoing.Enqueue(sessionId, new PlayerStatusPacket(mobile));
 
