@@ -9,13 +9,16 @@ namespace Moongate.Network.UO.Packets.Outgoing.Entity;
 /// <summary>
 /// Outgoing "Draw Game Player" (0x20): renders the player's own mobile in the world.
 /// </summary>
-[PacketHandler(0x20, PacketSizing.Fixed, Length = 19, Description = "Draw Game Player")]
+[PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Draw Game Player")]
 public class DrawPlayerPacket : BaseGameNetworkPacket
 {
+    private const byte OpCodeValue = 0x20;
+    private const int LengthValue = 19;
+
     public MobileEntity Mobile { get; }
 
     public DrawPlayerPacket(MobileEntity mobile)
-        : base(0x20, 19)
+        : base(OpCodeValue, LengthValue)
     {
         ArgumentNullException.ThrowIfNull(mobile);
 

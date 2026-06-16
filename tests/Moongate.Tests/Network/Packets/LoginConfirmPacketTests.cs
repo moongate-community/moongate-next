@@ -3,6 +3,7 @@ using Moongate.Core.Ids;
 using Moongate.Core.Types;
 using Moongate.Network.UO.Packets.Outgoing.Login;
 using Moongate.UO.Data.Entities.Mobiles;
+using Moongate.Tests.Support;
 using Xunit;
 
 namespace Moongate.Tests.Network.Packets;
@@ -20,7 +21,7 @@ public class LoginConfirmPacketTests
             Direction = DirectionType.South
         };
 
-        var bytes = Serialize(new LoginConfirmPacket(mobile, mapWidth: 6144, mapHeight: 4096));
+        var bytes = PacketSerializer.Serialize(new LoginConfirmPacket(mobile, mapWidth: 6144, mapHeight: 4096));
 
         Assert.Equal(37, bytes.Length);
         Assert.Equal(0x1B, bytes[0]);
@@ -32,12 +33,5 @@ public class LoginConfirmPacketTests
         Assert.Equal(unchecked((int)0xFFFFFFFF), (bytes[19] << 24) | (bytes[20] << 16) | (bytes[21] << 8) | bytes[22]); // -1 sentinel
         Assert.Equal(6144, (bytes[27] << 8) | bytes[28]);            // map width
         Assert.Equal(4096, (bytes[29] << 8) | bytes[30]);            // map height
-    }
-
-    private static byte[] Serialize(Moongate.Network.UO.Base.BaseGameNetworkPacket packet)
-    {
-        var writer = new Moongate.Network.Spans.SpanWriter(256, true);
-        packet.Write(ref writer);
-        return writer.Span.ToArray();
     }
 }

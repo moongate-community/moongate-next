@@ -10,15 +10,16 @@ namespace Moongate.Network.UO.Packets.Outgoing.Entity;
 /// <summary>
 /// Outgoing "Status Bar Info" (0x11), MVP version-1 layout: name, vitals, base stats.
 /// </summary>
-[PacketHandler(0x11, PacketSizing.Variable, Description = "Status Bar Info")]
+[PacketHandler(OpCodeValue, PacketSizing.Variable, Description = "Status Bar Info")]
 public class PlayerStatusPacket : BaseGameNetworkPacket
 {
+    private const byte OpCodeValue = 0x11;
     private const byte Version = 1;
 
     public MobileEntity Mobile { get; }
 
     public PlayerStatusPacket(MobileEntity mobile)
-        : base(0x11)
+        : base(OpCodeValue)
     {
         ArgumentNullException.ThrowIfNull(mobile);
 

@@ -3,6 +3,7 @@ using Moongate.Network.UO.Packets.Outgoing.Entity;
 using Moongate.UO.Data.Data.Mobiles;
 using Moongate.UO.Data.Entities.Mobiles;
 using Moongate.UO.Data.Types.Mobiles;
+using Moongate.Tests.Support;
 using Xunit;
 
 namespace Moongate.Tests.Network.Packets;
@@ -18,15 +19,9 @@ public class PlayerStatusPacketTests
             BaseStats = new MobileStats { Strength = 50, Dexterity = 40, Intelligence = 30 },
             Resources = new MobileResources { Hits = 45, MaxHits = 50, Mana = 30, MaxMana = 30, Stamina = 40, MaxStamina = 40 }
         };
-        var bytes = Serialize(new PlayerStatusPacket(mobile));
+        var bytes = PacketSerializer.Serialize(new PlayerStatusPacket(mobile));
         Assert.Equal(0x11, bytes[0]);
         Assert.Equal(bytes.Length, (bytes[1] << 8) | bytes[2]); // length prefix == actual length
-    }
-
-    private static byte[] Serialize(Moongate.Network.UO.Base.BaseGameNetworkPacket packet)
-    {
-        var writer = new Moongate.Network.Spans.SpanWriter(256, true);
-        packet.Write(ref writer);
-        return writer.Span.ToArray();
+        Assert.Equal(66, bytes.Length); // opcode(1)+len(2)+id(4)+name(30)+attr(4)+canRename(1)+version(1)+isFemale(1)+7*ushort(14)+gold(4)+resist(2)+weight(2)
     }
 }

@@ -2,32 +2,32 @@ using Moongate.Network.Spans;
 using Moongate.Network.UO.Attributes;
 using Moongate.Network.UO.Base;
 using Moongate.Network.UO.Types.Packets;
-using Moongate.UO.Data.Entities.Mobiles;
 
 namespace Moongate.Network.UO.Packets.Outgoing.World;
 
 /// <summary>
 /// Outgoing "War Mode" (0x72): reports the player's combat stance (MVP: always peace).
 /// </summary>
-[PacketHandler(0x72, PacketSizing.Fixed, Length = 5, Description = "War Mode")]
+[PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "War Mode")]
 public class WarModePacket : BaseGameNetworkPacket
 {
-    public MobileEntity Mobile { get; }
+    private const byte OpCodeValue = 0x72;
+    private const int LengthValue = 5;
 
-    public WarModePacket(MobileEntity mobile)
-        : base(0x72, 5)
+    public bool WarMode { get; }
+
+    public WarModePacket(bool warMode = false)
+        : base(OpCodeValue, LengthValue)
     {
-        ArgumentNullException.ThrowIfNull(mobile);
-
-        Mobile = mobile;
+        WarMode = warMode;
     }
 
     public override void Write(ref SpanWriter writer)
     {
         writer.Write(OpCode);
-        writer.Write(false);
+        writer.Write(WarMode);
         writer.Write((byte)0);
-        writer.Write((byte)0x32);
+        writer.Write((byte)0x32); // UO protocol constant (war-mode trailer)
         writer.Write((byte)0);
     }
 
