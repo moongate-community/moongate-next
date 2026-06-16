@@ -22,4 +22,6 @@ public sealed class PlayerSession
     public DateTimeOffset? DisconnectedAt { get; set; }
     public int? ViewRange { get; set; }
     public ClientVersion? ClientVersion { get; set; }
+
+    public byte PingSequence { get; set; }
 }
