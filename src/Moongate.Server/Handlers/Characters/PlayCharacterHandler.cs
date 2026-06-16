@@ -64,7 +64,7 @@ public class PlayCharacterHandler : PacketHandlerBase<PlayCharacterPacket>
 
         var mobile = characters[slot];
 
-        PlayerSessions.EnterWorld(context.SessionId, mobile.Id, mobile.Id, DateTimeOffset.Now);
+        PlayerSessions.EnterWorld(context.SessionId, mobile.Id, mobile.Id, DateTimeOffset.UtcNow);
 
         _logger.Information(
             "Player {Name} ({MobileId}) entering world on session {SessionId}",

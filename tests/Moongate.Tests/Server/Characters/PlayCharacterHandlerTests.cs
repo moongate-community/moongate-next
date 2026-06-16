@@ -69,6 +69,27 @@ public sealed class PlayCharacterHandlerTests
         Assert.Null(worldEntry.Mobile);
     }
 
+    [Fact]
+    public async Task HandleAsync_UnauthenticatedSession_DoesNothing()
+    {
+        var mobile = new MobileEntity { Id = new Serial(7), AccountId = new Serial(99) };
+        var mobiles = new FakeMobileService(AccountId, mobile);
+        var sessions = new FakePlayerSessionService(authenticated: false);
+        var worldEntry = new RecordingWorldEntryService();
+        var handler = new PlayCharacterHandler(
+            new NoopEventBusService(),
+            new NoopNetworkSessionManager(),
+            sessions,
+            mobiles,
+            worldEntry
+        );
+
+        await handler.HandleAsync(Context(0));
+
+        Assert.Null(worldEntry.Mobile);
+        Assert.False(sessions.EnterWorldCalled);
+    }
+
     private static PacketContext<PlayCharacterPacket> Context(int slot)
         => new(
             new FakeGameSession { SessionId = ConnectedSessionId },
@@ -98,6 +119,16 @@ public sealed class PlayCharacterHandlerTests
 
     private sealed class FakePlayerSessionService : IPlayerSessionService
     {
+        // _userId drives UserId on the returned session.
+        // new FakePlayerSessionService()                    → authenticated (UserId = AccountId)
+        // new FakePlayerSessionService(authenticated: false) → unauthenticated (UserId = null)
+        private readonly Serial? _userId;
+
+        public FakePlayerSessionService(bool authenticated = true)
+        {
+            _userId = authenticated ? AccountId : null;
+        }
+
         public bool EnterWorldCalled { get; private set; }
         public Serial EnteredCharacterSerial { get; private set; }
 
@@ -141,7 +172,7 @@ public sealed class PlayCharacterHandlerTests
         {
             if (sessionId == ConnectedSessionId)
             {
-                session = new PlayerSession { SessionId = ConnectedSessionId, UserId = AccountId };
+                session = new PlayerSession { SessionId = ConnectedSessionId, UserId = _userId };
 
                 return true;
             }
@@ -154,5 +185,4 @@ public sealed class PlayCharacterHandlerTests
         public PlayerSession UpdateClient(long sessionId, ClientVersion? clientVersion = null, int? viewRange = null)
             => throw new NotSupportedException();
     }
-
 }
