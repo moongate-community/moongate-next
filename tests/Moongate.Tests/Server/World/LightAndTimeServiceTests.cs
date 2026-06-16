@@ -1,8 +1,14 @@
+using System.Linq;
+using Moongate.Abstractions.Data.Player;
+using Moongate.Abstractions.Types.Player;
 using Moongate.Core.Geometry;
+using Moongate.Core.Ids;
+using Moongate.Network.UO.Packets.Outgoing.World;
 using Moongate.Server.Data.Config;
 using Moongate.Server.Data.World;
 using Moongate.Server.Services.World;
 using Moongate.Tests.Support;
+using Moongate.UO.Data.Entities.Mobiles;
 using Moongate.UO.Data.Interfaces.Services;
 using Xunit;
 
@@ -45,6 +51,64 @@ public sealed class LightAndTimeServiceTests
         Assert.Equal(18, time.Hour);
         Assert.Equal(0, time.Minute);
     }
+
+    [Fact]
+    public async Task ProcessLightAndTime_SendsOnChange_AndNotWhenUnchanged()
+    {
+        var mobile = new MobileEntity { Id = new Serial(7), MapId = 0, Location = new Point3D(10, 10, 0) };
+        var sessions = new StubPlayerSessions(InWorld(42, mobile.Id));
+        var outgoing = new RecordingOutgoingQueue();
+        var jobs = new CapturingJobService();
+        var service = new LightAndTimeService(
+            sessions,
+            new Lazy<IMobileService>(() => new MapItemMobileService(mobile)),
+            outgoing,
+            new StubRegionResolver(null),
+            jobs,
+            new ServerConfig());
+
+        await service.StartAsync(CancellationToken.None);
+        service.SetGlobalLightOverride(7, applyImmediately: false); // deterministic level
+
+        jobs.Invoke();
+        Assert.Single(outgoing.Sent.Select(s => s.Packet).OfType<OverallLightLevelPacket>());
+
+        jobs.Invoke(); // unchanged -> no resend
+        Assert.Single(outgoing.Sent.Select(s => s.Packet).OfType<OverallLightLevelPacket>());
+    }
+
+    [Fact]
+    public async Task ProcessLightAndTime_RemovesStaleSessions_AndResendsOnReentry()
+    {
+        var mobile = new MobileEntity { Id = new Serial(7), MapId = 0, Location = new Point3D(10, 10, 0) };
+        var sessions = new StubPlayerSessions(InWorld(42, mobile.Id));
+        var outgoing = new RecordingOutgoingQueue();
+        var jobs = new CapturingJobService();
+        var service = new LightAndTimeService(
+            sessions,
+            new Lazy<IMobileService>(() => new MapItemMobileService(mobile)),
+            outgoing,
+            new StubRegionResolver(null),
+            jobs,
+            new ServerConfig());
+
+        await service.StartAsync(CancellationToken.None);
+        service.SetGlobalLightOverride(7, applyImmediately: false);
+
+        jobs.Invoke();
+        Assert.Single(outgoing.Sent.Select(s => s.Packet).OfType<OverallLightLevelPacket>());
+
+        sessions.Clear();
+        jobs.Invoke(); // stale cleanup, nothing new
+        Assert.Single(outgoing.Sent.Select(s => s.Packet).OfType<OverallLightLevelPacket>());
+
+        sessions.Set(InWorld(42, mobile.Id));
+        jobs.Invoke(); // delta cleared -> resends
+        Assert.Equal(2, outgoing.Sent.Select(s => s.Packet).OfType<OverallLightLevelPacket>().Count());
+    }
+
+    private static PlayerSession InWorld(long sessionId, Serial mobileSerial)
+        => new() { SessionId = sessionId, MobileSerial = mobileSerial, State = PlayerSessionStateType.InWorld };
 
     private static LightAndTimeService Build(RegionEntry? region)
         => new(
