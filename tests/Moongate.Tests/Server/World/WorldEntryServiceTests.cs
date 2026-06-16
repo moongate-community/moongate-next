@@ -5,7 +5,6 @@ using Moongate.Network.UO.Packets.Outgoing.World;
 using Moongate.Network.UO.Types.Environment;
 using Moongate.Server.Data.Events;
 using Moongate.Server.Interfaces.Services.Items;
-using Moongate.Server.Interfaces.Services.World;
 using Moongate.Server.Services.World;
 using Moongate.Tests.Support;
 using Moongate.UO.Data.Data.Maps;
@@ -173,20 +172,3 @@ internal sealed class NoopFileResolver : IUoFileResolver
         => null;
 }
 
-/// <summary>
-/// ILightAndTimeService stub returning a fixed light level (12) and world time (18:00 UTC).
-/// </summary>
-internal sealed class FakeLightAndTimeService : ILightAndTimeService
-{
-    public int ComputeGlobalLightLevel(int mapId, Moongate.Core.Geometry.Point3D location, DateTime? utcNow = null)
-        => 12;
-
-    public DateTime GetWorldTime(DateTime? utcNow = null)
-        => new(2026, 1, 1, 18, 0, 0, DateTimeKind.Utc);
-
-    public void SetGlobalLightOverride(int? lightLevel, bool applyImmediately = true) { }
-
-    public Task StartAsync(CancellationToken cancellationToken) => Task.CompletedTask;
-
-    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
-}

@@ -45,6 +45,18 @@ public sealed class LightAndTimeServiceTests
     }
 
     [Fact]
+    public void SetGlobalLightOverride_ClampsToByteRange()
+    {
+        var service = Build(region: null);
+
+        service.SetGlobalLightOverride(300, applyImmediately: false);
+        Assert.Equal(255, service.ComputeGlobalLightLevel(0, new Point3D(0, 0, 0), Start));
+
+        service.SetGlobalLightOverride(-5, applyImmediately: false);
+        Assert.Equal(0, service.ComputeGlobalLightLevel(0, new Point3D(0, 0, 0), Start));
+    }
+
+    [Fact]
     public void GetWorldTime_ReflectsAcceleratedClock()
     {
         var time = Build(region: null).GetWorldTime(Start.AddSeconds(5400)); // 1080 uo-min = 18:00
