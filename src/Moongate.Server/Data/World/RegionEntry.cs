@@ -1,4 +1,5 @@
 using Moongate.Core.Geometry;
+using Moongate.UO.Data.Types.Maps;
 
 namespace Moongate.Server.Data.World;
 
@@ -24,6 +25,8 @@ public readonly record struct RegionEntry
     public Point3D? Entrance { get; }
 
     public Point3D? GoLocation { get; }
+
+    public RegionType Kind => RegionTypeParser.FromAssetType(Type);
 
     public RegionEntry(
         string type,

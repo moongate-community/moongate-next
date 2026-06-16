@@ -75,6 +75,8 @@ public static class WorldDataContainerExtensions
             resolver => new(resolver.Resolve<ServerAssetDataLoader>())
         );
 
+        container.Register<IRegionResolverService, RegionResolverService>(Reuse.Singleton);
+
         container.AddMoongateHosting();
         container.AddMoongateService<ServerAssetDataBootService>(WorldDataBootPriority);
 
