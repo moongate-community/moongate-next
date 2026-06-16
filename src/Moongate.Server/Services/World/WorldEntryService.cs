@@ -28,6 +28,7 @@ public sealed class WorldEntryService : IWorldEntryService
     private readonly IMapService _maps;
     private readonly IEventBusService _events;
     private readonly ILightAndTimeService _lightAndTime;
+    private readonly IRegionResolverService _regions;
 
     public WorldEntryService(
         IOutgoingPacketQueue outgoing,
@@ -35,7 +36,8 @@ public sealed class WorldEntryService : IWorldEntryService
         IContainerContentService contents,
         IMapService maps,
         IEventBusService events,
-        ILightAndTimeService lightAndTime
+        ILightAndTimeService lightAndTime,
+        IRegionResolverService regions
     )
     {
         ArgumentNullException.ThrowIfNull(outgoing);
@@ -44,6 +46,7 @@ public sealed class WorldEntryService : IWorldEntryService
         ArgumentNullException.ThrowIfNull(maps);
         ArgumentNullException.ThrowIfNull(events);
         ArgumentNullException.ThrowIfNull(lightAndTime);
+        ArgumentNullException.ThrowIfNull(regions);
 
         _outgoing = outgoing;
         _items = items;
@@ -51,6 +54,7 @@ public sealed class WorldEntryService : IWorldEntryService
         _maps = maps;
         _events = events;
         _lightAndTime = lightAndTime;
+        _regions = regions;
     }
 
     public async ValueTask EnterWorldAsync(
@@ -118,6 +122,13 @@ public sealed class WorldEntryService : IWorldEntryService
         _outgoing.Enqueue(sessionId, new PaperdollPacket(mobile, mobile.Name ?? string.Empty));
         _outgoing.Enqueue(sessionId, new LoginCompletePacket());
         _outgoing.Enqueue(sessionId, new SetTimePacket(_lightAndTime.GetWorldTime()));
+
+        var music = _regions.GetMusic(mobile.MapId, mobile.Location);
+
+        if (music != MusicType.NoMusic && music != MusicType.Invalid)
+        {
+            _outgoing.Enqueue(sessionId, new SetMusicPacket((int)music));
+        }
 
         _events.Publish(new PlayerCharacterLoggedInEvent(sessionId, mobile.AccountId, mobile.Id));
     }

@@ -4,6 +4,7 @@ using Moongate.Network.UO.Packets.Outgoing.Login;
 using Moongate.Network.UO.Packets.Outgoing.World;
 using Moongate.Network.UO.Types.Environment;
 using Moongate.Server.Data.Events;
+using Moongate.Server.Data.World;
 using Moongate.Server.Interfaces.Services.Items;
 using Moongate.Server.Services.World;
 using Moongate.Tests.Support;
@@ -41,7 +42,7 @@ public sealed class WorldEntryServiceTests
         var contents = new NoopContainerContentService();
         var maps = new FakeMapService();
         var events = new RecordingEventBus();
-        var service = new WorldEntryService(outgoing, items, contents, maps, events, new FakeLightAndTimeService());
+        var service = new WorldEntryService(outgoing, items, contents, maps, events, new FakeLightAndTimeService(), new StubRegionResolver(null));
 
         await service.EnterWorldAsync(42, mobile, CancellationToken.None);
 
@@ -77,7 +78,8 @@ public sealed class WorldEntryServiceTests
             new NoopContainerContentService(),
             new FakeMapService(),
             new RecordingEventBus(),
-            new FakeLightAndTimeService()
+            new FakeLightAndTimeService(),
+            new StubRegionResolver(null)
         );
 
         await service.EnterWorldAsync(42, mobile, CancellationToken.None);
@@ -97,7 +99,8 @@ public sealed class WorldEntryServiceTests
             new NoopContainerContentService(),
             new FakeMapService(),
             new RecordingEventBus(),
-            new FakeLightAndTimeService()
+            new FakeLightAndTimeService(),
+            new StubRegionResolver(null)
         );
 
         await service.EnterWorldAsync(42, mobile, CancellationToken.None);
@@ -123,13 +126,57 @@ public sealed class WorldEntryServiceTests
             new NoopContainerContentService(),
             new FakeMapService(map),
             new RecordingEventBus(),
-            new FakeLightAndTimeService()
+            new FakeLightAndTimeService(),
+            new StubRegionResolver(null)
         );
 
         await service.EnterWorldAsync(42, mobile, CancellationToken.None);
 
         var season = outgoing.Sent.Select(s => s.Packet).OfType<SeasonPacket>().Single();
         Assert.Equal(SeasonType.Summer, season.Season);
+    }
+
+    [Fact]
+    public async Task EnterWorldAsync_SendsRegionMusic()
+    {
+        var mobile = new MobileEntity { Id = new Serial(7), Name = "Tom", AccountId = new Serial(99), MapId = 0 };
+        var region = new RegionEntry("TownRegion", 0, "Felucca", "Britain", 1,
+            new[] { new RegionAreaEntry(0, 0, 100, 100) }, "Britain1", null, null);
+
+        var outgoing = new RecordingOutgoingQueue();
+        var service = new WorldEntryService(
+            outgoing,
+            new MapItemService(Array.Empty<ItemEntity>()),
+            new NoopContainerContentService(),
+            new FakeMapService(),
+            new RecordingEventBus(),
+            new FakeLightAndTimeService(),
+            new StubRegionResolver(region));
+
+        await service.EnterWorldAsync(42, mobile, CancellationToken.None);
+
+        var music = outgoing.Sent.Select(s => s.Packet).OfType<SetMusicPacket>().Single();
+        Assert.Equal((int)MusicType.Britain1, music.MusicId);
+    }
+
+    [Fact]
+    public async Task EnterWorldAsync_NoRegionMusic_SendsNoMusicPacket()
+    {
+        var mobile = new MobileEntity { Id = new Serial(7), Name = "Tom", AccountId = new Serial(99), MapId = 0 };
+
+        var outgoing = new RecordingOutgoingQueue();
+        var service = new WorldEntryService(
+            outgoing,
+            new MapItemService(Array.Empty<ItemEntity>()),
+            new NoopContainerContentService(),
+            new FakeMapService(),
+            new RecordingEventBus(),
+            new FakeLightAndTimeService(),
+            new StubRegionResolver(null));
+
+        await service.EnterWorldAsync(42, mobile, CancellationToken.None);
+
+        Assert.Empty(outgoing.Sent.Select(s => s.Packet).OfType<SetMusicPacket>());
     }
 }
 
