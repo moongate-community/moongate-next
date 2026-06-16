@@ -1,10 +1,14 @@
+using Moongate.Core.Geometry;
 using Moongate.Core.Ids;
+using Moongate.Core.Types;
+using Moongate.Network.UO.Packets.Incoming.Login;
 using Moongate.Server.Services.Templates;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Entities.Mobiles;
 using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Templates.Mobiles;
 using Moongate.UO.Data.Types.Items;
+using Moongate.UO.Data.Types.Mobiles;
 using Moongate.UO.Data.Types.Properties;
 using Moongate.UO.Data.Types.Skills;
 using Serilog;
@@ -19,6 +23,10 @@ namespace Moongate.Server.Services.Mobiles;
 /// </summary>
 public sealed class MobileFactoryService : IMobileFactoryService
 {
+    private const int DefaultMaleBodyId = 400;
+    private const int DefaultFemaleBodyId = 401;
+    private const string ProfessionPropertyKey = "profession";
+
     private readonly ILogger _logger = Log.ForContext<MobileFactoryService>();
     private readonly IMobileTemplateService _templates;
     private readonly IItemTemplateService _items;
@@ -66,6 +74,69 @@ public sealed class MobileFactoryService : IMobileFactoryService
 
         await EquipBackpackAsync(mobile, template, cancellationToken);
         await EquipItemsAsync(mobile, template, cancellationToken);
+
+        return mobile;
+    }
+
+    public async ValueTask<MobileEntity> CreatePlayerMobile(
+        CharacterCreationPacket packet,
+        Serial accountId,
+        CancellationToken cancellationToken = default
+    )
+    {
+        ArgumentNullException.ThrowIfNull(packet);
+
+        var female = packet.Gender == GenderType.Female;
+        var bodyId = packet.Race?.AliveBody(female) ?? (female ? DefaultFemaleBodyId : DefaultMaleBodyId);
+        var city = packet.StartingCity;
+
+        var mobile = new MobileEntity
+        {
+            Name = packet.CharacterName,
+            AccountId = accountId,
+            Direction = DirectionType.South,
+            Location = city is null ? Point3D.Zero : new Point3D(city.X, city.Y, city.Z),
+            MapId = city?.MapIndex ?? 0,
+            IsPlayer = true,
+            IsAlive = true,
+            Gender = packet.Gender,
+            RaceIndex = packet.RaceIndex,
+            BodyId = bodyId,
+            SkinHue = (Hue)packet.Skin.Hue,
+            HairStyle = packet.Hair.Style,
+            HairHue = (Hue)packet.Hair.Hue,
+            FacialHairStyle = packet.FacialHair.Style,
+            FacialHairHue = (Hue)packet.FacialHair.Hue,
+            Notoriety = NotorietyType.Innocent,
+            BaseStats = new()
+            {
+                Strength = packet.Strength,
+                Dexterity = packet.Dexterity,
+                Intelligence = packet.Intelligence
+            },
+            Resources = new()
+            {
+                Hits = packet.Strength,
+                MaxHits = packet.Strength,
+                Mana = packet.Intelligence,
+                MaxMana = packet.Intelligence,
+                Stamina = packet.Dexterity,
+                MaxStamina = packet.Dexterity
+            }
+        };
+
+        mobile.CustomProperties[ProfessionPropertyKey] = new()
+        {
+            Type = CustomPropertyType.Integer,
+            IntegerValue = packet.ProfessionId
+        };
+
+        foreach (var entry in packet.Skills)
+        {
+            mobile.Skills[entry.Skill] = new() { Base = entry.Value * 10, Value = entry.Value * 10 };
+        }
+
+        await _mobiles.Value.CreateAsync(mobile, cancellationToken);
 
         return mobile;
     }

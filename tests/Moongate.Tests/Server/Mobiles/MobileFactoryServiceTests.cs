@@ -1,4 +1,8 @@
+using System.Reflection;
 using Moongate.Core.Ids;
+using Moongate.Network.UO.Data.Login;
+using Moongate.Network.UO.Packets.Incoming.Login;
+using Moongate.UO.Data.Races.Base;
 using Moongate.Server.Services.Mobiles;
 using Moongate.Server.Services.Templates;
 using Moongate.UO.Data.Data.Mobiles;
@@ -52,6 +56,7 @@ public sealed class MobileFactoryServiceTests
         private uint _next = 1;
 
         public List<(Serial MobileId, ItemLayerType Layer)> Equipped { get; } = [];
+        public MobileEntity? LastCreated { get; private set; }
 
         public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
             => throw new NotSupportedException();
@@ -62,6 +67,8 @@ public sealed class MobileFactoryServiceTests
             {
                 mobile.Id = new(_next++);
             }
+
+            LastCreated = mobile;
 
             return ValueTask.FromResult(mobile);
         }
@@ -243,6 +250,130 @@ public sealed class MobileFactoryServiceTests
         );
 
         return (service, items, mobiles);
+    }
+
+    [Fact]
+    public async Task CreatePlayerMobile_MapsAppearanceStatsAndPersists()
+    {
+        var (factory, _, mobiles) = New(Guard());
+        var accountId = new Serial(42);
+        var packet = MakeCreationPacket(
+            name: "Hero",
+            gender: GenderType.Male,
+            raceIndex: 0,
+            str: 60,
+            dex: 50,
+            @int: 25,
+            skinHue: 1002,
+            hairStyle: 0x203B,
+            hairHue: 1110,
+            facialHairStyle: 0x203E,
+            facialHairHue: 1110,
+            profession: 4,
+            skills: [(UOSkillName.Swords, 50), (UOSkillName.Tactics, 30)]
+        );
+
+        var mobile = await factory.CreatePlayerMobile(packet, accountId);
+
+        Assert.True(mobile.Id.IsValid);
+        Assert.Equal("Hero", mobile.Name);
+        Assert.Equal(accountId, mobile.AccountId);
+        Assert.True(mobile.IsPlayer);
+        Assert.True(mobile.IsAlive);
+        Assert.Equal(NotorietyType.Innocent, mobile.Notoriety);
+        Assert.Equal(GenderType.Male, mobile.Gender);
+        Assert.Equal(400, mobile.BodyId);
+        Assert.Equal(60, mobile.BaseStats.Strength);
+        Assert.Equal(50, mobile.BaseStats.Dexterity);
+        Assert.Equal(25, mobile.BaseStats.Intelligence);
+        Assert.Equal(60, mobile.Resources.Hits);
+        Assert.Equal(60, mobile.Resources.MaxHits);
+        Assert.Equal(25, mobile.Resources.Mana);
+        Assert.Equal(25, mobile.Resources.MaxMana);
+        Assert.Equal(50, mobile.Resources.Stamina);
+        Assert.Equal(50, mobile.Resources.MaxStamina);
+        Assert.Equal(0x203B, mobile.HairStyle);
+        Assert.Equal((Hue)1110, mobile.HairHue);
+        Assert.Equal((Hue)1002, mobile.SkinHue);
+        Assert.Equal(500d, mobile.Skills[UOSkillName.Swords].Value);
+        Assert.Equal(500d, mobile.Skills[UOSkillName.Swords].Base);
+        Assert.Equal(300d, mobile.Skills[UOSkillName.Tactics].Value);
+        Assert.Equal(4L, mobile.CustomProperties["profession"].IntegerValue);
+        Assert.Equal(0x203E, mobile.FacialHairStyle);
+        Assert.Equal((Hue)1110, mobile.FacialHairHue);
+        Assert.Same(mobile, mobiles.LastCreated);
+    }
+
+    [Fact]
+    public async Task CreatePlayerMobile_Female_UsesFemaleBodyFallback()
+    {
+        var (factory, _, _) = New(Guard());
+        var accountId = new Serial(1);
+        var packet = MakeCreationPacket(gender: GenderType.Female);
+
+        var mobile = await factory.CreatePlayerMobile(packet, accountId);
+
+        Assert.Equal(401, mobile.BodyId);
+    }
+
+    [Fact]
+    public async Task CreatePlayerMobile_UsesStartingCityLocation()
+    {
+        var (factory, _, _) = New(Guard());
+        var accountId = new Serial(1);
+        var city = new CityInfo("Britain", "Castle", 100, 200, 5, mapIndex: 1);
+        var packet = MakeCreationPacket(city: city);
+
+        var mobile = await factory.CreatePlayerMobile(packet, accountId);
+
+        Assert.Equal(100, mobile.Location.X);
+        Assert.Equal(200, mobile.Location.Y);
+        Assert.Equal(5, mobile.Location.Z);
+        Assert.Equal(1, mobile.MapId);
+    }
+
+    private static CharacterCreationPacket MakeCreationPacket(
+        string name = "Hero",
+        GenderType gender = GenderType.Male,
+        int raceIndex = 0,
+        int str = 60,
+        int dex = 50,
+        int @int = 25,
+        int skinHue = 1002,
+        int hairStyle = 0x203B,
+        int hairHue = 1110,
+        int facialHairStyle = 0x203E,
+        int facialHairHue = 1110,
+        int profession = 4,
+        Race? race = null,
+        CityInfo? city = null,
+        params (UOSkillName Skill, int Value)[] skills
+    )
+    {
+        var packet = new CharacterCreationPacket();
+
+        void Set(string prop, object? value) =>
+            typeof(CharacterCreationPacket).GetProperty(prop)!.SetValue(packet, value);
+
+        Set(nameof(CharacterCreationPacket.CharacterName), name);
+        Set(nameof(CharacterCreationPacket.Gender), gender);
+        Set(nameof(CharacterCreationPacket.RaceIndex), raceIndex);
+        Set(nameof(CharacterCreationPacket.Race), race);
+        Set(nameof(CharacterCreationPacket.Strength), str);
+        Set(nameof(CharacterCreationPacket.Dexterity), dex);
+        Set(nameof(CharacterCreationPacket.Intelligence), @int);
+        Set(nameof(CharacterCreationPacket.ProfessionId), profession);
+        Set(nameof(CharacterCreationPacket.Skin), new HueStyle(0, (short)skinHue));
+        Set(nameof(CharacterCreationPacket.Hair), new HueStyle((short)hairStyle, (short)hairHue));
+        Set(nameof(CharacterCreationPacket.FacialHair), new HueStyle((short)facialHairStyle, (short)facialHairHue));
+        Set(nameof(CharacterCreationPacket.StartingCity), city);
+
+        foreach (var (skill, value) in skills)
+        {
+            packet.Skills.Add(new SkillKeyValue(skill, value));
+        }
+
+        return packet;
     }
 
     private static MobileTemplateService Registry(MobileTemplateDefinition definition)
