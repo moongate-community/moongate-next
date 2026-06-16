@@ -1,8 +1,6 @@
 using Moongate.Abstractions.Data.Network;
 using Moongate.Abstractions.Data.Player;
 using Moongate.Abstractions.Data.Version;
-using Moongate.Abstractions.Interfaces.EventHandlers;
-using Moongate.Abstractions.Interfaces.Events;
 using Moongate.Abstractions.Interfaces.Network;
 using Moongate.Abstractions.Interfaces.Player;
 using Moongate.Abstractions.Interfaces.Services;
@@ -157,99 +155,4 @@ public sealed class PlayCharacterHandlerTests
             => throw new NotSupportedException();
     }
 
-    private sealed class FakeMobileService : IMobileService
-    {
-        private readonly Serial _accountId;
-        private readonly IReadOnlyList<MobileEntity> _mobiles;
-
-        public FakeMobileService(Serial accountId, params MobileEntity[] mobiles)
-        {
-            _accountId = accountId;
-            _mobiles = mobiles;
-        }
-
-        public ValueTask<IReadOnlyList<MobileEntity>> GetByAccountIdAsync(
-            Serial accountId,
-            CancellationToken cancellationToken = default
-        )
-            => ValueTask.FromResult(
-                accountId.Equals(_accountId) ? _mobiles : (IReadOnlyList<MobileEntity>)[]
-            );
-
-        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
-
-        public ValueTask<MobileEntity> CreateAsync(MobileEntity mobile, CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
-
-        public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
-
-        public ValueTask<bool> EquipAsync(
-            MobileEntity mobile,
-            ItemEntity item,
-            ItemLayerType layer,
-            CancellationToken cancellationToken = default
-        )
-            => throw new NotSupportedException();
-
-        public ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
-
-        public SkillEntry GetSkill(MobileEntity mobile, UOSkillName skill)
-            => throw new NotSupportedException();
-
-        public ValueTask<SkillEntry> SetSkillAsync(
-            MobileEntity mobile,
-            UOSkillName skill,
-            double value,
-            CancellationToken cancellationToken = default
-        )
-            => throw new NotSupportedException();
-
-        public ValueTask<bool> UnequipAsync(
-            MobileEntity mobile,
-            ItemLayerType layer,
-            CancellationToken cancellationToken = default
-        )
-            => throw new NotSupportedException();
-    }
-
-    private sealed class NoopNetworkSessionManager : INetworkSessionManager
-    {
-        public int Count => throw new NotSupportedException();
-
-        public IReadOnlyCollection<long> GetSessionIds()
-            => throw new NotSupportedException();
-
-        public ValueEnumerable<FromArray<long>, long> QuerySessionIds()
-            => throw new NotSupportedException();
-
-        public bool TryGetSession(long sessionId, out IGameSession session)
-            => throw new NotSupportedException();
-    }
-
-    private sealed class NoopEventBusService : IEventBusService
-    {
-        public Action<Type, Exception, IMoongateEvent>? OnEventError { get; set; }
-
-        public int CurrentTickQueueDepth => throw new NotSupportedException();
-
-        public int DrainTickEvents(int maxItems)
-            => throw new NotSupportedException();
-
-        public void Publish<TEvent>(TEvent evt)
-            where TEvent : ITickEvent
-            => throw new NotSupportedException();
-
-        public Task PublishAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
-            where TEvent : IAsyncEvent
-            => throw new NotSupportedException();
-
-        public Task StartAsync(CancellationToken cancellationToken)
-            => throw new NotSupportedException();
-
-        public Task StopAsync(CancellationToken cancellationToken)
-            => throw new NotSupportedException();
-    }
 }
