@@ -173,6 +173,9 @@ internal sealed class NoopFileResolver : IUoFileResolver
         => null;
 }
 
+/// <summary>
+/// ILightAndTimeService stub returning a fixed light level (12) and world time (18:00 UTC).
+/// </summary>
 internal sealed class FakeLightAndTimeService : ILightAndTimeService
 {
     public int ComputeGlobalLightLevel(int mapId, Moongate.Core.Geometry.Point3D location, DateTime? utcNow = null)
