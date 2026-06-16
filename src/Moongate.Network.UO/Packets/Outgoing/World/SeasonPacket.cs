@@ -1,7 +1,7 @@
 using Moongate.Network.Spans;
 using Moongate.Network.UO.Attributes;
 using Moongate.Network.UO.Base;
-using Moongate.Network.UO.Types.Environment;
+using Moongate.UO.Data.Types.Maps;
 using Moongate.Network.UO.Types.Packets;
 
 namespace Moongate.Network.UO.Packets.Outgoing.World;

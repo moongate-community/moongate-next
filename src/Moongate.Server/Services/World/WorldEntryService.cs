@@ -3,6 +3,7 @@ using Moongate.Network.UO.Packets.Outgoing.Entity;
 using Moongate.Network.UO.Packets.Outgoing.Login;
 using Moongate.Network.UO.Packets.Outgoing.World;
 using Moongate.Network.UO.Types.Environment;
+using Moongate.UO.Data.Types.Maps;
 using Moongate.Server.Data.Events;
 using Moongate.Server.Data.Internal.Packets;
 using Moongate.Server.Interfaces.Network;
