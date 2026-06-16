@@ -25,7 +25,8 @@ public static class MobileTemplateContainerExtensions
 
         container.Register<IMobileTemplateService, MobileTemplateService>(Reuse.Singleton);
         container.Register<IMobileTemplateAuthoringService, MobileTemplateAuthoringService>(Reuse.Singleton);
-        container.Register<IMobileFactoryService, MobileFactoryService>(Reuse.Singleton);
+        container.Register<MobileFactoryService>(Reuse.Singleton);
+        container.RegisterMapping<IMobileFactoryService, MobileFactoryService>();
         container.RegisterDelegate(
             static resolver => new MobileTemplateYamlLoader(
                 resolver.Resolve<DirectoriesConfig>()[DirectoryType.Templates_Mobiles]
