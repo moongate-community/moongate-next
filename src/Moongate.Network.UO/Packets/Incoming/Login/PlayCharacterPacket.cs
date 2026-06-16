@@ -17,20 +17,6 @@ public class PlayCharacterPacket : BaseGameNetworkPacket
     public PlayCharacterPacket()
         : base(0x5D, 73) { }
 
-    public override void Write(ref SpanWriter writer)
-    {
-        writer.Write(OpCode);
-        writer.Write(0);
-        writer.WriteAscii(CharacterName, 30);
-        writer.Write((ushort)0);
-        writer.Write((uint)0);
-        writer.Write(0);
-        writer.Write(0);
-        writer.Write(new byte[16]);
-        writer.Write(Slot);
-        writer.Write((uint)0);
-    }
-
     protected override bool ParsePayload(ref SpanReader reader)
     {
         if (reader.Remaining != 72)

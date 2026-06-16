@@ -18,6 +18,17 @@ public sealed class PlayCharacterPacketTests
         Assert.Equal("Tom", packet.CharacterName);
     }
 
+    [Fact]
+    public void TryParse_WrongLength_ReturnsFalse()
+    {
+        var raw = new byte[50];
+        raw[0] = 0x5D;
+
+        var packet = new PlayCharacterPacket();
+
+        Assert.False(packet.TryParse(raw));
+    }
+
     private static byte[] BuildPlayCharacter(int slot, string name)
     {
         var buffer = new byte[73];
