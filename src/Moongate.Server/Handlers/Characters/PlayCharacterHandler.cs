@@ -6,6 +6,7 @@ using Moongate.Abstractions.Interfaces.Services;
 using Moongate.Abstractions.Network;
 using Moongate.Network.UO.Packets.Incoming.Login;
 using Moongate.Server.Interfaces.Services;
+using Moongate.Server.Interfaces.Services.World;
 using Moongate.UO.Data.Interfaces.Services;
 using Serilog;
 using ILogger = Serilog.ILogger;
@@ -18,20 +19,24 @@ public class PlayCharacterHandler : PacketHandlerBase<PlayCharacterPacket>
     private readonly ILogger _logger = Log.ForContext<PlayCharacterHandler>();
     private readonly IMobileService _mobiles;
     private readonly IWorldEntryService _worldEntry;
+    private readonly IWorldMobileRegistry _registry;
 
     public PlayCharacterHandler(
         IEventBusService eventBus,
         INetworkSessionManager sessions,
         IPlayerSessionService playerSessions,
         IMobileService mobiles,
-        IWorldEntryService worldEntry
+        IWorldEntryService worldEntry,
+        IWorldMobileRegistry registry
     ) : base(eventBus, sessions, playerSessions)
     {
         ArgumentNullException.ThrowIfNull(mobiles);
         ArgumentNullException.ThrowIfNull(worldEntry);
+        ArgumentNullException.ThrowIfNull(registry);
 
         _mobiles = mobiles;
         _worldEntry = worldEntry;
+        _registry = registry;
     }
 
     public override async Task HandleAsync(
@@ -63,6 +68,8 @@ public class PlayCharacterHandler : PacketHandlerBase<PlayCharacterPacket>
         }
 
         var mobile = characters[slot];
+
+        _registry.Add(mobile);
 
         PlayerSessions.EnterWorld(context.SessionId, mobile.Id, mobile.Id, DateTimeOffset.UtcNow);
 

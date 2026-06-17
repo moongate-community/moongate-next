@@ -6,6 +6,7 @@ using Moongate.Core.Ids;
 using Moongate.Network.UO.Packets.Incoming.Login;
 using Moongate.Server.Handlers.Characters;
 using Moongate.Server.Interfaces.Services;
+using Moongate.Server.Services.World;
 using Moongate.Tests.Support;
 using Moongate.UO.Data.Entities.Mobiles;
 using ZLinq;
@@ -112,18 +113,21 @@ public sealed class PlayCharacterHandlerTests
         var sessions = new FakePlayerSessionService();
         var mobiles = new FakeMobileService(AccountId, mobile);
         var worldEntry = new RecordingWorldEntryService();
+        var registry = new WorldMobileRegistry();
         var handler = new PlayCharacterHandler(
             new NoopEventBusService(),
             new NoopNetworkSessionManager(),
             sessions,
             mobiles,
-            worldEntry
+            worldEntry,
+            registry
         );
 
         await handler.HandleAsync(Context(5));
 
         Assert.False(sessions.EnterWorldCalled);
         Assert.Null(worldEntry.Mobile);
+        Assert.Empty(registry.All);
     }
 
     [Fact]
@@ -133,18 +137,21 @@ public sealed class PlayCharacterHandlerTests
         var mobiles = new FakeMobileService(AccountId, mobile);
         var sessions = new FakePlayerSessionService(false);
         var worldEntry = new RecordingWorldEntryService();
+        var registry = new WorldMobileRegistry();
         var handler = new PlayCharacterHandler(
             new NoopEventBusService(),
             new NoopNetworkSessionManager(),
             sessions,
             mobiles,
-            worldEntry
+            worldEntry,
+            registry
         );
 
         await handler.HandleAsync(Context(0));
 
         Assert.Null(worldEntry.Mobile);
         Assert.False(sessions.EnterWorldCalled);
+        Assert.Empty(registry.All);
     }
 
     [Fact]
@@ -154,12 +161,14 @@ public sealed class PlayCharacterHandlerTests
         var sessions = new FakePlayerSessionService();
         var mobiles = new FakeMobileService(AccountId, mobile);
         var worldEntry = new RecordingWorldEntryService();
+        var registry = new WorldMobileRegistry();
         var handler = new PlayCharacterHandler(
             new NoopEventBusService(),
             new NoopNetworkSessionManager(),
             sessions,
             mobiles,
-            worldEntry
+            worldEntry,
+            registry
         );
 
         await handler.HandleAsync(Context(0));
@@ -168,6 +177,8 @@ public sealed class PlayCharacterHandlerTests
         Assert.Equal(mobile.Id, sessions.EnteredCharacterSerial);
         Assert.Same(mobile, worldEntry.Mobile);
         Assert.Equal(ConnectedSessionId, worldEntry.SessionId);
+        Assert.True(registry.TryGet(mobile.Id, out var registered));
+        Assert.Same(mobile, registered);
     }
 
     private static PacketContext<PlayCharacterPacket> Context(int slot)
