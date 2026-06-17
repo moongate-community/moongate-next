@@ -2,7 +2,9 @@ using DryIoc;
 using Moongate.Abstractions.Extensions.DryIoc;
 using Moongate.Server.Data.Events;
 using Moongate.Server.Handlers.World;
+using Moongate.Server.Interfaces.Services.Movement;
 using Moongate.Server.Interfaces.Services.World;
+using Moongate.Server.Services.Movement;
 using Moongate.Server.Services.World;
 
 namespace Moongate.Server.Extensions.Movement;
@@ -14,6 +16,7 @@ public static class MovementContainerExtensions
     public static IContainer AddMoongateMovement(this IContainer container)
     {
         container.Register<IWorldMobileRegistry, WorldMobileRegistry>(Reuse.Singleton);
+        container.Register<IMovementTileQueryService, MovementTileQueryService>(Reuse.Singleton);
         container.AddTickEventHandler<PlayerDisconnectedRegistryHandler, PlayerDisconnectedEvent>();
 
         return container;
