@@ -16,6 +16,7 @@ public static class MovementContainerExtensions
     public static IContainer AddMoongateMovement(this IContainer container)
     {
         container.Register<IWorldSpatialIndex, WorldSpatialIndex>(Reuse.Singleton);
+        container.Register<IInterestManagementService, InterestManagementService>(Reuse.Singleton);
         container.Register<IMovementTileQueryService, MovementTileQueryService>(Reuse.Singleton);
         container.Register<IMovementValidationService, MovementValidationService>(Reuse.Singleton);
         container.AddTickEventHandler<PlayerDisconnectedRegistryHandler, PlayerDisconnectedEvent>();
