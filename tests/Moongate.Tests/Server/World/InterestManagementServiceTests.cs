@@ -88,6 +88,30 @@ public sealed class InterestManagementServiceTests
         Assert.Contains(outgoing.Sent, s => s.SessionId == ViewerSession && s.Packet is DeleteObjectPacket d && d.Serial == mover.Id);
     }
 
+    [Fact]
+    public async Task OnMobileMoved_MoverSide_SeesEntitiesEnterAndLeaveView()
+    {
+        var (svc, index, outgoing, _, viewer) = Build(); // viewer is a PLAYER at (100,100), session 1, range 24
+        var target = new MobileEntity { Id = new Serial(30), MapId = 0, Location = new Point3D(100, 140, 0) }; // dist 40, out of range (non-player)
+        var item = new ItemEntity { Id = new Serial(0x40000010), MapId = 0, Location = new Point3D(100, 141, 0) }; // dist 41, out of range
+        index.AddMobile(target);
+        index.AddOrUpdateItem(item);
+        outgoing.Sent.Clear(); // start with an empty known-set / no prior packets
+
+        // Step 1: viewer walks toward them to (100,120) -> target (dist 20) and item (dist 21) enter view (<= 24)
+        index.MoveMobile(viewer, new Point3D(100, 120, 0));
+        await svc.OnMobileMovedAsync(new MobileMovedEvent(viewer.Id, 0, new Point3D(100, 100, 0), new Point3D(100, 120, 0), Moongate.Core.Types.DirectionType.South));
+        Assert.Contains(outgoing.Sent, s => s.SessionId == ViewerSession && s.Packet is MobileIncomingPacket p && p.Mobile.Id == target.Id);
+        Assert.Contains(outgoing.Sent, s => s.SessionId == ViewerSession && s.Packet is ObjectInformationPacket p && p.Item.Id == item.Id);
+        outgoing.Sent.Clear();
+
+        // Step 2: viewer walks back to (100,100) -> target (dist 40) and item leave view -> DeleteObject for both
+        index.MoveMobile(viewer, new Point3D(100, 100, 0));
+        await svc.OnMobileMovedAsync(new MobileMovedEvent(viewer.Id, 0, new Point3D(100, 120, 0), new Point3D(100, 100, 0), Moongate.Core.Types.DirectionType.North));
+        Assert.Contains(outgoing.Sent, s => s.SessionId == ViewerSession && s.Packet is DeleteObjectPacket d && d.Serial == target.Id);
+        Assert.Contains(outgoing.Sent, s => s.SessionId == ViewerSession && s.Packet is DeleteObjectPacket d && d.Serial == item.Id);
+    }
+
     private sealed class FakeItems : Moongate.UO.Data.Interfaces.Services.IItemService
     {
         public ValueTask<ItemEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
