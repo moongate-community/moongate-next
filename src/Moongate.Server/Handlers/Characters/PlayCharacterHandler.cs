@@ -19,7 +19,7 @@ public class PlayCharacterHandler : PacketHandlerBase<PlayCharacterPacket>
     private readonly ILogger _logger = Log.ForContext<PlayCharacterHandler>();
     private readonly IMobileService _mobiles;
     private readonly IWorldEntryService _worldEntry;
-    private readonly IWorldMobileRegistry _registry;
+    private readonly IWorldSpatialIndex _index;
 
     public PlayCharacterHandler(
         IEventBusService eventBus,
@@ -27,16 +27,16 @@ public class PlayCharacterHandler : PacketHandlerBase<PlayCharacterPacket>
         IPlayerSessionService playerSessions,
         IMobileService mobiles,
         IWorldEntryService worldEntry,
-        IWorldMobileRegistry registry
+        IWorldSpatialIndex index
     ) : base(eventBus, sessions, playerSessions)
     {
         ArgumentNullException.ThrowIfNull(mobiles);
         ArgumentNullException.ThrowIfNull(worldEntry);
-        ArgumentNullException.ThrowIfNull(registry);
+        ArgumentNullException.ThrowIfNull(index);
 
         _mobiles = mobiles;
         _worldEntry = worldEntry;
-        _registry = registry;
+        _index = index;
     }
 
     public override async Task HandleAsync(
@@ -69,7 +69,7 @@ public class PlayCharacterHandler : PacketHandlerBase<PlayCharacterPacket>
 
         var mobile = characters[slot];
 
-        _registry.Add(mobile);
+        _index.AddMobile(mobile);
 
         PlayerSessions.EnterWorld(context.SessionId, mobile.Id, mobile.Id, DateTimeOffset.UtcNow);
 
