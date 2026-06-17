@@ -17,6 +17,7 @@ public static class MovementContainerExtensions
     {
         container.Register<IWorldMobileRegistry, WorldMobileRegistry>(Reuse.Singleton);
         container.Register<IMovementTileQueryService, MovementTileQueryService>(Reuse.Singleton);
+        container.Register<IMovementValidationService, MovementValidationService>(Reuse.Singleton);
         container.AddTickEventHandler<PlayerDisconnectedRegistryHandler, PlayerDisconnectedEvent>();
 
         return container;
