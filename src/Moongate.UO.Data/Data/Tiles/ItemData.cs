@@ -134,6 +134,13 @@ public struct ItemData
         set => this[UoTileFlag.Surface] = value;
     }
 
+    public bool ImpassableSurface
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => this[UoTileFlag.Impassable | UoTileFlag.Surface];
+        set => this[UoTileFlag.Impassable | UoTileFlag.Surface] = value;
+    }
+
     public bool Roof
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

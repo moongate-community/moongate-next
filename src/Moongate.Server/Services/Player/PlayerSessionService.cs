@@ -215,6 +215,18 @@ public sealed class PlayerSessionService
         }
     }
 
+    public void UpdateMovementState(long sessionId, byte moveSequence, long moveCredit, long moveTime)
+    {
+        lock (_sync)
+        {
+            var session = GetRequiredSession(sessionId);
+
+            session.MoveSequence = moveSequence;
+            session.MoveCredit = moveCredit;
+            session.MoveTime = moveTime;
+        }
+    }
+
     private static PlayerSession Copy(PlayerSession session)
         => new()
         {
@@ -230,7 +242,11 @@ public sealed class PlayerSessionService
             EnteredWorldAt = session.EnteredWorldAt,
             DisconnectedAt = session.DisconnectedAt,
             ViewRange = session.ViewRange,
-            ClientVersion = session.ClientVersion
+            ClientVersion = session.ClientVersion,
+            PingSequence = session.PingSequence,
+            MoveSequence = session.MoveSequence,
+            MoveCredit = session.MoveCredit,
+            MoveTime = session.MoveTime
         };
 
     private PlayerSession GetRequiredSession(long sessionId)

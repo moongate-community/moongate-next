@@ -24,4 +24,8 @@ public sealed class PlayerSession
     public ClientVersion? ClientVersion { get; set; }
 
     public byte PingSequence { get; set; }
+
+    public byte MoveSequence { get; set; }
+    public long MoveCredit { get; set; }
+    public long MoveTime { get; set; }
 }

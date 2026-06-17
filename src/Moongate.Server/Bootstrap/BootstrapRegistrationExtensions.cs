@@ -20,6 +20,7 @@ using Moongate.Server.Extensions.Logging;
 using Moongate.Server.Extensions.Loot;
 using Moongate.Server.Extensions.Metrics;
 using Moongate.Server.Extensions.Mobiles;
+using Moongate.Server.Extensions.Movement;
 using Moongate.Server.Extensions.Network;
 using Moongate.Server.Extensions.Persistence;
 using Moongate.Server.Extensions.Plugins;
@@ -143,6 +144,7 @@ internal static class BootstrapRegistrationExtensions
         container.AddMoongateTimerWheel();
         container.AddMoongateJobs();
         container.AddMoongateLightAndTime();
+        container.AddMoongateMovement();
         container.AddMoongateMetrics();
         container.AddMetricProvider<EventBusService>();
         container.AddMetricProvider<GameLoopService>();

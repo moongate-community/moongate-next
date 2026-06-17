@@ -100,4 +100,7 @@ public interface IPlayerSessionService
     /// <param name="viewRange">Optional client view range.</param>
     /// <returns>The updated player session.</returns>
     PlayerSession UpdateClient(long sessionId, ClientVersion? clientVersion = null, int? viewRange = null);
+
+    /// <summary>Persists the movement protocol state (sequence, fastwalk credit, move time) for a session.</summary>
+    void UpdateMovementState(long sessionId, byte moveSequence, long moveCredit, long moveTime);
 }
