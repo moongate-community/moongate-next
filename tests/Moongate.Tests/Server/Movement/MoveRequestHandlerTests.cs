@@ -10,11 +10,10 @@ using Moongate.Network.UO.Packets.Incoming.Movement;
 using Moongate.Network.UO.Packets.Outgoing.Movement;
 using Moongate.Server.Handlers.Movement;
 using Moongate.Server.Interfaces.Services.Movement;
+using Moongate.Server.Services.Player;
 using Moongate.Server.Services.World;
 using Moongate.Tests.Support;
 using Moongate.UO.Data.Entities.Mobiles;
-using ZLinq;
-using ZLinq.Linq;
 
 namespace Moongate.Tests.Server.Movement;
 
@@ -45,64 +44,6 @@ public sealed class MoveRequestHandlerTests
 
             return false;
         }
-    }
-
-    private sealed class FakePlayerSessionService : IPlayerSessionService
-    {
-        private readonly PlayerSession _session;
-
-        public FakePlayerSessionService(PlayerSession session)
-        {
-            _session = session;
-        }
-
-        public int Count => throw new NotSupportedException();
-
-        public PlayerSession Authenticate(long sessionId, Serial userId, string username, DateTimeOffset authenticatedAt)
-            => throw new NotSupportedException();
-
-        public bool Disconnect(long sessionId, DateTimeOffset disconnectedAt)
-            => throw new NotSupportedException();
-
-        public PlayerSession EnterWorld(
-            long sessionId,
-            Serial characterSerial,
-            Serial mobileSerial,
-            DateTimeOffset enteredWorldAt
-        )
-            => throw new NotSupportedException();
-
-        public IReadOnlyCollection<PlayerSession> GetAll()
-            => throw new NotSupportedException();
-
-        public PlayerSession GetOrCreateConnected(long sessionId, string? remoteEndPoint, DateTimeOffset connectedAt)
-            => throw new NotSupportedException();
-
-        public ValueEnumerable<FromArray<PlayerSession>, PlayerSession> Query()
-            => throw new NotSupportedException();
-
-        public bool Remove(long sessionId)
-            => throw new NotSupportedException();
-
-        public bool TryGetByMobileSerial(Serial mobileSerial, out PlayerSession session)
-            => throw new NotSupportedException();
-
-        public bool TryGetBySessionId(long sessionId, out PlayerSession session)
-        {
-            if (sessionId == InWorldSessionId)
-            {
-                session = _session;
-
-                return true;
-            }
-
-            session = null!;
-
-            return false;
-        }
-
-        public PlayerSession UpdateClient(long sessionId, ClientVersion? clientVersion = null, int? viewRange = null)
-            => throw new NotSupportedException();
     }
 
     [Fact]
@@ -187,13 +128,14 @@ public sealed class MoveRequestHandlerTests
         registry.Add(mobile);
 
         var sent = new List<IGameNetworkPacket>();
-        var handler = CreateHandler(registry, accept: true, out var session);
-        session.MoveSequence = 0;
+        var handler = CreateHandler(registry, accept: true, out var sessions);
+        sessions.UpdateMovementState(InWorldSessionId, moveSequence: 0, moveCredit: 0, moveTime: 0);
 
         await handler.HandleAsync(Context(DirectionType.South, sequence: 0, sent));
 
         var confirm = Assert.IsType<MoveConfirmPacket>(Assert.Single(sent));
         Assert.Equal((byte)0, confirm.Sequence);
+        Assert.True(sessions.TryGetBySessionId(InWorldSessionId, out var session));
         Assert.Equal((byte)1, session.MoveSequence);
     }
 
@@ -210,12 +152,13 @@ public sealed class MoveRequestHandlerTests
         registry.Add(mobile);
 
         var sent = new List<IGameNetworkPacket>();
-        var handler = CreateHandler(registry, accept: true, out var session);
-        session.MoveSequence = 255;
+        var handler = CreateHandler(registry, accept: true, out var sessions);
+        sessions.UpdateMovementState(InWorldSessionId, moveSequence: 255, moveCredit: 0, moveTime: 0);
 
         await handler.HandleAsync(Context(DirectionType.South, sequence: 255, sent));
 
         Assert.Contains(sent, static p => p is MoveConfirmPacket);
+        Assert.True(sessions.TryGetBySessionId(InWorldSessionId, out var session));
         Assert.Equal((byte)1, session.MoveSequence);
     }
 
@@ -232,8 +175,8 @@ public sealed class MoveRequestHandlerTests
         registry.Add(mobile);
 
         var sent = new List<IGameNetworkPacket>();
-        var handler = CreateHandler(registry, accept: true, out var session);
-        session.MoveSequence = 0;
+        var handler = CreateHandler(registry, accept: true, out var sessions);
+        sessions.UpdateMovementState(InWorldSessionId, moveSequence: 0, moveCredit: 0, moveTime: 0);
 
         await handler.HandleAsync(Context(DirectionType.South, sequence: 5, sent));
 
@@ -255,10 +198,13 @@ public sealed class MoveRequestHandlerTests
         registry.Add(mobile);
 
         var sent = new List<IGameNetworkPacket>();
-        var handler = CreateHandler(registry, accept: true, out var session);
-        session.MoveSequence = 1;
-        session.MoveTime = Environment.TickCount64 + 10_000_000;
-        session.MoveCredit = 0;
+        var handler = CreateHandler(registry, accept: true, out var sessions);
+        sessions.UpdateMovementState(
+            InWorldSessionId,
+            moveSequence: 1,
+            moveCredit: 0,
+            moveTime: Environment.TickCount64 + 10_000_000
+        );
 
         await handler.HandleAsync(Context(DirectionType.South, sequence: 1, sent));
 
@@ -266,25 +212,60 @@ public sealed class MoveRequestHandlerTests
         Assert.DoesNotContain(sent, static p => p is MoveConfirmPacket);
         Assert.True(registry.TryGet(MobileId, out var live));
         Assert.Equal(new Point3D(50, 50, 0), live.Location);
+        Assert.True(sessions.TryGetBySessionId(InWorldSessionId, out var session));
         Assert.Equal((byte)1, session.MoveSequence);
+    }
+
+    [Fact]
+    public async Task TwoStepWalk_PersistsSequence_AcrossPackets()
+    {
+        var mobile = new MobileEntity
+        {
+            Id = MobileId,
+            Direction = DirectionType.South,
+            Location = new Point3D(50, 50, 0)
+        };
+        var registry = new WorldMobileRegistry();
+        registry.Add(mobile);
+
+        var sent = new List<IGameNetworkPacket>();
+        var handler = CreateHandler(registry, accept: true, out var sessions);
+
+        // Seed fastwalk credit and a current move time so the throttle never denies the back-to-back
+        // packets; this test isolates sequence persistence across packets.
+        sessions.UpdateMovementState(
+            InWorldSessionId,
+            moveSequence: 0,
+            moveCredit: 5000,
+            moveTime: Environment.TickCount64
+        );
+
+        await handler.HandleAsync(Context(DirectionType.South, sequence: 0, sent));
+        await handler.HandleAsync(Context(DirectionType.South, sequence: 1, sent));
+
+        Assert.Equal(2, sent.Count(static p => p is MoveConfirmPacket));
+        Assert.DoesNotContain(sent, static p => p is MoveDenyPacket);
+        Assert.True(registry.TryGet(MobileId, out var live));
+        Assert.Equal(new Point3D(50, 52, 0), live.Location);
     }
 
     private static MoveRequestHandler CreateHandler(WorldMobileRegistry registry, bool accept)
         => CreateHandler(registry, accept, out _);
 
-    private static MoveRequestHandler CreateHandler(WorldMobileRegistry registry, bool accept, out PlayerSession session)
+    private static MoveRequestHandler CreateHandler(
+        WorldMobileRegistry registry,
+        bool accept,
+        out PlayerSessionService sessions
+    )
     {
-        session = new PlayerSession
-        {
-            SessionId = InWorldSessionId,
-            State = Abstractions.Types.Player.PlayerSessionStateType.InWorld,
-            MobileSerial = MobileId
-        };
+        sessions = new PlayerSessionService();
+        sessions.GetOrCreateConnected(InWorldSessionId, null, DateTimeOffset.UtcNow);
+        sessions.EnterWorld(InWorldSessionId, new Serial(456), MobileId, DateTimeOffset.UtcNow);
 
         return new MoveRequestHandler(
             new NoopEventBusService(),
             new NoopNetworkSessionManager(),
-            new FakePlayerSessionService(session),
+            sessions,
             registry,
             new FakeMovementValidation(accept)
         );

@@ -62,4 +62,7 @@ public sealed class StubPlayerSessions : IPlayerSessionService
 
     public PlayerSession UpdateClient(long sessionId, ClientVersion? clientVersion = null, int? viewRange = null)
         => throw new NotSupportedException();
+
+    public void UpdateMovementState(long sessionId, byte moveSequence, long moveCredit, long moveTime)
+        => throw new NotSupportedException();
 }

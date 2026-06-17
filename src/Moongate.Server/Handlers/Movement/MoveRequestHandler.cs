@@ -69,6 +69,7 @@ public class MoveRequestHandler : PacketHandlerBase<MoveRequestPacket>
 
         if (IsThrottled(session))
         {
+            PlayerSessions.UpdateMovementState(context.SessionId, session.MoveSequence, session.MoveCredit, session.MoveTime);
             await SendDenyAsync(context, mobile, packet.Sequence, cancellationToken);
 
             return;
@@ -86,6 +87,7 @@ public class MoveRequestHandler : PacketHandlerBase<MoveRequestPacket>
             if (!_validation.TryResolveMove(mobile, packet.Direction, out var newLocation))
             {
                 session.MoveSequence = 0;
+                PlayerSessions.UpdateMovementState(context.SessionId, session.MoveSequence, session.MoveCredit, session.MoveTime);
                 await SendDenyAsync(context, mobile, packet.Sequence, cancellationToken);
 
                 return;
@@ -106,6 +108,8 @@ public class MoveRequestHandler : PacketHandlerBase<MoveRequestPacket>
         await context.SendAsync(new MoveConfirmPacket(packet.Sequence, (byte)mobile.Notoriety), cancellationToken);
 
         session.MoveTime += isTurnOnly ? TurnDelayMs : ComputeSpeedMs(packet.Direction);
+
+        PlayerSessions.UpdateMovementState(context.SessionId, session.MoveSequence, session.MoveCredit, session.MoveTime);
     }
 
     private static int ComputeSpeedMs(DirectionType direction)
