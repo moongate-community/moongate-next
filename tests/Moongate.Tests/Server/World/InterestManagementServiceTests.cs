@@ -1,6 +1,7 @@
 using Moongate.Core.Geometry;
 using Moongate.Core.Ids;
 using Moongate.Network.UO.Packets.Outgoing.Entity;
+using Moongate.Server.Data.Events;
 using Moongate.Server.Services.Player;
 using Moongate.Server.Services.World;
 using Moongate.Tests.Support;
@@ -60,6 +61,31 @@ public sealed class InterestManagementServiceTests
         svc.OnEntityRemoved(other.Id);
 
         Assert.Contains(outgoing.Sent, s => s.SessionId == ViewerSession && s.Packet is DeleteObjectPacket d && d.Serial == other.Id);
+    }
+
+    [Fact]
+    public async Task OnMobileMoved_ObserverGainsThenLosesSight()
+    {
+        var (svc, index, outgoing, sessions, viewer) = Build(); // viewer at (100,100), session 1, range 24
+        var mover = new MobileEntity { Id = new Serial(20), MapId = 0, Location = new Point3D(100, 130, 0) }; // out of range (30 > 24)
+        index.AddMobile(mover);
+
+        // mover steps to (100,124) -> within range 24 of viewer -> viewer gets MobileIncoming
+        index.MoveMobile(mover, new Point3D(100, 124, 0));
+        await svc.OnMobileMovedAsync(new MobileMovedEvent(mover.Id, 0, new Point3D(100, 130, 0), new Point3D(100, 124, 0), Moongate.Core.Types.DirectionType.North));
+        Assert.Contains(outgoing.Sent, s => s.SessionId == ViewerSession && s.Packet is MobileIncomingPacket p && p.Mobile.Id == mover.Id);
+        outgoing.Sent.Clear();
+
+        // mover steps within view -> MobileMoving
+        index.MoveMobile(mover, new Point3D(100, 123, 0));
+        await svc.OnMobileMovedAsync(new MobileMovedEvent(mover.Id, 0, new Point3D(100, 124, 0), new Point3D(100, 123, 0), Moongate.Core.Types.DirectionType.North));
+        Assert.Contains(outgoing.Sent, s => s.SessionId == ViewerSession && s.Packet is MobileMovingPacket p && p.Mobile.Id == mover.Id);
+        outgoing.Sent.Clear();
+
+        // mover steps back out of range -> DeleteObject
+        index.MoveMobile(mover, new Point3D(100, 130, 0));
+        await svc.OnMobileMovedAsync(new MobileMovedEvent(mover.Id, 0, new Point3D(100, 123, 0), new Point3D(100, 130, 0), Moongate.Core.Types.DirectionType.South));
+        Assert.Contains(outgoing.Sent, s => s.SessionId == ViewerSession && s.Packet is DeleteObjectPacket d && d.Serial == mover.Id);
     }
 
     private sealed class FakeItems : Moongate.UO.Data.Interfaces.Services.IItemService

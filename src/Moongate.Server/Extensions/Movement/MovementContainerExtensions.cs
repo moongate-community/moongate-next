@@ -20,6 +20,7 @@ public static class MovementContainerExtensions
         container.Register<IMovementTileQueryService, MovementTileQueryService>(Reuse.Singleton);
         container.Register<IMovementValidationService, MovementValidationService>(Reuse.Singleton);
         container.AddTickEventHandler<PlayerDisconnectedRegistryHandler, PlayerDisconnectedEvent>();
+        container.AddAsyncEventHandler<MovementBroadcastHandler, MobileMovedEvent>();
 
         return container;
     }
