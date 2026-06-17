@@ -29,21 +29,21 @@ public class MoveRequestHandler : PacketHandlerBase<MoveRequestPacket>
     private const int RunFootDelayMs = 200;
     private const int TurnDelayMs = 100;
 
-    private readonly IWorldMobileRegistry _registry;
+    private readonly IWorldSpatialIndex _index;
     private readonly IMovementValidationService _validation;
 
     public MoveRequestHandler(
         IEventBusService eventBus,
         INetworkSessionManager sessions,
         IPlayerSessionService playerSessions,
-        IWorldMobileRegistry registry,
+        IWorldSpatialIndex index,
         IMovementValidationService validation
     ) : base(eventBus, sessions, playerSessions)
     {
-        ArgumentNullException.ThrowIfNull(registry);
+        ArgumentNullException.ThrowIfNull(index);
         ArgumentNullException.ThrowIfNull(validation);
 
-        _registry = registry;
+        _index = index;
         _validation = validation;
     }
 
@@ -55,7 +55,7 @@ public class MoveRequestHandler : PacketHandlerBase<MoveRequestPacket>
         if (!PlayerSessions.TryGetBySessionId(context.SessionId, out var session) ||
             session.State != PlayerSessionStateType.InWorld ||
             session.MobileSerial is not { } serial ||
-            !_registry.TryGet(serial, out var mobile))
+            !_index.TryGet(serial, out var mobile))
         {
             return;
         }

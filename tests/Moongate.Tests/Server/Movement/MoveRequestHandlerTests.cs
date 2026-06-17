@@ -55,8 +55,8 @@ public sealed class MoveRequestHandlerTests
             Direction = DirectionType.South,
             Location = new Point3D(50, 50, 0)
         };
-        var registry = new WorldMobileRegistry();
-        registry.Add(mobile);
+        var registry = new WorldSpatialIndex();
+        registry.AddMobile(mobile);
 
         var sent = new List<IGameNetworkPacket>();
         var handler = CreateHandler(registry, accept: true);
@@ -78,8 +78,8 @@ public sealed class MoveRequestHandlerTests
             Direction = DirectionType.South,
             Location = new Point3D(50, 50, 0)
         };
-        var registry = new WorldMobileRegistry();
-        registry.Add(mobile);
+        var registry = new WorldSpatialIndex();
+        registry.AddMobile(mobile);
 
         var sent = new List<IGameNetworkPacket>();
         var handler = CreateHandler(registry, accept: false);
@@ -101,8 +101,8 @@ public sealed class MoveRequestHandlerTests
             Direction = DirectionType.South,
             Location = new Point3D(50, 50, 0)
         };
-        var registry = new WorldMobileRegistry();
-        registry.Add(mobile);
+        var registry = new WorldSpatialIndex();
+        registry.AddMobile(mobile);
 
         var sent = new List<IGameNetworkPacket>();
         var handler = CreateHandler(registry, accept: true);
@@ -124,8 +124,8 @@ public sealed class MoveRequestHandlerTests
             Direction = DirectionType.South,
             Location = new Point3D(50, 50, 0)
         };
-        var registry = new WorldMobileRegistry();
-        registry.Add(mobile);
+        var registry = new WorldSpatialIndex();
+        registry.AddMobile(mobile);
 
         var sent = new List<IGameNetworkPacket>();
         var handler = CreateHandler(registry, accept: true, out var sessions);
@@ -148,8 +148,8 @@ public sealed class MoveRequestHandlerTests
             Direction = DirectionType.South,
             Location = new Point3D(50, 50, 0)
         };
-        var registry = new WorldMobileRegistry();
-        registry.Add(mobile);
+        var registry = new WorldSpatialIndex();
+        registry.AddMobile(mobile);
 
         var sent = new List<IGameNetworkPacket>();
         var handler = CreateHandler(registry, accept: true, out var sessions);
@@ -171,8 +171,8 @@ public sealed class MoveRequestHandlerTests
             Direction = DirectionType.South,
             Location = new Point3D(50, 50, 0)
         };
-        var registry = new WorldMobileRegistry();
-        registry.Add(mobile);
+        var registry = new WorldSpatialIndex();
+        registry.AddMobile(mobile);
 
         var sent = new List<IGameNetworkPacket>();
         var handler = CreateHandler(registry, accept: true, out var sessions);
@@ -194,8 +194,8 @@ public sealed class MoveRequestHandlerTests
             Direction = DirectionType.South,
             Location = new Point3D(50, 50, 0)
         };
-        var registry = new WorldMobileRegistry();
-        registry.Add(mobile);
+        var registry = new WorldSpatialIndex();
+        registry.AddMobile(mobile);
 
         var sent = new List<IGameNetworkPacket>();
         var handler = CreateHandler(registry, accept: true, out var sessions);
@@ -225,8 +225,8 @@ public sealed class MoveRequestHandlerTests
             Direction = DirectionType.South,
             Location = new Point3D(50, 50, 0)
         };
-        var registry = new WorldMobileRegistry();
-        registry.Add(mobile);
+        var registry = new WorldSpatialIndex();
+        registry.AddMobile(mobile);
 
         var sent = new List<IGameNetworkPacket>();
         var handler = CreateHandler(registry, accept: true, out var sessions);
@@ -249,11 +249,11 @@ public sealed class MoveRequestHandlerTests
         Assert.Equal(new Point3D(50, 52, 0), live.Location);
     }
 
-    private static MoveRequestHandler CreateHandler(WorldMobileRegistry registry, bool accept)
+    private static MoveRequestHandler CreateHandler(WorldSpatialIndex registry, bool accept)
         => CreateHandler(registry, accept, out _);
 
     private static MoveRequestHandler CreateHandler(
-        WorldMobileRegistry registry,
+        WorldSpatialIndex registry,
         bool accept,
         out PlayerSessionService sessions
     )

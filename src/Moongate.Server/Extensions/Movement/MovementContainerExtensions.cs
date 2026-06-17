@@ -15,7 +15,7 @@ public static class MovementContainerExtensions
     /// <summary>Registers the world mobile registry, movement services, and lifecycle handlers.</summary>
     public static IContainer AddMoongateMovement(this IContainer container)
     {
-        container.Register<IWorldMobileRegistry, WorldMobileRegistry>(Reuse.Singleton);
+        container.Register<IWorldSpatialIndex, WorldSpatialIndex>(Reuse.Singleton);
         container.Register<IMovementTileQueryService, MovementTileQueryService>(Reuse.Singleton);
         container.Register<IMovementValidationService, MovementValidationService>(Reuse.Singleton);
         container.AddTickEventHandler<PlayerDisconnectedRegistryHandler, PlayerDisconnectedEvent>();

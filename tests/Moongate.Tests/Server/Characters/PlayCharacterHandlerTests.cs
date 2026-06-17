@@ -116,7 +116,7 @@ public sealed class PlayCharacterHandlerTests
         var sessions = new FakePlayerSessionService();
         var mobiles = new FakeMobileService(AccountId, mobile);
         var worldEntry = new RecordingWorldEntryService();
-        var registry = new WorldMobileRegistry();
+        var registry = new WorldSpatialIndex();
         var handler = new PlayCharacterHandler(
             new NoopEventBusService(),
             new NoopNetworkSessionManager(),
@@ -140,7 +140,7 @@ public sealed class PlayCharacterHandlerTests
         var mobiles = new FakeMobileService(AccountId, mobile);
         var sessions = new FakePlayerSessionService(false);
         var worldEntry = new RecordingWorldEntryService();
-        var registry = new WorldMobileRegistry();
+        var registry = new WorldSpatialIndex();
         var handler = new PlayCharacterHandler(
             new NoopEventBusService(),
             new NoopNetworkSessionManager(),
@@ -164,7 +164,7 @@ public sealed class PlayCharacterHandlerTests
         var sessions = new FakePlayerSessionService();
         var mobiles = new FakeMobileService(AccountId, mobile);
         var worldEntry = new RecordingWorldEntryService();
-        var registry = new WorldMobileRegistry();
+        var registry = new WorldSpatialIndex();
         var handler = new PlayCharacterHandler(
             new NoopEventBusService(),
             new NoopNetworkSessionManager(),

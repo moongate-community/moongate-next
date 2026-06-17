@@ -11,15 +11,15 @@ namespace Moongate.Server.Handlers.World;
 public sealed class PlayerDisconnectedRegistryHandler : ITickEventHandler<PlayerDisconnectedEvent>
 {
     private readonly IPlayerSessionService _playerSessions;
-    private readonly IWorldMobileRegistry _registry;
+    private readonly IWorldSpatialIndex _index;
 
-    public PlayerDisconnectedRegistryHandler(IPlayerSessionService playerSessions, IWorldMobileRegistry registry)
+    public PlayerDisconnectedRegistryHandler(IPlayerSessionService playerSessions, IWorldSpatialIndex index)
     {
         ArgumentNullException.ThrowIfNull(playerSessions);
-        ArgumentNullException.ThrowIfNull(registry);
+        ArgumentNullException.ThrowIfNull(index);
 
         _playerSessions = playerSessions;
-        _registry = registry;
+        _index = index;
     }
 
     public void Handle(PlayerDisconnectedEvent evt)
@@ -28,7 +28,7 @@ public sealed class PlayerDisconnectedRegistryHandler : ITickEventHandler<Player
 
         if (_playerSessions.TryGetBySessionId(evt.SessionId, out var session) && session.MobileSerial is { } serial)
         {
-            _registry.Remove(serial);
+            _index.RemoveMobile(serial);
         }
     }
 }

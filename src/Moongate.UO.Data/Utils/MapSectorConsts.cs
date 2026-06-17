@@ -13,6 +13,9 @@ public static class MapSectorConsts
     /// <summary>Bit shift equivalent to dividing a tile coordinate by <see cref="SectorSize" />.</summary>
     public static readonly int SectorShift = ComputeSectorShift();
 
+    /// <summary>Maximum tiles a client sees from its position; used by interest management.</summary>
+    public const int MaxViewRange = 24;
+
     private static int ComputeSectorShift()
     {
         if (SectorSize <= 0 || !BitOperations.IsPow2((uint)SectorSize))
