@@ -174,9 +174,107 @@ public sealed class MoveRequestHandlerTests
         Assert.Equal(DirectionType.East, live.Direction);
     }
 
-    private static MoveRequestHandler CreateHandler(WorldMobileRegistry registry, bool accept)
+    [Fact]
+    public async Task ValidStep_ConfirmEchoesRequestSequence_AndAdvancesSequence()
     {
-        var session = new PlayerSession
+        var mobile = new MobileEntity
+        {
+            Id = MobileId,
+            Direction = DirectionType.South,
+            Location = new Point3D(50, 50, 0)
+        };
+        var registry = new WorldMobileRegistry();
+        registry.Add(mobile);
+
+        var sent = new List<IGameNetworkPacket>();
+        var handler = CreateHandler(registry, accept: true, out var session);
+        session.MoveSequence = 0;
+
+        await handler.HandleAsync(Context(DirectionType.South, sequence: 0, sent));
+
+        var confirm = Assert.IsType<MoveConfirmPacket>(Assert.Single(sent));
+        Assert.Equal((byte)0, confirm.Sequence);
+        Assert.Equal((byte)1, session.MoveSequence);
+    }
+
+    [Fact]
+    public async Task SequenceWrap_From255_ResetsToOne()
+    {
+        var mobile = new MobileEntity
+        {
+            Id = MobileId,
+            Direction = DirectionType.South,
+            Location = new Point3D(50, 50, 0)
+        };
+        var registry = new WorldMobileRegistry();
+        registry.Add(mobile);
+
+        var sent = new List<IGameNetworkPacket>();
+        var handler = CreateHandler(registry, accept: true, out var session);
+        session.MoveSequence = 255;
+
+        await handler.HandleAsync(Context(DirectionType.South, sequence: 255, sent));
+
+        Assert.Contains(sent, static p => p is MoveConfirmPacket);
+        Assert.Equal((byte)1, session.MoveSequence);
+    }
+
+    [Fact]
+    public async Task ResyncMismatch_DropsWithoutReply()
+    {
+        var mobile = new MobileEntity
+        {
+            Id = MobileId,
+            Direction = DirectionType.South,
+            Location = new Point3D(50, 50, 0)
+        };
+        var registry = new WorldMobileRegistry();
+        registry.Add(mobile);
+
+        var sent = new List<IGameNetworkPacket>();
+        var handler = CreateHandler(registry, accept: true, out var session);
+        session.MoveSequence = 0;
+
+        await handler.HandleAsync(Context(DirectionType.South, sequence: 5, sent));
+
+        Assert.Empty(sent);
+        Assert.True(registry.TryGet(MobileId, out var live));
+        Assert.Equal(new Point3D(50, 50, 0), live.Location);
+    }
+
+    [Fact]
+    public async Task Throttled_Denies_WithoutResettingSequence()
+    {
+        var mobile = new MobileEntity
+        {
+            Id = MobileId,
+            Direction = DirectionType.South,
+            Location = new Point3D(50, 50, 0)
+        };
+        var registry = new WorldMobileRegistry();
+        registry.Add(mobile);
+
+        var sent = new List<IGameNetworkPacket>();
+        var handler = CreateHandler(registry, accept: true, out var session);
+        session.MoveSequence = 1;
+        session.MoveTime = Environment.TickCount64 + 10_000_000;
+        session.MoveCredit = 0;
+
+        await handler.HandleAsync(Context(DirectionType.South, sequence: 1, sent));
+
+        Assert.Contains(sent, static p => p is MoveDenyPacket);
+        Assert.DoesNotContain(sent, static p => p is MoveConfirmPacket);
+        Assert.True(registry.TryGet(MobileId, out var live));
+        Assert.Equal(new Point3D(50, 50, 0), live.Location);
+        Assert.Equal((byte)1, session.MoveSequence);
+    }
+
+    private static MoveRequestHandler CreateHandler(WorldMobileRegistry registry, bool accept)
+        => CreateHandler(registry, accept, out _);
+
+    private static MoveRequestHandler CreateHandler(WorldMobileRegistry registry, bool accept, out PlayerSession session)
+    {
+        session = new PlayerSession
         {
             SessionId = InWorldSessionId,
             State = Abstractions.Types.Player.PlayerSessionStateType.InWorld,
