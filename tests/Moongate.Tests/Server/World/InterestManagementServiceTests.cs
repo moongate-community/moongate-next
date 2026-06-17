@@ -26,7 +26,7 @@ public sealed class InterestManagementServiceTests
         sessions.EnterWorld(ViewerSession, new Serial(900), viewerSerial, DateTimeOffset.UtcNow);
         var viewer = new MobileEntity { Id = viewerSerial, MapId = 0, Location = new Point3D(100, 100, 0), IsPlayer = true };
         index.AddMobile(viewer);
-        var svc = new InterestManagementService(index, outgoing, sessions, new FakeItems());
+        var svc = new InterestManagementService(index, outgoing, sessions, new FakeItemService());
         return (svc, index, outgoing, sessions, viewer);
     }
 
@@ -110,22 +110,5 @@ public sealed class InterestManagementServiceTests
         await svc.OnMobileMovedAsync(new MobileMovedEvent(viewer.Id, 0, new Point3D(100, 120, 0), new Point3D(100, 100, 0), Moongate.Core.Types.DirectionType.North));
         Assert.Contains(outgoing.Sent, s => s.SessionId == ViewerSession && s.Packet is DeleteObjectPacket d && d.Serial == target.Id);
         Assert.Contains(outgoing.Sent, s => s.SessionId == ViewerSession && s.Packet is DeleteObjectPacket d && d.Serial == item.Id);
-    }
-
-    private sealed class FakeItems : Moongate.UO.Data.Interfaces.Services.IItemService
-    {
-        public ValueTask<ItemEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
-            => ValueTask.FromResult<ItemEntity?>(null);
-        // throw for everything else (unused):
-        public ValueTask<bool> AddItemAsync(ItemEntity c, ItemEntity ch, Moongate.Core.Geometry.Point2D p, CancellationToken ct = default) => throw new NotSupportedException();
-        public ValueTask<int> CountAsync(CancellationToken ct = default) => throw new NotSupportedException();
-        public ValueTask<ItemEntity> CreateAsync(ItemEntity i, CancellationToken ct = default) => throw new NotSupportedException();
-        public ValueTask<bool> DeleteAsync(Serial id, CancellationToken ct = default) => throw new NotSupportedException();
-        public bool IsContainer(ItemEntity i) => throw new NotSupportedException();
-        public bool IsContainer(int i) => throw new NotSupportedException();
-        public bool IsDoor(ItemEntity i) => throw new NotSupportedException();
-        public bool IsDoor(int i) => throw new NotSupportedException();
-        public ValueTask<bool> RemoveItemAsync(ItemEntity c, Serial id, CancellationToken ct = default) => throw new NotSupportedException();
-        public ValueTask<int> TotalWeightAsync(ItemEntity i, CancellationToken ct = default) => throw new NotSupportedException();
     }
 }
