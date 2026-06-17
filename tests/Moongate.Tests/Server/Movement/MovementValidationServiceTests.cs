@@ -1,9 +1,13 @@
+using System;
 using System.Collections.Generic;
 using Moongate.Core.Geometry;
+using Moongate.Core.Ids;
 using Moongate.Core.Types;
 using Moongate.Server.Interfaces.Services.Movement;
+using Moongate.Server.Interfaces.Services.World;
 using Moongate.Server.Services.Movement;
 using Moongate.UO.Data.Data.Tiles;
+using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Entities.Mobiles;
 using Moongate.UO.Data.Interfaces.Tiles;
 using Moongate.UO.Data.Types.Tiles;
@@ -17,7 +21,7 @@ public sealed class MovementValidationServiceTests
     public void TryResolveMove_FlatWalkableLand_MovesToTileAtLandZ()
     {
         var tiles = new FakeTileQuery(width: 100, height: 100, landZ: 0);
-        var service = new MovementValidationService(tiles, new FakeTileData());
+        var service = new MovementValidationService(tiles, new FakeTileData(), new FakeSpatialIndex([]));
         var mobile = new MobileEntity { MapId = 0, Location = new Point3D(50, 50, 0) };
 
         Assert.True(service.TryResolveMove(mobile, DirectionType.South, out var dest));
@@ -28,7 +32,7 @@ public sealed class MovementValidationServiceTests
     public void TryResolveMove_OffMap_ReturnsFalse()
     {
         var tiles = new FakeTileQuery(width: 100, height: 100, landZ: 0);
-        var service = new MovementValidationService(tiles, new FakeTileData());
+        var service = new MovementValidationService(tiles, new FakeTileData(), new FakeSpatialIndex([]));
         var mobile = new MobileEntity { MapId = 0, Location = new Point3D(0, 0, 0) };
 
         Assert.False(service.TryResolveMove(mobile, DirectionType.West, out _)); // x -> -1
@@ -44,7 +48,7 @@ public sealed class MovementValidationServiceTests
             100,
             new ItemData { Flags = UoTileFlag.Impassable | UoTileFlag.Wall, Height = 20 }
         );
-        var service = new MovementValidationService(tiles, data);
+        var service = new MovementValidationService(tiles, data, new FakeSpatialIndex([]));
         var mobile = new MobileEntity { MapId = 0, Location = new Point3D(50, 50, 0) };
 
         Assert.False(service.TryResolveMove(mobile, DirectionType.South, out _));
@@ -55,7 +59,7 @@ public sealed class MovementValidationServiceTests
     {
         // No bounds known for the map -> permissive pass-through at the raw moved point (unchanged Z).
         var tiles = new FakeTileQuery(width: 100, height: 100, landZ: 0, mapKnown: false);
-        var service = new MovementValidationService(tiles, new FakeTileData());
+        var service = new MovementValidationService(tiles, new FakeTileData(), new FakeSpatialIndex([]));
         var mobile = new MobileEntity { MapId = 0, Location = new Point3D(50, 50, 7) };
 
         Assert.True(service.TryResolveMove(mobile, DirectionType.South, out var dest));
@@ -69,7 +73,7 @@ public sealed class MovementValidationServiceTests
         // Make side (51,50) unwalkable: Ignored land id (2) and no statics -> zero supports.
         var tiles = new FakeTileQuery(width: 100, height: 100, landZ: 0)
             .WithLand(51, 50, new LandTile((short)2, (sbyte)0));
-        var service = new MovementValidationService(tiles, new FakeTileData());
+        var service = new MovementValidationService(tiles, new FakeTileData(), new FakeSpatialIndex([]));
         var mobile = new MobileEntity { MapId = 0, Location = new Point3D(50, 50, 0) };
 
         Assert.False(service.TryResolveMove(mobile, DirectionType.SouthEast, out _));
@@ -87,11 +91,69 @@ public sealed class MovementValidationServiceTests
             200,
             new ItemData { Flags = UoTileFlag.Surface, Height = 0 }
         );
-        var service = new MovementValidationService(tiles, data);
+        var service = new MovementValidationService(tiles, data, new FakeSpatialIndex([]));
         var mobile = new MobileEntity { MapId = 0, Location = new Point3D(50, 50, 0) };
 
         Assert.True(service.TryResolveMove(mobile, DirectionType.South, out var dest));
         Assert.Equal(new Point3D(50, 51, 2), dest);
+    }
+
+    [Fact]
+    public void TryResolveMove_MobileOnDestinationTile_OverlappingZ_Blocks()
+    {
+        var tiles = new FakeTileQuery(width: 100, height: 100, landZ: 0);
+        var blocker = new MobileEntity { Id = new Serial(99), MapId = 0, Location = new Point3D(50, 51, 0) };
+        var index = new FakeSpatialIndex([blocker]);
+        var service = new MovementValidationService(tiles, new FakeTileData(), index);
+        var mover = new MobileEntity { Id = new Serial(1), MapId = 0, Location = new Point3D(50, 50, 0) };
+
+        Assert.False(service.TryResolveMove(mover, DirectionType.South, out _)); // dest (50,51) == blocker tile
+    }
+
+    [Fact]
+    public void TryResolveMove_MobileOnAdjacentTile_DoesNotBlock()
+    {
+        var tiles = new FakeTileQuery(width: 100, height: 100, landZ: 0);
+        var other = new MobileEntity { Id = new Serial(99), MapId = 0, Location = new Point3D(51, 51, 0) }; // not the dest tile
+        var index = new FakeSpatialIndex([other]);
+        var service = new MovementValidationService(tiles, new FakeTileData(), index);
+        var mover = new MobileEntity { Id = new Serial(1), MapId = 0, Location = new Point3D(50, 50, 0) };
+
+        Assert.True(service.TryResolveMove(mover, DirectionType.South, out var dest));
+        Assert.Equal(new Point3D(50, 51, 0), dest);
+    }
+
+    [Fact]
+    public void TryResolveMove_SelfOnDestinationTile_Ignored()
+    {
+        var tiles = new FakeTileQuery(width: 100, height: 100, landZ: 0);
+        var mover = new MobileEntity { Id = new Serial(1), MapId = 0, Location = new Point3D(50, 50, 0) };
+        var index = new FakeSpatialIndex([mover]); // index returns the mover itself
+        var service = new MovementValidationService(tiles, new FakeTileData(), index);
+
+        Assert.True(service.TryResolveMove(mover, DirectionType.South, out _));
+    }
+
+    private sealed class FakeSpatialIndex : IWorldSpatialIndex
+    {
+        private readonly IReadOnlyList<MobileEntity> _mobiles;
+
+        public FakeSpatialIndex(IReadOnlyList<MobileEntity> mobiles)
+        {
+            _mobiles = mobiles;
+        }
+
+        public IReadOnlyList<MobileEntity> GetMobilesInRange(int mapId, Point3D center, int range) => _mobiles;
+
+        public void AddMobile(MobileEntity mobile) => throw new NotSupportedException();
+        public bool TryGet(Serial id, out MobileEntity mobile) => throw new NotSupportedException();
+        public bool RemoveMobile(Serial id) => throw new NotSupportedException();
+        public IReadOnlyCollection<MobileEntity> All => throw new NotSupportedException();
+        public void MoveMobile(MobileEntity mobile, Point3D newLocation) => throw new NotSupportedException();
+        public void AddOrUpdateItem(ItemEntity item) => throw new NotSupportedException();
+        public bool RemoveItem(Serial id) => throw new NotSupportedException();
+        public IReadOnlyList<MobileEntity> GetPlayersInRange(int mapId, Point3D center, int range) => throw new NotSupportedException();
+        public IReadOnlyList<ItemEntity> GetItemsInRange(int mapId, Point3D center, int range) => throw new NotSupportedException();
     }
 
     private sealed class FakeTileQuery : IMovementTileQueryService

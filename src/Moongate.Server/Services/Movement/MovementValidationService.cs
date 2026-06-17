@@ -1,6 +1,7 @@
 using Moongate.Core.Geometry;
 using Moongate.Core.Types;
 using Moongate.Server.Interfaces.Services.Movement;
+using Moongate.Server.Interfaces.Services.World;
 using Moongate.UO.Data.Entities.Mobiles;
 using Moongate.UO.Data.Interfaces.Tiles;
 using Moongate.UO.Data.Types.Tiles;
@@ -8,8 +9,8 @@ using Moongate.UO.Data.Types.Tiles;
 namespace Moongate.Server.Services.Movement;
 
 /// <summary>
-/// Validates player movement against map land/static tiles (bounds, diagonal, Z step, blocking).
-/// Mobile-vs-mobile collision is intentionally not handled here (requires the spatial index).
+/// Validates player movement against map land/static tiles (bounds, diagonal, Z step, blocking)
+/// and mobile-vs-mobile collision via the spatial index.
 /// </summary>
 public sealed class MovementValidationService : IMovementValidationService
 {
@@ -19,14 +20,17 @@ public sealed class MovementValidationService : IMovementValidationService
 
     private readonly IMovementTileQueryService _tiles;
     private readonly ITileDataStore _tileData;
+    private readonly IWorldSpatialIndex _index;
 
-    public MovementValidationService(IMovementTileQueryService tiles, ITileDataStore tileData)
+    public MovementValidationService(IMovementTileQueryService tiles, ITileDataStore tileData, IWorldSpatialIndex index)
     {
         ArgumentNullException.ThrowIfNull(tiles);
         ArgumentNullException.ThrowIfNull(tileData);
+        ArgumentNullException.ThrowIfNull(index);
 
         _tiles = tiles;
         _tileData = tileData;
+        _index = index;
     }
 
     public bool TryResolveMove(MobileEntity mobile, DirectionType direction, out Point3D newLocation)
@@ -66,7 +70,10 @@ public sealed class MovementValidationService : IMovementValidationService
             return false;
         }
 
-        // TODO(#2 spatial index): IsBlockedByMobiles — mobile-vs-mobile collision needs nearby-mobile queries.
+        if (IsBlockedByMobiles(mobile, destination, resolvedZ))
+        {
+            return false;
+        }
 
         newLocation = new Point3D(destination.X, destination.Y, resolvedZ);
 
@@ -150,6 +157,33 @@ public sealed class MovementValidationService : IMovementValidationService
             var checkTop = checkZ + Math.Max(1, itemData.CalcHeight);
 
             if (checkTop > z && ourTop > checkZ)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool IsBlockedByMobiles(MobileEntity mobile, Point3D destination, int resolvedZ)
+    {
+        var ourTop = resolvedZ + PersonHeight;
+
+        foreach (var other in _index.GetMobilesInRange(mobile.MapId, destination, range: 1))
+        {
+            if (other.Id == mobile.Id)
+            {
+                continue;
+            }
+
+            if (other.Location.X != destination.X || other.Location.Y != destination.Y)
+            {
+                continue;
+            }
+
+            var otherTop = other.Location.Z + PersonHeight;
+
+            if (otherTop > resolvedZ && ourTop > other.Location.Z)
             {
                 return true;
             }
