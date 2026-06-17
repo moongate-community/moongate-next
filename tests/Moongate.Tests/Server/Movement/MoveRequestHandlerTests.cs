@@ -10,6 +10,7 @@ using Moongate.Network.UO.Packets.Incoming.Movement;
 using Moongate.Network.UO.Packets.Outgoing.Movement;
 using Moongate.Server.Handlers.Movement;
 using Moongate.Server.Interfaces.Services.Movement;
+using Moongate.Server.Data.Events;
 using Moongate.Server.Services.Player;
 using Moongate.Server.Services.World;
 using Moongate.Tests.Support;
@@ -249,21 +250,82 @@ public sealed class MoveRequestHandlerTests
         Assert.Equal(new Point3D(50, 52, 0), live.Location);
     }
 
+    [Fact]
+    public async Task ValidStep_UpdatesIndexLocation_AndPublishesMobileMovedEvent()
+    {
+        var mobile = new MobileEntity
+        {
+            Id = MobileId,
+            MapId = 0,
+            Direction = DirectionType.South,
+            Location = new Point3D(50, 50, 0)
+        };
+        var registry = new WorldSpatialIndex();
+        registry.AddMobile(mobile);
+
+        var sent = new List<IGameNetworkPacket>();
+        var handler = CreateHandler(registry, accept: true, out _, out var events);
+
+        await handler.HandleAsync(Context(DirectionType.South, sequence: 0, sent));
+
+        Assert.Contains(sent, static p => p is MoveConfirmPacket);
+        Assert.True(registry.TryGet(MobileId, out var live));
+        Assert.Equal(new Point3D(50, 51, 0), live.Location);
+
+        var moved = Assert.Single(events.Published.OfType<MobileMovedEvent>());
+        Assert.Equal(MobileId, moved.MobileId);
+        Assert.Equal(0, moved.MapId);
+        Assert.Equal(new Point3D(50, 50, 0), moved.OldLocation);
+        Assert.Equal(new Point3D(50, 51, 0), moved.NewLocation);
+        Assert.Equal(DirectionType.South, moved.Direction);
+    }
+
+    [Fact]
+    public async Task TurnOnly_DoesNotPublishMobileMovedEvent()
+    {
+        var mobile = new MobileEntity
+        {
+            Id = MobileId,
+            MapId = 0,
+            Direction = DirectionType.South,
+            Location = new Point3D(50, 50, 0)
+        };
+        var registry = new WorldSpatialIndex();
+        registry.AddMobile(mobile);
+
+        var sent = new List<IGameNetworkPacket>();
+        var handler = CreateHandler(registry, accept: true, out _, out var events);
+
+        await handler.HandleAsync(Context(DirectionType.East, sequence: 0, sent));
+
+        Assert.Contains(sent, static p => p is MoveConfirmPacket);
+        Assert.DoesNotContain(events.Published, static e => e is MobileMovedEvent);
+    }
+
     private static MoveRequestHandler CreateHandler(WorldSpatialIndex registry, bool accept)
-        => CreateHandler(registry, accept, out _);
+        => CreateHandler(registry, accept, out _, out _);
 
     private static MoveRequestHandler CreateHandler(
         WorldSpatialIndex registry,
         bool accept,
         out PlayerSessionService sessions
     )
+        => CreateHandler(registry, accept, out sessions, out _);
+
+    private static MoveRequestHandler CreateHandler(
+        WorldSpatialIndex registry,
+        bool accept,
+        out PlayerSessionService sessions,
+        out RecordingEventBusService events
+    )
     {
         sessions = new PlayerSessionService();
         sessions.GetOrCreateConnected(InWorldSessionId, null, DateTimeOffset.UtcNow);
         sessions.EnterWorld(InWorldSessionId, new Serial(456), MobileId, DateTimeOffset.UtcNow);
+        events = new RecordingEventBusService();
 
         return new MoveRequestHandler(
-            new NoopEventBusService(),
+            events,
             new NoopNetworkSessionManager(),
             sessions,
             registry,

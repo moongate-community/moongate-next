@@ -10,6 +10,7 @@ using Moongate.Core.Geometry;
 using Moongate.Core.Types;
 using Moongate.Network.UO.Packets.Incoming.Movement;
 using Moongate.Network.UO.Packets.Outgoing.Movement;
+using Moongate.Server.Data.Events;
 using Moongate.Server.Interfaces.Services.Movement;
 using Moongate.Server.Interfaces.Services.World;
 using Moongate.UO.Data.Entities.Mobiles;
@@ -93,8 +94,11 @@ public class MoveRequestHandler : PacketHandlerBase<MoveRequestPacket>
                 return;
             }
 
-            mobile.Location = newLocation;
+            var oldLocation = mobile.Location;
+            _index.MoveMobile(mobile, newLocation);
             mobile.Direction = packet.Direction;
+
+            EventBus.Publish(new MobileMovedEvent(mobile.Id, mobile.MapId, oldLocation, newLocation, packet.Direction));
         }
 
         var nextSequence = packet.Sequence + 1;
