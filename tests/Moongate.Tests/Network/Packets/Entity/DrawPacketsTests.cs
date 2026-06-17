@@ -73,4 +73,32 @@ public sealed class DrawPacketsTests
         var clothed = Serialize(new MobileIncomingPacket(m, [(ItemLayerType.OneHanded, sword)]));
         Assert.True(clothed.Length > bare.Length);
     }
+
+    [Fact]
+    public void MobileIncoming_HuedItem_SetsHueBit_AndWritesHue()
+    {
+        var m = new MobileEntity { Id = new Serial(0x40D), BodyId = 0x190, Location = new Point3D(10, 20, 0), Direction = DirectionType.North, SkinHue = (Hue)0, Notoriety = NotorietyType.Innocent };
+        var item = new ItemEntity { Id = new Serial(0x40000005), ItemId = 0x0F5E, Hue = (Hue)0x002B };
+        var bytes = Serialize(new MobileIncomingPacket(m, [(ItemLayerType.OneHanded, item)]));
+
+        // Equip section starts at offset 19 (opcode(1)+length(2)+serial(4)+body(2)+X(2)+Y(2)+Z(1)+dir(1)+skinhue(2)+flags(1)+notoriety(1)).
+        Assert.Equal(new byte[] { 0x40, 0x00, 0x00, 0x05 }, bytes[19..23]);   // serial big-endian
+        Assert.Equal(new byte[] { 0x8F, 0x5E }, bytes[23..25]);               // graphic 0x0F5E | 0x8000
+        Assert.Equal((byte)ItemLayerType.OneHanded, bytes[25]);              // layer
+        Assert.Equal(new byte[] { 0x00, 0x2B }, bytes[26..28]);               // hue ushort
+        Assert.Equal(new byte[] { 0x00, 0x00, 0x00, 0x00 }, bytes[28..32]);   // (uint)0 terminator
+    }
+
+    [Fact]
+    public void MobileIncoming_UnhuedItem_OmitsHue()
+    {
+        var m = new MobileEntity { Id = new Serial(0x40E), BodyId = 0x190, Location = new Point3D(10, 20, 0), Direction = DirectionType.North, SkinHue = (Hue)0, Notoriety = NotorietyType.Innocent };
+        var item = new ItemEntity { Id = new Serial(0x40000005), ItemId = 0x0F5E, Hue = (Hue)0 };
+        var bytes = Serialize(new MobileIncomingPacket(m, [(ItemLayerType.OneHanded, item)]));
+
+        Assert.Equal(new byte[] { 0x40, 0x00, 0x00, 0x05 }, bytes[19..23]);   // serial big-endian
+        Assert.Equal(new byte[] { 0x0F, 0x5E }, bytes[23..25]);               // graphic with NO hue bit
+        Assert.Equal((byte)ItemLayerType.OneHanded, bytes[25]);              // layer
+        Assert.Equal(new byte[] { 0x00, 0x00, 0x00, 0x00 }, bytes[26..30]);   // terminator directly, no hue ushort
+    }
 }
