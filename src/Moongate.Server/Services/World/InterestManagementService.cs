@@ -69,6 +69,28 @@ public sealed class InterestManagementService : IInterestManagementService
             _outgoing.Enqueue(sessionId, new ObjectInformationPacket(item));
             Remember(sessionId, item.Id);
         }
+
+        // reciprocal: announce the newcomer to every already-present player whose view covers it
+        var viewerEquipped = await ResolveEquippedAsync(viewer, cancellationToken);
+
+        foreach (var observer in _index.GetPlayersInRange(viewer.MapId, viewer.Location, MapSectorConsts.MaxViewRange))
+        {
+            if (observer.Id == viewer.Id || !_sessions.TryGetByMobileSerial(observer.Id, out var observerSession))
+            {
+                continue;
+            }
+
+            if (!observer.Location.InRange(viewer.Location, ViewRangeOf(observerSession.SessionId)))
+            {
+                continue;
+            }
+
+            if (!IsKnown(observerSession.SessionId, viewer.Id))
+            {
+                _outgoing.Enqueue(observerSession.SessionId, new MobileIncomingPacket(viewer, viewerEquipped));
+                Remember(observerSession.SessionId, viewer.Id);
+            }
+        }
     }
 
     public async Task OnMobileMovedAsync(MobileMovedEvent evt, CancellationToken cancellationToken = default)
@@ -181,16 +203,19 @@ public sealed class InterestManagementService : IInterestManagementService
                     observers.Add(sessionId);
                 }
             }
-
-            if (_sessions.TryGetByMobileSerial(entityId, out var session))
-            {
-                _known.Remove(session.SessionId);
-            }
         }
 
         foreach (var sessionId in observers)
         {
             _outgoing.Enqueue(sessionId, new DeleteObjectPacket(entityId));
+        }
+    }
+
+    public void ForgetSession(long sessionId)
+    {
+        lock (_sync)
+        {
+            _known.Remove(sessionId);
         }
     }
 

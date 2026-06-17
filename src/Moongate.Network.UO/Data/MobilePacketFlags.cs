@@ -5,7 +5,7 @@ namespace Moongate.Network.UO.Data;
 
 /// <summary>
 /// Computes the status-flag byte shared by the 0x77/0x78 mobile packets.
-/// Only the fields next currently models are encoded (gender); the rest are reserved for later.
+/// Only the fields currently modelled are encoded (gender); the rest are reserved for later.
 /// </summary>
 public static class MobilePacketFlags
 {

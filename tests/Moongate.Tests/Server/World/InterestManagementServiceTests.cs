@@ -50,6 +50,53 @@ public sealed class InterestManagementServiceTests
     }
 
     [Fact]
+    public async Task ForgetSession_DropsKnownSet_SoLaterRemovalSendsNoDelete()
+    {
+        var (svc, index, outgoing, _, viewer) = Build();
+        var other = new MobileEntity { Id = new Serial(11), MapId = 0, Location = new Point3D(101, 100, 0) };
+        index.AddMobile(other);
+        await svc.SendInitialSnapshotAsync(ViewerSession, viewer); // viewer (session 1) now knows 'other'
+        outgoing.Sent.Clear();
+
+        svc.ForgetSession(ViewerSession);
+
+        svc.OnEntityRemoved(other.Id);
+
+        Assert.DoesNotContain(outgoing.Sent, s => s.SessionId == ViewerSession);
+    }
+
+    [Fact]
+    public async Task SendInitialSnapshot_AnnouncesNewcomerToAlreadyPresentPlayers()
+    {
+        var index = new WorldSpatialIndex();
+        var outgoing = new RecordingOutgoingPacketQueue();
+        var sessions = new PlayerSessionService();
+
+        // P1 already in world at (100,100), session 1.
+        var p1Serial = new Serial(10);
+        sessions.GetOrCreateConnected(1, null, DateTimeOffset.UtcNow);
+        sessions.EnterWorld(1, new Serial(900), p1Serial, DateTimeOffset.UtcNow);
+        var p1 = new MobileEntity { Id = p1Serial, MapId = 0, Location = new Point3D(100, 100, 0), IsPlayer = true };
+        index.AddMobile(p1);
+
+        // P2 newcomer at (101,100), session 2, one tile from P1 (within view range 24).
+        var p2Serial = new Serial(11);
+        sessions.GetOrCreateConnected(2, null, DateTimeOffset.UtcNow);
+        sessions.EnterWorld(2, new Serial(901), p2Serial, DateTimeOffset.UtcNow);
+        var p2 = new MobileEntity { Id = p2Serial, MapId = 0, Location = new Point3D(101, 100, 0), IsPlayer = true };
+        index.AddMobile(p2);
+
+        var svc = new InterestManagementService(index, outgoing, sessions, new FakeItemService());
+
+        await svc.SendInitialSnapshotAsync(2, p2);
+
+        // P2 (newcomer) gets P1 in its snapshot.
+        Assert.Contains(outgoing.Sent, s => s.SessionId == 2 && s.Packet is MobileIncomingPacket p && p.Mobile.Id == p1.Id);
+        // Reciprocal: P1 (already present) gets the newcomer P2 announced.
+        Assert.Contains(outgoing.Sent, s => s.SessionId == 1 && s.Packet is MobileIncomingPacket p && p.Mobile.Id == p2.Id);
+    }
+
+    [Fact]
     public async Task OnEntityRemoved_SendsDeleteToObserversThatKnewIt()
     {
         var (svc, index, outgoing, _, viewer) = Build();

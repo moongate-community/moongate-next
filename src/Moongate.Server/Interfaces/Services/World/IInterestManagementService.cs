@@ -16,6 +16,9 @@ public interface IInterestManagementService
     /// <summary>Reacts to a mobile's completed step: updates observers and (for a player mover) its own view.</summary>
     Task OnMobileMovedAsync(MobileMovedEvent evt, CancellationToken cancellationToken = default);
 
-    /// <summary>Removes an entity from every client that knew it (sends delete) and drops its own known-set.</summary>
+    /// <summary>Removes an entity from every client that knew it (sends delete).</summary>
     void OnEntityRemoved(Serial entityId);
+
+    /// <summary>Drops all knowledge tracked for a disconnected session.</summary>
+    void ForgetSession(long sessionId);
 }

@@ -31,5 +31,7 @@ public sealed class PlayerDisconnectedInterestHandler : ITickEventHandler<Player
         {
             _interest.OnEntityRemoved(serial);
         }
+
+        _interest.ForgetSession(evt.SessionId);
     }
 }
