@@ -1,11 +1,9 @@
 using Moongate.Core.Ids;
-using Moongate.Persistence.Interfaces.Persistence;
 using Moongate.Server.Services.Items;
-using Moongate.UO.Data.Data.Tiles;
+using Moongate.Server.Services.World;
+using Moongate.Tests.Server.Items.Support;
 using Moongate.UO.Data.Entities.Items;
-using Moongate.UO.Data.Interfaces.Tiles;
 using Moongate.UO.Data.Types.Properties;
-using Moongate.UO.Data.Types.Tiles;
 
 namespace Moongate.Tests.Server.Items;
 
@@ -16,91 +14,11 @@ public sealed class ItemServiceTests
     private const int ArrowItemId = 0x1BFB;
     private const int ChildCount = 50;
 
-    private sealed class FakeTileDataStore : ITileDataStore
-    {
-        private readonly HashSet<int> _containers = [];
-        private readonly HashSet<int> _doors = [];
-
-        public IReadOnlyList<LandData> LandTable => [];
-        public IReadOnlyList<ItemData> ItemTable => [];
-
-        public void Container(int itemId)
-            => _containers.Add(itemId);
-
-        public ItemData GetItem(int id)
-        {
-            var flags = UoTileFlag.None;
-
-            if (_containers.Contains(id))
-            {
-                flags |= UoTileFlag.Container;
-            }
-
-            if (_doors.Contains(id))
-            {
-                flags |= UoTileFlag.Door;
-            }
-
-            return new() { Flags = flags };
-        }
-
-        public LandData GetLand(int id)
-            => default;
-
-        public void MakeDoor(int itemId)
-            => _doors.Add(itemId);
-    }
-
-    private sealed class FakeItemAccess : IAutoDataAccess<ItemEntity, Serial>
-    {
-        private readonly Dictionary<Serial, ItemEntity> _items = [];
-        private uint _nextId = 1;
-
-        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(_items.Count);
-
-        public ValueTask<IReadOnlyCollection<ItemEntity>> GetAllAsync(CancellationToken cancellationToken = default)
-            => ValueTask.FromResult<IReadOnlyCollection<ItemEntity>>(_items.Values.Select(Clone).ToArray());
-
-        public ValueTask<ItemEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(_items.TryGetValue(id, out var item) ? Clone(item) : null);
-
-        public ValueTask<Serial> NextIdAsync(CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(new Serial(_nextId++));
-
-        public IQueryable<ItemEntity> Query()
-            => _items.Values.Select(Clone).AsQueryable();
-
-        public ValueTask<bool> RemoveAsync(Serial id, CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(_items.Remove(id));
-
-        public ValueTask UpsertAsync(ItemEntity entity, CancellationToken cancellationToken = default)
-        {
-            _items[entity.Id] = Clone(entity);
-
-            return ValueTask.CompletedTask;
-        }
-
-        private static ItemEntity Clone(ItemEntity item)
-            => new()
-            {
-                Id = item.Id,
-                Name = item.Name,
-                ItemId = item.ItemId,
-                Amount = item.Amount,
-                Weight = item.Weight,
-                ParentContainerId = item.ParentContainerId,
-                ContainerPosition = item.ContainerPosition,
-                ContainedItemIds = [.. item.ContainedItemIds],
-                CustomProperties = new(item.CustomProperties)
-            };
-    }
-
     [Fact]
     public async Task AddItemAsync_NonContainer_ReturnsFalse()
     {
         var access = new FakeItemAccess();
-        var service = new ItemService(access, new FakeTileDataStore());
+        var service = new ItemService(access, new FakeTileDataStore(), new WorldSpatialIndex());
 
         var plain = await service.CreateAsync(new() { ItemId = ArrowItemId });
         var child = await service.CreateAsync(new() { ItemId = ArrowItemId });
@@ -115,7 +33,7 @@ public sealed class ItemServiceTests
         var access = new FakeItemAccess();
         var tiles = new FakeTileDataStore();
         tiles.Container(BackpackItemId);
-        var service = new ItemService(access, tiles);
+        var service = new ItemService(access, tiles, new WorldSpatialIndex());
 
         var backpack = await service.CreateAsync(new() { ItemId = BackpackItemId, Weight = 3 });
 
@@ -155,7 +73,7 @@ public sealed class ItemServiceTests
     [Fact]
     public async Task CreateAsync_AllocatesSerialInItemRange()
     {
-        var service = new ItemService(new FakeItemAccess(), new FakeTileDataStore());
+        var service = new ItemService(new FakeItemAccess(), new FakeTileDataStore(), new WorldSpatialIndex());
 
         var item = await service.CreateAsync(new() { ItemId = ArrowItemId, Weight = 1 });
 
@@ -168,7 +86,7 @@ public sealed class ItemServiceTests
         var tiles = new FakeTileDataStore();
         tiles.Container(BackpackItemId);
         tiles.MakeDoor(DoorItemId);
-        var service = new ItemService(new FakeItemAccess(), tiles);
+        var service = new ItemService(new FakeItemAccess(), tiles, new WorldSpatialIndex());
 
         Assert.True(service.IsContainer(new ItemEntity { ItemId = BackpackItemId }));
         Assert.False(service.IsContainer(new ItemEntity { ItemId = ArrowItemId }));
@@ -188,7 +106,7 @@ public sealed class ItemServiceTests
         var access = new FakeItemAccess();
         var tiles = new FakeTileDataStore();
         tiles.Container(BackpackItemId);
-        var service = new ItemService(access, tiles);
+        var service = new ItemService(access, tiles, new WorldSpatialIndex());
 
         var backpack = await service.CreateAsync(new() { ItemId = BackpackItemId });
         var child = await service.CreateAsync(new() { ItemId = ArrowItemId });

@@ -1,6 +1,7 @@
 using Moongate.Core.Geometry;
 using Moongate.Core.Ids;
 using Moongate.Persistence.Interfaces.Persistence;
+using Moongate.Server.Interfaces.Services.World;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Interfaces.Tiles;
@@ -16,11 +17,15 @@ public sealed class ItemService : IItemService
 {
     private readonly IAutoDataAccess<ItemEntity, Serial> _items;
     private readonly ITileDataStore _tileData;
+    private readonly IWorldSpatialIndex _index;
 
-    public ItemService(IAutoDataAccess<ItemEntity, Serial> items, ITileDataStore tileData)
+    public ItemService(IAutoDataAccess<ItemEntity, Serial> items, ITileDataStore tileData, IWorldSpatialIndex index)
     {
+        ArgumentNullException.ThrowIfNull(index);
+
         _items = items;
         _tileData = tileData;
+        _index = index;
     }
 
     public async ValueTask<bool> AddItemAsync(
@@ -51,6 +56,8 @@ public sealed class ItemService : IItemService
         await _items.UpsertAsync(container, cancellationToken);
         await _items.UpsertAsync(child, cancellationToken);
 
+        _index.RemoveItem(child.Id);
+
         return true;
     }
 
@@ -75,11 +82,25 @@ public sealed class ItemService : IItemService
 
         await _items.UpsertAsync(item, cancellationToken);
 
+        if (item.ParentContainerId == Serial.Zero && item.EquippedMobileId == Serial.Zero)
+        {
+            _index.AddOrUpdateItem(item);
+        }
+
         return item;
     }
 
-    public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
-        => _items.RemoveAsync(id, cancellationToken);
+    public async ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
+    {
+        var removed = await _items.RemoveAsync(id, cancellationToken);
+
+        if (removed)
+        {
+            _index.RemoveItem(id);
+        }
+
+        return removed;
+    }
 
     public ValueTask<ItemEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
         => _items.GetByIdAsync(id, cancellationToken);
