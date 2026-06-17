@@ -25,7 +25,7 @@ public class UoTileDataIntegrationTests
         var candidate = !string.IsNullOrWhiteSpace(fromEnv) ? fromEnv : Path.Combine(home, "uo");
 
         return Directory.Exists(candidate) && File.Exists(Path.Combine(candidate, "tiledata.mul"))
-                   ? candidate
-                   : null;
+            ? candidate
+            : null;
     }
 }

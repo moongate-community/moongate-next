@@ -5,9 +5,9 @@ using Moongate.Core.Types;
 namespace Moongate.UO.Data.Interfaces.Entities.Base;
 
 /// <summary>
-/// Common contract shared by every entity that exists in the game world
-/// (items and mobiles): identity, name, spatial placement, facing, coloring
-/// and weight.
+///     Common contract shared by every entity that exists in the game world
+///     (items and mobiles): identity, name, spatial placement, facing, coloring
+///     and weight.
 /// </summary>
 public interface IWorldEntity
 {

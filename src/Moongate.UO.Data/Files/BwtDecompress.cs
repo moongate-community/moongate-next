@@ -3,8 +3,8 @@ using System.Runtime.InteropServices;
 namespace Moongate.UO.Data.Files;
 
 /// <summary>
-/// Burrows-Wheeler-transform decompressor for UOP entries compressed with the ZlibBwt scheme
-/// (ported from ClassicUO's BwtDecompress). The input is the zlib-decompressed payload.
+///     Burrows-Wheeler-transform decompressor for UOP entries compressed with the ZlibBwt scheme
+///     (ported from ClassicUO's BwtDecompress). The input is the zlib-decompressed payload.
 /// </summary>
 public static class BwtDecompress
 {
@@ -147,7 +147,7 @@ public static class BwtDecompress
         Frequency(partialInput, frequency);
 
         for (int i = 0,
-                 m = 0;
+             m = 0;
              i < nonZeroCount;
              ++i)
         {

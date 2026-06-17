@@ -1,7 +1,7 @@
 namespace Moongate.Server.Services.Mobiles;
 
 /// <summary>
-/// Reserved custom-property keys written onto mobiles created from templates.
+///     Reserved custom-property keys written onto mobiles created from templates.
 /// </summary>
 public static class MobileTemplateDefinitionKeys
 {

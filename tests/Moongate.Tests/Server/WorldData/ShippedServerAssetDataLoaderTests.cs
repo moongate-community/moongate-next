@@ -128,9 +128,9 @@ public sealed class ShippedServerAssetDataLoaderTests : IDisposable
         );
 
         var sourceMapZeroSigns = signs
-                                 .GetAllEntries()
-                                 .Where(static entry => entry.SourceMapCode == 0)
-                                 .ToArray();
+            .GetAllEntries()
+            .Where(static entry => entry.SourceMapCode == 0)
+            .ToArray();
 
         Assert.NotEmpty(sourceMapZeroSigns);
         Assert.Contains(

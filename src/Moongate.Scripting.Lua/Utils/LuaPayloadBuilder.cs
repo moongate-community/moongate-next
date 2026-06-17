@@ -4,7 +4,7 @@ using Moongate.Abstractions.Data.Player;
 namespace Moongate.Scripting.Lua.Utils;
 
 /// <summary>
-/// Builds stable snake_case payload dictionaries exposed to Lua callbacks.
+///     Builds stable snake_case payload dictionaries exposed to Lua callbacks.
 /// </summary>
 public static class LuaPayloadBuilder
 {
@@ -34,12 +34,14 @@ public static class LuaPayloadBuilder
         string? remoteEndPoint,
         DateTimeOffset at
     )
-        => new Dictionary<string, object?>
+    {
+        return new Dictionary<string, object?>
         {
             ["session_id"] = sessionId,
             ["remote_endpoint"] = remoteEndPoint,
             ["at"] = at
         };
+    }
 
     public static IReadOnlyDictionary<string, object?> PlayerSession(PlayerSession playerSession)
     {
@@ -57,10 +59,12 @@ public static class LuaPayloadBuilder
     }
 
     public static IReadOnlyDictionary<string, object?> ServerStarted(DateTimeOffset at)
-        => new Dictionary<string, object?>
+    {
+        return new Dictionary<string, object?>
         {
             ["at"] = at
         };
+    }
 
     public static IReadOnlyDictionary<string, object?> Timer(string name, bool repeat)
     {

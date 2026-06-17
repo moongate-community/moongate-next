@@ -5,7 +5,7 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.WorldData;
 
 /// <summary>
-/// Registers server asset world data services before network services start.
+///     Registers server asset world data services before network services start.
 /// </summary>
 public sealed class ServerAssetDataBootService : IMoongateService
 {

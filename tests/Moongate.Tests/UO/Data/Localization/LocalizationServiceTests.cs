@@ -16,9 +16,9 @@ public class LocalizationServiceTests
             ClilocFixture.Write(
                 dir.FullName,
                 [
-                    new(1, 0, "first"),
-                    new(2, 0, ""),
-                    new(3, 0, "third")
+                    new ClilocFixture.Entry(1, 0, "first"),
+                    new ClilocFixture.Entry(2, 0, ""),
+                    new ClilocFixture.Entry(3, 0, "third")
                 ]
             );
             var service = new LocalizationService(new UoFileResolver(dir.FullName));
@@ -43,8 +43,8 @@ public class LocalizationServiceTests
             ClilocFixture.Write(
                 dir.FullName,
                 [
-                    new(1042971, 0, "~1_NOTHING~"),
-                    new(500000, 0, "a dagger")
+                    new ClilocFixture.Entry(1042971, 0, "~1_NOTHING~"),
+                    new ClilocFixture.Entry(500000, 0, "a dagger")
                 ]
             );
             var service = new LocalizationService(new UoFileResolver(dir.FullName));

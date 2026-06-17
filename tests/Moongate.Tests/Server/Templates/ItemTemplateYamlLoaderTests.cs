@@ -652,7 +652,10 @@ public class ItemTemplateYamlLoaderTests
         Assert.Contains("is_movable", exception.Message);
     }
 
-    [Theory, InlineData("item_template_id"), InlineData("contents.generated_at"), InlineData("contents.next_refill_at")]
+    [Theory]
+    [InlineData("item_template_id")]
+    [InlineData("contents.generated_at")]
+    [InlineData("contents.next_refill_at")]
     public void LoadAll_ReservedRuntimeItemParamKeys_Throws(string key)
     {
         using var dir = new TempTemplateDirectory();

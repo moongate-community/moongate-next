@@ -4,22 +4,22 @@ using Moongate.Network.UO.Base;
 namespace Moongate.Network.UO.Packets.Outgoing.World;
 
 /// <summary>
-/// Outgoing "War Mode" (0x72): reports the player's combat stance (MVP: always peace).
-/// Outgoing-only: carries no <c>[PacketHandler]</c> because opcode 0x72 is already registered
-/// inbound by <c>RequestWarModePacket</c> (the packet registry rejects duplicate opcodes).
+///     Outgoing "War Mode" (0x72): reports the player's combat stance (MVP: always peace).
+///     Outgoing-only: carries no <c>[PacketHandler]</c> because opcode 0x72 is already registered
+///     inbound by <c>RequestWarModePacket</c> (the packet registry rejects duplicate opcodes).
 /// </summary>
 public class WarModePacket : BaseGameNetworkPacket
 {
     private const byte OpCodeValue = 0x72;
     private const int LengthValue = 5;
 
-    public bool WarMode { get; }
-
     public WarModePacket(bool warMode = false)
         : base(OpCodeValue, LengthValue)
     {
         WarMode = warMode;
     }
+
+    public bool WarMode { get; }
 
     public override void Write(ref SpanWriter writer)
     {
@@ -31,5 +31,7 @@ public class WarModePacket : BaseGameNetworkPacket
     }
 
     protected override bool ParsePayload(ref SpanReader reader)
-        => false;
+    {
+        return false;
+    }
 }

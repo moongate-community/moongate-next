@@ -14,23 +14,23 @@ public static class UoItemEndpointExtensions
     public static IEndpointRouteBuilder MapMoongateUoItems(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/api/admin/uo/items")
-                             .WithTags("Admin UO Items")
-                             .RequireAuthorization(policy => policy.RequireRole(nameof(UserLevelType.Administrator)));
+            .WithTags("Admin UO Items")
+            .RequireAuthorization(policy => policy.RequireRole(nameof(UserLevelType.Administrator)));
 
         group.MapGet(
-                 "/",
-                 (ITileDataStore tileData, int? page, int? pageSize, string? search, string? flag)
-                     => HandleList(tileData, page, pageSize, search, flag)
-             )
-             .WithName("ListUoItems")
-             .WithSummary("Returns a paginated, searchable list of raw UO item tile data.");
+                "/",
+                (ITileDataStore tileData, int? page, int? pageSize, string? search, string? flag)
+                    => HandleList(tileData, page, pageSize, search, flag)
+            )
+            .WithName("ListUoItems")
+            .WithSummary("Returns a paginated, searchable list of raw UO item tile data.");
 
         group.MapGet(
-                 "/{itemId}",
-                 (ITileDataStore tileData, string itemId) => HandleDetail(tileData, itemId)
-             )
-             .WithName("GetUoItem")
-             .WithSummary("Returns raw UO item tile data for a single item id.");
+                "/{itemId}",
+                (ITileDataStore tileData, string itemId) => HandleDetail(tileData, itemId)
+            )
+            .WithName("GetUoItem")
+            .WithSummary("Returns raw UO item tile data for a single item id.");
 
         return endpoints;
     }
@@ -78,28 +78,36 @@ public static class UoItemEndpointExtensions
 
         var request = PageRequest.Normalize(page, pageSize, search);
         var ordered = tileData.ItemTable
-                              .Select(static (item, itemId) => (ItemId: itemId, Item: item))
-                              .Where(static item => !IsEmpty(item.Item))
-                              .OrderBy(static item => item.ItemId);
+            .Select(static (item, itemId) => (ItemId: itemId, Item: item))
+            .Where(static item => !IsEmpty(item.Item))
+            .OrderBy(static item => item.ItemId);
         var result = InMemoryListQuery.Apply(ordered, request, SearchFields, filters);
 
         return TypedResults.Ok(result.Select(static item => ToSummary(item.ItemId, item.Item)));
     }
 
     private static IReadOnlyList<string> FormatFlags(UoTileFlag flags)
-        => Enum.GetValues<UoTileFlag>()
-               .Where(flag => flag != UoTileFlag.None && flags.HasFlag(flag))
-               .Select(static flag => flag.ToString())
-               .ToArray();
+    {
+        return Enum.GetValues<UoTileFlag>()
+            .Where(flag => flag != UoTileFlag.None && flags.HasFlag(flag))
+            .Select(static flag => flag.ToString())
+            .ToArray();
+    }
 
     private static string FormatImageUrl(int itemId)
-        => $"/api/items/{FormatItemId(itemId)}.png";
+    {
+        return $"/api/items/{FormatItemId(itemId)}.png";
+    }
 
     private static string FormatItemId(int itemId)
-        => $"0x{itemId.ToString("X4", CultureInfo.InvariantCulture)}";
+    {
+        return $"0x{itemId.ToString("X4", CultureInfo.InvariantCulture)}";
+    }
 
     private static bool IsEmpty(ItemData item)
-        => string.IsNullOrWhiteSpace(item.Name) && item.Flags == UoTileFlag.None;
+    {
+        return string.IsNullOrWhiteSpace(item.Name) && item.Flags == UoTileFlag.None;
+    }
 
     private static IEnumerable<string?> SearchFields((int ItemId, ItemData Item) item)
     {
@@ -116,7 +124,8 @@ public static class UoItemEndpointExtensions
     }
 
     private static UoItemDetail ToDetail(int itemId, ItemData item)
-        => new(
+    {
+        return new UoItemDetail(
             itemId,
             FormatItemId(itemId),
             item.Name,
@@ -138,9 +147,11 @@ public static class UoItemEndpointExtensions
             item[UoTileFlag.Background],
             item[UoTileFlag.Wall]
         );
+    }
 
     private static UoItemSummary ToSummary(int itemId, ItemData item)
-        => new(
+    {
+        return new UoItemSummary(
             itemId,
             FormatItemId(itemId),
             item.Name,
@@ -161,6 +172,7 @@ public static class UoItemEndpointExtensions
             item[UoTileFlag.Background],
             item[UoTileFlag.Wall]
         );
+    }
 
     private static bool TryParseFlag(string? value, out UoTileFlag? parsed, out string error)
     {
@@ -195,13 +207,13 @@ public static class UoItemEndpointExtensions
 
         var trimmed = value.Trim();
         var parsed = trimmed.StartsWith("0x", StringComparison.OrdinalIgnoreCase)
-                         ? int.TryParse(
-                             trimmed.AsSpan(2),
-                             NumberStyles.AllowHexSpecifier,
-                             CultureInfo.InvariantCulture,
-                             out itemId
-                         )
-                         : int.TryParse(trimmed, NumberStyles.None, CultureInfo.InvariantCulture, out itemId);
+            ? int.TryParse(
+                trimmed.AsSpan(2),
+                NumberStyles.AllowHexSpecifier,
+                CultureInfo.InvariantCulture,
+                out itemId
+            )
+            : int.TryParse(trimmed, NumberStyles.None, CultureInfo.InvariantCulture, out itemId);
 
         return parsed && itemId >= 0;
     }

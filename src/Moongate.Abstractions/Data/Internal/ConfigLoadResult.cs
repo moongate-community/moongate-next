@@ -1,7 +1,7 @@
 namespace Moongate.Abstractions.Data.Internal;
 
 /// <summary>
-/// One loaded config section: the CLR type and the bound instance to register in DI.
+///     One loaded config section: the CLR type and the bound instance to register in DI.
 /// </summary>
 public sealed class ConfigLoadResult
 {

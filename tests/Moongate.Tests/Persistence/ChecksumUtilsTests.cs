@@ -6,11 +6,15 @@ public class ChecksumUtilsTests
 {
     [Fact]
     public void Compute_DifferentBytes_ProducesDifferentChecksum()
-        => Assert.NotEqual(ChecksumUtils.Compute([1, 2, 3]), ChecksumUtils.Compute([1, 2, 4]));
+    {
+        Assert.NotEqual(ChecksumUtils.Compute([1, 2, 3]), ChecksumUtils.Compute([1, 2, 4]));
+    }
 
     [Fact]
     public void Compute_EmptySpan_DoesNotThrow()
-        => _ = ChecksumUtils.Compute(ReadOnlySpan<byte>.Empty);
+    {
+        _ = ChecksumUtils.Compute(ReadOnlySpan<byte>.Empty);
+    }
 
     [Fact]
     public void Compute_SameBytes_ProducesSameChecksum()

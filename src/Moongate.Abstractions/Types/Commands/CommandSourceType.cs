@@ -1,7 +1,7 @@
 namespace Moongate.Abstractions.Types.Commands;
 
 /// <summary>
-/// Sources allowed to execute registered commands.
+///     Sources allowed to execute registered commands.
 /// </summary>
 [Flags]
 public enum CommandSourceType

@@ -55,8 +55,18 @@ public sealed class MigratedPacketTests
         Assert.Equal([0x22, 0x10, 0x05], bytes);
     }
 
-    [Theory, InlineData(0x03), InlineData(0x02), InlineData(0x21), InlineData(0x22), InlineData(0x55), InlineData(0x73),
-     InlineData(0xAD), InlineData(0xB1), InlineData(0xBF), InlineData(0xC7), InlineData(0xF2)]
+    [Theory]
+    [InlineData(0x03)]
+    [InlineData(0x02)]
+    [InlineData(0x21)]
+    [InlineData(0x22)]
+    [InlineData(0x55)]
+    [InlineData(0x73)]
+    [InlineData(0xAD)]
+    [InlineData(0xB1)]
+    [InlineData(0xBF)]
+    [InlineData(0xC7)]
+    [InlineData(0xF2)]
     public void PacketTable_Register_IncludesMigratedPackets(byte opCode)
     {
         var registry = new PacketRegistry();

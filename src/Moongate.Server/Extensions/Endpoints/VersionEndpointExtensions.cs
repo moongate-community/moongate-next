@@ -17,6 +17,6 @@ public static class VersionEndpointExtensions
         );
 
         return endpoints.MapGet(pattern, () => Results.Json(info))
-                        .WithName("GetVersion");
+            .WithName("GetVersion");
     }
 }

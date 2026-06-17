@@ -29,8 +29,12 @@ public static class HairStyleCatalog
     };
 
     private static HairStyleEntry CreateFacial(int style, string name)
-        => new(style, $"0x{style:X4}", name, true);
+    {
+        return new HairStyleEntry(style, $"0x{style:X4}", name, true);
+    }
 
     private static HairStyleEntry CreateHair(int style, string name)
-        => new(style, $"0x{style:X4}", name, false);
+    {
+        return new HairStyleEntry(style, $"0x{style:X4}", name, false);
+    }
 }

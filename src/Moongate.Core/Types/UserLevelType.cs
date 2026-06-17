@@ -1,8 +1,8 @@
 namespace Moongate.Core.Types;
 
 /// <summary>
-/// Access/permission level of an account, shared across authentication, user
-/// management and entity visibility.
+///     Access/permission level of an account, shared across authentication, user
+///     management and entity visibility.
 /// </summary>
 public enum UserLevelType
 {

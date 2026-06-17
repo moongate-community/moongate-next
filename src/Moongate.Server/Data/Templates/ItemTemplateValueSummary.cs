@@ -12,11 +12,13 @@ public sealed record ItemTemplateValueSummary(
 )
 {
     public static ItemTemplateValueSummary FromDefinition(ItemTemplateValueDefinition value, ItemRarity rarity)
-        => new(
+    {
+        return new ItemTemplateValueSummary(
             value.Buy,
             value.BaseSell,
             value.RarityMultiplier(rarity),
             value.EffectiveBuy(rarity),
             value.EffectiveSell(rarity)
         );
+    }
 }

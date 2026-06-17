@@ -16,26 +16,26 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.UoData;
 
 /// <summary>
-/// Eagerly loads every UO data store at boot (constructor injection forces each singleton to load),
-/// then logs a one-line readiness summary. Registered before the network service so data is ready —
-/// and missing required client files fail fast — before connections are accepted.
+///     Eagerly loads every UO data store at boot (constructor injection forces each singleton to load),
+///     then logs a one-line readiness summary. Registered before the network service so data is ready —
+///     and missing required client files fail fast — before connections are accepted.
 /// </summary>
 public sealed class UoDataBootService : IMoongateService
 {
     private static readonly ILogger _logger = Log.ForContext<UoDataBootService>();
+    private readonly IArtService _art;
+    private readonly IBodyDataStore _bodies;
+    private readonly IExpansionStore _expansions;
+    private readonly IHueStore _hues;
+    private readonly ILocalizationService _localization;
+    private readonly IMapService _maps;
+    private readonly IMultiDataStore _multis;
+    private readonly IRaceStore _races;
+    private readonly IRadarColorStore _radarColors;
+    private readonly ISkillDataStore _skills;
+    private readonly ITextureStore _textures;
 
     private readonly ITileDataStore _tileData;
-    private readonly IMapService _maps;
-    private readonly ILocalizationService _localization;
-    private readonly IMultiDataStore _multis;
-    private readonly IArtService _art;
-    private readonly ISkillDataStore _skills;
-    private readonly IRaceStore _races;
-    private readonly IBodyDataStore _bodies;
-    private readonly IHueStore _hues;
-    private readonly IRadarColorStore _radarColors;
-    private readonly ITextureStore _textures;
-    private readonly IExpansionStore _expansions;
 
     public UoDataBootService(
         ITileDataStore tileData,
@@ -91,5 +91,7 @@ public sealed class UoDataBootService : IMoongateService
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
-        => Task.CompletedTask;
+    {
+        return Task.CompletedTask;
+    }
 }

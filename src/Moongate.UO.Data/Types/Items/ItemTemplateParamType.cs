@@ -1,7 +1,7 @@
 namespace Moongate.UO.Data.Types.Items;
 
 /// <summary>
-/// Declares the supported value kind for an item template param.
+///     Declares the supported value kind for an item template param.
 /// </summary>
 public enum ItemTemplateParamType : byte
 {

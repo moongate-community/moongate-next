@@ -1,7 +1,7 @@
 namespace Moongate.UO.Data.Types.Items;
 
 /// <summary>
-/// Rarity tier of an item, from common loot to unique legendary pieces.
+///     Rarity tier of an item, from common loot to unique legendary pieces.
 /// </summary>
 public enum ItemRarity : byte
 {

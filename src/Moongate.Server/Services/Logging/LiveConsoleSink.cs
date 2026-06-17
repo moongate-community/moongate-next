@@ -1,3 +1,4 @@
+using Moongate.Server.Data.LiveConsole;
 using Moongate.Server.Interfaces.LiveConsole;
 using Moongate.Server.Types.LiveConsole;
 using Serilog.Core;
@@ -6,8 +7,8 @@ using Serilog.Events;
 namespace Moongate.Server.Services.Logging;
 
 /// <summary>
-/// Serilog sink that forwards each log event to the <see cref="ILiveConsoleBroadcaster" /> so it
-/// streams to connected admins. Skips SignalR's own framework logs to avoid a re-logging feedback loop.
+///     Serilog sink that forwards each log event to the <see cref="ILiveConsoleBroadcaster" /> so it
+///     streams to connected admins. Skips SignalR's own framework logs to avoid a re-logging feedback loop.
 /// </summary>
 public sealed class LiveConsoleSink : ILogEventSink
 {
@@ -28,7 +29,7 @@ public sealed class LiveConsoleSink : ILogEventSink
         }
 
         _broadcaster.Publish(
-            new()
+            new LiveConsoleEntry
             {
                 Kind = LiveConsoleEntryKind.Log,
                 Level = logEvent.Level.ToString(),

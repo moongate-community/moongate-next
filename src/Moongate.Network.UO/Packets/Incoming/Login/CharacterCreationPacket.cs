@@ -11,12 +11,17 @@ using Moongate.UO.Data.Types.Skills;
 namespace Moongate.Network.UO.Packets.Incoming.Login;
 
 /// <summary>
-/// Character creation packet sent by clients 7.0.16.0 and later (opcode 0xF8, 106 bytes).
+///     Character creation packet sent by clients 7.0.16.0 and later (opcode 0xF8, 106 bytes).
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = 106, Description = "Character Creation (7.0.16.0+)")]
 public class CharacterCreationPacket : BaseGameNetworkPacket
 {
     private const byte OpCodeValue = 0xF8;
+
+    public CharacterCreationPacket()
+        : base(OpCodeValue, 106)
+    {
+    }
 
     public string CharacterName { get; private set; } = "";
 
@@ -54,9 +59,6 @@ public class CharacterCreationPacket : BaseGameNetworkPacket
 
     public HueStyle Pants { get; private set; }
 
-    public CharacterCreationPacket()
-        : base(OpCodeValue, 106) { }
-
     protected override bool ParsePayload(ref SpanReader reader)
     {
         reader.ReadInt32(); // 0xEDEDEDED
@@ -87,28 +89,28 @@ public class CharacterCreationPacket : BaseGameNetworkPacket
         Intelligence = reader.ReadByte();
 
         Skills.Clear();
-        Skills.Add(new((UOSkillName)reader.ReadByte(), reader.ReadByte()));
-        Skills.Add(new((UOSkillName)reader.ReadByte(), reader.ReadByte()));
-        Skills.Add(new((UOSkillName)reader.ReadByte(), reader.ReadByte()));
-        Skills.Add(new((UOSkillName)reader.ReadByte(), reader.ReadByte()));
+        Skills.Add(new SkillKeyValue((UOSkillName)reader.ReadByte(), reader.ReadByte()));
+        Skills.Add(new SkillKeyValue((UOSkillName)reader.ReadByte(), reader.ReadByte()));
+        Skills.Add(new SkillKeyValue((UOSkillName)reader.ReadByte(), reader.ReadByte()));
+        Skills.Add(new SkillKeyValue((UOSkillName)reader.ReadByte(), reader.ReadByte()));
 
-        Skin = new(0, reader.ReadInt16());
-        Hair = new(reader.ReadInt16(), reader.ReadInt16());
-        FacialHair = new(reader.ReadInt16(), reader.ReadInt16());
+        Skin = new HueStyle(0, reader.ReadInt16());
+        Hair = new HueStyle(reader.ReadInt16(), reader.ReadInt16());
+        FacialHair = new HueStyle(reader.ReadInt16(), reader.ReadInt16());
 
         StartingCityIndex = reader.ReadInt16();
         var cities = StartingCities.AvailableStartingCities;
         StartingCity = StartingCityIndex >= 0 && StartingCityIndex < cities.Length
-                           ? cities[StartingCityIndex]
-                           : null;
+            ? cities[StartingCityIndex]
+            : null;
 
         reader.ReadBytes(2);
         Slot = reader.ReadInt16();
 
         reader.ReadInt32(); // reserved
 
-        Shirt = new(0, reader.ReadInt16());
-        Pants = new(0, reader.ReadInt16());
+        Shirt = new HueStyle(0, reader.ReadInt16());
+        Pants = new HueStyle(0, reader.ReadInt16());
 
         return true;
     }

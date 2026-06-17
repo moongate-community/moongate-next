@@ -3,9 +3,9 @@ using System.Net;
 namespace Moongate.Abstractions.Interfaces.Network;
 
 /// <summary>
-/// Curated, handler-safe view of an active network session: identity, connection endpoints, the
-/// reconnect seed, and transport toggles. Exposes none of the transport internals (raw client,
-/// pending byte buffer), so packet handlers can act on the session without server-layer lookups.
+///     Curated, handler-safe view of an active network session: identity, connection endpoints, the
+///     reconnect seed, and transport toggles. Exposes none of the transport internals (raw client,
+///     pending byte buffer), so packet handlers can act on the session without server-layer lookups.
 /// </summary>
 public interface IGameSession
 {

@@ -7,17 +7,17 @@ using ZLinq.Linq;
 namespace Moongate.Abstractions.Interfaces.Player;
 
 /// <summary>
-/// Manages logical player sessions associated with active network sessions.
+///     Manages logical player sessions associated with active network sessions.
 /// </summary>
 public interface IPlayerSessionService
 {
     /// <summary>
-    /// Number of currently tracked player sessions.
+    ///     Number of currently tracked player sessions.
     /// </summary>
     int Count { get; }
 
     /// <summary>
-    /// Marks a player session as authenticated.
+    ///     Marks a player session as authenticated.
     /// </summary>
     /// <param name="sessionId">Network session identifier.</param>
     /// <param name="userId">Authenticated user identifier.</param>
@@ -27,7 +27,7 @@ public interface IPlayerSessionService
     PlayerSession Authenticate(long sessionId, Serial userId, string username, DateTimeOffset authenticatedAt);
 
     /// <summary>
-    /// Marks a player session as disconnected and removes mobile indexes.
+    ///     Marks a player session as disconnected and removes mobile indexes.
     /// </summary>
     /// <param name="sessionId">Network session identifier.</param>
     /// <param name="disconnectedAt">Disconnect timestamp.</param>
@@ -35,7 +35,7 @@ public interface IPlayerSessionService
     bool Disconnect(long sessionId, DateTimeOffset disconnectedAt);
 
     /// <summary>
-    /// Attaches in-world character and mobile serials to a player session.
+    ///     Attaches in-world character and mobile serials to a player session.
     /// </summary>
     /// <param name="sessionId">Network session identifier.</param>
     /// <param name="characterSerial">Selected character serial.</param>
@@ -50,13 +50,13 @@ public interface IPlayerSessionService
     );
 
     /// <summary>
-    /// Returns a snapshot of all tracked player sessions.
+    ///     Returns a snapshot of all tracked player sessions.
     /// </summary>
     /// <returns>The current player sessions.</returns>
     IReadOnlyCollection<PlayerSession> GetAll();
 
     /// <summary>
-    /// Creates a logical player session for a network session or returns the existing one.
+    ///     Creates a logical player session for a network session or returns the existing one.
     /// </summary>
     /// <param name="sessionId">Network session identifier.</param>
     /// <param name="remoteEndPoint">Optional remote endpoint string.</param>
@@ -65,19 +65,19 @@ public interface IPlayerSessionService
     PlayerSession GetOrCreateConnected(long sessionId, string? remoteEndPoint, DateTimeOffset connectedAt);
 
     /// <summary>
-    /// Returns a ZLinq query over a snapshot of all tracked player sessions.
+    ///     Returns a ZLinq query over a snapshot of all tracked player sessions.
     /// </summary>
     ValueEnumerable<FromArray<PlayerSession>, PlayerSession> Query();
 
     /// <summary>
-    /// Removes a logical player session completely.
+    ///     Removes a logical player session completely.
     /// </summary>
     /// <param name="sessionId">Network session identifier.</param>
     /// <returns><c>true</c> when a session was removed; otherwise <c>false</c>.</returns>
     bool Remove(long sessionId);
 
     /// <summary>
-    /// Tries to get a player session by in-world mobile serial.
+    ///     Tries to get a player session by in-world mobile serial.
     /// </summary>
     /// <param name="mobileSerial">In-world mobile serial.</param>
     /// <param name="session">The player session when found.</param>
@@ -85,7 +85,7 @@ public interface IPlayerSessionService
     bool TryGetByMobileSerial(Serial mobileSerial, out PlayerSession session);
 
     /// <summary>
-    /// Tries to get a player session by network session id.
+    ///     Tries to get a player session by network session id.
     /// </summary>
     /// <param name="sessionId">Network session identifier.</param>
     /// <param name="session">The player session when found.</param>
@@ -93,7 +93,7 @@ public interface IPlayerSessionService
     bool TryGetBySessionId(long sessionId, out PlayerSession session);
 
     /// <summary>
-    /// Updates client metadata for a player session.
+    ///     Updates client metadata for a player session.
     /// </summary>
     /// <param name="sessionId">Network session identifier.</param>
     /// <param name="clientVersion">Optional client version.</param>

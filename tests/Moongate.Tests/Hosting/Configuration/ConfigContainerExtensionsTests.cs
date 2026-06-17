@@ -10,6 +10,16 @@ public class ConfigContainerExtensionsTests : IDisposable
     private readonly string _dir = Path.Combine(Path.GetTempPath(), $"nh-config-di-{Guid.NewGuid():N}");
     private string Path_ => Path.Combine(_dir, "moongate.yaml");
 
+    public void Dispose()
+    {
+        if (Directory.Exists(_dir))
+        {
+            Directory.Delete(_dir, true);
+        }
+
+        GC.SuppressFinalize(this);
+    }
+
     [Fact]
     public void AddMoongateConfig_MissingFile_CreatesDefaultAndRegistersDefault()
     {
@@ -43,15 +53,5 @@ public class ConfigContainerExtensionsTests : IDisposable
         container.AddMoongateConfig(Path_);
 
         Assert.Equal(9000, container.Resolve<TestServerSettings>().Port);
-    }
-
-    public void Dispose()
-    {
-        if (Directory.Exists(_dir))
-        {
-            Directory.Delete(_dir, true);
-        }
-
-        GC.SuppressFinalize(this);
     }
 }

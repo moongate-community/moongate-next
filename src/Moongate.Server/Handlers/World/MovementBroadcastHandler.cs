@@ -17,5 +17,7 @@ public sealed class MovementBroadcastHandler : IAsyncEventHandler<MobileMovedEve
     }
 
     public Task HandleAsync(MobileMovedEvent evt, CancellationToken cancellationToken)
-        => _interest.OnMobileMovedAsync(evt, cancellationToken);
+    {
+        return _interest.OnMobileMovedAsync(evt, cancellationToken);
+    }
 }

@@ -5,7 +5,7 @@ using Moongate.UO.Data.Interfaces.Maps;
 namespace Moongate.Server.Services.Movement;
 
 /// <summary>
-/// Reads map bounds and tiles from <see cref="IMapService" /> for movement validation.
+///     Reads map bounds and tiles from <see cref="IMapService" /> for movement validation.
 /// </summary>
 public sealed class MovementTileQueryService : IMovementTileQueryService
 {
@@ -53,5 +53,7 @@ public sealed class MovementTileQueryService : IMovementTileQueryService
     }
 
     public IReadOnlyList<StaticTile> GetStaticTiles(int mapId, int x, int y)
-        => _maps.GetMap(mapId)?.GetStaticTiles(x, y) ?? [];
+    {
+        return _maps.GetMap(mapId)?.GetStaticTiles(x, y) ?? [];
+    }
 }

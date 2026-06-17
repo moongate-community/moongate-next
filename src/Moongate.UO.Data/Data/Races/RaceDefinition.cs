@@ -1,8 +1,8 @@
 namespace Moongate.UO.Data.Data.Races;
 
 /// <summary>
-/// Data-only definition of a UO playable race: identity and the bodies used for each gender,
-/// alive and ghost. Behaviour (hair/hue rules) is a content-module concern.
+///     Data-only definition of a UO playable race: identity and the bodies used for each gender,
+///     alive and ghost. Behaviour (hair/hue rules) is a content-module concern.
 /// </summary>
 public sealed class RaceDefinition
 {

@@ -10,16 +10,16 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.World;
 
 /// <summary>
-/// Populates the in-memory spatial index from persisted entities at boot: NPC mobiles
-/// (non-player) and ground items (not in a container, not equipped). Player characters are
-/// added on login, and contained/equipped items are not world-positioned, so both are skipped.
+///     Populates the in-memory spatial index from persisted entities at boot: NPC mobiles
+///     (non-player) and ground items (not in a container, not equipped). Player characters are
+///     added on login, and contained/equipped items are not world-positioned, so both are skipped.
 /// </summary>
 public sealed class WorldEntitiesBootService : IMoongateService
 {
+    private readonly IWorldSpatialIndex _index;
+    private readonly IAutoDataAccess<ItemEntity, Serial> _items;
     private readonly ILogger _logger = Log.ForContext<WorldEntitiesBootService>();
     private readonly IAutoDataAccess<MobileEntity, Serial> _mobiles;
-    private readonly IAutoDataAccess<ItemEntity, Serial> _items;
-    private readonly IWorldSpatialIndex _index;
 
     public WorldEntitiesBootService(
         IAutoDataAccess<MobileEntity, Serial> mobiles,
@@ -60,9 +60,15 @@ public sealed class WorldEntitiesBootService : IMoongateService
             }
         }
 
-        _logger.Information("Spatial index cold-start: {NpcCount} NPC(s), {ItemCount} ground item(s) loaded", npcCount, itemCount);
+        _logger.Information(
+            "Spatial index cold-start: {NpcCount} NPC(s), {ItemCount} ground item(s) loaded",
+            npcCount,
+            itemCount
+        );
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
-        => Task.CompletedTask;
+    {
+        return Task.CompletedTask;
+    }
 }

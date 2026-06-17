@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 namespace Moongate.UO.Data.Data.Tiles;
 
 /// <summary>
-/// A single land tile read from a map facet block: tile id and z. 3 bytes, packed for direct reads.
+///     A single land tile read from a map facet block: tile id and z. 3 bytes, packed for direct reads.
 /// </summary>
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct LandTile

@@ -19,7 +19,9 @@ public class PingHandler : PacketHandlerBase<PingMessagePacket>
         IEventBusService eventBus,
         INetworkSessionManager sessions,
         IPlayerSessionService playerSessions
-    ) : base(eventBus, sessions, playerSessions) { }
+    ) : base(eventBus, sessions, playerSessions)
+    {
+    }
 
     public override async Task HandleAsync(
         PacketContext<PingMessagePacket> context,

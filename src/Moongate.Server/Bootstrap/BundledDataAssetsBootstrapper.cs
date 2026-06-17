@@ -5,7 +5,7 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Bootstrap;
 
 /// <summary>
-/// Seeds the runtime data directory with bundled embedded data assets.
+///     Seeds the runtime data directory with bundled embedded data assets.
 /// </summary>
 public static class BundledDataAssetsBootstrapper
 {
@@ -89,10 +89,12 @@ public static class BundledDataAssetsBootstrapper
     }
 
     private static IReadOnlyList<string> GetDataResourceNames(Assembly assembly, string normalizedPrefix)
-        => assembly.GetManifestResourceNames()
-                   .Where(name => name.StartsWith(normalizedPrefix, StringComparison.Ordinal))
-                   .Order(StringComparer.Ordinal)
-                   .ToArray();
+    {
+        return assembly.GetManifestResourceNames()
+            .Where(name => name.StartsWith(normalizedPrefix, StringComparison.Ordinal))
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+    }
 
     private static string GetRelativePath(string resourceName, string normalizedPrefix)
     {
@@ -112,7 +114,7 @@ public static class BundledDataAssetsBootstrapper
         var normalizedPrefix = resourcePrefix.Trim().Replace('\\', '/');
 
         return normalizedPrefix.EndsWith('/')
-                   ? normalizedPrefix
-                   : normalizedPrefix + "/";
+            ? normalizedPrefix
+            : normalizedPrefix + "/";
     }
 }

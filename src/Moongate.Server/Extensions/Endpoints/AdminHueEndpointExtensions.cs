@@ -11,24 +11,24 @@ public static class AdminHueEndpointExtensions
     public static IEndpointRouteBuilder MapMoongateAdminHues(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/api/admin/hues")
-                             .WithTags("Admin Hues")
-                             .RequireAuthorization(policy => policy.RequireRole(nameof(UserLevelType.Administrator)));
+            .WithTags("Admin Hues")
+            .RequireAuthorization(policy => policy.RequireRole(nameof(UserLevelType.Administrator)));
 
         group.MapGet(
-                 "/",
-                 (IHueStore hues, int? page, int? pageSize, string? search) =>
-                     HandleListHues(hues, page, pageSize, search)
-             )
-             .WithName("ListAdminHues")
-             .WithSummary("Returns a paged list of UO hues for the hue picker.")
-             .Produces<PagedResult<HueSummary>>();
+                "/",
+                (IHueStore hues, int? page, int? pageSize, string? search) =>
+                    HandleListHues(hues, page, pageSize, search)
+            )
+            .WithName("ListAdminHues")
+            .WithSummary("Returns a paged list of UO hues for the hue picker.")
+            .Produces<PagedResult<HueSummary>>();
 
         group.MapGet(
-                 "/{hue:int}",
-                 (IHueStore hues, int hue) => HandleGetHue(hues, hue)
-             )
-             .WithName("GetAdminHue")
-             .WithSummary("Returns a UO hue palette descriptor.");
+                "/{hue:int}",
+                (IHueStore hues, int hue) => HandleGetHue(hues, hue)
+            )
+            .WithName("GetAdminHue")
+            .WithSummary("Returns a UO hue palette descriptor.");
 
         return endpoints;
     }
@@ -60,10 +60,10 @@ public static class AdminHueEndpointExtensions
         var ordered = values.ToArray();
 
         var items = ordered
-                    .Skip((pageNumber - 1) * size)
-                    .Take(size)
-                    .Select(value => HueSummary.FromValue(value, hues))
-                    .ToArray();
+            .Skip((pageNumber - 1) * size)
+            .Take(size)
+            .Select(value => HueSummary.FromValue(value, hues))
+            .ToArray();
 
         return TypedResults.Ok(new PagedResult<HueSummary>(items, pageNumber, size, ordered.Length));
     }

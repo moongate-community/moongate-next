@@ -4,17 +4,19 @@ using Moongate.Persistence.Interfaces.Persistence;
 namespace Moongate.Persistence.Services.Persistence;
 
 /// <summary>
-/// Default in-memory <see cref="IPersistenceEntityRegistry" />.
+///     Default in-memory <see cref="IPersistenceEntityRegistry" />.
 /// </summary>
 public sealed class PersistenceEntityRegistry : IPersistenceEntityRegistry
 {
-    private readonly Dictionary<ushort, IPersistenceEntityDescriptor> _byTypeId = [];
     private readonly Dictionary<(Type Entity, Type Key), IPersistenceEntityDescriptor> _byClrTypes = [];
+    private readonly Dictionary<ushort, IPersistenceEntityDescriptor> _byTypeId = [];
 
     public bool IsFrozen { get; private set; }
 
     public void Freeze()
-        => IsFrozen = true;
+    {
+        IsFrozen = true;
+    }
 
     public IPersistenceEntityDescriptor GetDescriptor(ushort typeId)
     {
@@ -39,13 +41,19 @@ public sealed class PersistenceEntityRegistry : IPersistenceEntityRegistry
     }
 
     public IReadOnlyCollection<IPersistenceEntityDescriptor> GetRegisteredDescriptors()
-        => _byTypeId.Values.ToArray();
+    {
+        return _byTypeId.Values.ToArray();
+    }
 
     public bool IsRegistered(ushort typeId)
-        => _byTypeId.ContainsKey(typeId);
+    {
+        return _byTypeId.ContainsKey(typeId);
+    }
 
     public bool IsRegistered<TEntity, TKey>()
-        => _byClrTypes.ContainsKey((typeof(TEntity), typeof(TKey)));
+    {
+        return _byClrTypes.ContainsKey((typeof(TEntity), typeof(TKey)));
+    }
 
     public void Register<TEntity, TKey>(PersistenceEntityDescriptor<TEntity, TKey> descriptor)
         where TKey : notnull

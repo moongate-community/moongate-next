@@ -1,13 +1,11 @@
 namespace Moongate.Tests.UO.Data.Support;
 
 /// <summary>
-/// Writes synthetic classic <c>multi.idx</c> + <c>multi.mul</c> (postHS 16-byte entries) for the
-/// given multis keyed by id; absent ids get an empty index record.
+///     Writes synthetic classic <c>multi.idx</c> + <c>multi.mul</c> (postHS 16-byte entries) for the
+///     given multis keyed by id; absent ids get an empty index record.
 /// </summary>
 public static class MultiFixture
 {
-    public sealed record Tile(ushort ItemId, short X, short Y, short Z, ulong Flags);
-
     public static void WriteMul(string directory, IReadOnlyDictionary<int, IReadOnlyList<Tile>> multis)
     {
         var maxId = multis.Keys.Max();
@@ -48,4 +46,6 @@ public static class MultiFixture
             }
         }
     }
+
+    public sealed record Tile(ushort ItemId, short X, short Y, short Z, ulong Flags);
 }

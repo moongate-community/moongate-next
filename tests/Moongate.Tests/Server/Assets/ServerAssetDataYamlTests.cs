@@ -10,17 +10,16 @@ public sealed class ServerAssetDataYamlTests
     public void AssetsData_DoesNotContainLegacyJsonCfgTomlOrTxtFiles()
     {
         var legacyFiles = Directory
-                          .EnumerateFiles(AssetsDataDirectory(), "*", SearchOption.AllDirectories)
-                          .Where(
-                              path =>
-                                  path.EndsWith(".json", StringComparison.OrdinalIgnoreCase) ||
-                                  path.EndsWith(".cfg", StringComparison.OrdinalIgnoreCase) ||
-                                  path.EndsWith(".toml", StringComparison.OrdinalIgnoreCase) ||
-                                  path.EndsWith(".txt", StringComparison.OrdinalIgnoreCase)
-                          )
-                          .Select(path => Path.GetRelativePath(AssetsDataDirectory(), path))
-                          .Order(StringComparer.Ordinal)
-                          .ToArray();
+            .EnumerateFiles(AssetsDataDirectory(), "*", SearchOption.AllDirectories)
+            .Where(path =>
+                path.EndsWith(".json", StringComparison.OrdinalIgnoreCase) ||
+                path.EndsWith(".cfg", StringComparison.OrdinalIgnoreCase) ||
+                path.EndsWith(".toml", StringComparison.OrdinalIgnoreCase) ||
+                path.EndsWith(".txt", StringComparison.OrdinalIgnoreCase)
+            )
+            .Select(path => Path.GetRelativePath(AssetsDataDirectory(), path))
+            .Order(StringComparer.Ordinal)
+            .ToArray();
 
         Assert.Empty(legacyFiles);
     }
@@ -67,9 +66,9 @@ public sealed class ServerAssetDataYamlTests
     public void AssetsData_YamlFilesParse()
     {
         var yamlFiles = Directory
-                        .EnumerateFiles(AssetsDataDirectory(), "*.yaml", SearchOption.AllDirectories)
-                        .Order(StringComparer.Ordinal)
-                        .ToArray();
+            .EnumerateFiles(AssetsDataDirectory(), "*.yaml", SearchOption.AllDirectories)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
 
         Assert.NotEmpty(yamlFiles);
 

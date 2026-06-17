@@ -30,7 +30,7 @@ public sealed class ServerAssetDataBootServiceTests : IDisposable
             """
         );
 
-        var doors = new DoorDataService(new(_dataDirectory));
+        var doors = new DoorDataService(new ServerAssetDataLoader(_dataDirectory));
         var service = new ServerAssetDataBootService();
 
         await service.StartAsync(CancellationToken.None);

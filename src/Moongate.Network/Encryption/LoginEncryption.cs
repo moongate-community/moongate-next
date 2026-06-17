@@ -3,7 +3,7 @@ using Moongate.Network.Interfaces.Encryption;
 namespace Moongate.Network.Encryption;
 
 /// <summary>
-/// Implements login packet encryption for account login traffic.
+///     Implements login packet encryption for account login traffic.
 /// </summary>
 public sealed class LoginEncryption : IClientEncryption
 {
@@ -50,7 +50,9 @@ public sealed class LoginEncryption : IClientEncryption
     }
 
     public void ServerEncrypt(Span<byte> buffer)
-        => _ = buffer;
+    {
+        _ = buffer;
+    }
 
     public static bool TryDecrypt(
         int? major,
@@ -107,7 +109,7 @@ public sealed class LoginEncryption : IClientEncryption
             return false;
         }
 
-        encryption = new(seed, keys);
+        encryption = new LoginEncryption(seed, keys);
 
         return true;
     }

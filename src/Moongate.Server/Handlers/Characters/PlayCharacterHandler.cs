@@ -16,10 +16,10 @@ namespace Moongate.Server.Handlers.Characters;
 [RegisterPacketHandler]
 public class PlayCharacterHandler : PacketHandlerBase<PlayCharacterPacket>
 {
+    private readonly IWorldSpatialIndex _index;
     private readonly ILogger _logger = Log.ForContext<PlayCharacterHandler>();
     private readonly IMobileService _mobiles;
     private readonly IWorldEntryService _worldEntry;
-    private readonly IWorldSpatialIndex _index;
 
     public PlayCharacterHandler(
         IEventBusService eventBus,

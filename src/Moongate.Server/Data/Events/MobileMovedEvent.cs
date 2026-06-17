@@ -6,7 +6,7 @@ using Moongate.Core.Types;
 namespace Moongate.Server.Data.Events;
 
 /// <summary>
-/// Raised after a mobile completes a positional step. Broadcast seam for interest management (#3).
+///     Raised after a mobile completes a positional step. Broadcast seam for interest management (#3).
 /// </summary>
 public sealed record MobileMovedEvent(
     Serial MobileId,

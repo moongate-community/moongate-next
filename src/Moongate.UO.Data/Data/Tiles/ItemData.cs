@@ -4,7 +4,7 @@ using Moongate.UO.Data.Types.Tiles;
 namespace Moongate.UO.Data.Data.Tiles;
 
 /// <summary>
-/// Static properties of a single item/static tile, as read from <c>tiledata.mul</c>.
+///     Static properties of a single item/static tile, as read from <c>tiledata.mul</c>.
 /// </summary>
 public struct ItemData
 {
@@ -188,5 +188,7 @@ public struct ItemData
     }
 
     public override string ToString()
-        => $" {Name} ({Flags})";
+    {
+        return $" {Name} ({Flags})";
+    }
 }

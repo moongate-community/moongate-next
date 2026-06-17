@@ -14,42 +14,14 @@ public class EventBusServiceCollectionExtensionsTests : IDisposable
     private readonly string _dir = Path.Combine(Path.GetTempPath(), $"nh-eventbus-config-{Guid.NewGuid():N}");
     private string Path_ => Path.Combine(_dir, "moongate.yaml");
 
-    private sealed class NamedAsyncHandler : IAsyncEventHandler<TestAsyncEvent>
+    public void Dispose()
     {
-        private readonly List<string> _timeline;
-
-        public NamedAsyncHandler(List<string> timeline)
+        if (Directory.Exists(_dir))
         {
-            _timeline = timeline;
+            Directory.Delete(_dir, true);
         }
 
-        public Task HandleAsync(TestAsyncEvent evt, CancellationToken cancellationToken)
-        {
-            lock (_timeline)
-            {
-                _timeline.Add($"async:Named:{evt.Payload}");
-            }
-
-            return Task.CompletedTask;
-        }
-    }
-
-    private sealed class NamedTickHandler : ITickEventHandler<TestTickEvent>
-    {
-        private readonly List<string> _timeline;
-
-        public NamedTickHandler(List<string> timeline)
-        {
-            _timeline = timeline;
-        }
-
-        public void Handle(TestTickEvent evt)
-        {
-            lock (_timeline)
-            {
-                _timeline.Add($"tick:Named:{evt.Value}");
-            }
-        }
+        GC.SuppressFinalize(this);
     }
 
     [Fact]
@@ -129,13 +101,41 @@ public class EventBusServiceCollectionExtensionsTests : IDisposable
         Assert.Equal(new[] { "tick:Named:11" }, timeline);
     }
 
-    public void Dispose()
+    private sealed class NamedAsyncHandler : IAsyncEventHandler<TestAsyncEvent>
     {
-        if (Directory.Exists(_dir))
+        private readonly List<string> _timeline;
+
+        public NamedAsyncHandler(List<string> timeline)
         {
-            Directory.Delete(_dir, true);
+            _timeline = timeline;
         }
 
-        GC.SuppressFinalize(this);
+        public Task HandleAsync(TestAsyncEvent evt, CancellationToken cancellationToken)
+        {
+            lock (_timeline)
+            {
+                _timeline.Add($"async:Named:{evt.Payload}");
+            }
+
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class NamedTickHandler : ITickEventHandler<TestTickEvent>
+    {
+        private readonly List<string> _timeline;
+
+        public NamedTickHandler(List<string> timeline)
+        {
+            _timeline = timeline;
+        }
+
+        public void Handle(TestTickEvent evt)
+        {
+            lock (_timeline)
+            {
+                _timeline.Add($"tick:Named:{evt.Value}");
+            }
+        }
     }
 }

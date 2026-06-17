@@ -15,16 +15,16 @@ using Moongate.Server.Services.Player;
 namespace Moongate.Server.Extensions.Network;
 
 /// <summary>
-/// DryIoc-native registration helpers for the Moongate network service.
+///     DryIoc-native registration helpers for the Moongate network service.
 /// </summary>
 public static class NetworkContainerExtensions
 {
     private const int NetworkServicePriority = 20;
 
     /// <summary>
-    /// Registers <see cref="NetworkService" /> and <see cref="SessionService" /> with the Moongate
-    /// hosting orchestrator. Requires a <see cref="PacketRegistry" /> singleton
-    /// to have been registered earlier.
+    ///     Registers <see cref="NetworkService" /> and <see cref="SessionService" /> with the Moongate
+    ///     hosting orchestrator. Requires a <see cref="PacketRegistry" /> singleton
+    ///     to have been registered earlier.
     /// </summary>
     /// <param name="container">DryIoc container.</param>
     public static IContainer AddMoongateNetwork(this IContainer container)

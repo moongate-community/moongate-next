@@ -3,7 +3,7 @@ using Moongate.UO.Data.Data.Tiles;
 namespace Moongate.UO.Data.Interfaces.Tiles;
 
 /// <summary>
-/// Provides access to the static land and item tile properties parsed from <c>tiledata.mul</c>.
+///     Provides access to the static land and item tile properties parsed from <c>tiledata.mul</c>.
 /// </summary>
 public interface ITileDataStore
 {

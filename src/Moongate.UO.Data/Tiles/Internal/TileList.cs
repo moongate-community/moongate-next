@@ -4,8 +4,8 @@ using Moongate.UO.Data.Data.Tiles;
 namespace Moongate.UO.Data.Tiles.Internal;
 
 /// <summary>
-/// Growable accumulator of <see cref="StaticTile" /> used while bucketing a statics block.
-/// Backed by a pooled array; <see cref="ToArray" /> returns the pooled buffer to the pool.
+///     Growable accumulator of <see cref="StaticTile" /> used while bucketing a statics block.
+///     Backed by a pooled array; <see cref="ToArray" /> returns the pooled buffer to the pool.
 /// </summary>
 public sealed class TileList
 {

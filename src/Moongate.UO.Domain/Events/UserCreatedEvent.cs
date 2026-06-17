@@ -5,18 +5,10 @@ using Moongate.Core.Types;
 namespace Moongate.UO.Domain.Events;
 
 /// <summary>
-/// Async event published after a user account has been persisted.
+///     Async event published after a user account has been persisted.
 /// </summary>
 public sealed record UserCreatedEvent : IAsyncEvent
 {
-    public Serial UserId { get; }
-    public string Username { get; }
-    public string? Email { get; }
-    public UserLevelType Level { get; }
-    public bool IsActive { get; }
-    public string? ActivationId { get; }
-    public DateTimeOffset At { get; }
-
     public UserCreatedEvent(
         Serial userId,
         string username,
@@ -37,4 +29,12 @@ public sealed record UserCreatedEvent : IAsyncEvent
         ActivationId = activationId;
         At = at;
     }
+
+    public Serial UserId { get; }
+    public string Username { get; }
+    public string? Email { get; }
+    public UserLevelType Level { get; }
+    public bool IsActive { get; }
+    public string? ActivationId { get; }
+    public DateTimeOffset At { get; }
 }

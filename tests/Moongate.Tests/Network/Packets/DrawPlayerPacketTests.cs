@@ -1,3 +1,4 @@
+using Moongate.Core.Geometry;
 using Moongate.Core.Ids;
 using Moongate.Core.Types;
 using Moongate.Network.UO.Packets.Outgoing.Entity;
@@ -13,8 +14,8 @@ public class DrawPlayerPacketTests
     {
         var mobile = new MobileEntity
         {
-            Id = new(0x55), BodyId = 401, SkinHue = (Hue)0x83EA,
-            Location = new(10, 20, -5), Direction = DirectionType.East
+            Id = new Serial(0x55), BodyId = 401, SkinHue = (Hue)0x83EA,
+            Location = new Point3D(10, 20, -5), Direction = DirectionType.East
         };
         var bytes = PacketSerializer.Serialize(new DrawPlayerPacket(mobile));
         Assert.Equal(19, bytes.Length);

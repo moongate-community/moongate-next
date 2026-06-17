@@ -1,4 +1,5 @@
 using Moongate.Tests.UO.Data.Support;
+using Moongate.UO.Data.Data.Maps;
 using Moongate.UO.Data.Data.Tiles;
 using Moongate.UO.Data.Files;
 using Moongate.UO.Data.Interfaces.Maps;
@@ -12,41 +13,6 @@ namespace Moongate.Tests.UO.Data.Maps;
 
 public class MapImageServiceTests
 {
-    private sealed class TestMapService : IMapService
-    {
-        private readonly Map _map;
-
-        public TestMapService(Map map)
-        {
-            _map = map;
-        }
-
-        public IReadOnlyList<Map> Maps => [_map];
-
-        public Map? GetMap(int mapId)
-            => mapId == _map.MapId ? _map : null;
-    }
-
-    private sealed class TestTileDataStore : ITileDataStore
-    {
-        private readonly ItemData _staticTileData;
-
-        public TestTileDataStore(ItemData staticTileData)
-        {
-            _staticTileData = staticTileData;
-        }
-
-        public IReadOnlyList<LandData> LandTable => [];
-
-        public IReadOnlyList<ItemData> ItemTable => [];
-
-        public ItemData GetItem(int id)
-            => _staticTileData;
-
-        public LandData GetLand(int id)
-            => default;
-    }
-
     [Fact]
     public void GetMapImage_MissingMap_ReturnsNull()
     {
@@ -98,7 +64,7 @@ public class MapImageServiceTests
                 0,
                 8,
                 8,
-                [new(3, 2, 5, 0)],
+                [new MapFixture.LandCell(3, 2, 5, 0)],
                 []
             );
             RadarColFixture.Write(dir.FullName, new Dictionary<int, ushort> { [5] = 0x7FFF });
@@ -110,7 +76,7 @@ public class MapImageServiceTests
             Assert.Equal(8, image!.Width);
             Assert.Equal(8, image.Height);
             using var pixels = image.CloneAs<Rgb24>();
-            Assert.Equal(new(255, 255, 255), pixels[3, 2]);
+            Assert.Equal(new Rgb24(255, 255, 255), pixels[3, 2]);
         }
         finally
         {
@@ -130,8 +96,8 @@ public class MapImageServiceTests
                 0,
                 8,
                 8,
-                [new(3, 2, 5, 0)],
-                [new(0, 0, 10, 3, 2, 0, 0)]
+                [new MapFixture.LandCell(3, 2, 5, 0)],
+                [new MapFixture.StaticTileSpec(0, 0, 10, 3, 2, 0, 0)]
             );
             RadarColFixture.Write(
                 dir.FullName,
@@ -141,13 +107,13 @@ public class MapImageServiceTests
                     [0x4000 + 10] = 0x001F
                 }
             );
-            var service = BuildService(dir.FullName, new("wall", default, 0, 0, 0, 0, 0, 1));
+            var service = BuildService(dir.FullName, new ItemData("wall", default, 0, 0, 0, 0, 0, 1));
 
             using var image = service.GetMapImage(0);
 
             Assert.NotNull(image);
             using var pixels = image!.CloneAs<Rgb24>();
-            Assert.Equal(new(0, 0, 255), pixels[3, 2]);
+            Assert.Equal(new Rgb24(0, 0, 255), pixels[3, 2]);
         }
         finally
         {
@@ -158,13 +124,54 @@ public class MapImageServiceTests
     private static MapImageService BuildService(string directory, ItemData staticTileData = default)
     {
         var resolver = new UoFileResolver(directory);
-        var map = new Map(new(0, 0, 0, 8, 8, "Test", MapRulesType.FeluccaRules, SeasonType.Spring), resolver);
+        var map = new Map(new MapDefinition(0, 0, 0, 8, 8, "Test", MapRulesType.FeluccaRules, SeasonType.Spring), resolver);
 
-        return new(
+        return new MapImageService(
             new TestMapService(map),
             resolver,
             new RadarColorStore(resolver),
             new TestTileDataStore(staticTileData)
         );
+    }
+
+    private sealed class TestMapService : IMapService
+    {
+        private readonly Map _map;
+
+        public TestMapService(Map map)
+        {
+            _map = map;
+        }
+
+        public IReadOnlyList<Map> Maps => [_map];
+
+        public Map? GetMap(int mapId)
+        {
+            return mapId == _map.MapId ? _map : null;
+        }
+    }
+
+    private sealed class TestTileDataStore : ITileDataStore
+    {
+        private readonly ItemData _staticTileData;
+
+        public TestTileDataStore(ItemData staticTileData)
+        {
+            _staticTileData = staticTileData;
+        }
+
+        public IReadOnlyList<LandData> LandTable => [];
+
+        public IReadOnlyList<ItemData> ItemTable => [];
+
+        public ItemData GetItem(int id)
+        {
+            return _staticTileData;
+        }
+
+        public LandData GetLand(int id)
+        {
+            return default;
+        }
     }
 }

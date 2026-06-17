@@ -16,65 +16,65 @@ public static class ItemTemplateEndpointExtensions
     public static IEndpointRouteBuilder MapMoongateItemTemplates(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/api/admin/item-templates")
-                             .WithTags("Admin Item Templates")
-                             .RequireAuthorization(policy => policy.RequireRole(nameof(UserLevelType.Administrator)));
+            .WithTags("Admin Item Templates")
+            .RequireAuthorization(policy => policy.RequireRole(nameof(UserLevelType.Administrator)));
 
         group.MapGet(
-                 "/",
-                 (
-                     IItemTemplateService templates,
-                     IHueStore hues,
-                     HttpRequest request,
-                     int? page,
-                     int? pageSize,
-                     string? search,
-                     string? tag,
-                     string? rarity,
-                     string? layer
-                 ) => HandleList(
-                     templates,
-                     hues,
-                     page,
-                     pageSize,
-                     search,
-                     tag,
-                     rarity,
-                     layer,
-                     request.Query["abstract"].FirstOrDefault()
-                 )
-             )
-             .WithName("ListItemTemplates")
-             .WithSummary("Returns a paginated, searchable list of item templates.");
+                "/",
+                (
+                    IItemTemplateService templates,
+                    IHueStore hues,
+                    HttpRequest request,
+                    int? page,
+                    int? pageSize,
+                    string? search,
+                    string? tag,
+                    string? rarity,
+                    string? layer
+                ) => HandleList(
+                    templates,
+                    hues,
+                    page,
+                    pageSize,
+                    search,
+                    tag,
+                    rarity,
+                    layer,
+                    request.Query["abstract"].FirstOrDefault()
+                )
+            )
+            .WithName("ListItemTemplates")
+            .WithSummary("Returns a paginated, searchable list of item templates.");
 
         group.MapGet(
-                 "/{id}",
-                 (IItemTemplateService templates, IHueStore hues, string id) => HandleDetail(templates, hues, id)
-             )
-             .WithName("GetItemTemplate")
-             .WithSummary("Returns a full read-only item template definition.");
+                "/{id}",
+                (IItemTemplateService templates, IHueStore hues, string id) => HandleDetail(templates, hues, id)
+            )
+            .WithName("GetItemTemplate")
+            .WithSummary("Returns a full read-only item template definition.");
 
         group.MapPost(
-                 "/",
-                 (
-                     IItemTemplateAuthoringService authoring,
-                     ItemTemplateEditRequest request,
-                     CancellationToken cancellationToken
-                 ) => HandleCreateAsync(authoring, request, cancellationToken)
-             )
-             .WithName("CreateItemTemplate")
-             .WithSummary("Creates an item template in the managed web YAML file.");
+                "/",
+                (
+                    IItemTemplateAuthoringService authoring,
+                    ItemTemplateEditRequest request,
+                    CancellationToken cancellationToken
+                ) => HandleCreateAsync(authoring, request, cancellationToken)
+            )
+            .WithName("CreateItemTemplate")
+            .WithSummary("Creates an item template in the managed web YAML file.");
 
         group.MapPut(
-                 "/{id}",
-                 (
-                     IItemTemplateAuthoringService authoring,
-                     string id,
-                     ItemTemplateEditRequest request,
-                     CancellationToken cancellationToken
-                 ) => HandleUpdateAsync(authoring, id, request, cancellationToken)
-             )
-             .WithName("UpdateItemTemplate")
-             .WithSummary("Updates an existing item template in its owning YAML file.");
+                "/{id}",
+                (
+                    IItemTemplateAuthoringService authoring,
+                    string id,
+                    ItemTemplateEditRequest request,
+                    CancellationToken cancellationToken
+                ) => HandleUpdateAsync(authoring, id, request, cancellationToken)
+            )
+            .WithName("UpdateItemTemplate")
+            .WithSummary("Updates an existing item template in its owning YAML file.");
 
         return endpoints;
     }
@@ -110,8 +110,8 @@ public static class ItemTemplateEndpointExtensions
         ArgumentNullException.ThrowIfNull(hues);
 
         return templates.TryGet(id, out var template)
-                   ? TypedResults.Ok(ItemTemplateDetail.FromDefinition(template, hues))
-                   : TypedResults.NotFound();
+            ? TypedResults.Ok(ItemTemplateDetail.FromDefinition(template, hues))
+            : TypedResults.NotFound();
     }
 
     internal static IResult HandleList(
@@ -148,9 +148,7 @@ public static class ItemTemplateEndpointExtensions
 
         if (!string.IsNullOrWhiteSpace(tag))
         {
-            filters.Add(
-                template => template.Tags.Any(
-                    templateTag => string.Equals(
+            filters.Add(template => template.Tags.Any(templateTag => string.Equals(
                         templateTag,
                         tag.Trim(),
                         StringComparison.OrdinalIgnoreCase

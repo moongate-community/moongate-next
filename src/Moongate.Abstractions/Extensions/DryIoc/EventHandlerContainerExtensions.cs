@@ -5,12 +5,12 @@ using Moongate.Abstractions.Interfaces.Events;
 namespace Moongate.Abstractions.Extensions.DryIoc;
 
 /// <summary>
-/// DryIoc-native registration helpers for Moongate event handlers.
+///     DryIoc-native registration helpers for Moongate event handlers.
 /// </summary>
 public static class EventHandlerContainerExtensions
 {
     /// <summary>
-    /// Registers <typeparamref name="THandler" /> as an <see cref="IAsyncEventHandler{TEvent}" /> singleton.
+    ///     Registers <typeparamref name="THandler" /> as an <see cref="IAsyncEventHandler{TEvent}" /> singleton.
     /// </summary>
     public static IContainer AddAsyncEventHandler<THandler, TEvent>(this IContainer container)
         where THandler : class, IAsyncEventHandler<TEvent>
@@ -23,7 +23,7 @@ public static class EventHandlerContainerExtensions
     }
 
     /// <summary>
-    /// Registers <typeparamref name="THandler" /> as an <see cref="ITickEventHandler{TEvent}" /> singleton.
+    ///     Registers <typeparamref name="THandler" /> as an <see cref="ITickEventHandler{TEvent}" /> singleton.
     /// </summary>
     public static IContainer AddTickEventHandler<THandler, TEvent>(this IContainer container)
         where THandler : class, ITickEventHandler<TEvent>

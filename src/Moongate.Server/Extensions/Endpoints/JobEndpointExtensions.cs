@@ -9,19 +9,19 @@ public static class JobEndpointExtensions
     public static IEndpointRouteBuilder MapMoongateJobs(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/api/admin/jobs")
-                             .WithTags("Admin Jobs")
-                             .RequireAuthorization(policy => policy.RequireRole(nameof(UserLevelType.Administrator)));
+            .WithTags("Admin Jobs")
+            .RequireAuthorization(policy => policy.RequireRole(nameof(UserLevelType.Administrator)));
 
         group.MapGet("/", (IJobService jobs) => HandleList(jobs))
-             .WithName("ListAdminJobs")
-             .WithSummary("Returns the registered jobs and their latest run metadata.")
-             .Produces<IReadOnlyList<JobSnapshot>>();
+            .WithName("ListAdminJobs")
+            .WithSummary("Returns the registered jobs and their latest run metadata.")
+            .Produces<IReadOnlyList<JobSnapshot>>();
 
         group.MapPost("/{id}/run", (IJobService jobs, string id) => HandleRun(jobs, id))
-             .WithName("RunAdminJob")
-             .WithSummary("Schedules an immediate run of a job.")
-             .Produces(StatusCodes.Status200OK)
-             .Produces(StatusCodes.Status404NotFound);
+            .WithName("RunAdminJob")
+            .WithSummary("Schedules an immediate run of a job.")
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound);
 
         return endpoints;
     }

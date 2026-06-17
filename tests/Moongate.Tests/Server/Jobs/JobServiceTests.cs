@@ -1,3 +1,4 @@
+using Moongate.Abstractions.Data.Timing;
 using Moongate.Abstractions.Types.Jobs;
 using Moongate.Server.Services.Jobs;
 using Moongate.Server.Services.Timing;
@@ -103,7 +104,9 @@ public sealed class JobServiceTests
 
     [Fact]
     public void RunNow_UnknownId_ReturnsFalse()
-        => Assert.False(new JobService(NewWheel()).RunNow("nope"));
+    {
+        Assert.False(new JobService(NewWheel()).RunNow("nope"));
+    }
 
     [Fact]
     public void Source_IsRecorded()
@@ -116,5 +119,7 @@ public sealed class JobServiceTests
     }
 
     private static TimerWheelService NewWheel()
-        => new(new() { TickDuration = TimeSpan.FromMilliseconds(8), WheelSize = 16 });
+    {
+        return new TimerWheelService(new TimerWheelConfig { TickDuration = TimeSpan.FromMilliseconds(8), WheelSize = 16 });
+    }
 }

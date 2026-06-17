@@ -13,12 +13,12 @@ public class GenericDataAccessTests
     public async Task GetAll_ReturnsDetachedClones()
     {
         var access = NewAccess(out _, out _);
-        await access.UpsertAsync(new() { Id = new(1), Name = "original" });
+        await access.UpsertAsync(new TestPlayer { Id = new Serial(1), Name = "original" });
 
         var all = await access.GetAllAsync();
         all.First().Name = "mutated";
 
-        Assert.Equal("original", (await access.GetByIdAsync(new(1)))!.Name);
+        Assert.Equal("original", (await access.GetByIdAsync(new Serial(1)))!.Name);
     }
 
     [Fact]
@@ -26,30 +26,30 @@ public class GenericDataAccessTests
     {
         var access = NewAccess(out _, out _);
 
-        Assert.Null(await access.GetByIdAsync(new(999)));
+        Assert.Null(await access.GetByIdAsync(new Serial(999)));
     }
 
     [Fact]
     public async Task Query_ReturnsDetachedQueryableClones()
     {
         var access = NewAccess(out _, out _);
-        await access.UpsertAsync(new() { Id = new(1), Name = "active", Level = 10 });
-        await access.UpsertAsync(new() { Id = new(2), Name = "inactive", Level = 1 });
+        await access.UpsertAsync(new TestPlayer { Id = new Serial(1), Name = "active", Level = 10 });
+        await access.UpsertAsync(new TestPlayer { Id = new Serial(2), Name = "inactive", Level = 1 });
 
         var queried = access.Query().Where(player => player.Level >= 10).ToArray();
         queried[0].Name = "mutated";
 
         Assert.Single(queried);
-        Assert.Equal("active", (await access.GetByIdAsync(new(1)))!.Name);
+        Assert.Equal("active", (await access.GetByIdAsync(new Serial(1)))!.Name);
     }
 
     [Fact]
     public async Task Remove_Existing_ReturnsTrueAndAppendsRemoveEntry()
     {
         var access = NewAccess(out var journal, out _);
-        await access.UpsertAsync(new() { Id = new(1), Name = "a" });
+        await access.UpsertAsync(new TestPlayer { Id = new Serial(1), Name = "a" });
 
-        var removed = await access.RemoveAsync(new(1));
+        var removed = await access.RemoveAsync(new Serial(1));
 
         Assert.True(removed);
         Assert.Equal(0, await access.CountAsync());
@@ -61,7 +61,7 @@ public class GenericDataAccessTests
     {
         var access = NewAccess(out var journal, out _);
 
-        var removed = await access.RemoveAsync(new(123));
+        var removed = await access.RemoveAsync(new Serial(123));
 
         Assert.False(removed);
         Assert.Empty(journal.Entries);
@@ -72,7 +72,7 @@ public class GenericDataAccessTests
     {
         var access = NewAccess(out var journal, out _);
 
-        await access.UpsertAsync(new() { Id = new(1), Name = "a" });
+        await access.UpsertAsync(new TestPlayer { Id = new Serial(1), Name = "a" });
 
         Assert.Single(journal.Entries);
         Assert.Equal(JournalEntityOperationType.Upsert, journal.Entries[0].Operation);
@@ -85,11 +85,11 @@ public class GenericDataAccessTests
     {
         var access = NewAccess(out _, out _);
 
-        await access.UpsertAsync(new() { Id = new(1), Name = "v1" });
-        await access.UpsertAsync(new() { Id = new(1), Name = "v2" });
+        await access.UpsertAsync(new TestPlayer { Id = new Serial(1), Name = "v1" });
+        await access.UpsertAsync(new TestPlayer { Id = new Serial(1), Name = "v2" });
 
         Assert.Equal(1, await access.CountAsync());
-        Assert.Equal("v2", (await access.GetByIdAsync(new(1)))!.Name);
+        Assert.Equal("v2", (await access.GetByIdAsync(new Serial(1)))!.Name);
     }
 
     [Fact]
@@ -97,8 +97,8 @@ public class GenericDataAccessTests
     {
         var access = NewAccess(out _, out _);
 
-        await access.UpsertAsync(new() { Id = new(1), Name = "Bob", Level = 3 });
-        var result = await access.GetByIdAsync(new(1));
+        await access.UpsertAsync(new TestPlayer { Id = new Serial(1), Name = "Bob", Level = 3 });
+        var result = await access.GetByIdAsync(new Serial(1));
 
         Assert.NotNull(result);
         Assert.Equal("Bob", result!.Name);
@@ -109,10 +109,10 @@ public class GenericDataAccessTests
         out PersistenceStateStore store
     )
     {
-        journal = new();
-        store = new();
+        journal = new InMemoryJournalService();
+        store = new PersistenceStateStore();
         var descriptor = new PersistenceEntityDescriptor<TestPlayer, Serial>(1, "TestPlayer", 1, p => p.Id);
 
-        return new(store, journal, descriptor);
+        return new GenericDataAccess<TestPlayer, Serial>(store, journal, descriptor);
     }
 }

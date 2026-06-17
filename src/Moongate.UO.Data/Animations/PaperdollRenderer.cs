@@ -23,9 +23,9 @@ public sealed class PaperdollRenderer : IPaperdollRenderer
     private const int BodyFemale = 0x000D;
 
     private readonly IGumpStore _gumps;
+    private readonly IHueStore _hues;
     private readonly IItemTemplateService _itemTemplates;
     private readonly ITileDataStore _tileData;
-    private readonly IHueStore _hues;
 
     public PaperdollRenderer(IGumpStore gumps, IItemTemplateService itemTemplates, ITileDataStore tileData, IHueStore hues)
     {

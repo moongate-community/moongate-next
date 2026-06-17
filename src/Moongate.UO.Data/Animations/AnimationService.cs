@@ -8,17 +8,17 @@ using SixLabors.ImageSharp.PixelFormats;
 namespace Moongate.UO.Data.Animations;
 
 /// <summary>
-/// Decodes body frames from the UO animation files, applying <c>Body.def</c> remapping + hue and
-/// <c>Bodyconv.def</c> routing (anim2..anim5), with a direction fallback. Thin glue over the animation
-/// building blocks plus <see cref="HueApplier" />, mirroring <c>ArtService</c>.
+///     Decodes body frames from the UO animation files, applying <c>Body.def</c> remapping + hue and
+///     <c>Bodyconv.def</c> routing (anim2..anim5), with a direction fallback. Thin glue over the animation
+///     building blocks plus <see cref="HueApplier" />, mirroring <c>ArtService</c>.
 /// </summary>
 public sealed class AnimationService : IAnimationService
 {
     private const int DirectionCount = 5;
+    private readonly BodyConvTable _bodyConv;
+    private readonly BodyDefTable _bodyDef;
 
     private readonly AnimationFileSet _fileSet;
-    private readonly BodyDefTable _bodyDef;
-    private readonly BodyConvTable _bodyConv;
     private readonly IHueStore _hueStore;
 
     public AnimationService(IUoFileResolver resolver, BodyDefTable bodyDef, BodyConvTable bodyConv, IHueStore hueStore)
@@ -31,7 +31,7 @@ public sealed class AnimationService : IAnimationService
         _bodyDef = bodyDef;
         _bodyConv = bodyConv;
         _hueStore = hueStore;
-        _fileSet = new(resolver);
+        _fileSet = new AnimationFileSet(resolver);
     }
 
     public Image<Rgba32>? GetBodyFrame(int body, int action = 0, int direction = 1, int frame = 0, int hue = 0)

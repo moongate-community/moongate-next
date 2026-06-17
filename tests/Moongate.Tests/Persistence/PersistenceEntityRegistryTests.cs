@@ -39,8 +39,8 @@ public class PersistenceEntityRegistryTests
         var registry = new PersistenceEntityRegistry();
         registry.Register(PlayerDescriptor());
 
-        Assert.Throws<InvalidOperationException>(
-            () => registry.Register(new PersistenceEntityDescriptor<TestItem, Serial>(1, "Dup", 1, i => i.Id))
+        Assert.Throws<InvalidOperationException>(() =>
+            registry.Register(new PersistenceEntityDescriptor<TestItem, Serial>(1, "Dup", 1, i => i.Id))
         );
     }
 
@@ -66,8 +66,12 @@ public class PersistenceEntityRegistryTests
     }
 
     private static PersistenceEntityDescriptor<TestItem, Serial> ItemDescriptor()
-        => new(2, "TestItem", 1, i => i.Id);
+    {
+        return new PersistenceEntityDescriptor<TestItem, Serial>(2, "TestItem", 1, i => i.Id);
+    }
 
     private static PersistenceEntityDescriptor<TestPlayer, Serial> PlayerDescriptor()
-        => new(1, "TestPlayer", 1, p => p.Id);
+    {
+        return new PersistenceEntityDescriptor<TestPlayer, Serial>(1, "TestPlayer", 1, p => p.Id);
+    }
 }

@@ -9,8 +9,8 @@ using Moongate.UO.Data.Types.Skills;
 namespace Moongate.Tests.Support;
 
 /// <summary>
-/// IMobileService stub that returns a fixed list of mobiles for a given account id;
-/// all other members throw <see cref="NotSupportedException" />.
+///     IMobileService stub that returns a fixed list of mobiles for a given account id;
+///     all other members throw <see cref="NotSupportedException" />.
 /// </summary>
 public sealed class FakeMobileService : IMobileService
 {
@@ -24,13 +24,19 @@ public sealed class FakeMobileService : IMobileService
     }
 
     public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
-        => throw new NotSupportedException();
+    {
+        throw new NotSupportedException();
+    }
 
     public ValueTask<MobileEntity> CreateAsync(MobileEntity mobile, CancellationToken cancellationToken = default)
-        => throw new NotSupportedException();
+    {
+        throw new NotSupportedException();
+    }
 
     public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
-        => throw new NotSupportedException();
+    {
+        throw new NotSupportedException();
+    }
 
     public ValueTask<bool> EquipAsync(
         MobileEntity mobile,
@@ -38,19 +44,27 @@ public sealed class FakeMobileService : IMobileService
         ItemLayerType layer,
         CancellationToken cancellationToken = default
     )
-        => throw new NotSupportedException();
+    {
+        throw new NotSupportedException();
+    }
 
     public ValueTask<IReadOnlyList<MobileEntity>> GetByAccountIdAsync(
         Serial accountId,
         CancellationToken cancellationToken = default
     )
-        => ValueTask.FromResult(accountId.Equals(_accountId) ? _mobiles : []);
+    {
+        return ValueTask.FromResult(accountId.Equals(_accountId) ? _mobiles : []);
+    }
 
     public ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
-        => throw new NotSupportedException();
+    {
+        throw new NotSupportedException();
+    }
 
     public SkillEntry GetSkill(MobileEntity mobile, UOSkillName skill)
-        => throw new NotSupportedException();
+    {
+        throw new NotSupportedException();
+    }
 
     public ValueTask<SkillEntry> SetSkillAsync(
         MobileEntity mobile,
@@ -58,12 +72,16 @@ public sealed class FakeMobileService : IMobileService
         double value,
         CancellationToken cancellationToken = default
     )
-        => throw new NotSupportedException();
+    {
+        throw new NotSupportedException();
+    }
 
     public ValueTask<bool> UnequipAsync(
         MobileEntity mobile,
         ItemLayerType layer,
         CancellationToken cancellationToken = default
     )
-        => throw new NotSupportedException();
+    {
+        throw new NotSupportedException();
+    }
 }

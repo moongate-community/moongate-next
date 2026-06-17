@@ -1,4 +1,5 @@
 using Moongate.Server.Data.Templates;
+using Moongate.UO.Data.Templates.Items;
 using Moongate.UO.Data.Templates.Mobiles;
 using Moongate.UO.Data.Types.Items;
 using Moongate.UO.Data.Types.Mobiles;
@@ -37,7 +38,7 @@ public sealed class MobileTemplateDtoTests
     [Fact]
     public void Detail_NullBlocks_AreNull()
     {
-        var d = MobileTemplateDetail.FromDefinition(new() { Id = "bare" });
+        var d = MobileTemplateDetail.FromDefinition(new MobileTemplateDefinition { Id = "bare" });
 
         Assert.Null(d.Stats);
         Assert.Null(d.Resources);
@@ -84,7 +85,7 @@ public sealed class MobileTemplateDtoTests
     [Fact]
     public void Summary_NullStrings_BecomeEmpty()
     {
-        var s = MobileTemplateSummary.FromDefinition(new() { Id = "bare" });
+        var s = MobileTemplateSummary.FromDefinition(new MobileTemplateDefinition { Id = "bare" });
 
         Assert.Equal("", s.Name);
         Assert.Equal("", s.Title);
@@ -112,20 +113,20 @@ public sealed class MobileTemplateDtoTests
             Fame = 1200,
             FactionId = "town_britannia",
             BaseMobile = "base_humanoid",
-            Stats = new() { Strength = 100, Dexterity = 90, Intelligence = 50 },
-            Resources = new() { Hits = 120, Mana = 50, Stamina = 90 },
-            Resistances = new() { Physical = 40, Fire = 20 },
+            Stats = new MobileStatsTemplate { Strength = 100, Dexterity = 90, Intelligence = 50 },
+            Resources = new MobileResourcesTemplate { Hits = 120, Mana = 50, Stamina = 90 },
+            Resistances = new MobileResistancesTemplate { Physical = 40, Fire = 20 },
             BackpackTemplate = "backpack",
             IsAbstract = false
         };
         m.Skills["Tactics"] = 80; // inserted before Swords so the OrderBy(name) is actually exercised
         m.Skills["Swords"] = 90;
-        m.Equipment.Add(new() { Item = "leather_chest" });
-        m.Equipment.Add(new() { Item = "katana" });
+        m.Equipment.Add(new MobileEquipmentEntry { Item = "leather_chest" });
+        m.Equipment.Add(new MobileEquipmentEntry { Item = "katana" });
         m.LootTables.Add("common");
         m.Tags.Add("npc");
         m.Tags.Add("guard");
-        m.Params["faction_rank"] = new() { Type = ItemTemplateParamType.Integer, Value = "3" };
+        m.Params["faction_rank"] = new ItemTemplateParamDefinition { Type = ItemTemplateParamType.Integer, Value = "3" };
 
         return m;
     }

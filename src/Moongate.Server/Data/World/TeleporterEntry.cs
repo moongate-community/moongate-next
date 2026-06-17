@@ -3,24 +3,10 @@ using Moongate.Core.Geometry;
 namespace Moongate.Server.Data.World;
 
 /// <summary>
-/// Represents one world teleporter mapping loaded from server asset data.
+///     Represents one world teleporter mapping loaded from server asset data.
 /// </summary>
 public readonly record struct TeleporterEntry
 {
-    public int SourceMapId { get; }
-
-    public string SourceMapName { get; }
-
-    public Point3D SourceLocation { get; }
-
-    public int DestinationMapId { get; }
-
-    public string DestinationMapName { get; }
-
-    public Point3D DestinationLocation { get; }
-
-    public bool Back { get; }
-
     public TeleporterEntry(
         int sourceMapId,
         string sourceMapName,
@@ -39,4 +25,18 @@ public readonly record struct TeleporterEntry
         DestinationLocation = destinationLocation;
         Back = back;
     }
+
+    public int SourceMapId { get; }
+
+    public string SourceMapName { get; }
+
+    public Point3D SourceLocation { get; }
+
+    public int DestinationMapId { get; }
+
+    public string DestinationMapName { get; }
+
+    public Point3D DestinationLocation { get; }
+
+    public bool Back { get; }
 }

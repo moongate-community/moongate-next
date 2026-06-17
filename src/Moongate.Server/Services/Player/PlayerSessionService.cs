@@ -11,14 +11,14 @@ using ZLinq.Linq;
 namespace Moongate.Server.Services.Player;
 
 /// <summary>
-/// Thread-safe in-memory logical player session service.
+///     Thread-safe in-memory logical player session service.
 /// </summary>
 public sealed class PlayerSessionService
     : IPlayerSessionService, ITickEventHandler<PlayerConnectedEvent>, ITickEventHandler<PlayerDisconnectedEvent>
 {
-    private readonly Lock _sync = new();
     private readonly Dictionary<long, PlayerSession> _sessions = [];
     private readonly Dictionary<Serial, long> _sessionsByMobileSerial = [];
+    private readonly Lock _sync = new();
 
     public int Count
     {
@@ -125,22 +125,10 @@ public sealed class PlayerSessionService
         }
     }
 
-    public void Handle(PlayerConnectedEvent evt)
-    {
-        ArgumentNullException.ThrowIfNull(evt);
-
-        GetOrCreateConnected(evt.SessionId, evt.RemoteEndPoint, evt.At);
-    }
-
-    public void Handle(PlayerDisconnectedEvent evt)
-    {
-        ArgumentNullException.ThrowIfNull(evt);
-
-        Disconnect(evt.SessionId, evt.At);
-    }
-
     public ValueEnumerable<FromArray<PlayerSession>, PlayerSession> Query()
-        => GetAll().ToArray().AsValueEnumerable();
+    {
+        return GetAll().ToArray().AsValueEnumerable();
+    }
 
     public bool Remove(long sessionId)
     {
@@ -227,8 +215,23 @@ public sealed class PlayerSessionService
         }
     }
 
+    public void Handle(PlayerConnectedEvent evt)
+    {
+        ArgumentNullException.ThrowIfNull(evt);
+
+        GetOrCreateConnected(evt.SessionId, evt.RemoteEndPoint, evt.At);
+    }
+
+    public void Handle(PlayerDisconnectedEvent evt)
+    {
+        ArgumentNullException.ThrowIfNull(evt);
+
+        Disconnect(evt.SessionId, evt.At);
+    }
+
     private static PlayerSession Copy(PlayerSession session)
-        => new()
+    {
+        return new PlayerSession
         {
             SessionId = session.SessionId,
             RemoteEndPoint = session.RemoteEndPoint,
@@ -248,9 +251,12 @@ public sealed class PlayerSessionService
             MoveCredit = session.MoveCredit,
             MoveTime = session.MoveTime
         };
+    }
 
     private PlayerSession GetRequiredSession(long sessionId)
-        => _sessions.TryGetValue(sessionId, out var session)
-               ? session
-               : throw new InvalidOperationException($"Player session '{sessionId}' does not exist.");
+    {
+        return _sessions.TryGetValue(sessionId, out var session)
+            ? session
+            : throw new InvalidOperationException($"Player session '{sessionId}' does not exist.");
+    }
 }

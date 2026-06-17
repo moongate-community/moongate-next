@@ -8,7 +8,7 @@ using Moongate.Network.UO.Types.Speech;
 namespace Moongate.Network.UO.Packets.Incoming.Speech;
 
 /// <summary>
-/// Represents a Unicode or encoded speech request packet.
+///     Represents a Unicode or encoded speech request packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Variable, Description = "Unicode/Ascii Speech Request")]
 public class UnicodeSpeechPacket : BaseGameNetworkPacket
@@ -17,13 +17,6 @@ public class UnicodeSpeechPacket : BaseGameNetworkPacket
     private const int MaximumKeywordCount = 50;
     private const int MaximumTextLength = 128;
 
-    public short Font { get; set; }
-    public short Hue { get; set; }
-    public int[] Keywords { get; set; }
-    public string Language { get; set; }
-    public ChatMessageType MessageType { get; set; }
-    public string Text { get; set; }
-
     public UnicodeSpeechPacket()
         : base(OpCodeValue)
     {
@@ -31,6 +24,13 @@ public class UnicodeSpeechPacket : BaseGameNetworkPacket
         Language = "ENU";
         Text = "";
     }
+
+    public short Font { get; set; }
+    public short Hue { get; set; }
+    public int[] Keywords { get; set; }
+    public string Language { get; set; }
+    public ChatMessageType MessageType { get; set; }
+    public string Text { get; set; }
 
     protected override bool ParsePayload(ref SpanReader reader)
     {

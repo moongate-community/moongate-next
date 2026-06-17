@@ -6,14 +6,14 @@ using Moongate.UO.Data.Types.Maps;
 namespace Moongate.UO.Data.Data;
 
 /// <summary>
-/// Configuration for the Ultima Online client data files (idx/mul/uop). Bound from the <c>uo</c>
-/// YAML section. Validation fails boot when the directory or the minimum required files are absent.
+///     Configuration for the Ultima Online client data files (idx/mul/uop). Bound from the <c>uo</c>
+///     YAML section. Validation fails boot when the directory or the minimum required files are absent.
 /// </summary>
 public sealed class UoConfig : IValidatableConfig
 {
     /// <summary>
-    /// Directory containing the UO client data files. Supports <c>~</c> and environment variables.
-    /// Default: <c>~/uo</c>.
+    ///     Directory containing the UO client data files. Supports <c>~</c> and environment variables.
+    ///     Default: <c>~/uo</c>.
     /// </summary>
     public string ClientFilesDirectory { get; set; } = "~/uo";
 

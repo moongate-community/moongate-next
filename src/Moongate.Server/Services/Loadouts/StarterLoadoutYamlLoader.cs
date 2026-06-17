@@ -6,19 +6,17 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.Loadouts;
 
 /// <summary>
-/// Loads the starter loadout YAML file. Parsing is strict (fail fast); a missing
-/// directory or file is only a warning and yields no loadout. Collections are
-/// normalized because YamlDotNet overwrites pre-initialized collections with
-/// null when a key is present but empty.
+///     Loads the starter loadout YAML file. Parsing is strict (fail fast); a missing
+///     directory or file is only a warning and yields no loadout. Collections are
+///     normalized because YamlDotNet overwrites pre-initialized collections with
+///     null when a key is present but empty.
 /// </summary>
 public sealed class StarterLoadoutYamlLoader
 {
     public const string StarterLoadoutFileName = "starter.yaml";
-
-    private readonly ILogger _logger = Log.ForContext<StarterLoadoutYamlLoader>();
     private readonly string _loadoutsDirectory;
 
-    public string StarterLoadoutFilePath => Path.Combine(_loadoutsDirectory, StarterLoadoutFileName);
+    private readonly ILogger _logger = Log.ForContext<StarterLoadoutYamlLoader>();
 
     public StarterLoadoutYamlLoader(string loadoutsDirectory)
     {
@@ -26,6 +24,8 @@ public sealed class StarterLoadoutYamlLoader
 
         _loadoutsDirectory = Path.GetFullPath(loadoutsDirectory);
     }
+
+    public string StarterLoadoutFilePath => Path.Combine(_loadoutsDirectory, StarterLoadoutFileName);
 
     public StarterLoadoutDefinition? Load()
     {
@@ -71,7 +71,7 @@ public sealed class StarterLoadoutYamlLoader
 
     private static LoadoutSection NormalizeSection(LoadoutSection? section, string sectionName, string filePath)
     {
-        section ??= new();
+        section ??= new LoadoutSection();
         section.BackpackItems ??= [];
         section.EquipItems ??= [];
 

@@ -5,20 +5,21 @@ using Moongate.Abstractions.Types.Jobs;
 namespace Moongate.Tests.Support;
 
 /// <summary>
-/// IJobService stub that captures the recurring handler so tests can invoke it via <see cref="Invoke" />.
+///     IJobService stub that captures the recurring handler so tests can invoke it via <see cref="Invoke" />.
 /// </summary>
 public sealed class CapturingJobService : IJobService
 {
     private Action? _handler;
 
     public bool Cancel(string jobId)
-        => true;
+    {
+        return true;
+    }
 
     public IReadOnlyList<JobSnapshot> GetJobs()
-        => [];
-
-    public void Invoke()
-        => _handler?.Invoke();
+    {
+        return [];
+    }
 
     public string RegisterOnce(
         string name,
@@ -27,7 +28,9 @@ public sealed class CapturingJobService : IJobService
         string? description = null,
         JobSourceType source = JobSourceType.CSharp
     )
-        => throw new NotSupportedException();
+    {
+        throw new NotSupportedException();
+    }
 
     public string RegisterRecurring(
         string name,
@@ -44,11 +47,22 @@ public sealed class CapturingJobService : IJobService
     }
 
     public bool RunNow(string jobId)
-        => throw new NotSupportedException();
+    {
+        throw new NotSupportedException();
+    }
 
     public Task StartAsync(CancellationToken cancellationToken)
-        => Task.CompletedTask;
+    {
+        return Task.CompletedTask;
+    }
 
     public Task StopAsync(CancellationToken cancellationToken)
-        => Task.CompletedTask;
+    {
+        return Task.CompletedTask;
+    }
+
+    public void Invoke()
+    {
+        _handler?.Invoke();
+    }
 }

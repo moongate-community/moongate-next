@@ -6,8 +6,8 @@ using Moongate.UO.Data.Types.Tiles;
 namespace Moongate.UO.Data.Data.Multi;
 
 /// <summary>
-/// A parsed multi (house, boat, structure): its component entries, bucketed static tiles, and
-/// bounding geometry. Read-only — built once from client data.
+///     A parsed multi (house, boat, structure): its component entries, bucketed static tiles, and
+///     bounding geometry. Read-only — built once from client data.
 /// </summary>
 public sealed class MultiComponentList
 {
@@ -92,9 +92,9 @@ public sealed class MultiComponentList
 
     private void BuildTiles(MultiTileEntry[] allTiles, int minX, int minY, int maxX, int maxY)
     {
-        Min = new(minX, minY);
-        Max = new(maxX, maxY);
-        Center = new(-minX, -minY);
+        Min = new Point2D(minX, minY);
+        Max = new Point2D(maxX, maxY);
+        Center = new Point2D(-minX, -minY);
         Width = maxX - minX + 1;
         Height = maxY - minY + 1;
 
@@ -111,8 +111,8 @@ public sealed class MultiComponentList
                 tiles[xOffset] ??= new TileList[Height];
                 Tiles[xOffset] ??= new StaticTile[Height][];
 
-                tiles[xOffset][yOffset] ??= new();
-                tiles[xOffset][yOffset].Add(new(allTiles[i].ItemId, (sbyte)allTiles[i].OffsetZ));
+                tiles[xOffset][yOffset] ??= new TileList();
+                tiles[xOffset][yOffset].Add(new StaticTile(allTiles[i].ItemId, (sbyte)allTiles[i].OffsetZ));
             }
         }
 

@@ -4,8 +4,8 @@ using Moongate.Scripting.Lua.Interfaces.Scripts;
 namespace Moongate.Server.Services.Scripting;
 
 /// <summary>
-/// Hosting adapter that drives the Lua <see cref="IScriptEngineService" /> lifecycle through the
-/// Moongate service orchestrator. Keeps the scripting project free of any hosting dependency.
+///     Hosting adapter that drives the Lua <see cref="IScriptEngineService" /> lifecycle through the
+///     Moongate service orchestrator. Keeps the scripting project free of any hosting dependency.
 /// </summary>
 public sealed class LuaScriptHostedService : IMoongateService
 {
@@ -17,7 +17,9 @@ public sealed class LuaScriptHostedService : IMoongateService
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
-        => _engine.StartAsync();
+    {
+        return _engine.StartAsync();
+    }
 
     public Task StopAsync(CancellationToken cancellationToken)
     {

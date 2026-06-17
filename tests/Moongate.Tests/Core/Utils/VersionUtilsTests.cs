@@ -5,34 +5,6 @@ namespace Moongate.Tests.Core.Utils;
 
 public class VersionUtilsTests
 {
-    private sealed class FakeInformationalAssembly : Assembly
-    {
-        private readonly string? _informationalVersion;
-        private readonly Version? _assemblyVersion;
-
-        public FakeInformationalAssembly(string? informationalVersion, Version? assemblyVersion = null)
-        {
-            _informationalVersion = informationalVersion;
-            _assemblyVersion = assemblyVersion;
-        }
-
-        public override object[] GetCustomAttributes(Type attributeType, bool inherit)
-        {
-            if (attributeType == typeof(AssemblyInformationalVersionAttribute) && _informationalVersion is not null)
-            {
-                return new Attribute[] { new AssemblyInformationalVersionAttribute(_informationalVersion) };
-            }
-
-            return Array.Empty<Attribute>();
-        }
-
-        public override AssemblyName GetName()
-            => new("Fake") { Version = _assemblyVersion };
-
-        public override bool IsDefined(Type attributeType, bool inherit)
-            => attributeType == typeof(AssemblyInformationalVersionAttribute) && _informationalVersion is not null;
-    }
-
     [Fact]
     public void GetVersion_AssemblyWithBuildMetadata_StripsHashSuffix()
     {
@@ -57,7 +29,7 @@ public class VersionUtilsTests
     [Fact]
     public void GetVersion_AssemblyWithoutInformationalVersion_FallsBackToAssemblyVersion()
     {
-        var assembly = new FakeInformationalAssembly(null, new(4, 5, 6, 7));
+        var assembly = new FakeInformationalAssembly(null, new Version(4, 5, 6, 7));
 
         var result = VersionUtils.GetVersion(assembly);
 
@@ -67,7 +39,7 @@ public class VersionUtilsTests
     [Fact]
     public void GetVersion_AssemblyWithWhitespaceInformationalVersion_FallsBackToAssemblyVersion()
     {
-        var assembly = new FakeInformationalAssembly("   ", new(2, 0));
+        var assembly = new FakeInformationalAssembly("   ", new Version(2, 0));
 
         var result = VersionUtils.GetVersion(assembly);
 
@@ -86,7 +58,9 @@ public class VersionUtilsTests
 
     [Fact]
     public void GetVersion_NullAssembly_Throws()
-        => Assert.Throws<ArgumentNullException>(() => VersionUtils.GetVersion(null!));
+    {
+        Assert.Throws<ArgumentNullException>(() => VersionUtils.GetVersion(null!));
+    }
 
     [Fact]
     public void GetVersion_TargetAssembly_ReturnsInformationalVersion()
@@ -111,6 +85,38 @@ public class VersionUtilsTests
         finally
         {
             Environment.SetEnvironmentVariable("MOONGATE_IS_DOCKER", oldDockerValue);
+        }
+    }
+
+    private sealed class FakeInformationalAssembly : Assembly
+    {
+        private readonly Version? _assemblyVersion;
+        private readonly string? _informationalVersion;
+
+        public FakeInformationalAssembly(string? informationalVersion, Version? assemblyVersion = null)
+        {
+            _informationalVersion = informationalVersion;
+            _assemblyVersion = assemblyVersion;
+        }
+
+        public override object[] GetCustomAttributes(Type attributeType, bool inherit)
+        {
+            if (attributeType == typeof(AssemblyInformationalVersionAttribute) && _informationalVersion is not null)
+            {
+                return new Attribute[] { new AssemblyInformationalVersionAttribute(_informationalVersion) };
+            }
+
+            return Array.Empty<Attribute>();
+        }
+
+        public override AssemblyName GetName()
+        {
+            return new AssemblyName("Fake") { Version = _assemblyVersion };
+        }
+
+        public override bool IsDefined(Type attributeType, bool inherit)
+        {
+            return attributeType == typeof(AssemblyInformationalVersionAttribute) && _informationalVersion is not null;
         }
     }
 }

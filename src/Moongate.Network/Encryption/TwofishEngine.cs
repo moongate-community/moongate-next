@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 namespace Moongate.Network.Encryption;
 
 /// <summary>
-/// Implements the 128-bit Twofish block cipher used by the UO game transport.
+///     Implements the 128-bit Twofish block cipher used by the UO game transport.
 /// </summary>
 public sealed class TwofishEngine
 {
@@ -178,19 +178,27 @@ public sealed class TwofishEngine
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static int Lfsr1(int val)
-        => val ^ Lfsr4(val);
+    {
+        return val ^ Lfsr4(val);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static int Lfsr2(int val)
-        => val ^ Lfsr3(val) ^ Lfsr4(val);
+    {
+        return val ^ Lfsr3(val) ^ Lfsr4(val);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static int Lfsr3(int val)
-        => (val >> 1) ^ ((val & 0x01) == 0x01 ? MdsGfFdbk / 2 : 0);
+    {
+        return (val >> 1) ^ ((val & 0x01) == 0x01 ? MdsGfFdbk / 2 : 0);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static int Lfsr4(int val)
-        => (val >> 2) ^ ((val & 0x02) == 0x02 ? MdsGfFdbk / 2 : 0) ^ ((val & 0x01) == 0x01 ? MdsGfFdbk / 4 : 0);
+    {
+        return (val >> 2) ^ ((val & 0x02) == 0x02 ? MdsGfFdbk / 2 : 0) ^ ((val & 0x01) == 0x01 ? MdsGfFdbk / 4 : 0);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static uint MdsMultiply(byte b0, byte b1, byte b2, byte b3)

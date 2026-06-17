@@ -24,7 +24,7 @@ public sealed class MobileTemplateYamlDocumentStore
 
         if (!File.Exists(normalized))
         {
-            return new() { MobileTemplates = [] };
+            return new MobileTemplateTable { MobileTemplates = [] };
         }
 
         var table = YamlUtils.DeserializeFromFile<MobileTemplateTable>(normalized);
@@ -43,8 +43,7 @@ public sealed class MobileTemplateYamlDocumentStore
             {
                 var table = LoadTable(file);
 
-                if (table.MobileTemplates.Any(
-                        template => string.Equals(
+                if (table.MobileTemplates.Any(template => string.Equals(
                             template.Id,
                             templateId,
                             StringComparison.OrdinalIgnoreCase
@@ -65,8 +64,11 @@ public sealed class MobileTemplateYamlDocumentStore
 
         var normalized = NormalizeInsideTemplatesDirectory(filePath);
         var table = LoadTable(normalized);
-        var existingIndex = table.MobileTemplates.FindIndex(
-            existing => string.Equals(existing.Id, template.Id, StringComparison.OrdinalIgnoreCase)
+        var existingIndex = table.MobileTemplates.FindIndex(existing => string.Equals(
+                existing.Id,
+                template.Id,
+                StringComparison.OrdinalIgnoreCase
+            )
         );
 
         if (existingIndex >= 0)

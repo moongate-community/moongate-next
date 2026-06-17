@@ -36,15 +36,14 @@ public class UoArtIntegrationTests
 
         var hasArt = Directory.Exists(candidate) &&
                      Directory.EnumerateFiles(candidate)
-                              .Any(
-                                  f =>
-                                  {
-                                      var name = Path.GetFileName(f);
+                         .Any(f =>
+                             {
+                                 var name = Path.GetFileName(f);
 
-                                      return string.Equals(name, "artLegacyMUL.uop", StringComparison.OrdinalIgnoreCase) ||
-                                             string.Equals(name, "art.mul", StringComparison.OrdinalIgnoreCase);
-                                  }
-                              );
+                                 return string.Equals(name, "artLegacyMUL.uop", StringComparison.OrdinalIgnoreCase) ||
+                                        string.Equals(name, "art.mul", StringComparison.OrdinalIgnoreCase);
+                             }
+                         );
 
         return hasArt ? candidate : null;
     }

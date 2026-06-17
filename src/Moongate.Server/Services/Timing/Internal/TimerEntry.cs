@@ -1,8 +1,8 @@
 namespace Moongate.Server.Services.Timing.Internal;
 
 /// <summary>
-/// Internal record stored in the timer wheel. Mutable so the wheel can update
-/// SlotIndex, RemainingRounds, Node and Cancelled in place.
+///     Internal record stored in the timer wheel. Mutable so the wheel can update
+///     SlotIndex, RemainingRounds, Node and Cancelled in place.
 /// </summary>
 internal sealed class TimerEntry
 {

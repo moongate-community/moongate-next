@@ -115,8 +115,8 @@ internal static class BuiltinCommandRegistration
                 }
 
                 var commands = registry.GetRegisteredCommands()
-                                       .Where(command => (command.Source & context.Source) != 0)
-                                       .ToArray();
+                    .Where(command => (command.Source & context.Source) != 0)
+                    .ToArray();
 
                 if (commands.Length == 0)
                 {
@@ -135,12 +135,11 @@ internal static class BuiltinCommandRegistration
             "Shows registered commands.",
             CommandSourceType.All,
             context => registry.GetRegisteredCommands()
-                               .SelectMany(static command => command.Aliases)
-                               .Where(
-                                   alias => alias.StartsWith(GetCurrentToken(context), StringComparison.OrdinalIgnoreCase)
-                               )
-                               .Order(StringComparer.OrdinalIgnoreCase)
-                               .ToArray()
+                .SelectMany(static command => command.Aliases)
+                .Where(alias => alias.StartsWith(GetCurrentToken(context), StringComparison.OrdinalIgnoreCase)
+                )
+                .Order(StringComparer.OrdinalIgnoreCase)
+                .ToArray()
         );
     }
 }

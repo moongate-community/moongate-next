@@ -6,11 +6,14 @@ using Moongate.UO.Data.Entities.Mobiles;
 namespace Moongate.Server.Interfaces.Services.World;
 
 /// <summary>
-/// In-memory spatial index of live in-world entities (mobiles, the player subset, and ground
-/// items), bucketed by map sector. Entities are mutated in place; not persisted per change.
+///     In-memory spatial index of live in-world entities (mobiles, the player subset, and ground
+///     items), bucketed by map sector. Entities are mutated in place; not persisted per change.
 /// </summary>
 public interface IWorldSpatialIndex
 {
+    /// <summary>Snapshot of all live mobiles.</summary>
+    IReadOnlyCollection<MobileEntity> All { get; }
+
     /// <summary>Adds or replaces the live mobile keyed by its serial, bucketing it by sector.</summary>
     void AddMobile(MobileEntity mobile);
 
@@ -19,9 +22,6 @@ public interface IWorldSpatialIndex
 
     /// <summary>Removes the live mobile from the index; returns false when absent.</summary>
     bool RemoveMobile(Serial id);
-
-    /// <summary>Snapshot of all live mobiles.</summary>
-    IReadOnlyCollection<MobileEntity> All { get; }
 
     /// <summary>Moves a tracked mobile to a new location, re-bucketing it and setting its Location atomically.</summary>
     void MoveMobile(MobileEntity mobile, Point3D newLocation);

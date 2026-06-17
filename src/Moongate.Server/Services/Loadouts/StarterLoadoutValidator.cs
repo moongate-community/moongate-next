@@ -8,9 +8,9 @@ using Moongate.UO.Data.Types.Loadouts;
 namespace Moongate.Server.Services.Loadouts;
 
 /// <summary>
-/// Boot-time fail-fast validation for the starter loadout definition against the
-/// item template registry and the profession catalog. Any violation throws so the
-/// server refuses to start with a broken loadout.
+///     Boot-time fail-fast validation for the starter loadout definition against the
+///     item template registry and the profession catalog. Any violation throws so the
+///     server refuses to start with a broken loadout.
 /// </summary>
 public static class StarterLoadoutValidator
 {

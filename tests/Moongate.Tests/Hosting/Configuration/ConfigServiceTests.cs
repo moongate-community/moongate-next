@@ -101,8 +101,12 @@ public class ConfigServiceTests : IDisposable
     }
 
     private static ConfigSectionRegistration ServerSection()
-        => new("server", typeof(TestServerSettings), () => new TestServerSettings());
+    {
+        return new ConfigSectionRegistration("server", typeof(TestServerSettings), () => new TestServerSettings());
+    }
 
     private static ConfigSectionRegistration ValidatableSection()
-        => new("limits", typeof(ValidatableSettings), () => new ValidatableSettings());
+    {
+        return new ConfigSectionRegistration("limits", typeof(ValidatableSettings), () => new ValidatableSettings());
+    }
 }

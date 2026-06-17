@@ -3,7 +3,7 @@ using Moongate.Persistence.Data;
 namespace Moongate.Persistence.Interfaces.Persistence;
 
 /// <summary>
-/// Appends and replays journal entries from durable storage.
+///     Appends and replays journal entries from durable storage.
 /// </summary>
 public interface IJournalService
 {

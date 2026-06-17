@@ -10,6 +10,16 @@ public sealed class ServerConfigContainerExtensionsTests : IDisposable
 
     private string ConfigPath => Path.Combine(_dir, "moongate.yaml");
 
+    public void Dispose()
+    {
+        if (Directory.Exists(_dir))
+        {
+            Directory.Delete(_dir, true);
+        }
+
+        GC.SuppressFinalize(this);
+    }
+
     [Fact]
     public void AddMoongateServerConfig_BindsServerName()
     {
@@ -37,15 +47,5 @@ public sealed class ServerConfigContainerExtensionsTests : IDisposable
 
         Assert.Equal("Moongate Server", config.ServerName);
         Assert.False(config.IsRegistrationAllowed);
-    }
-
-    public void Dispose()
-    {
-        if (Directory.Exists(_dir))
-        {
-            Directory.Delete(_dir, true);
-        }
-
-        GC.SuppressFinalize(this);
     }
 }

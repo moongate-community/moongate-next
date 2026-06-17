@@ -6,20 +6,20 @@ using Moongate.Abstractions.Types.Metrics;
 namespace Moongate.Server.Services.Metrics;
 
 /// <summary>
-/// Renders a <see cref="MetricsSnapshot" /> into OpenMetrics 1.0 text/plain.
-/// No NuGet dependency; format is small and stable.
+///     Renders a <see cref="MetricsSnapshot" /> into OpenMetrics 1.0 text/plain.
+///     No NuGet dependency; format is small and stable.
 /// </summary>
 public static class OpenMetricsFormatter
 {
     /// <summary>
-    /// Returns the OpenMetrics text representation of <paramref name="snapshot" />, including the trailing <c># EOF</c> line.
-    /// Counter sample names that do not already end in <c>_total</c> get the suffix appended.
+    ///     Returns the OpenMetrics text representation of <paramref name="snapshot" />, including the trailing <c># EOF</c> line.
+    ///     Counter sample names that do not already end in <c>_total</c> get the suffix appended.
     /// </summary>
     public static string Format(MetricsSnapshot snapshot)
     {
         var sb = new StringBuilder(256);
         var groups = snapshot.Samples
-                             .GroupBy(s => GetEmittedName(s), StringComparer.Ordinal);
+            .GroupBy(s => GetEmittedName(s), StringComparer.Ordinal);
 
         foreach (var group in groups)
         {
@@ -112,10 +112,12 @@ public static class OpenMetricsFormatter
     }
 
     private static string TypeName(MetricType type)
-        => type switch
+    {
+        return type switch
         {
             MetricType.Counter => "counter",
-            MetricType.Gauge   => "gauge",
-            _                  => "unknown"
+            MetricType.Gauge => "gauge",
+            _ => "unknown"
         };
+    }
 }

@@ -8,15 +8,15 @@ using ZLinq;
 namespace Moongate.Persistence.Services.Persistence;
 
 /// <summary>
-/// In-memory <see cref="IDataAccess{TEntity,TKey}" /> backed by a shared state store; every mutation
-/// is appended to the journal. Reads return detached clones for snapshot isolation.
+///     In-memory <see cref="IDataAccess{TEntity,TKey}" /> backed by a shared state store; every mutation
+///     is appended to the journal. Reads return detached clones for snapshot isolation.
 /// </summary>
 public class GenericDataAccess<TEntity, TKey> : IDataAccess<TEntity, TKey>
     where TKey : notnull
 {
-    private readonly PersistenceStateStore _stateStore;
-    private readonly IJournalService _journalService;
     private readonly IPersistenceEntityDescriptor<TEntity, TKey> _descriptor;
+    private readonly IJournalService _journalService;
+    private readonly PersistenceStateStore _stateStore;
 
     internal GenericDataAccess(
         PersistenceStateStore stateStore,
@@ -42,10 +42,10 @@ public class GenericDataAccess<TEntity, TKey> : IDataAccess<TEntity, TKey>
         lock (_stateStore.SyncRoot)
         {
             IReadOnlyCollection<TEntity> clones = Bucket()
-                                                  .Values
-                                                  .AsValueEnumerable()
-                                                  .Select(_descriptor.Clone)
-                                                  .ToArray();
+                .Values
+                .AsValueEnumerable()
+                .Select(_descriptor.Clone)
+                .ToArray();
 
             return ValueTask.FromResult(clones);
         }
@@ -64,10 +64,10 @@ public class GenericDataAccess<TEntity, TKey> : IDataAccess<TEntity, TKey>
         lock (_stateStore.SyncRoot)
         {
             var clones = Bucket()
-                         .Values
-                         .AsValueEnumerable()
-                         .Select(_descriptor.Clone)
-                         .ToArray();
+                .Values
+                .AsValueEnumerable()
+                .Select(_descriptor.Clone)
+                .ToArray();
 
             return clones.AsQueryable();
         }
@@ -81,7 +81,7 @@ public class GenericDataAccess<TEntity, TKey> : IDataAccess<TEntity, TKey>
         {
             if (Bucket().Remove(id))
             {
-                entry = new()
+                entry = new JournalEntry
                 {
                     SequenceId = ++_stateStore.LastSequenceId,
                     TimestampUnixMilliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
@@ -117,7 +117,7 @@ public class GenericDataAccess<TEntity, TKey> : IDataAccess<TEntity, TKey>
                 _stateStore.TrackKey(_descriptor.TypeId, autoKey);
             }
 
-            entry = new()
+            entry = new JournalEntry
             {
                 SequenceId = ++_stateStore.LastSequenceId,
                 TimestampUnixMilliseconds = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
@@ -131,5 +131,7 @@ public class GenericDataAccess<TEntity, TKey> : IDataAccess<TEntity, TKey>
     }
 
     private protected Dictionary<TKey, TEntity> Bucket()
-        => _stateStore.GetBucket<TEntity, TKey>(_descriptor.TypeId);
+    {
+        return _stateStore.GetBucket<TEntity, TKey>(_descriptor.TypeId);
+    }
 }

@@ -14,39 +14,12 @@ namespace Moongate.Tests.Server.Endpoints;
 
 public sealed class HairImageEndpointExtensionsTests : IDisposable
 {
-    private readonly string _root = Path.Combine(Path.GetTempPath(), $"moongate-hairimg-{Guid.NewGuid():N}");
     private readonly DirectoriesConfig _directories;
+    private readonly string _root = Path.Combine(Path.GetTempPath(), $"moongate-hairimg-{Guid.NewGuid():N}");
 
     public HairImageEndpointExtensionsTests()
     {
-        _directories = new(_root, Enum.GetNames<DirectoryType>());
-    }
-
-    private sealed class FakeRenderer : IMobileFigureRenderer
-    {
-        private readonly bool _hasImage;
-
-        public FakeRenderer(bool hasImage)
-        {
-            _hasImage = hasImage;
-        }
-
-        public int RenderCount { get; private set; }
-
-        public Image<Rgba32>? Render(MobileRenderRequest request)
-        {
-            RenderCount++;
-
-            if (!_hasImage)
-            {
-                return null;
-            }
-
-            var img = new Image<Rgba32>(3, 3);
-            img[1, 1] = new(255, 255, 255, 255);
-
-            return img;
-        }
+        _directories = new DirectoriesConfig(_root, Enum.GetNames<DirectoryType>());
     }
 
     public void Dispose()
@@ -61,14 +34,14 @@ public sealed class HairImageEndpointExtensionsTests : IDisposable
     public async Task HandleGetHairImage_RendererReturnsNull_ReturnsNotFound()
     {
         var result = await HairImageEndpointExtensions.HandleGetHairImageAsync(
-                         0x203B,
-                         0,
-                         null,
-                         false,
-                         new FakeRenderer(false),
-                         _directories,
-                         CancellationToken.None
-                     );
+            0x203B,
+            0,
+            null,
+            false,
+            new FakeRenderer(false),
+            _directories,
+            CancellationToken.None
+        );
 
         Assert.IsType<NotFound>(result);
     }
@@ -102,7 +75,9 @@ public sealed class HairImageEndpointExtensionsTests : IDisposable
 
     [Fact]
     public void HandleListHairStyles_Facial_ReturnsFacialCatalog()
-        => Assert.Equal(7, Ok(HairImageEndpointExtensions.HandleListHairStyles(true, null)).TotalCount);
+    {
+        Assert.Equal(7, Ok(HairImageEndpointExtensions.HandleListHairStyles(true, null)).TotalCount);
+    }
 
     [Fact]
     public void HandleListHairStyles_NonFacial_ReturnsHairCatalog()
@@ -116,8 +91,39 @@ public sealed class HairImageEndpointExtensionsTests : IDisposable
 
     [Fact]
     public void HandleListHairStyles_Search_FiltersByName()
-        => Assert.Equal(1, Ok(HairImageEndpointExtensions.HandleListHairStyles(false, "topknot")).TotalCount);
+    {
+        Assert.Equal(1, Ok(HairImageEndpointExtensions.HandleListHairStyles(false, "topknot")).TotalCount);
+    }
 
     private static PagedResult<HairStyleSummary> Ok(IResult result)
-        => Assert.IsType<Ok<PagedResult<HairStyleSummary>>>(result).Value!;
+    {
+        return Assert.IsType<Ok<PagedResult<HairStyleSummary>>>(result).Value!;
+    }
+
+    private sealed class FakeRenderer : IMobileFigureRenderer
+    {
+        private readonly bool _hasImage;
+
+        public FakeRenderer(bool hasImage)
+        {
+            _hasImage = hasImage;
+        }
+
+        public int RenderCount { get; private set; }
+
+        public Image<Rgba32>? Render(MobileRenderRequest request)
+        {
+            RenderCount++;
+
+            if (!_hasImage)
+            {
+                return null;
+            }
+
+            var img = new Image<Rgba32>(3, 3);
+            img[1, 1] = new Rgba32(255, 255, 255, 255);
+
+            return img;
+        }
+    }
 }

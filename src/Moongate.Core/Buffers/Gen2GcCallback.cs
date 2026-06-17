@@ -8,8 +8,8 @@ using System.Runtime.InteropServices;
 namespace Moongate.Core.Buffers;
 
 /// <summary>
-/// Schedules a callback roughly every gen 2 GC (you may see a Gen 0 an Gen 1 but only once)
-/// (We can fix this by capturing the Gen 2 count at startup and testing, but I mostly don't care)
+///     Schedules a callback roughly every gen 2 GC (you may see a Gen 0 an Gen 1 but only once)
+///     (We can fix this by capturing the Gen 2 count at startup and testing, but I mostly don't care)
 /// </summary>
 internal sealed class Gen2GcCallback : CriticalFinalizerObject
 {
@@ -71,22 +71,24 @@ internal sealed class Gen2GcCallback : CriticalFinalizerObject
     }
 
     /// <summary>
-    /// Schedule 'callback' to be called in the next GC.  If the callback returns true it is
-    /// rescheduled for the next Gen 2 GC, otherwise the callback stops.
+    ///     Schedule 'callback' to be called in the next GC.  If the callback returns true it is
+    ///     rescheduled for the next Gen 2 GC, otherwise the callback stops.
     /// </summary>
     public static void Register(Func<bool> callback)
-
-        // Create an unreachable object that remembers the callback function and target object.
-        => new Gen2GcCallback(callback);
+    // Create an unreachable object that remembers the callback function and target object.
+    {
+        new Gen2GcCallback(callback);
+    }
 
     /// <summary>
-    /// Schedule 'callback' to be called in the next GC.  If the callback returns true it is
-    /// rescheduled for the next Gen 2 GC, otherwise the callback stops.
-    /// NOTE: This callback will be kept alive until either the callback function returns false,
-    /// or the target object dies.
+    ///     Schedule 'callback' to be called in the next GC.  If the callback returns true it is
+    ///     rescheduled for the next Gen 2 GC, otherwise the callback stops.
+    ///     NOTE: This callback will be kept alive until either the callback function returns false,
+    ///     or the target object dies.
     /// </summary>
     public static void Register(Func<object, bool> callback, object targetObj)
-
-        // Create a unreachable object that remembers the callback function and target object.
-        => new Gen2GcCallback(callback, targetObj);
+    // Create a unreachable object that remembers the callback function and target object.
+    {
+        new Gen2GcCallback(callback, targetObj);
+    }
 }

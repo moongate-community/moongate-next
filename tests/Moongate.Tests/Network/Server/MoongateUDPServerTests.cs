@@ -11,12 +11,12 @@ public class MoongateUDPServerTests
     public async Task Receive_DefaultBehaviour_EchoesPayloadBackToSender()
     {
         var port = GetFreeUdpPort();
-        await using var server = new MoongateUDPServer(new(IPAddress.Loopback, port), false);
+        await using var server = new MoongateUDPServer(new IPEndPoint(IPAddress.Loopback, port), false);
         await server.StartAsync(CancellationToken.None);
 
         using var client = new UdpClient();
         var payload = Encoding.ASCII.GetBytes("ping");
-        await client.SendAsync(payload, payload.Length, new(IPAddress.Loopback, port));
+        await client.SendAsync(payload, payload.Length, new IPEndPoint(IPAddress.Loopback, port));
 
         var received = await client.ReceiveAsync().WaitAsync(TimeSpan.FromSeconds(5));
 
@@ -29,25 +29,25 @@ public class MoongateUDPServerTests
     public async Task Receive_WithCustomHandler_SendsHandlerResponse()
     {
         var port = GetFreeUdpPort();
-        await using var server = new MoongateUDPServer(new(IPAddress.Loopback, port), false)
+        await using var server = new MoongateUDPServer(new IPEndPoint(IPAddress.Loopback, port), false)
         {
             OnDatagram = (data, _) =>
-                         {
-                             var reply = new byte[data.Length];
-                             data.Span.CopyTo(reply);
+            {
+                var reply = new byte[data.Length];
+                data.Span.CopyTo(reply);
 
-                             for (var i = 0; i < reply.Length; i++)
-                             {
-                                 reply[i] = (byte)(reply[i] + 1);
-                             }
+                for (var i = 0; i < reply.Length; i++)
+                {
+                    reply[i] = (byte)(reply[i] + 1);
+                }
 
-                             return reply;
-                         }
+                return reply;
+            }
         };
         await server.StartAsync(CancellationToken.None);
 
         using var client = new UdpClient();
-        await client.SendAsync([1, 2, 3], 3, new(IPAddress.Loopback, port));
+        await client.SendAsync([1, 2, 3], 3, new IPEndPoint(IPAddress.Loopback, port));
 
         var received = await client.ReceiveAsync().WaitAsync(TimeSpan.FromSeconds(5));
 
@@ -59,7 +59,7 @@ public class MoongateUDPServerTests
     [Fact]
     public async Task Start_BindsAndReportsRunning()
     {
-        await using var server = new MoongateUDPServer(new(IPAddress.Loopback, 0), false);
+        await using var server = new MoongateUDPServer(new IPEndPoint(IPAddress.Loopback, 0), false);
 
         await server.StartAsync(CancellationToken.None);
 
@@ -73,7 +73,7 @@ public class MoongateUDPServerTests
     public async Task StopThenStart_RebindsListener()
     {
         var port = GetFreeUdpPort();
-        await using var server = new MoongateUDPServer(new(IPAddress.Loopback, port), false);
+        await using var server = new MoongateUDPServer(new IPEndPoint(IPAddress.Loopback, port), false);
 
         await server.StartAsync(CancellationToken.None);
         Assert.True(server.IsRunning);

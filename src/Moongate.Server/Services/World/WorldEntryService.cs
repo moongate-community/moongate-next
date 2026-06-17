@@ -18,18 +18,18 @@ using Moongate.UO.Data.Types.Maps;
 namespace Moongate.Server.Services.World;
 
 /// <summary>
-/// Builds and sends the world-entry packet sequence for a player entering the world.
+///     Builds and sends the world-entry packet sequence for a player entering the world.
 /// </summary>
 public sealed class WorldEntryService : IWorldEntryService
 {
-    private readonly IOutgoingPacketQueue _outgoing;
-    private readonly IItemService _items;
     private readonly IContainerContentService _contents;
-    private readonly IMapService _maps;
     private readonly IEventBusService _events;
-    private readonly ILightAndTimeService _lightAndTime;
-    private readonly IRegionResolverService _regions;
     private readonly IInterestManagementService _interest;
+    private readonly IItemService _items;
+    private readonly ILightAndTimeService _lightAndTime;
+    private readonly IMapService _maps;
+    private readonly IOutgoingPacketQueue _outgoing;
+    private readonly IRegionResolverService _regions;
 
     public WorldEntryService(
         IOutgoingPacketQueue outgoing,

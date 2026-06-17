@@ -13,64 +13,6 @@ namespace Moongate.Tests.Server.Items;
 
 public sealed class ItemFactoryServiceTests
 {
-    private sealed class FakeItemService : IItemService
-    {
-        private uint _next = Serial.ItemOffset + 1;
-
-        public List<ItemEntity> Created { get; } = [];
-
-        public ValueTask<bool> AddItemAsync(
-            ItemEntity container,
-            ItemEntity child,
-            Point2D position,
-            CancellationToken cancellationToken = default
-        )
-            => throw new NotSupportedException();
-
-        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
-
-        public ValueTask<ItemEntity> CreateAsync(ItemEntity item, CancellationToken cancellationToken = default)
-        {
-            if (!item.Id.IsValid)
-            {
-                item.Id = new(_next++);
-            }
-
-            Created.Add(item);
-
-            return ValueTask.FromResult(item);
-        }
-
-        public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
-
-        public ValueTask<ItemEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
-
-        public bool IsContainer(ItemEntity item)
-            => throw new NotSupportedException();
-
-        public bool IsContainer(int itemId)
-            => throw new NotSupportedException();
-
-        public bool IsDoor(ItemEntity item)
-            => throw new NotSupportedException();
-
-        public bool IsDoor(int itemId)
-            => throw new NotSupportedException();
-
-        public ValueTask<bool> RemoveItemAsync(
-            ItemEntity container,
-            Serial itemId,
-            CancellationToken cancellationToken = default
-        )
-            => throw new NotSupportedException();
-
-        public ValueTask<int> TotalWeightAsync(ItemEntity item, CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
-    }
-
     [Fact]
     public async Task CreateFromTemplateAsync_AbstractTemplate_Throws()
     {
@@ -81,9 +23,10 @@ public sealed class ItemFactoryServiceTests
         };
         var factory = new ItemFactoryService(NewRegistry(template), new FakeItemService());
 
-        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
-                            () => factory.CreateFromTemplateAsync("base_clothing").AsTask()
-                        );
+        var exception =
+            await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                factory.CreateFromTemplateAsync("base_clothing").AsTask()
+            );
         Assert.Contains("abstract", exception.Message);
     }
 
@@ -94,7 +37,7 @@ public sealed class ItemFactoryServiceTests
         {
             Id = "rare_katana",
             Rarity = ItemRarity.Rare,
-            Value = new()
+            Value = new ItemTemplateValueDefinition
             {
                 Buy = 25,
                 Sell = 10
@@ -123,7 +66,7 @@ public sealed class ItemFactoryServiceTests
             GumpId = 0x3C,
             ScriptId = "shirt_script",
             Rarity = ItemRarity.Common,
-            Value = new()
+            Value = new ItemTemplateValueDefinition
             {
                 Buy = 20,
                 Sell = 8
@@ -156,9 +99,9 @@ public sealed class ItemFactoryServiceTests
     {
         var factory = new ItemFactoryService(NewRegistry(), new FakeItemService());
 
-        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
-                            () => factory.CreateFromTemplateAsync("missing").AsTask()
-                        );
+        var exception =
+            await Assert.ThrowsAsync<InvalidOperationException>(() => factory.CreateFromTemplateAsync("missing").AsTask()
+            );
         Assert.Contains("missing", exception.Message);
     }
 
@@ -183,12 +126,12 @@ public sealed class ItemFactoryServiceTests
             Id = "shirt",
             IsMovable = true
         };
-        template.Params["dyeable"] = new()
+        template.Params["dyeable"] = new ItemTemplateParamDefinition
         {
             Type = ItemTemplateParamType.String,
             Value = "true"
         };
-        template.Params["charges"] = new()
+        template.Params["charges"] = new ItemTemplateParamDefinition
         {
             Type = ItemTemplateParamType.Integer,
             Value = "0x10"
@@ -255,14 +198,94 @@ public sealed class ItemFactoryServiceTests
     }
 
     private static ItemTemplateDefinition NewTemplateWithGraphicVariants()
-        => new()
+    {
+        return new ItemTemplateDefinition
         {
             Id = "bread_loaf",
             ItemId = 4155,
             GraphicVariants =
             [
-                new() { ItemId = 4156 },
-                new() { ItemId = 4157 }
+                new ItemTemplateGraphicVariantDefinition { ItemId = 4156 },
+                new ItemTemplateGraphicVariantDefinition { ItemId = 4157 }
             ]
         };
+    }
+
+    private sealed class FakeItemService : IItemService
+    {
+        private uint _next = Serial.ItemOffset + 1;
+
+        public List<ItemEntity> Created { get; } = [];
+
+        public ValueTask<bool> AddItemAsync(
+            ItemEntity container,
+            ItemEntity child,
+            Point2D position,
+            CancellationToken cancellationToken = default
+        )
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<ItemEntity> CreateAsync(ItemEntity item, CancellationToken cancellationToken = default)
+        {
+            if (!item.Id.IsValid)
+            {
+                item.Id = new Serial(_next++);
+            }
+
+            Created.Add(item);
+
+            return ValueTask.FromResult(item);
+        }
+
+        public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<ItemEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public bool IsContainer(ItemEntity item)
+        {
+            throw new NotSupportedException();
+        }
+
+        public bool IsContainer(int itemId)
+        {
+            throw new NotSupportedException();
+        }
+
+        public bool IsDoor(ItemEntity item)
+        {
+            throw new NotSupportedException();
+        }
+
+        public bool IsDoor(int itemId)
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<bool> RemoveItemAsync(
+            ItemEntity container,
+            Serial itemId,
+            CancellationToken cancellationToken = default
+        )
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<int> TotalWeightAsync(ItemEntity item, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+    }
 }

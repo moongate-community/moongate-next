@@ -7,7 +7,7 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Incoming.Speech;
 
 /// <summary>
-/// Represents an ASCII talk request packet.
+///     Represents an ASCII talk request packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Variable, Description = "Talk Request")]
 public class TalkRequestPacket : BaseGameNetworkPacket
@@ -15,13 +15,15 @@ public class TalkRequestPacket : BaseGameNetworkPacket
     private const byte OpCodeValue = 0x03;
     private const int MinimumPayloadLength = 5;
 
+    public TalkRequestPacket()
+        : base(OpCodeValue)
+    {
+    }
+
     public byte MessageType { get; private set; }
     public ushort Hue { get; private set; }
     public ushort Font { get; private set; }
     public string Text { get; private set; } = "";
-
-    public TalkRequestPacket()
-        : base(OpCodeValue) { }
 
     protected override bool ParsePayload(ref SpanReader reader)
     {

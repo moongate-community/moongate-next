@@ -12,12 +12,12 @@ using Moongate.UO.Domain.Interfaces.Services;
 namespace Moongate.Server.Services.Users;
 
 /// <summary>
-/// Default user service backed by auto-increment persistence.
+///     Default user service backed by auto-increment persistence.
 /// </summary>
 public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IUserService
 {
-    private readonly IAutoDataAccess<UserEntity, Serial> _users;
     private readonly IEventBusService _eventBus;
+    private readonly IAutoDataAccess<UserEntity, Serial> _users;
 
     public UserService(IAutoDataAccess<UserEntity, Serial> users, IEventBusService eventBus)
         : base(users)
@@ -36,8 +36,8 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
         }
 
         var user = _users
-                   .Query()
-                   .FirstOrDefault(u => string.Equals(u.ActivationId, normalizedActivationId, StringComparison.Ordinal));
+            .Query()
+            .FirstOrDefault(u => string.Equals(u.ActivationId, normalizedActivationId, StringComparison.Ordinal));
 
         if (user is null)
         {
@@ -57,7 +57,9 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
     }
 
     public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
-        => _users.CountAsync(cancellationToken);
+    {
+        return _users.CountAsync(cancellationToken);
+    }
 
     public async ValueTask<UserEntity> CreateAsync(
         string username,
@@ -132,7 +134,9 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
     }
 
     public ValueTask<UserEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
-        => _users.GetByIdAsync(id, cancellationToken);
+    {
+        return _users.GetByIdAsync(id, cancellationToken);
+    }
 
     public ValueTask<UserEntity?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
     {
@@ -143,8 +147,8 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
 
         var normalizedUsername = username.Trim();
         var user = _users
-                   .Query()
-                   .FirstOrDefault(u => string.Equals(u.Username, normalizedUsername, StringComparison.OrdinalIgnoreCase));
+            .Query()
+            .FirstOrDefault(u => string.Equals(u.Username, normalizedUsername, StringComparison.OrdinalIgnoreCase));
 
         return ValueTask.FromResult(user);
     }
@@ -250,26 +254,28 @@ public sealed class UserService : PaginatedEntityService<UserEntity, Serial>, IU
     }
 
     protected override IQueryable<UserEntity> ApplyOrder(IQueryable<UserEntity> query)
-        => query.OrderBy(u => u.Username, StringComparer.OrdinalIgnoreCase);
+    {
+        return query.OrderBy(u => u.Username, StringComparer.OrdinalIgnoreCase);
+    }
 
     protected override IQueryable<UserEntity> ApplySearch(IQueryable<UserEntity> query, string term)
-        => query.Where(
-            u =>
-                u.Username.Contains(term, StringComparison.OrdinalIgnoreCase) ||
-                u.Email.Contains(term, StringComparison.OrdinalIgnoreCase)
+    {
+        return query.Where(u =>
+            u.Username.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+            u.Email.Contains(term, StringComparison.OrdinalIgnoreCase)
         );
+    }
 
     private async ValueTask EnsureEmailIsFreeAsync(string email, Serial? excludingId, CancellationToken cancellationToken)
     {
         var hasExclusion = excludingId.HasValue;
         var excludedSerial = excludingId.GetValueOrDefault();
         var clash = _users
-                    .Query()
-                    .FirstOrDefault(
-                        u =>
-                            string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase) &&
-                            (!hasExclusion || u.Id != excludedSerial)
-                    );
+            .Query()
+            .FirstOrDefault(u =>
+                string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase) &&
+                (!hasExclusion || u.Id != excludedSerial)
+            );
 
         if (clash is not null)
         {

@@ -6,7 +6,7 @@ using Moongate.Server.Services.WorldData;
 namespace Moongate.Server.Services.World;
 
 /// <summary>
-/// Lazy in-memory store for weather entries.
+///     Lazy in-memory store for weather entries.
 /// </summary>
 public class WeatherDataService : LazyDataService, IWeatherDataService
 {
@@ -14,7 +14,9 @@ public class WeatherDataService : LazyDataService, IWeatherDataService
     private readonly Lock _sync = new();
     private List<WeatherEntry> _entries = [];
 
-    public WeatherDataService() { }
+    public WeatherDataService()
+    {
+    }
 
     public WeatherDataService(ServerAssetDataLoader loader)
     {
@@ -48,5 +50,7 @@ public class WeatherDataService : LazyDataService, IWeatherDataService
     }
 
     protected override void LoadCore()
-        => _loader?.LoadWeather(this);
+    {
+        _loader?.LoadWeather(this);
+    }
 }

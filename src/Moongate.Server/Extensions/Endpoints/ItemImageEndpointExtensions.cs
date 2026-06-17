@@ -16,40 +16,42 @@ public static class ItemImageEndpointExtensions
     public static IEndpointRouteBuilder MapMoongateItemImages(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet(
-                     "/api/items/{itemId}.png",
-                     (
-                         string itemId,
-                         IArtService artService,
-                         DirectoriesConfig directories,
-                         CancellationToken cancellationToken
-                     ) => HandleGetItemImageAsync(itemId, artService, directories, cancellationToken)
-                 )
-                 .WithName("GetItemImage")
-                 .WithTags("Items")
-                 .WithSummary("Returns a lazily generated PNG image of the specified UO item art.")
-                 .Produces(StatusCodes.Status200OK, contentType: "image/png")
-                 .Produces(StatusCodes.Status400BadRequest)
-                 .Produces(StatusCodes.Status404NotFound);
+                "/api/items/{itemId}.png",
+                (
+                    string itemId,
+                    IArtService artService,
+                    DirectoriesConfig directories,
+                    CancellationToken cancellationToken
+                ) => HandleGetItemImageAsync(itemId, artService, directories, cancellationToken)
+            )
+            .WithName("GetItemImage")
+            .WithTags("Items")
+            .WithSummary("Returns a lazily generated PNG image of the specified UO item art.")
+            .Produces(StatusCodes.Status200OK, contentType: "image/png")
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status404NotFound);
 
         endpoints.MapPost(
-                     "/api/items/build",
-                     (
-                         IArtService artService,
-                         DirectoriesConfig directories,
-                         CancellationToken cancellationToken
-                     ) => HandleBuildItemImagesAsync(artService, directories, cancellationToken)
-                 )
-                 .WithName("BuildItemImages")
-                 .WithTags("Items")
-                 .WithSummary("Generates and caches PNG images for all available UO item art.")
-                 .Produces<ItemImageBuildResult>()
-                 .Produces(StatusCodes.Status200OK);
+                "/api/items/build",
+                (
+                    IArtService artService,
+                    DirectoriesConfig directories,
+                    CancellationToken cancellationToken
+                ) => HandleBuildItemImagesAsync(artService, directories, cancellationToken)
+            )
+            .WithName("BuildItemImages")
+            .WithTags("Items")
+            .WithSummary("Generates and caches PNG images for all available UO item art.")
+            .Produces<ItemImageBuildResult>()
+            .Produces(StatusCodes.Status200OK);
 
         return endpoints;
     }
 
     internal static string FormatFileName(int itemId)
-        => $"0x{itemId.ToString("X3", CultureInfo.InvariantCulture)}.png";
+    {
+        return $"0x{itemId.ToString("X3", CultureInfo.InvariantCulture)}.png";
+    }
 
     internal static string GetCachePath(DirectoriesConfig directories, int itemId)
     {
@@ -137,8 +139,8 @@ public static class ItemImageEndpointExtensions
         var result = await EnsureItemImageAsync(itemId, artService, directories, cancellationToken);
 
         return result.HasImage
-                   ? Results.File(result.CachePath, "image/png")
-                   : TypedResults.NotFound();
+            ? Results.File(result.CachePath, "image/png")
+            : TypedResults.NotFound();
     }
 
     private static async Task<(bool HasImage, bool Generated, string CachePath)> EnsureItemImageAsync(
@@ -155,7 +157,7 @@ public static class ItemImageEndpointExtensions
             return (true, false, cachePath);
         }
 
-        var generationLock = _generationLocks.GetOrAdd(itemId, static _ => new(1, 1));
+        var generationLock = _generationLocks.GetOrAdd(itemId, static _ => new SemaphoreSlim(1, 1));
         await generationLock.WaitAsync(cancellationToken);
 
         try

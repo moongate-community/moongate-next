@@ -12,58 +12,6 @@ namespace Moongate.Tests.Server.Loot;
 
 public sealed class LootTableBootServiceTests
 {
-    private sealed class FakeItemService : IItemService
-    {
-        private readonly HashSet<int> _containerItemIds;
-
-        public FakeItemService(params int[] containerItemIds)
-        {
-            _containerItemIds = [..containerItemIds];
-        }
-
-        public ValueTask<bool> AddItemAsync(
-            ItemEntity container,
-            ItemEntity child,
-            Point2D position,
-            CancellationToken cancellationToken = default
-        )
-            => throw new NotSupportedException();
-
-        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
-
-        public ValueTask<ItemEntity> CreateAsync(ItemEntity item, CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
-
-        public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
-
-        public ValueTask<ItemEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
-
-        public bool IsContainer(ItemEntity item)
-            => IsContainer(item.ItemId);
-
-        public bool IsContainer(int itemId)
-            => _containerItemIds.Contains(itemId);
-
-        public bool IsDoor(ItemEntity item)
-            => throw new NotSupportedException();
-
-        public bool IsDoor(int itemId)
-            => throw new NotSupportedException();
-
-        public ValueTask<bool> RemoveItemAsync(
-            ItemEntity container,
-            Serial itemId,
-            CancellationToken cancellationToken = default
-        )
-            => throw new NotSupportedException();
-
-        public ValueTask<int> TotalWeightAsync(ItemEntity item, CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
-    }
-
     [Fact]
     public async Task StartAsync_InvalidFile_Throws()
     {
@@ -71,10 +19,10 @@ public sealed class LootTableBootServiceTests
         dir.WriteFile("bad.yaml", "loot_tables:\n  - id: t\n    content:\n      - item: does_not_exist\n");
         var templates = Templates();
         var bootService = new LootTableBootService(
-            new(dir.Path),
+            new LootTableYamlLoader(dir.Path),
             NewLootService(templates),
             templates,
-            new(),
+            new LootTableRegistryStore(),
             new ThrowingItemService()
         );
 
@@ -91,7 +39,7 @@ public sealed class LootTableBootServiceTests
             {
                 Id = "wooden_chest",
                 ItemId = 3651,
-                Contents = new()
+                Contents = new ItemTemplateContentsDefinition
                 {
                     LootTemplate = "missing",
                     RefillEvery = TimeSpan.FromHours(6)
@@ -99,11 +47,17 @@ public sealed class LootTableBootServiceTests
             }
         );
         var loot = NewLootService(templates);
-        var bootService = new LootTableBootService(new(dir.Path), loot, templates, new(), new FakeItemService(3651));
+        var bootService = new LootTableBootService(
+            new LootTableYamlLoader(dir.Path),
+            loot,
+            templates,
+            new LootTableRegistryStore(),
+            new FakeItemService(3651)
+        );
 
-        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
-                            () => bootService.StartAsync(CancellationToken.None)
-                        );
+        var exception =
+            await Assert.ThrowsAsync<InvalidOperationException>(() => bootService.StartAsync(CancellationToken.None)
+            );
 
         Assert.Contains("wooden_chest", exception.Message);
         Assert.Contains("missing", exception.Message);
@@ -115,7 +69,13 @@ public sealed class LootTableBootServiceTests
         using var dir = new TempTemplateDirectory();
         var templates = Templates();
         var loot = NewLootService(templates);
-        var bootService = new LootTableBootService(new(dir.Path), loot, templates, new(), new ThrowingItemService());
+        var bootService = new LootTableBootService(
+            new LootTableYamlLoader(dir.Path),
+            loot,
+            templates,
+            new LootTableRegistryStore(),
+            new ThrowingItemService()
+        );
 
         await bootService.StartAsync(CancellationToken.None);
 
@@ -130,7 +90,13 @@ public sealed class LootTableBootServiceTests
         var templates = Templates();
         var loot = NewLootService(templates);
         var store = new LootTableRegistryStore();
-        var bootService = new LootTableBootService(new(dir.Path), loot, templates, store, new ThrowingItemService());
+        var bootService = new LootTableBootService(
+            new LootTableYamlLoader(dir.Path),
+            loot,
+            templates,
+            store,
+            new ThrowingItemService()
+        );
 
         await bootService.StartAsync(CancellationToken.None);
 
@@ -140,17 +106,95 @@ public sealed class LootTableBootServiceTests
     }
 
     private static LootService NewLootService(ItemTemplateService templates)
-        => new(
+    {
+        return new LootService(
             templates,
-            new(static () => throw new NotSupportedException()),
+            new Lazy<IItemFactoryService>(static () => throw new NotSupportedException()),
             new MizuchiRandom(1UL, 1UL)
         );
+    }
 
     private static ItemTemplateService Templates(params ItemTemplateDefinition[] additionalTemplates)
     {
         var registry = new ItemTemplateService();
-        registry.UpsertRange([new() { Id = "gold_coin", ItemId = 3821, IsStackable = true }, ..additionalTemplates]);
+        registry.UpsertRange(
+            [new ItemTemplateDefinition { Id = "gold_coin", ItemId = 3821, IsStackable = true }, .. additionalTemplates]
+        );
 
         return registry;
+    }
+
+    private sealed class FakeItemService : IItemService
+    {
+        private readonly HashSet<int> _containerItemIds;
+
+        public FakeItemService(params int[] containerItemIds)
+        {
+            _containerItemIds = [.. containerItemIds];
+        }
+
+        public ValueTask<bool> AddItemAsync(
+            ItemEntity container,
+            ItemEntity child,
+            Point2D position,
+            CancellationToken cancellationToken = default
+        )
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<ItemEntity> CreateAsync(ItemEntity item, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<ItemEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public bool IsContainer(ItemEntity item)
+        {
+            return IsContainer(item.ItemId);
+        }
+
+        public bool IsContainer(int itemId)
+        {
+            return _containerItemIds.Contains(itemId);
+        }
+
+        public bool IsDoor(ItemEntity item)
+        {
+            throw new NotSupportedException();
+        }
+
+        public bool IsDoor(int itemId)
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<bool> RemoveItemAsync(
+            ItemEntity container,
+            Serial itemId,
+            CancellationToken cancellationToken = default
+        )
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<int> TotalWeightAsync(ItemEntity item, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
     }
 }

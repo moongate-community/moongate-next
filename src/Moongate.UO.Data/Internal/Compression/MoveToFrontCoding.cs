@@ -1,7 +1,7 @@
 namespace Moongate.UO.Data.Internal.Compression;
 
 /// <summary>
-/// Move-to-front transform used by the Mythic.Package compression codec.
+///     Move-to-front transform used by the Mythic.Package compression codec.
 /// </summary>
 public static class MoveToFrontCoding
 {

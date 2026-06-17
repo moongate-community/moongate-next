@@ -1,7 +1,7 @@
 namespace Moongate.Abstractions.Data.Persistence;
 
 /// <summary>
-/// Configuration for the persistence service: autosave cadence and snapshot/journal file names.
+///     Configuration for the persistence service: autosave cadence and snapshot/journal file names.
 /// </summary>
 public sealed class PersistenceConfig
 {

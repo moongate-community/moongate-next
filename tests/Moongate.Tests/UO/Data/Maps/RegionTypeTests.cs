@@ -5,13 +5,22 @@ namespace Moongate.Tests.UO.Data.Maps;
 
 public sealed class RegionTypeTests
 {
-    [Theory, InlineData("BaseRegion", RegionType.Base), InlineData("DungeonRegion", RegionType.Dungeon),
-     InlineData("GreenAcresRegion", RegionType.GreenAcres), InlineData("GuardedRegion", RegionType.Guarded),
-     InlineData("JailRegion", RegionType.Jail), InlineData("NoHousingRegion", RegionType.NoHousing),
-     InlineData("TownRegion", RegionType.Town), InlineData("dungeonregion", RegionType.Dungeon),
-     InlineData("Nonsense", RegionType.Unknown), InlineData("", RegionType.Unknown), InlineData(null, RegionType.Unknown)]
+    [Theory]
+    [InlineData("BaseRegion", RegionType.Base)]
+    [InlineData("DungeonRegion", RegionType.Dungeon)]
+    [InlineData("GreenAcresRegion", RegionType.GreenAcres)]
+    [InlineData("GuardedRegion", RegionType.Guarded)]
+    [InlineData("JailRegion", RegionType.Jail)]
+    [InlineData("NoHousingRegion", RegionType.NoHousing)]
+    [InlineData("TownRegion", RegionType.Town)]
+    [InlineData("dungeonregion", RegionType.Dungeon)]
+    [InlineData("Nonsense", RegionType.Unknown)]
+    [InlineData("", RegionType.Unknown)]
+    [InlineData(null, RegionType.Unknown)]
     public void FromAssetType_MapsKnownStrings(string? assetType, RegionType expected)
-        => Assert.Equal(expected, RegionTypeParser.FromAssetType(assetType));
+    {
+        Assert.Equal(expected, RegionTypeParser.FromAssetType(assetType));
+    }
 
     [Fact]
     public void RegionAreaEntry_Contains_IsInclusiveAndOrderRobust()

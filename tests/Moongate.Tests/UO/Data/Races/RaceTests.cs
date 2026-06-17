@@ -43,8 +43,11 @@ public sealed class RaceTests
         Assert.False(Race.TryParse("orc", null, out _));
     }
 
-    [Theory, InlineData(GenderType.Male, true, 400), InlineData(GenderType.Female, true, 401),
-     InlineData(GenderType.Male, false, 402), InlineData(GenderType.Female, false, 403)]
+    [Theory]
+    [InlineData(GenderType.Male, true, 400)]
+    [InlineData(GenderType.Female, true, 401)]
+    [InlineData(GenderType.Male, false, 402)]
+    [InlineData(GenderType.Female, false, 403)]
     public void Human_Body_MatchesGenderAndAliveState(GenderType gender, bool alive, int expected)
     {
         var mobile = new MobileEntity { Gender = gender, IsAlive = alive };

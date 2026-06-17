@@ -11,25 +11,53 @@ using ZLinq.Linq;
 namespace Moongate.Server.Services.Network;
 
 /// <summary>
-/// Thread-safe in-memory <see cref="ISessionService" /> backed by a concurrent dictionary.
+///     Thread-safe in-memory <see cref="ISessionService" /> backed by a concurrent dictionary.
 /// </summary>
 public sealed class SessionService : ISessionService, INetworkSessionManager
 {
-    private readonly ConcurrentDictionary<long, GameSession> _sessions = new();
     private readonly IEventBusService? _eventBus;
+    private readonly ConcurrentDictionary<long, GameSession> _sessions = new();
 
     public SessionService(IEventBusService? eventBus = null)
     {
         _eventBus = eventBus;
     }
 
+    public IReadOnlyCollection<long> GetSessionIds()
+    {
+        return _sessions.Keys.ToArray();
+    }
+
+    public ValueEnumerable<FromArray<long>, long> QuerySessionIds()
+    {
+        return _sessions.Keys.ToArray().AsValueEnumerable();
+    }
+
+    public bool TryGetSession(long sessionId, out IGameSession session)
+    {
+        if (_sessions.TryGetValue(sessionId, out var found))
+        {
+            session = found;
+
+            return true;
+        }
+
+        session = null!;
+
+        return false;
+    }
+
     public int Count => _sessions.Count;
 
     public void Clear()
-        => _sessions.Clear();
+    {
+        _sessions.Clear();
+    }
 
     public IReadOnlyCollection<GameSession> GetAll()
-        => _sessions.Values.ToArray();
+    {
+        return _sessions.Values.ToArray();
+    }
 
     public GameSession GetOrCreate(MoongateTCPClient client)
     {
@@ -54,12 +82,6 @@ public sealed class SessionService : ISessionService, INetworkSessionManager
         return session;
     }
 
-    public IReadOnlyCollection<long> GetSessionIds()
-        => _sessions.Keys.ToArray();
-
-    public ValueEnumerable<FromArray<long>, long> QuerySessionIds()
-        => _sessions.Keys.ToArray().AsValueEnumerable();
-
     public bool Remove(long sessionId)
     {
         if (!_sessions.TryRemove(sessionId, out var session))
@@ -75,19 +97,7 @@ public sealed class SessionService : ISessionService, INetworkSessionManager
     }
 
     public bool TryGet(long sessionId, out GameSession session)
-        => _sessions.TryGetValue(sessionId, out session!);
-
-    public bool TryGetSession(long sessionId, out IGameSession session)
     {
-        if (_sessions.TryGetValue(sessionId, out var found))
-        {
-            session = found;
-
-            return true;
-        }
-
-        session = null!;
-
-        return false;
+        return _sessions.TryGetValue(sessionId, out session!);
     }
 }

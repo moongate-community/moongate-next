@@ -7,7 +7,7 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Outgoing.World;
 
 /// <summary>
-/// Represents a global light level packet.
+///     Represents a global light level packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Overall Light Level")]
 public class OverallLightLevelPacket : BaseGameNetworkPacket
@@ -15,16 +15,18 @@ public class OverallLightLevelPacket : BaseGameNetworkPacket
     private const byte OpCodeValue = 0x4F;
     private const int LengthValue = 2;
 
-    public LightLevelType LightLevel { get; set; }
-
     public OverallLightLevelPacket()
-        : base(OpCodeValue, LengthValue) { }
+        : base(OpCodeValue, LengthValue)
+    {
+    }
 
     public OverallLightLevelPacket(LightLevelType lightLevel)
         : this()
     {
         LightLevel = lightLevel;
     }
+
+    public LightLevelType LightLevel { get; set; }
 
     public override void Write(ref SpanWriter writer)
     {

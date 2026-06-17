@@ -1,7 +1,7 @@
 namespace Moongate.UO.Data.Types.Maps;
 
 /// <summary>
-/// Defines UO world seasons (also a per-facet map property).
+///     Defines UO world seasons (also a per-facet map property).
 /// </summary>
 public enum SeasonType : byte
 {

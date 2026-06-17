@@ -4,8 +4,8 @@ using Moongate.Core.Interfaces.Ids;
 namespace Moongate.Persistence.Interfaces.Persistence;
 
 /// <summary>
-/// Owns persistence lifecycle: loads the snapshot and replays the journal at startup, autosaves
-/// periodically, and hands out per-type <see cref="IDataAccess{TEntity,TKey}" /> instances.
+///     Owns persistence lifecycle: loads the snapshot and replays the journal at startup, autosaves
+///     periodically, and hands out per-type <see cref="IDataAccess{TEntity,TKey}" /> instances.
 /// </summary>
 public interface IPersistenceService : IMoongateService
 {

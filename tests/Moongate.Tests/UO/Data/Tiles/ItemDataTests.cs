@@ -1,6 +1,5 @@
 using Moongate.UO.Data.Data.Tiles;
 using Moongate.UO.Data.Types.Tiles;
-using Xunit;
 
 namespace Moongate.Tests.UO.Data.Tiles;
 

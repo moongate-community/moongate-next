@@ -6,7 +6,7 @@ using Moongate.UO.Data.Types.Maps;
 namespace Moongate.Tests.Support;
 
 /// <summary>
-/// IRegionResolverService stub returning a fixed region for every lookup; other members throw.
+///     IRegionResolverService stub returning a fixed region for every lookup; other members throw.
 /// </summary>
 public sealed class StubRegionResolver : IRegionResolverService
 {
@@ -18,11 +18,17 @@ public sealed class StubRegionResolver : IRegionResolverService
     }
 
     public MusicType GetMusic(int mapId, Point3D location)
-        => MusicTypeParser.FromName(_region?.Music);
+    {
+        return MusicTypeParser.FromName(_region?.Music);
+    }
 
     public RegionEntry? GetRegionByName(string name)
-        => throw new NotSupportedException();
+    {
+        throw new NotSupportedException();
+    }
 
     public RegionEntry? ResolveRegion(int mapId, Point3D location)
-        => _region;
+    {
+        return _region;
+    }
 }

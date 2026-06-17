@@ -1,7 +1,7 @@
 namespace Moongate.UO.Data.Data.Loadouts;
 
 /// <summary>
-/// The fully composed starter loadout for a new character.
+///     The fully composed starter loadout for a new character.
 /// </summary>
 public sealed class StarterLoadout
 {

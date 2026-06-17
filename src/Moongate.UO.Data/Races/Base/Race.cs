@@ -7,9 +7,9 @@ using Moongate.UO.Data.Types.Mobiles;
 namespace Moongate.UO.Data.Races.Base;
 
 /// <summary>
-/// A playable race: identity, body graphics per gender/alive state, and appearance
-/// (skin/hair) clamping and randomization. Instances live in a process-global registry
-/// populated at boot; the mobile entity persists only its <c>RaceIndex</c>.
+///     A playable race: identity, body graphics per gender/alive state, and appearance
+///     (skin/hair) clamping and randomization. Instances live in a process-global registry
+///     populated at boot; the mobile entity persists only its <c>RaceIndex</c>.
 /// </summary>
 public abstract class Race : ISpanParsable<Race>
 {
@@ -59,40 +59,11 @@ public abstract class Race : ISpanParsable<Race>
     public string Name { get; set; }
     public string PluralName { get; set; }
 
-    public virtual int AliveBody(MobileEntity mobile)
-        => AliveBody(mobile.Gender == GenderType.Female);
-
-    public virtual int AliveBody(bool female)
-        => female ? FemaleBody : MaleBody;
-
-    public virtual int Body(MobileEntity mobile)
-        => mobile.IsAlive ? AliveBody(mobile.Gender == GenderType.Female) : GhostBody(mobile.Gender == GenderType.Female);
-
-    public abstract int ClipHairHue(int hue);
-
-    public abstract int ClipSkinHue(int hue);
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Race? GetRace(int raceID)
-        => AllRaces.FirstOrDefault(r => r.RaceID == raceID);
-
-    public virtual int GhostBody(MobileEntity mobile)
-        => GhostBody(mobile.Gender == GenderType.Female);
-
-    public virtual int GhostBody(bool female)
-        => female ? FemaleGhostBody : MaleGhostBody;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsAllowedRace(Race race, int allowedRaceFlags)
-        => (allowedRaceFlags & race.RaceFlag) != 0;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Race Parse(string s)
-        => Parse(s, null);
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Race Parse(string s, IFormatProvider? provider)
-        => Parse(s.AsSpan(), provider);
+    {
+        return Parse(s.AsSpan(), provider);
+    }
 
     public static Race Parse(ReadOnlySpan<char> s, IFormatProvider? provider)
     {
@@ -104,20 +75,11 @@ public abstract class Race : ISpanParsable<Race>
         throw new FormatException($"The input string '{s}' was not in a correct format.");
     }
 
-    public abstract int RandomFacialHair(bool female);
-
-    public abstract int RandomHair(bool female);
-
-    public abstract int RandomHairHue();
-
-    public abstract int RandomSkinHue();
-
-    public override string ToString()
-        => Name;
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParse(string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out Race result)
-        => TryParse(s.AsSpan(), provider, out result);
+    {
+        return TryParse(s.AsSpan(), provider, out result);
+    }
 
     public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, [MaybeNullWhen(false)] out Race result)
     {
@@ -143,6 +105,68 @@ public abstract class Race : ISpanParsable<Race>
         result = null;
 
         return false;
+    }
+
+    public virtual int AliveBody(MobileEntity mobile)
+    {
+        return AliveBody(mobile.Gender == GenderType.Female);
+    }
+
+    public virtual int AliveBody(bool female)
+    {
+        return female ? FemaleBody : MaleBody;
+    }
+
+    public virtual int Body(MobileEntity mobile)
+    {
+        return mobile.IsAlive
+            ? AliveBody(mobile.Gender == GenderType.Female)
+            : GhostBody(mobile.Gender == GenderType.Female);
+    }
+
+    public abstract int ClipHairHue(int hue);
+
+    public abstract int ClipSkinHue(int hue);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Race? GetRace(int raceID)
+    {
+        return AllRaces.FirstOrDefault(r => r.RaceID == raceID);
+    }
+
+    public virtual int GhostBody(MobileEntity mobile)
+    {
+        return GhostBody(mobile.Gender == GenderType.Female);
+    }
+
+    public virtual int GhostBody(bool female)
+    {
+        return female ? FemaleGhostBody : MaleGhostBody;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsAllowedRace(Race race, int allowedRaceFlags)
+    {
+        return (allowedRaceFlags & race.RaceFlag) != 0;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Race Parse(string s)
+    {
+        return Parse(s, null);
+    }
+
+    public abstract int RandomFacialHair(bool female);
+
+    public abstract int RandomHair(bool female);
+
+    public abstract int RandomHairHue();
+
+    public abstract int RandomSkinHue();
+
+    public override string ToString()
+    {
+        return Name;
     }
 
     public abstract bool ValidateFacialHair(bool female, int itemID);

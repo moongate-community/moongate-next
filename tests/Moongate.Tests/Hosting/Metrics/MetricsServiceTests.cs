@@ -1,4 +1,5 @@
 using Moongate.Abstractions.Data.Metrics;
+using Moongate.Abstractions.Data.Timing;
 using Moongate.Abstractions.Interfaces.Metrics;
 using Moongate.Abstractions.Types.Metrics;
 using Moongate.Server.Services.Metrics;
@@ -8,55 +9,10 @@ namespace Moongate.Tests.Hosting.Metrics;
 
 public class MetricsServiceTests
 {
-    private sealed class RecordingProvider : IMetricProvider
-    {
-        private readonly IReadOnlyList<MetricSample> _samples;
-
-        public RecordingProvider(string prefix, IReadOnlyList<MetricSample> samples)
-        {
-            Prefix = prefix;
-            _samples = samples;
-        }
-
-        public string Prefix { get; }
-
-        public IReadOnlyList<MetricSample> Collect()
-            => _samples;
-    }
-
-    private sealed class DynamicProvider : IMetricProvider
-    {
-        private readonly Func<IReadOnlyList<MetricSample>> _factory;
-
-        public DynamicProvider(string prefix, Func<IReadOnlyList<MetricSample>> factory)
-        {
-            Prefix = prefix;
-            _factory = factory;
-        }
-
-        public string Prefix { get; }
-
-        public IReadOnlyList<MetricSample> Collect()
-            => _factory();
-    }
-
-    private sealed class ThrowingProvider : IMetricProvider
-    {
-        public ThrowingProvider(string prefix)
-        {
-            Prefix = prefix;
-        }
-
-        public string Prefix { get; }
-
-        public IReadOnlyList<MetricSample> Collect()
-            => throw new InvalidOperationException("boom");
-    }
-
     [Fact]
     public async Task GetSnapshot_BeforeStart_ReturnsEmpty()
     {
-        var svc = new MetricsService(Array.Empty<IMetricProvider>(), NewTimer(), new());
+        var svc = new MetricsService(Array.Empty<IMetricProvider>(), NewTimer(), new MetricsConfig());
 
         var snapshot = svc.GetSnapshot();
 
@@ -68,9 +24,9 @@ public class MetricsServiceTests
     [Fact]
     public async Task RefreshSnapshot_PrependsProviderPrefixToEverySample()
     {
-        var p1 = new RecordingProvider("bus", [new("a", 1), new("b", 2, MetricType.Counter)]);
-        var p2 = new RecordingProvider("loop", [new("c", 3)]);
-        var svc = new MetricsService([p1, p2], NewTimer(), new());
+        var p1 = new RecordingProvider("bus", [new MetricSample("a", 1), new MetricSample("b", 2, MetricType.Counter)]);
+        var p2 = new RecordingProvider("loop", [new MetricSample("c", 3)]);
+        var svc = new MetricsService([p1, p2], NewTimer(), new MetricsConfig());
 
         await svc.StartAsync(CancellationToken.None);
 
@@ -85,9 +41,9 @@ public class MetricsServiceTests
     [Fact]
     public async Task RefreshSnapshot_ProviderThrows_IsSkippedAndOthersContinue()
     {
-        var good = new RecordingProvider("good", [new("ok", 1)]);
+        var good = new RecordingProvider("good", [new MetricSample("ok", 1)]);
         var bad = new ThrowingProvider("bad");
-        var svc = new MetricsService([bad, good], NewTimer(), new());
+        var svc = new MetricsService([bad, good], NewTimer(), new MetricsConfig());
 
         await svc.StartAsync(CancellationToken.None);
 
@@ -124,8 +80,8 @@ public class MetricsServiceTests
     [Fact]
     public async Task StartAsync_PerformsImmediateRefresh()
     {
-        var provider = new RecordingProvider("svc", [new("count", 7)]);
-        var svc = new MetricsService([provider], NewTimer(), new());
+        var provider = new RecordingProvider("svc", [new MetricSample("count", 7)]);
+        var svc = new MetricsService([provider], NewTimer(), new MetricsConfig());
 
         await svc.StartAsync(CancellationToken.None);
 
@@ -173,7 +129,7 @@ public class MetricsServiceTests
     public async Task StopAsync_UnregistersRefreshTimer()
     {
         var timer = NewTimer();
-        var svc = new MetricsService(Array.Empty<IMetricProvider>(), timer, new());
+        var svc = new MetricsService(Array.Empty<IMetricProvider>(), timer, new MetricsConfig());
 
         await svc.StartAsync(CancellationToken.None);
         var activeBefore = ActiveCount(timer);
@@ -185,8 +141,63 @@ public class MetricsServiceTests
     }
 
     private static int ActiveCount(TimerWheelService timer)
-        => (int)timer.Collect().Single(s => s.Name == "active").Value;
+    {
+        return (int)timer.Collect().Single(s => s.Name == "active").Value;
+    }
 
     private static TimerWheelService NewTimer()
-        => new(new() { TickDuration = TimeSpan.FromMilliseconds(8), WheelSize = 64 });
+    {
+        return new TimerWheelService(new TimerWheelConfig { TickDuration = TimeSpan.FromMilliseconds(8), WheelSize = 64 });
+    }
+
+    private sealed class RecordingProvider : IMetricProvider
+    {
+        private readonly IReadOnlyList<MetricSample> _samples;
+
+        public RecordingProvider(string prefix, IReadOnlyList<MetricSample> samples)
+        {
+            Prefix = prefix;
+            _samples = samples;
+        }
+
+        public string Prefix { get; }
+
+        public IReadOnlyList<MetricSample> Collect()
+        {
+            return _samples;
+        }
+    }
+
+    private sealed class DynamicProvider : IMetricProvider
+    {
+        private readonly Func<IReadOnlyList<MetricSample>> _factory;
+
+        public DynamicProvider(string prefix, Func<IReadOnlyList<MetricSample>> factory)
+        {
+            Prefix = prefix;
+            _factory = factory;
+        }
+
+        public string Prefix { get; }
+
+        public IReadOnlyList<MetricSample> Collect()
+        {
+            return _factory();
+        }
+    }
+
+    private sealed class ThrowingProvider : IMetricProvider
+    {
+        public ThrowingProvider(string prefix)
+        {
+            Prefix = prefix;
+        }
+
+        public string Prefix { get; }
+
+        public IReadOnlyList<MetricSample> Collect()
+        {
+            throw new InvalidOperationException("boom");
+        }
+    }
 }

@@ -9,9 +9,9 @@ using Moongate.UO.Data.Types.Skills;
 namespace Moongate.UO.Data.Interfaces.Entities.Mobiles;
 
 /// <summary>
-/// Data contract for mobile entities (players and NPCs): identity, appearance,
-/// vitals/stats/skills and equipment references. Derived facts (effective stats,
-/// body-from-race, skill checks) and behavior live in the mobile service.
+///     Data contract for mobile entities (players and NPCs): identity, appearance,
+///     vitals/stats/skills and equipment references. Derived facts (effective stats,
+///     body-from-race, skill checks) and behavior live in the mobile service.
 /// </summary>
 public interface IMobileEntity : IWorldEntity
 {

@@ -5,7 +5,7 @@ using Moongate.UO.Data.Templates.Items;
 namespace Moongate.Server.Services.Templates;
 
 /// <summary>
-/// Default in-memory item template registry keyed by case-insensitive template id.
+///     Default in-memory item template registry keyed by case-insensitive template id.
 /// </summary>
 public sealed class ItemTemplateService : IItemTemplateService
 {
@@ -17,10 +17,14 @@ public sealed class ItemTemplateService : IItemTemplateService
     public int Count => _templates.Count;
 
     public void Clear()
-        => ReplaceAll([]);
+    {
+        ReplaceAll([]);
+    }
 
     public IReadOnlyCollection<ItemTemplateDefinition> GetAll()
-        => _templates.Values.ToArray();
+    {
+        return _templates.Values.ToArray();
+    }
 
     public void ReplaceAll(IEnumerable<ItemTemplateDefinition> templates)
     {
@@ -37,7 +41,9 @@ public sealed class ItemTemplateService : IItemTemplateService
     }
 
     public bool TryGet(string id, [NotNullWhen(true)] out ItemTemplateDefinition? definition)
-        => _templates.TryGetValue(id, out definition);
+    {
+        return _templates.TryGetValue(id, out definition);
+    }
 
     public void UpsertRange(IEnumerable<ItemTemplateDefinition> templates)
     {

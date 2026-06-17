@@ -4,22 +4,12 @@ using Moongate.Network.Spans;
 namespace Moongate.Network.UO.Base;
 
 /// <summary>
-/// Base implementation for game network packets with shared opcode and parsing validation logic.
+///     Base implementation for game network packets with shared opcode and parsing validation logic.
 /// </summary>
 public abstract class BaseGameNetworkPacket : IGameNetworkPacket
 {
     /// <summary>
-    /// Gets the packet opcode identifier.
-    /// </summary>
-    public byte OpCode { get; }
-
-    /// <summary>
-    /// Gets the packet length. Use <c>-1</c> for variable-length packets.
-    /// </summary>
-    public int Length { get; }
-
-    /// <summary>
-    /// Initializes a new packet base with opcode and expected length.
+    ///     Initializes a new packet base with opcode and expected length.
     /// </summary>
     /// <param name="opCode">Packet opcode.</param>
     /// <param name="length">Expected packet length, or <c>-1</c> for variable length.</param>
@@ -30,7 +20,17 @@ public abstract class BaseGameNetworkPacket : IGameNetworkPacket
     }
 
     /// <summary>
-    /// Tries to parse packet bytes after validating opcode and optional fixed length.
+    ///     Gets the packet opcode identifier.
+    /// </summary>
+    public byte OpCode { get; }
+
+    /// <summary>
+    ///     Gets the packet length. Use <c>-1</c> for variable-length packets.
+    /// </summary>
+    public int Length { get; }
+
+    /// <summary>
+    ///     Tries to parse packet bytes after validating opcode and optional fixed length.
     /// </summary>
     /// <param name="data">Raw packet bytes.</param>
     /// <returns><c>true</c> when parsing succeeds; otherwise <c>false</c>.</returns>
@@ -63,14 +63,16 @@ public abstract class BaseGameNetworkPacket : IGameNetworkPacket
     }
 
     /// <summary>
-    /// Writes packet content to the target span writer.
+    ///     Writes packet content to the target span writer.
     /// </summary>
     /// <param name="writer">Destination writer.</param>
     public virtual void Write(ref SpanWriter writer)
-        => throw new NotImplementedException();
+    {
+        throw new NotImplementedException();
+    }
 
     /// <summary>
-    /// Parses packet-specific payload after opcode validation.
+    ///     Parses packet-specific payload after opcode validation.
     /// </summary>
     /// <param name="reader">Packet span reader positioned after opcode.</param>
     /// <returns><c>true</c> when payload parsing succeeds; otherwise <c>false</c>.</returns>

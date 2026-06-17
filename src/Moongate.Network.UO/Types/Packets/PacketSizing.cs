@@ -1,7 +1,7 @@
 namespace Moongate.Network.UO.Types.Packets;
 
 /// <summary>
-/// Represents PacketSizing.
+///     Represents PacketSizing.
 /// </summary>
 public enum PacketSizing : uint
 {

@@ -10,11 +10,13 @@ public sealed class FirstPlugin : IMoongatePlugin
     {
         Id = "moongate.fixture.first",
         Name = "First Fixture Plugin",
-        Version = new(1, 0, 0),
+        Version = new Version(1, 0, 0),
         Author = "Moongate Tests"
     };
 
-    public void Configure(IContainer container, PluginContext context) { }
+    public void Configure(IContainer container, PluginContext context)
+    {
+    }
 }
 
 public sealed class SecondPlugin : IMoongatePlugin
@@ -23,9 +25,11 @@ public sealed class SecondPlugin : IMoongatePlugin
     {
         Id = "moongate.fixture.second",
         Name = "Second Fixture Plugin",
-        Version = new(1, 0, 0),
+        Version = new Version(1, 0, 0),
         Author = "Moongate Tests"
     };
 
-    public void Configure(IContainer container, PluginContext context) { }
+    public void Configure(IContainer container, PluginContext context)
+    {
+    }
 }

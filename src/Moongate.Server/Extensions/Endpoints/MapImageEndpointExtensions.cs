@@ -13,19 +13,19 @@ public static class MapImageEndpointExtensions
     public static IEndpointRouteBuilder MapMoongateMapImages(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet(
-                     "/api/maps/{mapId:int}.png",
-                     (
-                         int mapId,
-                         IMapImageService mapImages,
-                         DirectoriesConfig directories,
-                         CancellationToken cancellationToken
-                     ) => HandleGetMapImageAsync(mapId, mapImages, directories, cancellationToken)
-                 )
-                 .WithName("GetMapImage")
-                 .WithTags("Maps")
-                 .WithSummary("Returns a lazily generated radar-colour PNG image of the specified UO map.")
-                 .Produces(StatusCodes.Status200OK, contentType: "image/png")
-                 .Produces(StatusCodes.Status404NotFound);
+                "/api/maps/{mapId:int}.png",
+                (
+                    int mapId,
+                    IMapImageService mapImages,
+                    DirectoriesConfig directories,
+                    CancellationToken cancellationToken
+                ) => HandleGetMapImageAsync(mapId, mapImages, directories, cancellationToken)
+            )
+            .WithName("GetMapImage")
+            .WithTags("Maps")
+            .WithSummary("Returns a lazily generated radar-colour PNG image of the specified UO map.")
+            .Produces(StatusCodes.Status200OK, contentType: "image/png")
+            .Produces(StatusCodes.Status404NotFound);
 
         return endpoints;
     }
@@ -57,7 +57,7 @@ public static class MapImageEndpointExtensions
             return Results.File(cachePath, "image/png");
         }
 
-        var generationLock = _generationLocks.GetOrAdd(mapId, static _ => new(1, 1));
+        var generationLock = _generationLocks.GetOrAdd(mapId, static _ => new SemaphoreSlim(1, 1));
         await generationLock.WaitAsync(cancellationToken);
 
         try

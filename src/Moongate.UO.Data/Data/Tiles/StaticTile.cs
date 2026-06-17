@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 namespace Moongate.UO.Data.Data.Tiles;
 
 /// <summary>
-/// A single static tile read from a statics block: id, in-block x/y, z and hue. 7 bytes, packed.
+///     A single static tile read from a statics block: id, in-block x/y, z and hue. 7 bytes, packed.
 /// </summary>
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct StaticTile

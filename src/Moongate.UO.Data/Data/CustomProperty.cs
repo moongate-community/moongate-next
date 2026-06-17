@@ -3,8 +3,8 @@ using Moongate.UO.Data.Types.Properties;
 namespace Moongate.UO.Data.Data;
 
 /// <summary>
-/// A typed custom value attached to an entity (item or mobile): the
-/// <see cref="Type" /> selects which value field is meaningful.
+///     A typed custom value attached to an entity (item or mobile): the
+///     <see cref="Type" /> selects which value field is meaningful.
 /// </summary>
 public sealed class CustomProperty
 {

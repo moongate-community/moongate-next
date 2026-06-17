@@ -5,9 +5,9 @@ namespace Moongate.Core.Collections;
 
 internal static class HashHelpers
 {
-    internal static readonly int[] SizeOneIntArray = new int[1];
     public const int MaxPrimeArrayLength = 0x7FEFFFFD;
     public const int HashPrime = 101;
+    internal static readonly int[] SizeOneIntArray = new int[1];
 
     public static readonly int[] primes =
     [
@@ -43,7 +43,9 @@ internal static class HashHelpers
     }
 
     public static ulong GetFastModMultiplier(uint divisor)
-        => ulong.MaxValue / divisor + 1;
+    {
+        return ulong.MaxValue / divisor + 1;
+    }
 
     public static int GetPrime(int min)
     {

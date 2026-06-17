@@ -5,14 +5,14 @@ using Moongate.UO.Data.Entities.Items;
 namespace Moongate.UO.Data.Interfaces.Services;
 
 /// <summary>
-/// Provides item persistence plus tile-data-derived facts (container/door),
-/// total-weight aggregation and container placement behavior.
+///     Provides item persistence plus tile-data-derived facts (container/door),
+///     total-weight aggregation and container placement behavior.
 /// </summary>
 public interface IItemService
 {
     /// <summary>
-    /// Places a child item into a container at the given position and persists both;
-    /// returns false when the target item is not a container.
+    ///     Places a child item into a container at the given position and persists both;
+    ///     returns false when the target item is not a container.
     /// </summary>
     ValueTask<bool> AddItemAsync(
         ItemEntity container,
@@ -46,8 +46,8 @@ public interface IItemService
     bool IsDoor(int itemId);
 
     /// <summary>
-    /// Removes a child item from a container by serial and persists the change;
-    /// returns false when the child was not contained.
+    ///     Removes a child item from a container by serial and persists the change;
+    ///     returns false when the child was not contained.
     /// </summary>
     ValueTask<bool> RemoveItemAsync(ItemEntity container, Serial itemId, CancellationToken cancellationToken = default);
 

@@ -8,7 +8,7 @@ using Moongate.UO.Data.Entities.Items;
 namespace Moongate.Network.UO.Packets.Outgoing.Entity;
 
 /// <summary>
-/// Outgoing "Add Multiple Items To Container" (0x3C): sends a container's contents in one packet.
+///     Outgoing "Add Multiple Items To Container" (0x3C): sends a container's contents in one packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Variable, Description = "Add Multiple Items To Container")]
 public class ContainerContentPacket : BaseGameNetworkPacket
@@ -16,9 +16,6 @@ public class ContainerContentPacket : BaseGameNetworkPacket
     private const byte OpCodeValue = 0x3C;
     private const int HeaderLength = 5;
     private const int EntryLength = 20;
-
-    public Serial ContainerId { get; }
-    public IReadOnlyList<ItemEntity> Items { get; }
 
     public ContainerContentPacket(Serial containerId, IReadOnlyList<ItemEntity> items)
         : base(OpCodeValue)
@@ -28,6 +25,9 @@ public class ContainerContentPacket : BaseGameNetworkPacket
         ContainerId = containerId;
         Items = items;
     }
+
+    public Serial ContainerId { get; }
+    public IReadOnlyList<ItemEntity> Items { get; }
 
     public override void Write(ref SpanWriter writer)
     {
@@ -54,5 +54,7 @@ public class ContainerContentPacket : BaseGameNetworkPacket
     }
 
     protected override bool ParsePayload(ref SpanReader reader)
-        => false;
+    {
+        return false;
+    }
 }

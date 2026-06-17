@@ -1,7 +1,7 @@
 namespace Moongate.Persistence.Interfaces.Persistence;
 
 /// <summary>
-/// Describes a registered persisted entity type.
+///     Describes a registered persisted entity type.
 /// </summary>
 public interface IPersistenceEntityDescriptor
 {

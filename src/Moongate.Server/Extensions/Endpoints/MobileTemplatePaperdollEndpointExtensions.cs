@@ -15,20 +15,20 @@ public static class MobileTemplatePaperdollEndpointExtensions
     public static IEndpointRouteBuilder MapMoongatePaperdolls(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet(
-                     "/api/mobile-templates/{id}/paperdoll.png",
-                     (
-                         string id,
-                         IMobileTemplateService templates,
-                         IPaperdollRenderer renderer,
-                         DirectoriesConfig directories,
-                         CancellationToken cancellationToken
-                     ) => HandleGetPaperdollAsync(id, templates, renderer, directories, cancellationToken)
-                 )
-                 .WithName("GetMobileTemplatePaperdoll")
-                 .WithTags("Mobiles")
-                 .WithSummary("Returns a lazily generated PNG paperdoll (gump art) of the mobile template.")
-                 .Produces(StatusCodes.Status200OK, contentType: "image/png")
-                 .Produces(StatusCodes.Status404NotFound);
+                "/api/mobile-templates/{id}/paperdoll.png",
+                (
+                    string id,
+                    IMobileTemplateService templates,
+                    IPaperdollRenderer renderer,
+                    DirectoriesConfig directories,
+                    CancellationToken cancellationToken
+                ) => HandleGetPaperdollAsync(id, templates, renderer, directories, cancellationToken)
+            )
+            .WithName("GetMobileTemplatePaperdoll")
+            .WithTags("Mobiles")
+            .WithSummary("Returns a lazily generated PNG paperdoll (gump art) of the mobile template.")
+            .Produces(StatusCodes.Status200OK, contentType: "image/png")
+            .Produces(StatusCodes.Status404NotFound);
 
         return endpoints;
     }
@@ -69,7 +69,7 @@ public static class MobileTemplatePaperdollEndpointExtensions
             return Results.File(cachePath, "image/png");
         }
 
-        var generationLock = _generationLocks.GetOrAdd(cachePath, static _ => new(1, 1));
+        var generationLock = _generationLocks.GetOrAdd(cachePath, static _ => new SemaphoreSlim(1, 1));
         await generationLock.WaitAsync(cancellationToken);
 
         try

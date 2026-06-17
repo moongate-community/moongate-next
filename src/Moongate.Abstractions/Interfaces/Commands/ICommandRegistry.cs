@@ -4,18 +4,18 @@ using Moongate.Abstractions.Types.Commands;
 namespace Moongate.Abstractions.Interfaces.Commands;
 
 /// <summary>
-/// Registers command handlers from built-in server code and trusted plugins.
+///     Registers command handlers from built-in server code and trusted plugins.
 /// </summary>
 public interface ICommandRegistry
 {
     /// <summary>
-    /// Gets all registered command definitions.
+    ///     Gets all registered command definitions.
     /// </summary>
     /// <returns>Registered commands ordered by primary name.</returns>
     IReadOnlyList<CommandDefinition> GetRegisteredCommands();
 
     /// <summary>
-    /// Registers one command or multiple aliases separated by <c>|</c>.
+    ///     Registers one command or multiple aliases separated by <c>|</c>.
     /// </summary>
     /// <param name="commandName">Primary command name or alias list.</param>
     /// <param name="handler">Command handler.</param>
@@ -31,7 +31,7 @@ public interface ICommandRegistry
     );
 
     /// <summary>
-    /// Attempts to resolve a command by primary name or alias.
+    ///     Attempts to resolve a command by primary name or alias.
     /// </summary>
     /// <param name="commandName">Command name or alias.</param>
     /// <param name="definition">Matching command definition.</param>

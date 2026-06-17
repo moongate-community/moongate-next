@@ -3,8 +3,8 @@ using System.Text.RegularExpressions;
 namespace Moongate.UO.Data.Animations;
 
 /// <summary>
-/// Parses <c>Body.def</c> into a <c>body → (graphic, hue)</c> remap table. A missing or malformed file
-/// yields an empty table; <see cref="Resolve" /> then returns the body unchanged with hue 0.
+///     Parses <c>Body.def</c> into a <c>body → (graphic, hue)</c> remap table. A missing or malformed file
+///     yields an empty table; <see cref="Resolve" /> then returns the body unchanged with hue 0.
 /// </summary>
 public sealed class BodyDefTable
 {
@@ -49,5 +49,7 @@ public sealed class BodyDefTable
     public int Count => _map.Count;
 
     public (int Graphic, int Hue) Resolve(int body)
-        => _map.TryGetValue(body, out var entry) ? entry : (body, 0);
+    {
+        return _map.TryGetValue(body, out var entry) ? entry : (body, 0);
+    }
 }

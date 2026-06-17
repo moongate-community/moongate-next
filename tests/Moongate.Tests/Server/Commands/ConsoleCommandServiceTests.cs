@@ -9,60 +9,32 @@ namespace Moongate.Tests.Server.Commands;
 
 public sealed class ConsoleCommandServiceTests
 {
-    private sealed class CapturingCommandSystemService : ICommandSystemService
+    [Theory]
+    [InlineData("exit")]
+    [InlineData("exit now")]
+    [InlineData(" stop")]
+    [InlineData("QUIT")]
+    public void IsLoopTerminatingCommand_ExitAliases_ReturnsTrue(string line)
     {
-        private readonly TaskCompletionSource<string> _executedCommand = new(
-            TaskCreationOptions.RunContinuationsAsynchronously
-        );
-
-        public Task<string> ExecutedCommand => _executedCommand.Task;
-
-        public Task ExecuteCommandAsync(
-            string commandWithArgs,
-            CommandSourceType source = CommandSourceType.Console,
-            long? sessionId = null,
-            PlayerSession? playerSession = null,
-            CancellationToken cancellationToken = default
-        )
-        {
-            _executedCommand.TrySetResult(commandWithArgs);
-
-            return Task.CompletedTask;
-        }
-
-        public Task<IReadOnlyList<string>> ExecuteCommandWithOutputAsync(
-            string commandWithArgs,
-            CommandSourceType source = CommandSourceType.Console,
-            long? sessionId = null,
-            PlayerSession? playerSession = null,
-            CancellationToken cancellationToken = default
-        )
-            => Task.FromResult<IReadOnlyList<string>>([]);
-
-        public IReadOnlyList<string> GetAutocompleteSuggestions(string commandWithArgs)
-            => [];
-
-        public IReadOnlyList<CommandDefinition> GetRegisteredCommands()
-            => [];
-
-        public Task StartAsync(CancellationToken cancellationToken)
-            => Task.CompletedTask;
-
-        public Task StopAsync(CancellationToken cancellationToken)
-            => Task.CompletedTask;
+        Assert.True(ConsoleCommandService.IsLoopTerminatingCommand(line));
     }
 
-    [Theory, InlineData("exit"), InlineData("exit now"), InlineData(" stop"), InlineData("QUIT")]
-    public void IsLoopTerminatingCommand_ExitAliases_ReturnsTrue(string line)
-        => Assert.True(ConsoleCommandService.IsLoopTerminatingCommand(line));
-
-    [Theory, InlineData(""), InlineData(" "), InlineData("help"), InlineData("exitdoor"), InlineData(".exit")]
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData("help")]
+    [InlineData("exitdoor")]
+    [InlineData(".exit")]
     public void IsLoopTerminatingCommand_OtherInput_ReturnsFalse(string line)
-        => Assert.False(ConsoleCommandService.IsLoopTerminatingCommand(line));
+    {
+        Assert.False(ConsoleCommandService.IsLoopTerminatingCommand(line));
+    }
 
     [Fact]
     public void Prompt_UsesMoongatePrefix()
-        => Assert.Equal("MG> ", ConsoleCommandService.Prompt);
+    {
+        Assert.Equal("MG> ", ConsoleCommandService.Prompt);
+    }
 
     [Fact]
     public async Task StartAsync_WaitsForApplicationStartedBeforePromptingAndReading()
@@ -96,6 +68,59 @@ public sealed class ConsoleCommandServiceTests
             await service.StopAsync(CancellationToken.None);
             Console.SetIn(originalIn);
             Console.SetOut(originalOut);
+        }
+    }
+
+    private sealed class CapturingCommandSystemService : ICommandSystemService
+    {
+        private readonly TaskCompletionSource<string> _executedCommand = new(
+            TaskCreationOptions.RunContinuationsAsynchronously
+        );
+
+        public Task<string> ExecutedCommand => _executedCommand.Task;
+
+        public Task ExecuteCommandAsync(
+            string commandWithArgs,
+            CommandSourceType source = CommandSourceType.Console,
+            long? sessionId = null,
+            PlayerSession? playerSession = null,
+            CancellationToken cancellationToken = default
+        )
+        {
+            _executedCommand.TrySetResult(commandWithArgs);
+
+            return Task.CompletedTask;
+        }
+
+        public Task<IReadOnlyList<string>> ExecuteCommandWithOutputAsync(
+            string commandWithArgs,
+            CommandSourceType source = CommandSourceType.Console,
+            long? sessionId = null,
+            PlayerSession? playerSession = null,
+            CancellationToken cancellationToken = default
+        )
+        {
+            return Task.FromResult<IReadOnlyList<string>>([]);
+        }
+
+        public IReadOnlyList<string> GetAutocompleteSuggestions(string commandWithArgs)
+        {
+            return [];
+        }
+
+        public IReadOnlyList<CommandDefinition> GetRegisteredCommands()
+        {
+            return [];
+        }
+
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
         }
     }
 }

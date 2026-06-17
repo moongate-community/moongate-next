@@ -7,7 +7,7 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.Seed;
 
 /// <summary>
-/// Starts seed execution when the server reports that it has started.
+///     Starts seed execution when the server reports that it has started.
 /// </summary>
 public sealed class SeedServerStartedHandler : ITickEventHandler<ServerStartedEvent>
 {
@@ -20,7 +20,9 @@ public sealed class SeedServerStartedHandler : ITickEventHandler<ServerStartedEv
     }
 
     public void Handle(ServerStartedEvent evt)
-        => _ = Task.Run(RunSeedsAsync);
+    {
+        _ = Task.Run(RunSeedsAsync);
+    }
 
     private async Task RunSeedsAsync()
     {

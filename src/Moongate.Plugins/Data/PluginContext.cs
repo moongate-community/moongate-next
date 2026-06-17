@@ -8,14 +8,14 @@ using Serilog;
 namespace Moongate.Plugins.Data;
 
 /// <summary>
-/// Per-plugin startup context passed to <see cref="Moongate.Plugins.Interfaces.Plugins.IMoongatePlugin" />.
+///     Per-plugin startup context passed to <see cref="Moongate.Plugins.Interfaces.Plugins.IMoongatePlugin" />.
 /// </summary>
 public sealed class PluginContext
 {
     public const string PluginConfigFileName = "plugin.yaml";
+    private readonly ICommandRegistry? _commandRegistry;
 
     private readonly ILogger _logger = Log.ForContext<PluginContext>();
-    private readonly ICommandRegistry? _commandRegistry;
 
     public PluginContext(
         string pluginDirectory,
@@ -42,7 +42,7 @@ public sealed class PluginContext
     public DirectoriesConfig Directories { get; }
 
     /// <summary>
-    /// Loads this plugin's <c>plugin.yaml</c> into a typed config. Missing files are created from defaults.
+    ///     Loads this plugin's <c>plugin.yaml</c> into a typed config. Missing files are created from defaults.
     /// </summary>
     public TConfig LoadConfig<TConfig>(Func<TConfig> defaultFactory)
         where TConfig : class, new()
@@ -86,7 +86,7 @@ public sealed class PluginContext
     }
 
     /// <summary>
-    /// Registers a command owned by this plugin.
+    ///     Registers a command owned by this plugin.
     /// </summary>
     /// <param name="commandName">Primary command name or aliases separated by <c>|</c>.</param>
     /// <param name="handler">Command handler.</param>

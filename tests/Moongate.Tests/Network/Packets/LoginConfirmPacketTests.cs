@@ -1,3 +1,5 @@
+using Moongate.Core.Geometry;
+using Moongate.Core.Ids;
 using Moongate.Core.Types;
 using Moongate.Network.UO.Packets.Outgoing.Login;
 using Moongate.Tests.Support;
@@ -12,9 +14,9 @@ public class LoginConfirmPacketTests
     {
         var mobile = new MobileEntity
         {
-            Id = new(0x1234),
+            Id = new Serial(0x1234),
             BodyId = 400,
-            Location = new(100, 200, 5),
+            Location = new Point3D(100, 200, 5),
             Direction = DirectionType.South
         };
 

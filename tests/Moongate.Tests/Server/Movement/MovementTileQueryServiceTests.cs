@@ -1,7 +1,6 @@
 using Moongate.Server.Services.Movement;
 using Moongate.UO.Data.Files;
 using Moongate.UO.Data.Maps;
-using Xunit;
 
 namespace Moongate.Tests.Server.Movement;
 

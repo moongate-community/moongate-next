@@ -1,4 +1,5 @@
 using DryIoc;
+using Moongate.Abstractions.Data.Timing;
 using Moongate.Abstractions.Interfaces.Commands;
 using Moongate.Abstractions.Interfaces.Timing;
 using Moongate.Abstractions.Services.Commands;
@@ -155,13 +156,18 @@ public class LuaCoreModulesTests
     }
 
     private static LuaEngineFixture NewFixture(params Type[] modules)
-        => NewFixture(modules, null);
+    {
+        return NewFixture(modules, null);
+    }
 
     private static LuaEngineFixture NewFixture(Type module, Action<IContainer> configure)
-        => NewFixture([module], configure);
+    {
+        return NewFixture([module], configure);
+    }
 
     private static LuaEngineFixture NewFixture(Type[] modules, Action<IContainer>? configure)
-        => new(
+    {
+        return new LuaEngineFixture(
             modules.Select(module => new ScriptModuleData(module)),
             container =>
             {
@@ -169,7 +175,10 @@ public class LuaCoreModulesTests
                 configure?.Invoke(container);
             }
         );
+    }
 
     private static TimerWheelService NewTimer()
-        => new(new() { TickDuration = TimeSpan.FromMilliseconds(8), WheelSize = 64 });
+    {
+        return new TimerWheelService(new TimerWheelConfig { TickDuration = TimeSpan.FromMilliseconds(8), WheelSize = 64 });
+    }
 }

@@ -16,8 +16,8 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
     private readonly IHueStore _hues;
     private readonly IItemService _items;
     private readonly string _itemsDirectory;
-    private readonly ILootService _lootService;
     private readonly LootTableRegistryStore _lootRegistryStore;
+    private readonly ILootService _lootService;
     private readonly object _saveGate = new();
     private readonly IItemTemplateService _templates;
     private readonly ITileDataStore _tileData;
@@ -41,7 +41,7 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
         ArgumentNullException.ThrowIfNull(lootService);
 
         _itemsDirectory = directories[DirectoryType.Templates_Items];
-        _documents = new(_itemsDirectory);
+        _documents = new ItemTemplateYamlDocumentStore(_itemsDirectory);
         _tileData = tileData;
         _templates = templates;
         _hues = hues;
@@ -109,7 +109,9 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
     }
 
     private static ItemTemplateGraphicVariantDefinition CloneGraphicVariant(ItemTemplateGraphicVariantDefinition variant)
-        => new() { ItemId = variant.ItemId };
+    {
+        return new ItemTemplateGraphicVariantDefinition { ItemId = variant.ItemId };
+    }
 
     private static void CopyDirectory(string sourceDirectory, string targetDirectory)
     {
@@ -146,7 +148,7 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
             return null;
         }
 
-        return new()
+        return new ItemTemplateContentsDefinition
         {
             LootTemplate = contents.LootTemplate.Trim(),
             Generate = contents.Generate,
@@ -168,7 +170,9 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
     }
 
     private string RelativeSourceFile(string sourceFile)
-        => Path.GetRelativePath(_itemsDirectory, sourceFile).Replace(Path.DirectorySeparatorChar, '/');
+    {
+        return Path.GetRelativePath(_itemsDirectory, sourceFile).Replace(Path.DirectorySeparatorChar, '/');
+    }
 
     private ItemTemplateSaveResult Save(
         ItemTemplateDefinition template,
@@ -204,11 +208,14 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
             _templates.ReplaceAll(reloaded);
             PublishLootRegistry(reloaded);
 
-            var savedTemplate = reloaded.Single(
-                item => string.Equals(item.Id, template.Id, StringComparison.OrdinalIgnoreCase)
+            var savedTemplate = reloaded.Single(item => string.Equals(
+                    item.Id,
+                    template.Id,
+                    StringComparison.OrdinalIgnoreCase
+                )
             );
 
-            return new(ItemTemplateDetail.FromDefinition(savedTemplate, _hues), relativeSourceFile);
+            return new ItemTemplateSaveResult(ItemTemplateDetail.FromDefinition(savedTemplate, _hues), relativeSourceFile);
         }
         finally
         {
@@ -230,30 +237,31 @@ public sealed class ItemTemplateAuthoringService : IItemTemplateAuthoringService
 
         return File.Exists(sourceFile) &&
                _documents.LoadTable(sourceFile)
-                         .ItemTemplates
-                         .Any(template => string.Equals(template.Id, id, StringComparison.OrdinalIgnoreCase));
+                   .ItemTemplates
+                   .Any(template => string.Equals(template.Id, id, StringComparison.OrdinalIgnoreCase));
     }
 
     private static ItemTemplateDefinition ToDefinition(ItemTemplateEditRequest request)
     {
         var id = request.Id.Trim();
         var tags = (request.Tags ?? [])
-                   .Select(static tag => tag.Trim())
-                   .Where(static tag => tag.Length > 0)
-                   .Distinct(StringComparer.OrdinalIgnoreCase)
-                   .ToList();
+            .Select(static tag => tag.Trim())
+            .Where(static tag => tag.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
         var parameters = new Dictionary<string, ItemTemplateParamDefinition>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var (key, param) in request.Params ?? new(StringComparer.OrdinalIgnoreCase))
+        foreach (var (key, param) in request.Params ??
+                                     new Dictionary<string, ItemTemplateParamDefinition>(StringComparer.OrdinalIgnoreCase))
         {
-            parameters[key.Trim()] = new()
+            parameters[key.Trim()] = new ItemTemplateParamDefinition
             {
                 Type = param.Type,
                 Value = param.Value
             };
         }
 
-        return new()
+        return new ItemTemplateDefinition
         {
             Id = id,
             BaseItem = string.IsNullOrWhiteSpace(request.BaseItem) ? null : request.BaseItem.Trim(),

@@ -16,10 +16,10 @@
 namespace Moongate.Core.Buffers;
 
 /// <summary>
-/// Wrapper for STArray backed strings and char buffers that will be used in InterpolatedStringHandlers.
-/// The wrapper prevents intermediate strings from being created unnecessarily.
-/// Note: TryFormat can only be called once. Using the PooledArraySpanFormattable after calling TryFormat will throw.
-/// To use the span multiple times, use the Chars property directly instead.
+///     Wrapper for STArray backed strings and char buffers that will be used in InterpolatedStringHandlers.
+///     The wrapper prevents intermediate strings from being created unnecessarily.
+///     Note: TryFormat can only be called once. Using the PooledArraySpanFormattable after calling TryFormat will throw.
+///     To use the span multiple times, use the Chars property directly instead.
 /// </summary>
 public struct PooledArraySpanFormattable : ISpanFormattable, IDisposable
 {
@@ -44,11 +44,13 @@ public struct PooledArraySpanFormattable : ISpanFormattable, IDisposable
     }
 
     public static implicit operator string(PooledArraySpanFormattable f)
-        => f.ToString();
+    {
+        return f.ToString();
+    }
 
     public string ToString(string? format = null, IFormatProvider formatProvider = null)
     {
-        _value ??= new(_arrayToReturnToPool.AsSpan(0, _pos));
+        _value ??= new string(_arrayToReturnToPool.AsSpan(0, _pos));
 
         STArrayPool<char>.Shared.Return(_arrayToReturnToPool);
         _arrayToReturnToPool = null;

@@ -4,7 +4,7 @@ using Serilog;
 namespace Moongate.UO.Data.Files;
 
 /// <summary>
-/// Scans a client-files directory once and resolves recognised UO file names to absolute paths.
+///     Scans a client-files directory once and resolves recognised UO file names to absolute paths.
 /// </summary>
 public sealed class UoFileResolver : IUoFileResolver
 {
@@ -39,7 +39,7 @@ public sealed class UoFileResolver : IUoFileResolver
         ArgumentException.ThrowIfNullOrWhiteSpace(rootDirectory);
 
         RootDirectory = rootDirectory;
-        _paths = new(StringComparer.OrdinalIgnoreCase);
+        _paths = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         Scan();
     }
@@ -47,10 +47,14 @@ public sealed class UoFileResolver : IUoFileResolver
     public string RootDirectory { get; }
 
     public bool Contains(string fileName)
-        => _paths.ContainsKey(fileName);
+    {
+        return _paths.ContainsKey(fileName);
+    }
 
     public string? Resolve(string fileName)
-        => _paths.GetValueOrDefault(fileName);
+    {
+        return _paths.GetValueOrDefault(fileName);
+    }
 
     private void Scan()
     {

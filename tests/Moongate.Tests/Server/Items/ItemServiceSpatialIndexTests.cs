@@ -18,7 +18,7 @@ public sealed class ItemServiceSpatialIndexTests
 
         await service.CreateAsync(item);
 
-        Assert.Contains(item, index.GetItemsInRange(0, new Point3D(50, 50, 0), range: 1));
+        Assert.Contains(item, index.GetItemsInRange(0, new Point3D(50, 50, 0), 1));
     }
 
     [Fact]
@@ -31,6 +31,6 @@ public sealed class ItemServiceSpatialIndexTests
 
         await service.DeleteAsync(item.Id);
 
-        Assert.Empty(index.GetItemsInRange(0, new Point3D(50, 50, 0), range: 1));
+        Assert.Empty(index.GetItemsInRange(0, new Point3D(50, 50, 0), 1));
     }
 }

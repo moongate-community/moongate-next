@@ -5,7 +5,7 @@ using Moongate.Server.Services.WorldData;
 namespace Moongate.Server.Services.World;
 
 /// <summary>
-/// Lazy in-memory store for mount tile item ids.
+///     Lazy in-memory store for mount tile item ids.
 /// </summary>
 public class MountDataService : LazyDataService, IMountDataService
 {
@@ -13,7 +13,9 @@ public class MountDataService : LazyDataService, IMountDataService
     private readonly Lock _sync = new();
     private HashSet<int> _itemIds = [];
 
-    public MountDataService() { }
+    public MountDataService()
+    {
+    }
 
     public MountDataService(ServerAssetDataLoader loader)
     {
@@ -57,5 +59,7 @@ public class MountDataService : LazyDataService, IMountDataService
     }
 
     protected override void LoadCore()
-        => _loader?.LoadMounts(this);
+    {
+        _loader?.LoadMounts(this);
+    }
 }

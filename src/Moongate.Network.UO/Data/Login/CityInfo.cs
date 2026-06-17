@@ -4,6 +4,17 @@ namespace Moongate.Network.UO.Data.Login;
 
 public sealed class CityInfo
 {
+    public CityInfo(string city, string building, int x, int y, int z, int mapIndex = 0, int description = 0)
+    {
+        City = city;
+        Building = building;
+        X = x;
+        Y = y;
+        Z = z;
+        MapIndex = mapIndex;
+        Description = description;
+    }
+
     public static int Length => 89;
 
     public string City { get; set; } = "";
@@ -19,17 +30,6 @@ public sealed class CityInfo
     public int Z { get; set; }
 
     public int MapIndex { get; set; }
-
-    public CityInfo(string city, string building, int x, int y, int z, int mapIndex = 0, int description = 0)
-    {
-        City = city;
-        Building = building;
-        X = x;
-        Y = y;
-        Z = z;
-        MapIndex = mapIndex;
-        Description = description;
-    }
 
     public byte[] ToArray(int index)
     {

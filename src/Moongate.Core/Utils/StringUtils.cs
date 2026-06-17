@@ -4,116 +4,136 @@ using Moongate.Core.Types;
 namespace Moongate.Core.Utils;
 
 /// <summary>
-/// Provides utility methods for string operations, including various case conversion methods.
+///     Provides utility methods for string operations, including various case conversion methods.
 /// </summary>
 public static class StringUtils
 {
     /// <summary>
-    /// Converts a string to camelCase.
+    ///     Converts a string to camelCase.
     /// </summary>
     /// <example>
-    /// "HelloWorld" becomes "helloWorld"
-    /// "API_RESPONSE" becomes "apiResponse"
-    /// "user-id" becomes "userId"
+    ///     "HelloWorld" becomes "helloWorld"
+    ///     "API_RESPONSE" becomes "apiResponse"
+    ///     "user-id" becomes "userId"
     /// </example>
     public static string ToCamelCase(string text)
-        => ConvertCase(text, '\0', StringCasingType.Lower, StringCasingType.Title, true);
+    {
+        return ConvertCase(text, '\0', StringCasingType.Lower, StringCasingType.Title, true);
+    }
 
     /// <summary>
-    /// Converts a string to dot.case.
+    ///     Converts a string to dot.case.
     /// </summary>
     /// <example>
-    /// "HelloWorld" becomes "hello.world"
-    /// "API_RESPONSE" becomes "api.response"
+    ///     "HelloWorld" becomes "hello.world"
+    ///     "API_RESPONSE" becomes "api.response"
     /// </example>
     public static string ToDotCase(string text)
-        => ConvertCase(text, '.', StringCasingType.Lower, StringCasingType.Lower, true);
+    {
+        return ConvertCase(text, '.', StringCasingType.Lower, StringCasingType.Lower, true);
+    }
 
     /// <summary>
-    /// Converts a string to kebab-case.
+    ///     Converts a string to kebab-case.
     /// </summary>
     /// <example>
-    /// "HelloWorld" becomes "hello-world"
-    /// "API_RESPONSE" becomes "api-response"
-    /// "userId" becomes "user-id"
+    ///     "HelloWorld" becomes "hello-world"
+    ///     "API_RESPONSE" becomes "api-response"
+    ///     "userId" becomes "user-id"
     /// </example>
     public static string ToKebabCase(string text)
-        => ConvertCase(text, '-', StringCasingType.Lower, StringCasingType.Lower, true);
+    {
+        return ConvertCase(text, '-', StringCasingType.Lower, StringCasingType.Lower, true);
+    }
 
     /// <summary>
-    /// Converts a string to PascalCase.
+    ///     Converts a string to PascalCase.
     /// </summary>
     /// <example>
-    /// "hello_world" becomes "HelloWorld"
-    /// "api-response" becomes "ApiResponse"
-    /// "userId" becomes "UserId"
+    ///     "hello_world" becomes "HelloWorld"
+    ///     "api-response" becomes "ApiResponse"
+    ///     "userId" becomes "UserId"
     /// </example>
     public static string ToPascalCase(string text)
-        => ConvertCase(text, '\0', StringCasingType.Title, StringCasingType.Title, true);
+    {
+        return ConvertCase(text, '\0', StringCasingType.Title, StringCasingType.Title, true);
+    }
 
     /// <summary>
-    /// Converts a string to path/case.
+    ///     Converts a string to path/case.
     /// </summary>
     /// <example>
-    /// "HelloWorld" becomes "hello/world"
-    /// "API_RESPONSE" becomes "api/response"
+    ///     "HelloWorld" becomes "hello/world"
+    ///     "API_RESPONSE" becomes "api/response"
     /// </example>
     public static string ToPathCase(string text)
-        => ConvertCase(text, '/', StringCasingType.Lower, StringCasingType.Lower, true);
+    {
+        return ConvertCase(text, '/', StringCasingType.Lower, StringCasingType.Lower, true);
+    }
 
     /// <summary>
-    /// Converts a string to Sentence case.
-    /// Camel-case humps are NOT split: only whitespace, underscores and hyphens are word separators.
+    ///     Converts a string to Sentence case.
+    ///     Camel-case humps are NOT split: only whitespace, underscores and hyphens are word separators.
     /// </summary>
     /// <example>
-    /// "hello world" becomes "Hello world"
-    /// "API_RESPONSE" becomes "Api response"
+    ///     "hello world" becomes "Hello world"
+    ///     "API_RESPONSE" becomes "Api response"
     /// </example>
     public static string ToSentenceCase(string text)
-        => ConvertCase(text, ' ', StringCasingType.Title, StringCasingType.Lower, false);
+    {
+        return ConvertCase(text, ' ', StringCasingType.Title, StringCasingType.Lower, false);
+    }
 
     /// <summary>
-    /// Converts a string to snake_case.
+    ///     Converts a string to snake_case.
     /// </summary>
     /// <example>
-    /// "HelloWorld" becomes "hello_world"
-    /// "APIResponse" becomes "api_response"
-    /// "userId" becomes "user_id"
+    ///     "HelloWorld" becomes "hello_world"
+    ///     "APIResponse" becomes "api_response"
+    ///     "userId" becomes "user_id"
     /// </example>
     public static string ToSnakeCase(string text)
-        => ConvertCase(text, '_', StringCasingType.Lower, StringCasingType.Lower, true);
+    {
+        return ConvertCase(text, '_', StringCasingType.Lower, StringCasingType.Lower, true);
+    }
 
     /// <summary>
-    /// Converts a string to Title Case.
+    ///     Converts a string to Title Case.
     /// </summary>
     /// <example>
-    /// "hello_world" becomes "Hello World"
-    /// "API_RESPONSE" becomes "Api Response"
-    /// "user-id" becomes "User Id"
+    ///     "hello_world" becomes "Hello World"
+    ///     "API_RESPONSE" becomes "Api Response"
+    ///     "user-id" becomes "User Id"
     /// </example>
     public static string ToTitleCase(string text)
-        => ConvertCase(text, ' ', StringCasingType.Title, StringCasingType.Title, true);
+    {
+        return ConvertCase(text, ' ', StringCasingType.Title, StringCasingType.Title, true);
+    }
 
     /// <summary>
-    /// Converts a string to Train-Case.
+    ///     Converts a string to Train-Case.
     /// </summary>
     /// <example>
-    /// "hello_world" becomes "Hello-World"
-    /// "apiResponse" becomes "Api-Response"
+    ///     "hello_world" becomes "Hello-World"
+    ///     "apiResponse" becomes "Api-Response"
     /// </example>
     public static string ToTrainCase(string text)
-        => ConvertCase(text, '-', StringCasingType.Title, StringCasingType.Title, true);
+    {
+        return ConvertCase(text, '-', StringCasingType.Title, StringCasingType.Title, true);
+    }
 
     /// <summary>
-    /// Converts a string to UPPER_SNAKE_CASE (screaming snake case).
+    ///     Converts a string to UPPER_SNAKE_CASE (screaming snake case).
     /// </summary>
     /// <example>
-    /// "HelloWorld" becomes "HELLO_WORLD"
-    /// "apiResponse" becomes "API_RESPONSE"
-    /// "user-id" becomes "USER_ID"
+    ///     "HelloWorld" becomes "HELLO_WORLD"
+    ///     "apiResponse" becomes "API_RESPONSE"
+    ///     "user-id" becomes "USER_ID"
     /// </example>
     public static string ToUpperSnakeCase(string text)
-        => ConvertCase(text, '_', StringCasingType.Upper, StringCasingType.Upper, true);
+    {
+        return ConvertCase(text, '_', StringCasingType.Upper, StringCasingType.Upper, true);
+    }
 
     private static void AppendWord(ref ValueStringBuilder sb, ReadOnlySpan<char> word, StringCasingType casing)
     {
@@ -231,5 +251,7 @@ public static class StringUtils
     }
 
     private static bool IsExplicitSeparator(char c)
-        => c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '_' || c == '-';
+    {
+        return c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '_' || c == '-';
+    }
 }

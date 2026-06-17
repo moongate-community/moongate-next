@@ -5,18 +5,10 @@ namespace Moongate.Tests.UO.Data.Animations;
 
 public sealed class AnimationFileSetTests
 {
-    private sealed class EmptyResolver : IUoFileResolver
-    {
-        public string RootDirectory => "";
-
-        public bool Contains(string fileName)
-            => false;
-
-        public string? Resolve(string fileName)
-            => null; // nothing installed
-    }
-
-    [Theory, InlineData(0), InlineData(6), InlineData(-1)]
+    [Theory]
+    [InlineData(0)]
+    [InlineData(6)]
+    [InlineData(-1)]
     public void Seek_UnknownFileType_ReturnsNull(int fileType)
     {
         var set = new AnimationFileSet(new EmptyResolver());
@@ -33,5 +25,21 @@ public sealed class AnimationFileSetTests
         Assert.Null(set.Seek(1, 100, out var l1));
         Assert.Equal(0, l1);
         Assert.Null(set.Seek(3, 100, out _));
+    }
+
+    private sealed class EmptyResolver : IUoFileResolver
+    {
+        public string RootDirectory => "";
+
+        public bool Contains(string fileName)
+        {
+            return false;
+        }
+
+        public string? Resolve(string fileName)
+        {
+            return null;
+            // nothing installed
+        }
     }
 }

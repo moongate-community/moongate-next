@@ -5,22 +5,18 @@ using Moongate.UO.Data.Interfaces.Files;
 namespace Moongate.UO.Data.Files;
 
 /// <summary>
-/// Reads UO indexed resources from an <c>.idx</c>/<c>.mul</c> pair or a legacy <c>.uop</c> file,
-/// applying any verdata patches supplied by an <see cref="IVerdataPatchSource" />.
+///     Reads UO indexed resources from an <c>.idx</c>/<c>.mul</c> pair or a legacy <c>.uop</c> file,
+///     applying any verdata patches supplied by an <see cref="IVerdataPatchSource" />.
 /// </summary>
 public sealed class FileIndex : IDisposable
 {
-    private readonly IVerdataPatchSource _verdata;
     private readonly string? _mulPath;
-
-    public Entry3D[] Index { get; }
-
-    public Stream? Stream { get; private set; }
-
-    public long IdxLength { get; }
+    private readonly IVerdataPatchSource _verdata;
 
     public FileIndex(string? idxPath, string? mulPath, int length, int file, IVerdataPatchSource verdata)
-        : this(idxPath, mulPath, null, length, file, ".dat", -1, false, verdata) { }
+        : this(idxPath, mulPath, null, length, file, ".dat", -1, false, verdata)
+    {
+    }
 
     public FileIndex(
         string? idxPath,
@@ -169,6 +165,12 @@ public sealed class FileIndex : IDisposable
         ApplyPatches(file, length);
     }
 
+    public Entry3D[] Index { get; }
+
+    public Stream? Stream { get; private set; }
+
+    public long IdxLength { get; }
+
     public void Dispose()
     {
         Stream?.Dispose();
@@ -176,17 +178,17 @@ public sealed class FileIndex : IDisposable
     }
 
     /// <summary>
-    /// Calculates a Mythic.Package entry hash from its build path. Taken from Mythic.Package.dll.
+    ///     Calculates a Mythic.Package entry hash from its build path. Taken from Mythic.Package.dll.
     /// </summary>
     /// <param name="s">The entry path, e.g. <c>build/artlegacymul/000000000.tga</c>.</param>
     public static ulong HashFileName(string s)
     {
         uint eax,
-             ecx,
-             edx,
-             ebx,
-             esi,
-             edi;
+            ecx,
+            edx,
+            ebx,
+            esi,
+            edi;
 
         eax = ecx = edx = 0;
         ebx = edi = esi = (uint)s.Length + 0xDEADBEEF;
@@ -311,8 +313,8 @@ public sealed class FileIndex : IDisposable
         if (Stream == null || !Stream.CanRead || !Stream.CanSeek)
         {
             Stream = _mulPath == null
-                         ? null
-                         : new FileStream(_mulPath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+                ? null
+                : new FileStream(_mulPath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
         }
 
         if (Stream == null)

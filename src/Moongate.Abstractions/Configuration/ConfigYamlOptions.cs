@@ -8,28 +8,39 @@ using YamlDotNet.Serialization.NamingConventions;
 namespace Moongate.Abstractions.Configuration;
 
 /// <summary>
-/// Shared YAML serializer options for config serialization and deserialization.
+///     Shared YAML serializer options for config serialization and deserialization.
 /// </summary>
 public static class ConfigYamlOptions
 {
     public static readonly ISerializer Serializer = new SerializerBuilder()
-                                                    .WithNamingConvention(UnderscoredNamingConvention.Instance)
-                                                    .WithTypeConverter(new Point3DYamlConverter())
-                                                    .WithTypeConverter(new TimeSpanYamlConverter())
-                                                    .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitNull)
-                                                    .Build();
+        .WithNamingConvention(UnderscoredNamingConvention.Instance)
+        .WithTypeConverter(new Point3DYamlConverter())
+        .WithTypeConverter(new TimeSpanYamlConverter())
+        .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitNull)
+        .Build();
 
     public static readonly IDeserializer Deserializer = new DeserializerBuilder()
-                                                        .WithNamingConvention(UnderscoredNamingConvention.Instance)
-                                                        .WithTypeConverter(new Point3DYamlConverter())
-                                                        .WithTypeConverter(new TimeSpanYamlConverter())
-                                                        .IgnoreUnmatchedProperties()
-                                                        .Build();
+        .WithNamingConvention(UnderscoredNamingConvention.Instance)
+        .WithTypeConverter(new Point3DYamlConverter())
+        .WithTypeConverter(new TimeSpanYamlConverter())
+        .IgnoreUnmatchedProperties()
+        .Build();
+
+    /// <summary>
+    ///     Maps a CLR property name to the config key used in YAML and in dotted config paths
+    ///     (e.g. <c>UseSsl</c> → <c>use_ssl</c>), using the same naming convention as the serializer.
+    /// </summary>
+    public static string ToConfigKey(string name)
+    {
+        return UnderscoredNamingConvention.Instance.Apply(name);
+    }
 
     private sealed class Point3DYamlConverter : IYamlTypeConverter
     {
         public bool Accepts(Type type)
-            => type == typeof(Point3D) || Nullable.GetUnderlyingType(type) == typeof(Point3D);
+        {
+            return type == typeof(Point3D) || Nullable.GetUnderlyingType(type) == typeof(Point3D);
+        }
 
         public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
         {
@@ -73,14 +84,16 @@ public static class ConfigYamlOptions
                 throw new FormatException($"Point3D value '{value}' must use 'x,y,z' format.");
             }
 
-            return new(x, y, z);
+            return new Point3D(x, y, z);
         }
     }
 
     private sealed class TimeSpanYamlConverter : IYamlTypeConverter
     {
         public bool Accepts(Type type)
-            => type == typeof(TimeSpan) || type == typeof(TimeSpan?);
+        {
+            return type == typeof(TimeSpan) || type == typeof(TimeSpan?);
+        }
 
         public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
         {
@@ -106,11 +119,4 @@ public static class ConfigYamlOptions
             emitter.Emit(new Scalar(((TimeSpan)value).ToString("c", CultureInfo.InvariantCulture)));
         }
     }
-
-    /// <summary>
-    /// Maps a CLR property name to the config key used in YAML and in dotted config paths
-    /// (e.g. <c>UseSsl</c> → <c>use_ssl</c>), using the same naming convention as the serializer.
-    /// </summary>
-    public static string ToConfigKey(string name)
-        => UnderscoredNamingConvention.Instance.Apply(name);
 }

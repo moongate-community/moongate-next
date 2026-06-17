@@ -7,16 +7,6 @@ namespace Moongate.Tests.Hosting.Metrics;
 
 public class RuntimeMetricProviderTests
 {
-    private sealed class FakeSampler : IProcessRuntimeSampler
-    {
-        public int ProcessorCount { get; set; } = 1;
-
-        public ProcessRuntimeReading Reading { get; set; } = new() { Timestamp = DateTimeOffset.UnixEpoch };
-
-        public ProcessRuntimeReading Read()
-            => Reading;
-    }
-
     [Fact]
     public void Collect_FirstCall_ReportsZeroCpuAndEightSamples()
     {
@@ -50,7 +40,7 @@ public class RuntimeMetricProviderTests
         var sampler = new FakeSampler
         {
             ProcessorCount = 1,
-            Reading = new()
+            Reading = new ProcessRuntimeReading
             {
                 TotalProcessorTime = TimeSpan.Zero,
                 WorkingSetBytes = 1_000,
@@ -123,15 +113,32 @@ public class RuntimeMetricProviderTests
     }
 
     private static ProcessRuntimeReading Reading(double cpuMs, double t)
-        => new()
+    {
+        return new ProcessRuntimeReading
         {
             TotalProcessorTime = TimeSpan.FromMilliseconds(cpuMs),
             Timestamp = DateTimeOffset.UnixEpoch.AddMilliseconds(t)
         };
+    }
 
     private static MetricType TypeOf(IReadOnlyList<MetricSample> samples, string name)
-        => samples.Single(s => s.Name == name).Type;
+    {
+        return samples.Single(s => s.Name == name).Type;
+    }
 
     private static double ValueOf(IReadOnlyList<MetricSample> samples, string name)
-        => samples.Single(s => s.Name == name).Value;
+    {
+        return samples.Single(s => s.Name == name).Value;
+    }
+
+    private sealed class FakeSampler : IProcessRuntimeSampler
+    {
+        public ProcessRuntimeReading Reading { get; set; } = new() { Timestamp = DateTimeOffset.UnixEpoch };
+        public int ProcessorCount { get; set; } = 1;
+
+        public ProcessRuntimeReading Read()
+        {
+            return Reading;
+        }
+    }
 }

@@ -7,18 +7,6 @@ namespace Moongate.Tests.Network.Service;
 
 public class PacketContextTests
 {
-    private sealed class TestPacket : BaseGameNetworkPacket
-    {
-        public TestPacket(byte opCode)
-            : base(opCode, 1) { }
-
-        public override void Write(ref SpanWriter writer)
-            => writer.Write(OpCode);
-
-        protected override bool ParsePayload(ref SpanReader reader)
-            => true;
-    }
-
     [Fact]
     public async Task BroadcastAsync_EnqueuesToAllSessionsIncludingSelf()
     {
@@ -44,8 +32,7 @@ public class PacketContextTests
     [Fact]
     public void Ctor_NullPacket_Throws()
     {
-        var exception = Record.Exception(
-            () => new PacketContext<TestPacket>(
+        var exception = Record.Exception(() => new PacketContext<TestPacket>(
                 new FakeGameSession { SessionId = 10 },
                 null!,
                 DateTimeOffset.UtcNow,
@@ -60,10 +47,9 @@ public class PacketContextTests
     [Fact]
     public void Ctor_NullSession_Throws()
     {
-        var exception = Record.Exception(
-            () => new PacketContext<TestPacket>(
+        var exception = Record.Exception(() => new PacketContext<TestPacket>(
                 null!,
-                new(0x01),
+                new TestPacket(0x01),
                 DateTimeOffset.UtcNow,
                 (_, _, _) => Task.CompletedTask,
                 () => []
@@ -100,7 +86,7 @@ public class PacketContextTests
         var session = new FakeGameSession { SessionId = 42 };
         var context = new PacketContext<TestPacket>(
             session,
-            new(0x01),
+            new TestPacket(0x01),
             DateTimeOffset.UtcNow,
             (_, _, _) => Task.CompletedTask,
             () => []
@@ -111,9 +97,10 @@ public class PacketContextTests
     }
 
     private static PacketContext<TestPacket> NewContext(long sessionId, long[] sessions, List<long> sent)
-        => new(
+    {
+        return new PacketContext<TestPacket>(
             new FakeGameSession { SessionId = sessionId },
-            new(0x01),
+            new TestPacket(0x01),
             DateTimeOffset.UtcNow,
             (targetSessionId, _, _) =>
             {
@@ -123,4 +110,23 @@ public class PacketContextTests
             },
             () => sessions
         );
+    }
+
+    private sealed class TestPacket : BaseGameNetworkPacket
+    {
+        public TestPacket(byte opCode)
+            : base(opCode, 1)
+        {
+        }
+
+        public override void Write(ref SpanWriter writer)
+        {
+            writer.Write(OpCode);
+        }
+
+        protected override bool ParsePayload(ref SpanReader reader)
+        {
+            return true;
+        }
+    }
 }

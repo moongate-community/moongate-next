@@ -7,30 +7,30 @@ using Serilog;
 namespace Moongate.Network.Server;
 
 /// <summary>
-/// Connectionless UDP server that binds one socket per local interface address and processes
-/// each received datagram. By default it echoes the payload back to the sender (the behaviour the
-/// UO launcher expects from a shard ping server); supply <see cref="OnDatagram" /> to customise the
-/// response. Supports Start/Stop/Start cycles by recreating the sockets on each Start.
+///     Connectionless UDP server that binds one socket per local interface address and processes
+///     each received datagram. By default it echoes the payload back to the sender (the behaviour the
+///     UO launcher expects from a shard ping server); supply <see cref="OnDatagram" /> to customise the
+///     response. Supports Start/Stop/Start cycles by recreating the sockets on each Start.
 /// </summary>
 public sealed class MoongateUDPServer : IAsyncDisposable, IDisposable
 {
-    private readonly ILogger _logger = Log.ForContext<MoongateUDPServer>();
-    private readonly Lock _sync = new();
-    private readonly List<UdpClient> _listeners = [];
-    private readonly List<Task> _receiveLoops = [];
-    private readonly IPEndPoint _endPoint;
     private readonly bool _bindAllInterfaces;
+    private readonly IPEndPoint _endPoint;
+    private readonly List<UdpClient> _listeners = [];
+    private readonly ILogger _logger = Log.ForContext<MoongateUDPServer>();
+    private readonly List<Task> _receiveLoops = [];
+    private readonly Lock _sync = new();
 
     private CancellationTokenSource? _cancellationTokenSource;
     private int _started;
 
     /// <summary>
-    /// Initializes a UDP server bound to the given endpoint on every <see cref="StartAsync" />.
+    ///     Initializes a UDP server bound to the given endpoint on every <see cref="StartAsync" />.
     /// </summary>
     /// <param name="endPoint">Endpoint supplying the port (and address when not binding all interfaces).</param>
     /// <param name="bindAllInterfaces">
-    /// When <c>true</c> (default), binds one socket per local unicast address matching the endpoint's
-    /// address family. When <c>false</c>, binds only <paramref name="endPoint" />.
+    ///     When <c>true</c> (default), binds one socket per local unicast address matching the endpoint's
+    ///     address family. When <c>false</c>, binds only <paramref name="endPoint" />.
     /// </param>
     public MoongateUDPServer(IPEndPoint endPoint, bool bindAllInterfaces = true)
     {
@@ -41,24 +41,19 @@ public sealed class MoongateUDPServer : IAsyncDisposable, IDisposable
     }
 
     /// <summary>
-    /// Raised when receive loops throw an unexpected exception.
-    /// </summary>
-    public event EventHandler<MoongateTCPExceptionEventArgs>? OnException;
-
-    /// <summary>
-    /// Optional response factory. Receives the datagram payload and the sender endpoint and returns
-    /// the bytes to send back; return <see cref="ReadOnlyMemory{T}.Empty" /> to send no reply.
-    /// When <c>null</c>, the server echoes the payload unchanged.
+    ///     Optional response factory. Receives the datagram payload and the sender endpoint and returns
+    ///     the bytes to send back; return <see cref="ReadOnlyMemory{T}.Empty" /> to send no reply.
+    ///     When <c>null</c>, the server echoes the payload unchanged.
     /// </summary>
     public Func<ReadOnlyMemory<byte>, IPEndPoint, ReadOnlyMemory<byte>>? OnDatagram { get; set; }
 
     /// <summary>
-    /// True when the server is currently listening.
+    ///     True when the server is currently listening.
     /// </summary>
     public bool IsRunning => Volatile.Read(ref _started) != 0;
 
     /// <summary>
-    /// Number of bound listening sockets.
+    ///     Number of bound listening sockets.
     /// </summary>
     public int ListenerCount
     {
@@ -72,16 +67,25 @@ public sealed class MoongateUDPServer : IAsyncDisposable, IDisposable
     }
 
     /// <inheritdoc />
-    public void Dispose()
-        => DisposeAsync().AsTask().GetAwaiter().GetResult();
+    public async ValueTask DisposeAsync()
+    {
+        await StopAsync(CancellationToken.None);
+    }
 
     /// <inheritdoc />
-    public async ValueTask DisposeAsync()
-        => await StopAsync(CancellationToken.None);
+    public void Dispose()
+    {
+        DisposeAsync().AsTask().GetAwaiter().GetResult();
+    }
 
     /// <summary>
-    /// Starts listening, binding sockets and launching a receive loop per socket. Recreates the
-    /// sockets on every call, so Stop/Start cycles are supported.
+    ///     Raised when receive loops throw an unexpected exception.
+    /// </summary>
+    public event EventHandler<MoongateTCPExceptionEventArgs>? OnException;
+
+    /// <summary>
+    ///     Starts listening, binding sockets and launching a receive loop per socket. Recreates the
+    ///     sockets on every call, so Stop/Start cycles are supported.
     /// </summary>
     public Task StartAsync(CancellationToken cancellationToken)
     {
@@ -115,7 +119,7 @@ public sealed class MoongateUDPServer : IAsyncDisposable, IDisposable
     }
 
     /// <summary>
-    /// Stops listening, closing every socket and awaiting the receive loops.
+    ///     Stops listening, closing every socket and awaiting the receive loops.
     /// </summary>
     public async Task StopAsync(CancellationToken cancellationToken)
     {
@@ -182,7 +186,7 @@ public sealed class MoongateUDPServer : IAsyncDisposable, IDisposable
         {
             socket.Bind(endPoint);
 
-            return new()
+            return new UdpClient
             {
                 Client = socket
             };
@@ -209,8 +213,8 @@ public sealed class MoongateUDPServer : IAsyncDisposable, IDisposable
             {
                 var result = await listener.ReceiveAsync(cancellationToken);
                 var response = OnDatagram is null
-                                   ? result.Buffer
-                                   : OnDatagram(result.Buffer, result.RemoteEndPoint);
+                    ? result.Buffer
+                    : OnDatagram(result.Buffer, result.RemoteEndPoint);
 
                 if (!response.IsEmpty)
                 {
@@ -232,7 +236,7 @@ public sealed class MoongateUDPServer : IAsyncDisposable, IDisposable
             catch (Exception ex)
             {
                 _logger.Warning(ex, "UDP receive loop failed");
-                OnException?.Invoke(this, new(ex));
+                OnException?.Invoke(this, new MoongateTCPExceptionEventArgs(ex));
             }
         }
     }
@@ -245,7 +249,7 @@ public sealed class MoongateUDPServer : IAsyncDisposable, IDisposable
         }
 
         return NetworkUtils.GetListeningAddresses(_endPoint)
-                           .Select(address => new IPEndPoint(address.Address, _endPoint.Port))
-                           .ToArray();
+            .Select(address => new IPEndPoint(address.Address, _endPoint.Port))
+            .ToArray();
     }
 }

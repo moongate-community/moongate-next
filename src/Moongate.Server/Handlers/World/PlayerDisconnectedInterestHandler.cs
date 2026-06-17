@@ -6,13 +6,13 @@ using Moongate.Server.Interfaces.Services.World;
 namespace Moongate.Server.Handlers.World;
 
 /// <summary>
-/// On disconnect, deletes the leaving player's mobile from every observer that knew it
-/// and clears the leaver's own known-set.
+///     On disconnect, deletes the leaving player's mobile from every observer that knew it
+///     and clears the leaver's own known-set.
 /// </summary>
 public sealed class PlayerDisconnectedInterestHandler : ITickEventHandler<PlayerDisconnectedEvent>
 {
-    private readonly IPlayerSessionService _sessions;
     private readonly IInterestManagementService _interest;
+    private readonly IPlayerSessionService _sessions;
 
     public PlayerDisconnectedInterestHandler(IPlayerSessionService sessions, IInterestManagementService interest)
     {

@@ -6,7 +6,7 @@ using Moongate.Server.Interfaces.Network;
 namespace Moongate.Server.Services.Network;
 
 /// <summary>
-/// FIFO queue for outbound game packets.
+///     FIFO queue for outbound game packets.
 /// </summary>
 public sealed class OutgoingPacketQueue : IOutgoingPacketQueue
 {
@@ -52,6 +52,6 @@ public sealed class OutgoingPacketQueue : IOutgoingPacketQueue
     {
         ArgumentNullException.ThrowIfNull(packet);
 
-        _packets.Enqueue(new(sessionId, packet, DateTimeOffset.UtcNow));
+        _packets.Enqueue(new OutgoingPacketEnvelope(sessionId, packet, DateTimeOffset.UtcNow));
     }
 }

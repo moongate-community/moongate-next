@@ -6,7 +6,7 @@ using Moongate.UO.Domain.Entities;
 namespace Moongate.UO.Domain.Interfaces.Services;
 
 /// <summary>
-/// Provides account-level access to UO users for the server and plugins.
+///     Provides account-level access to UO users for the server and plugins.
 /// </summary>
 public interface IUserService : IPaginatedService<UserEntity>
 {
@@ -37,8 +37,8 @@ public interface IUserService : IPaginatedService<UserEntity>
     ValueTask<UserEntity?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Validates credentials: returns the user when the username exists, the account is active, and the
-    /// password matches the stored hash; returns null otherwise (including blank input).
+    ///     Validates credentials: returns the user when the username exists, the account is active, and the
+    ///     password matches the stored hash; returns null otherwise (including blank input).
     /// </summary>
     ValueTask<UserEntity?> LoginAsync(string username, string password, CancellationToken cancellationToken = default);
 

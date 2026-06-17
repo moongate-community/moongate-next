@@ -1,8 +1,8 @@
 namespace Moongate.UO.Data.Data.Internal;
 
 /// <summary>
-/// One data-block entry from a UOP file index: its byte offset, decompressed size, compression
-/// state, compressed size and an extra ordering value populated by the map reader.
+///     One data-block entry from a UOP file index: its byte offset, decompressed size, compression
+///     state, compressed size and an extra ordering value populated by the map reader.
 /// </summary>
 public struct UopEntry
 {

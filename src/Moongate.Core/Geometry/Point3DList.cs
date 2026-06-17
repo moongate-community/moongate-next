@@ -1,7 +1,7 @@
 namespace Moongate.Core.Geometry;
 
 /// <summary>
-/// Represents Point3DList.
+///     Represents Point3DList.
 /// </summary>
 public class Point3DList
 {
@@ -11,17 +11,17 @@ public class Point3DList
 
     private Point3D[] _list;
 
-    public int Count { get; private set; }
-
-    public Point3D Last => _list[Count - 1];
-
-    public Point3D this[int index] => _list[index];
-
     public Point3DList()
     {
         _list = new Point3D[InitialCapacity];
         Count = 0;
     }
+
+    public int Count { get; private set; }
+
+    public Point3D Last => _list[Count - 1];
+
+    public Point3D this[int index] => _list[index];
 
     public void Add(int x, int y, int z)
     {
@@ -44,7 +44,9 @@ public class Point3DList
     }
 
     public void Clear()
-        => Count = 0;
+    {
+        Count = 0;
+    }
 
     public Point3D[] ToArray()
     {

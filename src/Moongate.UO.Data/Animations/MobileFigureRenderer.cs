@@ -8,17 +8,17 @@ using SixLabors.ImageSharp.PixelFormats;
 namespace Moongate.UO.Data.Animations;
 
 /// <summary>
-/// Composites a dressed mobile figure: body (skin-hued), hair, facial hair, and worn equipment (each routed
-/// via <see cref="EquipConvTable" /> and hued), drawn in front-facing layer order via <see cref="AnimationCompositor" />.
+///     Composites a dressed mobile figure: body (skin-hued), hair, facial hair, and worn equipment (each routed
+///     via <see cref="EquipConvTable" /> and hued), drawn in front-facing layer order via <see cref="AnimationCompositor" />.
 /// </summary>
 public sealed class MobileFigureRenderer : IMobileFigureRenderer
 {
     private const int DirectionCount = 5;
 
     private readonly IAnimationService _animation;
-    private readonly ITileDataStore _tileData;
-    private readonly IItemTemplateService _itemTemplates;
     private readonly EquipConvTable _equipConv;
+    private readonly IItemTemplateService _itemTemplates;
+    private readonly ITileDataStore _tileData;
 
     public MobileFigureRenderer(
         IAnimationService animation,

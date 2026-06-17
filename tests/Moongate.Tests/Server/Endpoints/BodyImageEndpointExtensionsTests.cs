@@ -16,78 +16,12 @@ namespace Moongate.Tests.Server.Endpoints;
 
 public sealed class BodyImageEndpointExtensionsTests : IDisposable
 {
-    private readonly string _root = Path.Combine(Path.GetTempPath(), $"moongate-body-endpoint-{Guid.NewGuid():N}");
     private readonly DirectoriesConfig _directories;
+    private readonly string _root = Path.Combine(Path.GetTempPath(), $"moongate-body-endpoint-{Guid.NewGuid():N}");
 
     public BodyImageEndpointExtensionsTests()
     {
-        _directories = new(_root, Enum.GetNames<DirectoryType>());
-    }
-
-    private sealed class FakeAnimationService : IAnimationService
-    {
-        private readonly HashSet<int> _available;
-
-        public FakeAnimationService(IEnumerable<int> available)
-        {
-            _available = available.ToHashSet();
-        }
-
-        public int RenderCount { get; private set; }
-
-        public Image<Rgba32>? GetBodyFrame(int body, int action = 0, int direction = 1, int frame = 0, int hue = 0)
-        {
-            RenderCount++;
-
-            if (!_available.Contains(body))
-            {
-                return null;
-            }
-
-            var image = new Image<Rgba32>(3, 3);
-            image[1, 1] = new(255, 255, 255, 255);
-
-            return image;
-        }
-
-        public DecodedFrame? GetDecodedFrame(int graphic, int action, int direction, int frame, int hue)
-            => null;
-    }
-
-    private sealed class FakeBodyDataStore : IBodyDataStore
-    {
-        private readonly int[] _bodies;
-        private readonly UoBodyType _bodyType;
-
-        public FakeBodyDataStore(UoBodyType bodyType, params int[] bodies)
-        {
-            _bodyType = bodyType;
-            _bodies = bodies;
-        }
-
-        public int Count => _bodies.Length;
-
-        public UoBodyType GetBodyType(int bodyId)
-            => Array.IndexOf(_bodies, bodyId) >= 0 ? _bodyType : UoBodyType.Empty;
-
-        public IReadOnlyCollection<int> GetClassifiedBodies()
-            => _bodies;
-    }
-
-    [Fact]
-    public async Task Build_TalliesGeneratedAndSkipped()
-    {
-        var result = await BodyImageEndpointExtensions.HandleBuildBodyImagesAsync(
-                         new FakeAnimationService([400]),
-                         new FakeBodyDataStore(UoBodyType.Monster, 400, 401),
-                         _directories,
-                         CancellationToken.None
-                     );
-
-        var ok = Assert.IsType<Ok<BodyImageBuildResult>>(result);
-        Assert.Equal(2, ok.Value!.TotalBodies);
-        Assert.Equal(1, ok.Value.Generated); // 400 rendered
-        Assert.Equal(1, ok.Value.Skipped);   // 401 has no image
+        _directories = new DirectoriesConfig(_root, Enum.GetNames<DirectoryType>());
     }
 
     public void Dispose()
@@ -96,6 +30,22 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
         {
             Directory.Delete(_root, true);
         }
+    }
+
+    [Fact]
+    public async Task Build_TalliesGeneratedAndSkipped()
+    {
+        var result = await BodyImageEndpointExtensions.HandleBuildBodyImagesAsync(
+            new FakeAnimationService([400]),
+            new FakeBodyDataStore(UoBodyType.Monster, 400, 401),
+            _directories,
+            CancellationToken.None
+        );
+
+        var ok = Assert.IsType<Ok<BodyImageBuildResult>>(result);
+        Assert.Equal(2, ok.Value!.TotalBodies);
+        Assert.Equal(1, ok.Value.Generated); // 400 rendered
+        Assert.Equal(1, ok.Value.Skipped);   // 401 has no image
     }
 
     [Fact]
@@ -157,12 +107,12 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
     public async Task Get_ExistingBody_ReturnsPngFile()
     {
         var result = await BodyImageEndpointExtensions.HandleGetBodyImageAsync(
-                         "400",
-                         null,
-                         new FakeAnimationService([400]),
-                         _directories,
-                         CancellationToken.None
-                     );
+            "400",
+            null,
+            new FakeAnimationService([400]),
+            _directories,
+            CancellationToken.None
+        );
 
         Assert.Contains("PhysicalFile", result.GetType().Name, StringComparison.OrdinalIgnoreCase);
     }
@@ -171,12 +121,12 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
     public async Task Get_MissingBody_ReturnsNotFound()
     {
         var result = await BodyImageEndpointExtensions.HandleGetBodyImageAsync(
-                         "999",
-                         null,
-                         new FakeAnimationService([400]),
-                         _directories,
-                         CancellationToken.None
-                     );
+            "999",
+            null,
+            new FakeAnimationService([400]),
+            _directories,
+            CancellationToken.None
+        );
 
         Assert.IsType<NotFound>(result);
     }
@@ -203,12 +153,12 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
     public async Task Get_NonNumericBody_ReturnsBadRequest()
     {
         var result = await BodyImageEndpointExtensions.HandleGetBodyImageAsync(
-                         "0x190",
-                         null,
-                         new FakeAnimationService([400]),
-                         _directories,
-                         CancellationToken.None
-                     );
+            "0x190",
+            null,
+            new FakeAnimationService([400]),
+            _directories,
+            CancellationToken.None
+        );
 
         Assert.IsType<BadRequest<string>>(result);
     }
@@ -228,7 +178,8 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
 
     [Fact]
     public void HandleListBodies_ExcludesEquipmentBodies()
-        => Assert.Empty(
+    {
+        Assert.Empty(
             OkList(
                     BodyImageEndpointExtensions.HandleListBodies(
                         new FakeBodyDataStore(UoBodyType.Equipment, 400, 401),
@@ -239,6 +190,7 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
                 )
                 .Items
         );
+    }
 
     [Fact]
     public void HandleListBodies_OrdersAscending_AndProjectsSummary()
@@ -256,10 +208,12 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
 
     [Fact]
     public void HandleListBodies_PageBeyondEnd_ReturnsEmpty()
-        => Assert.Empty(
+    {
+        Assert.Empty(
             OkList(BodyImageEndpointExtensions.HandleListBodies(new FakeBodyDataStore(UoBodyType.Human, 1, 2), 9, 60, null))
                 .Items
         );
+    }
 
     [Fact]
     public void HandleListBodies_Pagination_Bounds()
@@ -280,7 +234,8 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
 
     [Fact]
     public void HandleListBodies_SearchByDecimalId_Filters()
-        => Assert.Equal(
+    {
+        Assert.Equal(
             1,
             OkList(
                     BodyImageEndpointExtensions.HandleListBodies(
@@ -292,6 +247,7 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
                 )
                 .TotalCount
         );
+    }
 
     [Fact]
     public void HandleListBodies_SearchByHex_Filters()
@@ -310,5 +266,63 @@ public sealed class BodyImageEndpointExtensionsTests : IDisposable
     }
 
     private static PagedResult<BodySummary> OkList(IResult result)
-        => Assert.IsType<Ok<PagedResult<BodySummary>>>(result).Value!;
+    {
+        return Assert.IsType<Ok<PagedResult<BodySummary>>>(result).Value!;
+    }
+
+    private sealed class FakeAnimationService : IAnimationService
+    {
+        private readonly HashSet<int> _available;
+
+        public FakeAnimationService(IEnumerable<int> available)
+        {
+            _available = available.ToHashSet();
+        }
+
+        public int RenderCount { get; private set; }
+
+        public Image<Rgba32>? GetBodyFrame(int body, int action = 0, int direction = 1, int frame = 0, int hue = 0)
+        {
+            RenderCount++;
+
+            if (!_available.Contains(body))
+            {
+                return null;
+            }
+
+            var image = new Image<Rgba32>(3, 3);
+            image[1, 1] = new Rgba32(255, 255, 255, 255);
+
+            return image;
+        }
+
+        public DecodedFrame? GetDecodedFrame(int graphic, int action, int direction, int frame, int hue)
+        {
+            return null;
+        }
+    }
+
+    private sealed class FakeBodyDataStore : IBodyDataStore
+    {
+        private readonly int[] _bodies;
+        private readonly UoBodyType _bodyType;
+
+        public FakeBodyDataStore(UoBodyType bodyType, params int[] bodies)
+        {
+            _bodyType = bodyType;
+            _bodies = bodies;
+        }
+
+        public int Count => _bodies.Length;
+
+        public UoBodyType GetBodyType(int bodyId)
+        {
+            return Array.IndexOf(_bodies, bodyId) >= 0 ? _bodyType : UoBodyType.Empty;
+        }
+
+        public IReadOnlyCollection<int> GetClassifiedBodies()
+        {
+            return _bodies;
+        }
+    }
 }

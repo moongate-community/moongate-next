@@ -3,8 +3,8 @@ using Moongate.UO.Data.Utils;
 namespace Moongate.Server.Data.World.Internal;
 
 /// <summary>
-/// Builds a sector index for fast region lookups: each region is bucketed into every
-/// (map, sectorX, sectorY) its rectangles overlap, and buckets are ordered by priority desc.
+///     Builds a sector index for fast region lookups: each region is bucketed into every
+///     (map, sectorX, sectorY) its rectangles overlap, and buckets are ordered by priority desc.
 /// </summary>
 public static class RegionSectorIndex
 {
@@ -59,5 +59,7 @@ public static class RegionSectorIndex
 
     /// <summary>Returns the sector bucket key for a tile coordinate on a map.</summary>
     public static (int MapId, int SectorX, int SectorY) SectorKey(int mapId, int x, int y)
-        => (mapId, x >> MapSectorConsts.SectorShift, y >> MapSectorConsts.SectorShift);
+    {
+        return (mapId, x >> MapSectorConsts.SectorShift, y >> MapSectorConsts.SectorShift);
+    }
 }

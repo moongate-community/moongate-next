@@ -7,17 +7,19 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Incoming.System;
 
 /// <summary>
-/// Represents a freeshard list packet.
+///     Represents a freeshard list packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Variable, Description = "Freeshard List")]
 public class FreeshardListPacket : BaseGameNetworkPacket
 {
     private const byte OpCodeValue = 0xF1;
 
-    public byte[] Payload { get; private set; } = [];
-
     public FreeshardListPacket()
-        : base(OpCodeValue) { }
+        : base(OpCodeValue)
+    {
+    }
+
+    public byte[] Payload { get; private set; } = [];
 
     protected override bool ParsePayload(ref SpanReader reader)
     {

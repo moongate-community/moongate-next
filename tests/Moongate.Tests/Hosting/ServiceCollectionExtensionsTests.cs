@@ -7,17 +7,6 @@ namespace Moongate.Tests.Hosting;
 
 public class ServiceCollectionExtensionsTests
 {
-    private interface IFooService : IMoongateService;
-
-    private sealed class FooService : IFooService
-    {
-        public Task StartAsync(CancellationToken cancellationToken)
-            => Task.CompletedTask;
-
-        public Task StopAsync(CancellationToken cancellationToken)
-            => Task.CompletedTask;
-    }
-
     [Fact]
     public void AddMoongateHosting_CalledTwice_ResolvesSingleOrchestrator()
     {
@@ -51,5 +40,20 @@ public class ServiceCollectionExtensionsTests
         container.AddMoongateService<FooService>();
 
         Assert.NotNull(container.Resolve<FooService>());
+    }
+
+    private interface IFooService : IMoongateService;
+
+    private sealed class FooService : IFooService
+    {
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
     }
 }

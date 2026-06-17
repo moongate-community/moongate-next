@@ -1,7 +1,7 @@
 namespace Moongate.Persistence.Interfaces.Persistence;
 
 /// <summary>
-/// Strongly typed descriptor for a persisted entity kind.
+///     Strongly typed descriptor for a persisted entity kind.
 /// </summary>
 public interface IPersistenceEntityDescriptor<TEntity, TKey> : IPersistenceEntityDescriptor
 {

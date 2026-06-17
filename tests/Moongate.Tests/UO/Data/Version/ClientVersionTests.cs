@@ -10,8 +10,8 @@ public class ClientVersionTests
         Assert.True(new ClientVersion("7.0.9.0") > new ClientVersion("7.0.0.0"));
         Assert.True(new ClientVersion("7.0.0.0") < new ClientVersion("7.0.9.0"));
         Assert.True(new ClientVersion("7.0.9.0") >= new ClientVersion("7.0.9.0"));
-        Assert.Equal(new("7.0.9.0"), new ClientVersion("7.0.9.0"));
-        Assert.NotEqual(new("7.0.9.0"), new ClientVersion("7.0.8.0"));
+        Assert.Equal(new ClientVersion("7.0.9.0"), new ClientVersion("7.0.9.0"));
+        Assert.NotEqual(new ClientVersion("7.0.9.0"), new ClientVersion("7.0.8.0"));
     }
 
     [Fact]

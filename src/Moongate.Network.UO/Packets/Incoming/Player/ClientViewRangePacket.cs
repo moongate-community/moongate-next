@@ -6,7 +6,7 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Incoming.Player;
 
 /// <summary>
-/// Represents a client view range packet.
+///     Represents a client view range packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Client View Range")]
 public class ClientViewRangePacket : BaseGameNetworkPacket
@@ -17,16 +17,18 @@ public class ClientViewRangePacket : BaseGameNetworkPacket
     private const byte OpCodeValue = 0xC8;
     private const int LengthValue = 2;
 
-    public byte Range { get; set; } = MaxRange;
-
     public ClientViewRangePacket()
-        : base(OpCodeValue, LengthValue) { }
+        : base(OpCodeValue, LengthValue)
+    {
+    }
 
     public ClientViewRangePacket(byte range)
         : this()
     {
         Range = range;
     }
+
+    public byte Range { get; set; } = MaxRange;
 
     public override void Write(ref SpanWriter writer)
     {

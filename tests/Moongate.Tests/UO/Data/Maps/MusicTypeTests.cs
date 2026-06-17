@@ -1,5 +1,4 @@
 using Moongate.UO.Data.Types.Maps;
-using Xunit;
 
 namespace Moongate.Tests.UO.Data.Maps;
 
@@ -15,7 +14,9 @@ public sealed class MusicTypeTests
     [InlineData("", MusicType.NoMusic)]
     [InlineData(null, MusicType.NoMusic)]
     public void FromName_MapsKnownNames(string? name, MusicType expected)
-        => Assert.Equal(expected, MusicTypeParser.FromName(name));
+    {
+        Assert.Equal(expected, MusicTypeParser.FromName(name));
+    }
 
     [Fact]
     public void Enum_HasExpectedAnchorValues()

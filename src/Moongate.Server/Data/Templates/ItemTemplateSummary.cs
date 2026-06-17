@@ -21,7 +21,9 @@ public sealed record ItemTemplateSummary(
 )
 {
     public static string FormatItemId(int itemId)
-        => $"0x{itemId.ToString("X4", CultureInfo.InvariantCulture)}";
+    {
+        return $"0x{itemId.ToString("X4", CultureInfo.InvariantCulture)}";
+    }
 
     public static ItemTemplateSummary FromDefinition(ItemTemplateDefinition template, IHueStore hues)
     {
@@ -30,16 +32,16 @@ public sealed record ItemTemplateSummary(
 
         var itemIdHex = FormatItemId(template.ItemId);
 
-        return new(
+        return new ItemTemplateSummary(
             template.Id,
             template.Name,
             template.ItemId,
             itemIdHex,
             $"/api/items/{itemIdHex}.png",
-            [..template.GraphicVariants.Select(ItemTemplateGraphicVariantSummary.FromDefinition)],
+            [.. template.GraphicVariants.Select(ItemTemplateGraphicVariantSummary.FromDefinition)],
             template.Rarity.ToString(),
             template.Layer.HasValue ? FormatLayer(template.Layer.Value) : null,
-            [..template.Tags],
+            [.. template.Tags],
             template.IsAbstract,
             template.Value is null ? null : ItemTemplateValueSummary.FromDefinition(template.Value, template.Rarity),
             HueSummary.FromValue(template.Hue, hues)
@@ -47,11 +49,13 @@ public sealed record ItemTemplateSummary(
     }
 
     private static string FormatLayer(ItemLayerType layer)
-        => layer switch
+    {
+        return layer switch
         {
             ItemLayerType.OneHanded => nameof(ItemLayerType.OneHanded),
             ItemLayerType.InnerLegs => nameof(ItemLayerType.InnerLegs),
-            ItemLayerType.Bank      => nameof(ItemLayerType.Bank),
-            _                       => layer.ToString()
+            ItemLayerType.Bank => nameof(ItemLayerType.Bank),
+            _ => layer.ToString()
         };
+    }
 }

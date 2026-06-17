@@ -8,7 +8,7 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Incoming.GeneralInformation;
 
 /// <summary>
-/// Represents a general information packet.
+///     Represents a general information packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Variable, Description = "General Information Packet")]
 public class GeneralInformationPacket : BaseGameNetworkPacket
@@ -16,11 +16,10 @@ public class GeneralInformationPacket : BaseGameNetworkPacket
     private const byte OpCodeValue = 0xBF;
     private const int HeaderLength = 5;
 
-    public GeneralInformationSubcommandType SubcommandType { get; set; }
-    public ReadOnlyMemory<byte> SubcommandData { get; set; } = ReadOnlyMemory<byte>.Empty;
-
     public GeneralInformationPacket()
-        : base(OpCodeValue) { }
+        : base(OpCodeValue)
+    {
+    }
 
     public GeneralInformationPacket(
         GeneralInformationSubcommandType subcommandType,
@@ -31,6 +30,9 @@ public class GeneralInformationPacket : BaseGameNetworkPacket
         SubcommandType = subcommandType;
         SubcommandData = subcommandData;
     }
+
+    public GeneralInformationSubcommandType SubcommandType { get; set; }
+    public ReadOnlyMemory<byte> SubcommandData { get; set; } = ReadOnlyMemory<byte>.Empty;
 
     public override void Write(ref SpanWriter writer)
     {

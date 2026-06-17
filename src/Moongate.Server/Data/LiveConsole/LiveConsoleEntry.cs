@@ -3,7 +3,7 @@ using Moongate.Server.Types.LiveConsole;
 namespace Moongate.Server.Data.LiveConsole;
 
 /// <summary>
-/// A single line shown in the live admin console, sent over SignalR to connected admins.
+///     A single line shown in the live admin console, sent over SignalR to connected admins.
 /// </summary>
 public sealed record LiveConsoleEntry
 {

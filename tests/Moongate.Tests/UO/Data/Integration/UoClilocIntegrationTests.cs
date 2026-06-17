@@ -25,13 +25,12 @@ public class UoClilocIntegrationTests
 
         var hasCliloc = Directory.Exists(candidate) &&
                         Directory.EnumerateFiles(candidate)
-                                 .Any(
-                                     f => string.Equals(
-                                         Path.GetFileName(f),
-                                         "cliloc.enu",
-                                         StringComparison.OrdinalIgnoreCase
-                                     )
-                                 );
+                            .Any(f => string.Equals(
+                                    Path.GetFileName(f),
+                                    "cliloc.enu",
+                                    StringComparison.OrdinalIgnoreCase
+                                )
+                            );
 
         return hasCliloc ? candidate : null;
     }

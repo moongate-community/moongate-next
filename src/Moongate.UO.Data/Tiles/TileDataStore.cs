@@ -9,16 +9,16 @@ using Serilog;
 namespace Moongate.UO.Data.Tiles;
 
 /// <summary>
-/// Loads <c>tiledata.mul</c> into in-memory land and item tables and exposes them for lookup.
+///     Loads <c>tiledata.mul</c> into in-memory land and item tables and exposes them for lookup.
 /// </summary>
 public sealed class TileDataStore : ITileDataStore
 {
     private const int LandLength = 0x4000;
 
     private static readonly ILogger _logger = Log.ForContext<TileDataStore>();
+    private readonly ItemData[] _itemTable;
 
     private readonly LandData[] _landTable;
-    private readonly ItemData[] _itemTable;
 
     public TileDataStore(IUoFileResolver resolver)
     {
@@ -71,7 +71,7 @@ public sealed class TileDataStore : ITileDataStore
 
             bin.Read(buffer);
             var name = ReadName(buffer);
-            _landTable[i] = new(name, flags);
+            _landTable[i] = new LandData(name, flags);
         }
 
         for (var i = 0; i < itemLength; i++)
@@ -96,7 +96,7 @@ public sealed class TileDataStore : ITileDataStore
 
             bin.Read(buffer);
             var name = ReadName(buffer);
-            _itemTable[i] = new(name, flags, weight, quality, animation, quantity, value, height);
+            _itemTable[i] = new ItemData(name, flags, weight, quality, animation, quantity, value, height);
         }
 
         _logger.Information(
@@ -111,10 +111,14 @@ public sealed class TileDataStore : ITileDataStore
     public IReadOnlyList<ItemData> ItemTable => _itemTable;
 
     public ItemData GetItem(int id)
-        => id >= 0 && id < _itemTable.Length ? _itemTable[id] : default;
+    {
+        return id >= 0 && id < _itemTable.Length ? _itemTable[id] : default;
+    }
 
     public LandData GetLand(int id)
-        => id >= 0 && id < _landTable.Length ? _landTable[id] : default;
+    {
+        return id >= 0 && id < _landTable.Length ? _landTable[id] : default;
+    }
 
     private static string ReadName(Span<byte> buffer)
     {

@@ -9,7 +9,7 @@ using Moongate.Network.UO.Types.Targeting;
 namespace Moongate.Network.UO.Packets.Incoming.Targeting;
 
 /// <summary>
-/// Represents a target cursor command packet.
+///     Represents a target cursor command packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Target Cursor Commands")]
 public class TargetCursorCommandsPacket : BaseGameNetworkPacket
@@ -17,16 +17,10 @@ public class TargetCursorCommandsPacket : BaseGameNetworkPacket
     private const byte OpCodeValue = 0x6C;
     private const int LengthValue = 19;
 
-    public TargetCursorSelectionType CursorTarget { get; set; }
-    public Serial CursorId { get; set; }
-    public TargetCursorType CursorType { get; set; }
-    public Serial ClickedOnId { get; set; }
-    public Point3D Location { get; set; }
-    public byte Unknown { get; set; }
-    public ushort Graphic { get; set; }
-
     public TargetCursorCommandsPacket()
-        : base(OpCodeValue, LengthValue) { }
+        : base(OpCodeValue, LengthValue)
+    {
+    }
 
     public TargetCursorCommandsPacket(
         TargetCursorSelectionType cursorTarget,
@@ -40,8 +34,22 @@ public class TargetCursorCommandsPacket : BaseGameNetworkPacket
         CursorType = cursorType;
     }
 
+    public TargetCursorSelectionType CursorTarget { get; set; }
+    public Serial CursorId { get; set; }
+    public TargetCursorType CursorType { get; set; }
+    public Serial ClickedOnId { get; set; }
+    public Point3D Location { get; set; }
+    public byte Unknown { get; set; }
+    public ushort Graphic { get; set; }
+
     public static TargetCursorCommandsPacket CreateCancelCurrentTarget()
-        => new(TargetCursorSelectionType.SelectObject, (Serial)0u, TargetCursorType.CancelCurrentTargeting);
+    {
+        return new TargetCursorCommandsPacket(
+            TargetCursorSelectionType.SelectObject,
+            (Serial)0u,
+            TargetCursorType.CancelCurrentTargeting
+        );
+    }
 
     public override void Write(ref SpanWriter writer)
     {
@@ -73,7 +81,7 @@ public class TargetCursorCommandsPacket : BaseGameNetworkPacket
         Unknown = reader.ReadByte();
         var z = unchecked((sbyte)reader.ReadByte());
         Graphic = reader.ReadUInt16();
-        Location = new(x, y, z);
+        Location = new Point3D(x, y, z);
 
         return reader.Remaining == 0;
     }

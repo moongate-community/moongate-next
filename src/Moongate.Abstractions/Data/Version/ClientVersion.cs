@@ -1,9 +1,9 @@
 namespace Moongate.Abstractions.Data.Version;
 
 /// <summary>
-/// A parsed Ultima Online client version (<c>Major.Minor.Revision.Patch</c>), comparable by
-/// component. Supports the legacy patch-letter form (e.g. <c>5.0.2b</c>). Does not model the
-/// KR/SA/UOTD client type or protocol changes.
+///     A parsed Ultima Online client version (<c>Major.Minor.Revision.Patch</c>), comparable by
+///     component. Supports the legacy patch-letter form (e.g. <c>5.0.2b</c>). Does not model the
+///     KR/SA/UOTD client type or protocol changes.
 /// </summary>
 public sealed class ClientVersion : IComparable<ClientVersion>, IEquatable<ClientVersion>
 {
@@ -87,38 +87,58 @@ public sealed class ClientVersion : IComparable<ClientVersion>, IEquatable<Clien
     }
 
     public bool Equals(ClientVersion? other)
-        => other is not null &&
-           Major == other.Major &&
-           Minor == other.Minor &&
-           Revision == other.Revision &&
-           Patch == other.Patch;
+    {
+        return other is not null &&
+               Major == other.Major &&
+               Minor == other.Minor &&
+               Revision == other.Revision &&
+               Patch == other.Patch;
+    }
 
     public override bool Equals(object? obj)
-        => obj is ClientVersion other && Equals(other);
+    {
+        return obj is ClientVersion other && Equals(other);
+    }
 
     public override int GetHashCode()
-        => HashCode.Combine(Major, Minor, Revision, Patch);
+    {
+        return HashCode.Combine(Major, Minor, Revision, Patch);
+    }
 
     public static bool operator ==(ClientVersion? left, ClientVersion? right)
-        => left is null ? right is null : left.Equals(right);
+    {
+        return left is null ? right is null : left.Equals(right);
+    }
 
     public static bool operator >(ClientVersion? left, ClientVersion? right)
-        => Compare(left, right) > 0;
+    {
+        return Compare(left, right) > 0;
+    }
 
     public static bool operator >=(ClientVersion? left, ClientVersion? right)
-        => Compare(left, right) >= 0;
+    {
+        return Compare(left, right) >= 0;
+    }
 
     public static bool operator !=(ClientVersion? left, ClientVersion? right)
-        => !(left == right);
+    {
+        return !(left == right);
+    }
 
     public static bool operator <(ClientVersion? left, ClientVersion? right)
-        => Compare(left, right) < 0;
+    {
+        return Compare(left, right) < 0;
+    }
 
     public static bool operator <=(ClientVersion? left, ClientVersion? right)
-        => Compare(left, right) <= 0;
+    {
+        return Compare(left, right) <= 0;
+    }
 
     public override string ToString()
-        => SourceString;
+    {
+        return SourceString;
+    }
 
     private static int Compare(ClientVersion? left, ClientVersion? right)
     {
@@ -150,5 +170,7 @@ public sealed class ClientVersion : IComparable<ClientVersion>, IEquatable<Clien
     }
 
     private static string Segment(string[] segments, int index)
-        => index < segments.Length ? segments[index] : "";
+    {
+        return index < segments.Length ? segments[index] : "";
+    }
 }

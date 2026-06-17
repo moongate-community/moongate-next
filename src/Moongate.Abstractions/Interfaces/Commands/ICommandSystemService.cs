@@ -6,12 +6,12 @@ using Moongate.Abstractions.Types.Commands;
 namespace Moongate.Abstractions.Interfaces.Commands;
 
 /// <summary>
-/// Dispatches operator commands from console, in-game speech, plugins, and HTTP endpoints.
+///     Dispatches operator commands from console, in-game speech, plugins, and HTTP endpoints.
 /// </summary>
 public interface ICommandSystemService : IMoongateService
 {
     /// <summary>
-    /// Executes a raw command text.
+    ///     Executes a raw command text.
     /// </summary>
     /// <param name="commandWithArgs">Raw command text including arguments.</param>
     /// <param name="source">Command source.</param>
@@ -27,7 +27,7 @@ public interface ICommandSystemService : IMoongateService
     );
 
     /// <summary>
-    /// Executes a command and returns output produced through the command context.
+    ///     Executes a command and returns output produced through the command context.
     /// </summary>
     /// <param name="commandWithArgs">Raw command text including arguments.</param>
     /// <param name="source">Command source.</param>
@@ -44,14 +44,14 @@ public interface ICommandSystemService : IMoongateService
     );
 
     /// <summary>
-    /// Gets autocomplete suggestions for the current command line.
+    ///     Gets autocomplete suggestions for the current command line.
     /// </summary>
     /// <param name="commandWithArgs">Current command line.</param>
     /// <returns>Autocomplete suggestions.</returns>
     IReadOnlyList<string> GetAutocompleteSuggestions(string commandWithArgs);
 
     /// <summary>
-    /// Gets registered command definitions.
+    ///     Gets registered command definitions.
     /// </summary>
     /// <returns>Registered command definitions.</returns>
     IReadOnlyList<CommandDefinition> GetRegisteredCommands();

@@ -8,8 +8,8 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Handlers.Player;
 
 /// <summary>
-/// Consumes the Get Player Status packet (0x34) so the parser can frame it correctly.
-/// Sending the actual status/skills response is intentionally out of scope (no-op for now).
+///     Consumes the Get Player Status packet (0x34) so the parser can frame it correctly.
+///     Sending the actual status/skills response is intentionally out of scope (no-op for now).
 /// </summary>
 [RegisterPacketHandler]
 public sealed class GetPlayerStatusHandler : IPacketHandler<GetPlayerStatusPacket>

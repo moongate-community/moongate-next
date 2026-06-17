@@ -12,5 +12,7 @@ public sealed record UserSummary(
 )
 {
     public static UserSummary FromEntity(UserEntity user)
-        => new(user.Id.ToString(), user.Username, user.Email, user.Level.ToString(), user.IsActive);
+    {
+        return new UserSummary(user.Id.ToString(), user.Username, user.Email, user.Level.ToString(), user.IsActive);
+    }
 }

@@ -11,8 +11,10 @@ public sealed class CommandRegistryTests
         var registry = new CommandRegistry();
         registry.RegisterCommand("save", static _ => Task.CompletedTask);
 
-        Assert.Throws<InvalidOperationException>(
-            () => registry.RegisterCommand("persist|save", static _ => Task.CompletedTask)
+        Assert.Throws<InvalidOperationException>(() => registry.RegisterCommand(
+                "persist|save",
+                static _ => Task.CompletedTask
+            )
         );
     }
 

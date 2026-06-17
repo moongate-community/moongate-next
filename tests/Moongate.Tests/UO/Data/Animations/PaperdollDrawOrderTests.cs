@@ -14,15 +14,21 @@ public sealed class PaperdollDrawOrderTests
 
     [Fact]
     public void Cloak_DrawsBehind_OuterTorso()
-        => Assert.True(
+    {
+        Assert.True(
             PaperdollDrawOrder.Priority(ItemLayerType.Cloak) < PaperdollDrawOrder.Priority(ItemLayerType.OuterTorso)
         );
+    }
 
     [Fact]
     public void Helm_DrawsInFrontOf_Hair()
-        => Assert.True(PaperdollDrawOrder.Priority(ItemLayerType.Helm) > PaperdollDrawOrder.Priority(ItemLayerType.Hair));
+    {
+        Assert.True(PaperdollDrawOrder.Priority(ItemLayerType.Helm) > PaperdollDrawOrder.Priority(ItemLayerType.Hair));
+    }
 
     [Fact]
     public void NonPaperdollLayer_IsSkipped()
-        => Assert.Equal(PaperdollDrawOrder.Skip, PaperdollDrawOrder.Priority(ItemLayerType.Backpack));
+    {
+        Assert.Equal(PaperdollDrawOrder.Skip, PaperdollDrawOrder.Priority(ItemLayerType.Backpack));
+    }
 }

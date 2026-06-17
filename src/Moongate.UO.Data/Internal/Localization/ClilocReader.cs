@@ -5,7 +5,7 @@ using Moongate.UO.Data.Internal.Compression;
 namespace Moongate.UO.Data.Internal.Localization;
 
 /// <summary>
-/// Reads and parses a <c>cliloc</c> file, transparently decompressing Mythic-packed data.
+///     Reads and parses a <c>cliloc</c> file, transparently decompressing Mythic-packed data.
 /// </summary>
 public static class ClilocReader
 {
@@ -75,7 +75,7 @@ public static class ClilocReader
             }
 
             var text = Encoding.UTF8.GetString(textBuffer, 0, length);
-            entries.Add(new(number, text, flag));
+            entries.Add(new StringEntry(number, text, flag));
         }
 
         return entries;

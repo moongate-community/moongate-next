@@ -10,8 +10,8 @@ namespace Moongate.Server.Handlers.Items;
 [RegisterPacketHandler]
 public sealed class ContainerDoubleClickPacketHandler : IPacketHandler<DoubleClickPacket>
 {
-    private readonly IItemService _items;
     private readonly IContainerContentService _contents;
+    private readonly IItemService _items;
 
     public ContainerDoubleClickPacketHandler(IItemService items, IContainerContentService contents)
     {

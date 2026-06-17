@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 namespace Moongate.UO.Data.Data.Tiles;
 
 /// <summary>
-/// A hued land tile variant used by map overlays: id, hue and z.
+///     A hued land tile variant used by map overlays: id, hue and z.
 /// </summary>
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct HuedTile

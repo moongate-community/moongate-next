@@ -13,7 +13,9 @@ public sealed class RecordingOutgoingPacketQueue : IOutgoingPacketQueue
 
     public void Enqueue<TPacket>(long sessionId, TPacket packet)
         where TPacket : IGameNetworkPacket
-        => Sent.Add((sessionId, packet));
+    {
+        Sent.Add((sessionId, packet));
+    }
 
     public int Clear(Action<OutgoingPacketEnvelope>? handler = null)
     {
@@ -22,5 +24,8 @@ public sealed class RecordingOutgoingPacketQueue : IOutgoingPacketQueue
         return n;
     }
 
-    public int Drain(int maxItems, Func<OutgoingPacketEnvelope, bool> handler) => 0;
+    public int Drain(int maxItems, Func<OutgoingPacketEnvelope, bool> handler)
+    {
+        return 0;
+    }
 }

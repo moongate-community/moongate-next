@@ -40,10 +40,10 @@ public class LiveConsoleSinkTests
 
         if (sourceContext is not null)
         {
-            properties.Add(new("SourceContext", new ScalarValue(sourceContext)));
+            properties.Add(new LogEventProperty("SourceContext", new ScalarValue(sourceContext)));
         }
 
-        return new(
+        return new LogEvent(
             DateTimeOffset.UnixEpoch,
             level,
             null,

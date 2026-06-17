@@ -20,83 +20,6 @@ public class NetworkServiceIntegrationTests : IDisposable
 {
     private readonly string _dir = Path.Combine(Path.GetTempPath(), $"nh-network-config-{Guid.NewGuid():N}");
 
-    private sealed class PacketCapture
-    {
-        public List<PacketReceivedEvent> Packets { get; } = [];
-        public List<PlayerConnectedEvent> Connects { get; } = [];
-        public List<PlayerDisconnectedEvent> Disconnects { get; } = [];
-    }
-
-    private sealed class CapturePacketHandler : ITickEventHandler<PacketReceivedEvent>
-    {
-        private readonly PacketCapture _capture;
-
-        public CapturePacketHandler(PacketCapture capture)
-        {
-            _capture = capture;
-        }
-
-        public void Handle(PacketReceivedEvent evt)
-        {
-            lock (_capture)
-            {
-                _capture.Packets.Add(evt);
-            }
-        }
-    }
-
-    private sealed class CaptureConnectHandler : ITickEventHandler<PlayerConnectedEvent>
-    {
-        private readonly PacketCapture _capture;
-
-        public CaptureConnectHandler(PacketCapture capture)
-        {
-            _capture = capture;
-        }
-
-        public void Handle(PlayerConnectedEvent evt)
-        {
-            lock (_capture)
-            {
-                _capture.Connects.Add(evt);
-            }
-        }
-    }
-
-    private sealed class CaptureDisconnectHandler : ITickEventHandler<PlayerDisconnectedEvent>
-    {
-        private readonly PacketCapture _capture;
-
-        public CaptureDisconnectHandler(PacketCapture capture)
-        {
-            _capture = capture;
-        }
-
-        public void Handle(PlayerDisconnectedEvent evt)
-        {
-            lock (_capture)
-            {
-                _capture.Disconnects.Add(evt);
-            }
-        }
-    }
-
-    private sealed class TestOutgoingPacket : BaseGameNetworkPacket
-    {
-        public TestOutgoingPacket()
-            : base(0xAA, 3) { }
-
-        public override void Write(ref SpanWriter writer)
-        {
-            writer.Write(OpCode);
-            writer.Write((byte)0x01);
-            writer.Write((byte)0x02);
-        }
-
-        protected override bool ParsePayload(ref SpanReader reader)
-            => true;
-    }
-
     public void Dispose()
     {
         if (Directory.Exists(_dir))
@@ -354,5 +277,86 @@ public class NetworkServiceIntegrationTests : IDisposable
         File.WriteAllText(path, $"network:\n  port: {port}\n  ping_server_enabled: false\n");
 
         return path;
+    }
+
+    private sealed class PacketCapture
+    {
+        public List<PacketReceivedEvent> Packets { get; } = [];
+        public List<PlayerConnectedEvent> Connects { get; } = [];
+        public List<PlayerDisconnectedEvent> Disconnects { get; } = [];
+    }
+
+    private sealed class CapturePacketHandler : ITickEventHandler<PacketReceivedEvent>
+    {
+        private readonly PacketCapture _capture;
+
+        public CapturePacketHandler(PacketCapture capture)
+        {
+            _capture = capture;
+        }
+
+        public void Handle(PacketReceivedEvent evt)
+        {
+            lock (_capture)
+            {
+                _capture.Packets.Add(evt);
+            }
+        }
+    }
+
+    private sealed class CaptureConnectHandler : ITickEventHandler<PlayerConnectedEvent>
+    {
+        private readonly PacketCapture _capture;
+
+        public CaptureConnectHandler(PacketCapture capture)
+        {
+            _capture = capture;
+        }
+
+        public void Handle(PlayerConnectedEvent evt)
+        {
+            lock (_capture)
+            {
+                _capture.Connects.Add(evt);
+            }
+        }
+    }
+
+    private sealed class CaptureDisconnectHandler : ITickEventHandler<PlayerDisconnectedEvent>
+    {
+        private readonly PacketCapture _capture;
+
+        public CaptureDisconnectHandler(PacketCapture capture)
+        {
+            _capture = capture;
+        }
+
+        public void Handle(PlayerDisconnectedEvent evt)
+        {
+            lock (_capture)
+            {
+                _capture.Disconnects.Add(evt);
+            }
+        }
+    }
+
+    private sealed class TestOutgoingPacket : BaseGameNetworkPacket
+    {
+        public TestOutgoingPacket()
+            : base(0xAA, 3)
+        {
+        }
+
+        public override void Write(ref SpanWriter writer)
+        {
+            writer.Write(OpCode);
+            writer.Write((byte)0x01);
+            writer.Write((byte)0x02);
+        }
+
+        protected override bool ParsePayload(ref SpanReader reader)
+        {
+            return true;
+        }
     }
 }

@@ -6,7 +6,7 @@ using Serilog.Events;
 namespace Moongate.Abstractions.Data.Commands;
 
 /// <summary>
-/// Carries parsed command state and output helpers for command handlers.
+///     Carries parsed command state and output helpers for command handlers.
 /// </summary>
 public sealed class CommandSystemContext
 {
@@ -37,60 +37,66 @@ public sealed class CommandSystemContext
     }
 
     /// <summary>
-    /// Raw command text without source-specific prefixes.
+    ///     Raw command text without source-specific prefixes.
     /// </summary>
     public string CommandText { get; }
 
     /// <summary>
-    /// Parsed command arguments.
+    ///     Parsed command arguments.
     /// </summary>
     public IReadOnlyList<string> Arguments { get; }
 
     /// <summary>
-    /// Command source.
+    ///     Command source.
     /// </summary>
     public CommandSourceType Source { get; }
 
     /// <summary>
-    /// Runtime service provider available to command handlers.
+    ///     Runtime service provider available to command handlers.
     /// </summary>
     public IServiceProvider Services { get; }
 
     /// <summary>
-    /// Network session id for in-game commands.
+    ///     Network session id for in-game commands.
     /// </summary>
     public long? SessionId { get; }
 
     /// <summary>
-    /// Logical player session for in-game commands, when known.
+    ///     Logical player session for in-game commands, when known.
     /// </summary>
     public PlayerSession? PlayerSession { get; }
 
     /// <summary>
-    /// Whether this command was executed from the game client.
+    ///     Whether this command was executed from the game client.
     /// </summary>
     public bool IsInGame => Source == CommandSourceType.InGame;
 
     /// <summary>
-    /// Writes informational command output.
+    ///     Writes informational command output.
     /// </summary>
     public void Print(string message, params object[] args)
-        => Print(LogEventLevel.Information, message, args);
+    {
+        Print(LogEventLevel.Information, message, args);
+    }
 
     /// <summary>
-    /// Writes error command output.
+    ///     Writes error command output.
     /// </summary>
     public void PrintError(string message, params object[] args)
-        => Print(LogEventLevel.Error, message, args);
+    {
+        Print(LogEventLevel.Error, message, args);
+    }
 
     /// <summary>
-    /// Writes warning command output.
+    ///     Writes warning command output.
     /// </summary>
     public void PrintWarning(string message, params object[] args)
-        => Print(LogEventLevel.Warning, message, args);
+    {
+        Print(LogEventLevel.Warning, message, args);
+    }
 
     /// <summary>
-    /// Resolves a service from the command service provider.
+    ///     Resolves a service from the command service provider.
     /// </summary>
     /// <typeparam name="T">Service type.</typeparam>
     /// <returns>The resolved service.</returns>

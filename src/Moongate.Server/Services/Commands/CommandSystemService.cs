@@ -10,7 +10,7 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.Commands;
 
 /// <summary>
-/// Dispatches parsed command lines to registered handlers.
+///     Dispatches parsed command lines to registered handlers.
 /// </summary>
 public sealed class CommandSystemService : ICommandSystemService
 {
@@ -34,7 +34,9 @@ public sealed class CommandSystemService : ICommandSystemService
         PlayerSession? playerSession = null,
         CancellationToken cancellationToken = default
     )
-        => ExecuteCommandWithOutputAsync(commandWithArgs, source, sessionId, playerSession, cancellationToken);
+    {
+        return ExecuteCommandWithOutputAsync(commandWithArgs, source, sessionId, playerSession, cancellationToken);
+    }
 
     public async Task<IReadOnlyList<string>> ExecuteCommandWithOutputAsync(
         string commandWithArgs,
@@ -104,17 +106,17 @@ public sealed class CommandSystemService : ICommandSystemService
         if (tokens.Count == 0)
         {
             return _registry.GetRegisteredCommands()
-                            .Select(static command => command.Name)
-                            .ToArray();
+                .Select(static command => command.Name)
+                .ToArray();
         }
 
         if (tokens.Count == 1 && !endsWithWhitespace)
         {
             return _registry.GetRegisteredCommands()
-                            .SelectMany(static command => command.Aliases)
-                            .Where(alias => alias.StartsWith(tokens[0], StringComparison.OrdinalIgnoreCase))
-                            .Order(StringComparer.OrdinalIgnoreCase)
-                            .ToArray();
+                .SelectMany(static command => command.Aliases)
+                .Where(alias => alias.StartsWith(tokens[0], StringComparison.OrdinalIgnoreCase))
+                .Order(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
         }
 
         if (!_registry.TryGetCommand(tokens[0], out var definition) ||
@@ -135,7 +137,9 @@ public sealed class CommandSystemService : ICommandSystemService
     }
 
     public IReadOnlyList<CommandDefinition> GetRegisteredCommands()
-        => _registry.GetRegisteredCommands();
+    {
+        return _registry.GetRegisteredCommands();
+    }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {

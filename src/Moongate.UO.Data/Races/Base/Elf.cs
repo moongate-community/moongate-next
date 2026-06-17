@@ -26,7 +26,9 @@ public class Elf : Race
     };
 
     public Elf(int raceID, int raceIndex)
-        : base(raceID, raceIndex, "Elf", "Elves", 605, 606, 607, 608) { }
+        : base(raceID, raceIndex, "Elf", "Elves", 605, 606, 607, 608)
+    {
+    }
 
     public override int ClipHairHue(int hue)
     {
@@ -55,10 +57,13 @@ public class Elf : Race
     }
 
     public override int RandomFacialHair(bool female)
-        => 0;
+    {
+        return 0;
+    }
 
     public override int RandomHair(bool female)
-        => RandomUtils.Random(8) switch
+    {
+        return RandomUtils.Random(8) switch
         {
             0 => 0x2FC0,
             1 => 0x2FC1,
@@ -69,15 +74,22 @@ public class Elf : Race
             6 => female ? 0x2FCC : 0x2FBF,
             _ => female ? 0x2FD0 : 0x2FCD
         };
+    }
 
     public override int RandomHairHue()
-        => m_HairHues.RandomElement();
+    {
+        return m_HairHues.RandomElement();
+    }
 
     public override int RandomSkinHue()
-        => m_SkinHues.RandomElement() | 0x8000;
+    {
+        return m_SkinHues.RandomElement() | 0x8000;
+    }
 
     public override bool ValidateFacialHair(bool female, int itemID)
-        => itemID == 0;
+    {
+        return itemID == 0;
+    }
 
     public override bool ValidateHair(bool female, int itemID)
     {

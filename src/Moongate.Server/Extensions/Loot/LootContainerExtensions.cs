@@ -10,15 +10,15 @@ using ShaiRandom.Generators;
 namespace Moongate.Server.Extensions.Loot;
 
 /// <summary>
-/// DryIoc-native registration helpers for loot table services.
+///     DryIoc-native registration helpers for loot table services.
 /// </summary>
 public static class LootContainerExtensions
 {
     private const int LootTablesBootPriority = 14;
 
     /// <summary>
-    /// Registers the loot service, the YAML loader and the fail-fast boot service
-    /// (priority 14: after starter loadouts, before persistence/network).
+    ///     Registers the loot service, the YAML loader and the fail-fast boot service
+    ///     (priority 14: after starter loadouts, before persistence/network).
     /// </summary>
     public static IContainer AddMoongateLootTables(this IContainer container)
     {
@@ -28,7 +28,7 @@ public static class LootContainerExtensions
         container.Register<ILootService, LootService>(Reuse.Singleton);
         container.Register<LootTableRegistryStore>(Reuse.Singleton);
         container.RegisterDelegate<LootTemplateProjectionService>(
-            resolver => new(resolver.Resolve<IItemTemplateService>()),
+            resolver => new LootTemplateProjectionService(resolver.Resolve<IItemTemplateService>()),
             Reuse.Singleton
         );
         container.RegisterDelegate(

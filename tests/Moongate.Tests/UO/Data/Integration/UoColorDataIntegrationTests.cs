@@ -37,7 +37,7 @@ public class UoColorDataIntegrationTests
 
         var has = Directory.Exists(candidate) &&
                   Directory.EnumerateFiles(candidate)
-                           .Any(f => string.Equals(Path.GetFileName(f), requiredFile, StringComparison.OrdinalIgnoreCase));
+                      .Any(f => string.Equals(Path.GetFileName(f), requiredFile, StringComparison.OrdinalIgnoreCase));
 
         return has ? candidate : null;
     }

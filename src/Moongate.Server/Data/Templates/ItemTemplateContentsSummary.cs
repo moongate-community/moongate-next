@@ -14,7 +14,7 @@ public sealed record ItemTemplateContentsSummary(
     {
         ArgumentNullException.ThrowIfNull(contents);
 
-        return new(
+        return new ItemTemplateContentsSummary(
             contents.LootTemplate,
             contents.Generate.ToString(),
             contents.RefillEvery,

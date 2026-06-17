@@ -7,8 +7,8 @@ using Serilog;
 namespace Moongate.UO.Data.Localization;
 
 /// <summary>
-/// Loads the cliloc string table once from the resolved <c>cliloc.enu</c> and answers lookups and
-/// placeholder formatting. A missing file yields an empty table (non-fatal).
+///     Loads the cliloc string table once from the resolved <c>cliloc.enu</c> and answers lookups and
+///     placeholder formatting. A missing file yields an empty table (non-fatal).
 /// </summary>
 public sealed class LocalizationService : ILocalizationService
 {
@@ -20,7 +20,7 @@ public sealed class LocalizationService : ILocalizationService
     {
         ArgumentNullException.ThrowIfNull(resolver);
 
-        _entries = new();
+        _entries = new Dictionary<int, StringEntry>();
 
         var path = resolver.Resolve("cliloc.enu");
 
@@ -42,11 +42,17 @@ public sealed class LocalizationService : ILocalizationService
     public int Count => _entries.Count;
 
     public string Format(int number, params object[] args)
-        => _entries.TryGetValue(number, out var entry) ? entry.Format(args) : "";
+    {
+        return _entries.TryGetValue(number, out var entry) ? entry.Format(args) : "";
+    }
 
     public StringEntry? GetEntry(int number)
-        => _entries.GetValueOrDefault(number);
+    {
+        return _entries.GetValueOrDefault(number);
+    }
 
     public string? GetText(int number)
-        => _entries.TryGetValue(number, out var entry) ? entry.Text : null;
+    {
+        return _entries.TryGetValue(number, out var entry) ? entry.Text : null;
+    }
 }

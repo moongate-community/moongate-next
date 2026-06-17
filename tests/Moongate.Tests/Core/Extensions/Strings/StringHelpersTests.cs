@@ -6,16 +6,26 @@ public class StringHelpersTests
 {
     [Fact]
     public void Capitalize_EmptyInput_ReturnsEmpty()
-        => Assert.Equal("", "".Capitalize());
+    {
+        Assert.Equal("", "".Capitalize());
+    }
 
     [Fact]
     public void Capitalize_NullInput_ReturnsNull()
-        => Assert.Null(((string?)null).Capitalize());
+    {
+        Assert.Null(((string?)null).Capitalize());
+    }
 
-    [Theory, InlineData("hello world", "Hello World"), InlineData("lord of the rings", "Lord Of the Rings"),
-     InlineData("the lord of the rings", "The Lord Of the Rings"), InlineData("the lord", "The Lord"), InlineData("a", "A")]
+    [Theory]
+    [InlineData("hello world", "Hello World")]
+    [InlineData("lord of the rings", "Lord Of the Rings")]
+    [InlineData("the lord of the rings", "The Lord Of the Rings")]
+    [InlineData("the lord", "The Lord")]
+    [InlineData("a", "A")]
     public void Capitalize_VariousInputs_CapitalizesEachWordAndSkipsInternalThe(string input, string expected)
-        => Assert.Equal(expected, input.Capitalize());
+    {
+        Assert.Equal(expected, input.Capitalize());
+    }
 
     [Fact]
     public void DefaultIfNullOrEmpty_BlankInput_ReturnsDefault()
@@ -26,7 +36,9 @@ public class StringHelpersTests
 
     [Fact]
     public void DefaultIfNullOrEmpty_NonBlankInput_ReturnsInput()
-        => Assert.Equal("value", "value".DefaultIfNullOrEmpty("fallback"));
+    {
+        Assert.Equal("value", "value".DefaultIfNullOrEmpty("fallback"));
+    }
 
     [Fact]
     public void IndentMultiline_PrependsIndentToEachLine()
@@ -59,9 +71,13 @@ public class StringHelpersTests
         Assert.True(threw);
     }
 
-    [Theory, InlineData("", "x", ""), InlineData("abc", "", "abc"), InlineData("aXbXcXdXe", "X", "abcde"),
-     InlineData("xyzabc123abc", "abc", "xyz123"), InlineData("nothing here", "missing", "nothing here"),
-     InlineData("aaaa", "aa", "")]
+    [Theory]
+    [InlineData("", "x", "")]
+    [InlineData("abc", "", "abc")]
+    [InlineData("aXbXcXdXe", "X", "abcde")]
+    [InlineData("xyzabc123abc", "abc", "xyz123")]
+    [InlineData("nothing here", "missing", "nothing here")]
+    [InlineData("aaaa", "aa", "")]
     public void Remove_StringPatterns_RemovesAllOccurrences(string input, string pattern, string expected)
     {
         // Regression: previous implementation advanced by 1 instead of pattern.Length,

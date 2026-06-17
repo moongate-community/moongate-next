@@ -6,7 +6,7 @@ using Moongate.Server.Services.WorldData;
 namespace Moongate.Server.Services.World;
 
 /// <summary>
-/// Lazy in-memory store for region entries.
+///     Lazy in-memory store for region entries.
 /// </summary>
 public class RegionDataService : LazyDataService, IRegionDataService
 {
@@ -14,7 +14,9 @@ public class RegionDataService : LazyDataService, IRegionDataService
     private readonly Lock _sync = new();
     private List<RegionEntry> _entries = [];
 
-    public RegionDataService() { }
+    public RegionDataService()
+    {
+    }
 
     public RegionDataService(ServerAssetDataLoader loader)
     {
@@ -48,5 +50,7 @@ public class RegionDataService : LazyDataService, IRegionDataService
     }
 
     protected override void LoadCore()
-        => _loader?.LoadRegions(this);
+    {
+        _loader?.LoadRegions(this);
+    }
 }

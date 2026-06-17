@@ -1,7 +1,7 @@
 namespace Moongate.Network.UO.Types.GeneralInformation;
 
 /// <summary>
-/// Subcommand types used by General Information packet (0xBF).
+///     Subcommand types used by General Information packet (0xBF).
 /// </summary>
 public enum GeneralInformationSubcommandType : ushort
 {

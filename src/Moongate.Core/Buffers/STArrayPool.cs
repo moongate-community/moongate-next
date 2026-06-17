@@ -11,10 +11,10 @@ using Moongate.Core.Types;
 namespace Moongate.Core.Buffers;
 
 /// <summary>
-/// Thread-safe ArrayPool adaptation. Each calling thread keeps its own
-/// bucket cache via <see cref="ThreadLocal{T}" />, avoiding cross-thread
-/// contention while letting <see cref="Trim" /> reach every thread's state
-/// during Gen2 GC callbacks.
+///     Thread-safe ArrayPool adaptation. Each calling thread keeps its own
+///     bucket cache via <see cref="ThreadLocal{T}" />, avoiding cross-thread
+///     contention while letting <see cref="Trim" /> reach every thread's state
+///     during Gen2 GC callbacks.
 /// </summary>
 [SuppressMessage(
     "Reliability",
@@ -33,7 +33,7 @@ public sealed class STArrayPool<T> : ArrayPool<T>
     public static STArrayPool<T> Shared { get; } = new();
 
     private readonly ThreadLocal<STArrayPoolThreadState<T>> _state =
-        new(static () => new(BucketCount), true);
+        new(static () => new STArrayPoolThreadState<T>(BucketCount), true);
 
     private STArrayPool()
     {
@@ -55,12 +55,12 @@ public sealed class STArrayPool<T> : ArrayPool<T>
             if (buffer is not null)
             {
                 cacheBuckets[bucketIndex].Array = null;
-            #if DEBUG_ARRAYPOOL
+#if DEBUG_ARRAYPOOL
                 _rentedArrays.AddOrUpdate(
                     buffer,
                     new STArrayPoolRentReturnStatus { IsRented = true }
                 );
-            #endif
+#endif
                 return buffer;
             }
         }
@@ -77,12 +77,12 @@ public sealed class STArrayPool<T> : ArrayPool<T>
 
                 if (buffer is not null)
                 {
-                #if DEBUG_ARRAYPOOL
+#if DEBUG_ARRAYPOOL
                     _rentedArrays.AddOrUpdate(
                         buffer,
                         new STArrayPoolRentReturnStatus { IsRented = true }
                     );
-                #endif
+#endif
                     return buffer;
                 }
             }
@@ -103,12 +103,12 @@ public sealed class STArrayPool<T> : ArrayPool<T>
 
         var array = GC.AllocateUninitializedArray<T>(minimumLength);
 
-    #if DEBUG_ARRAYPOOL
+#if DEBUG_ARRAYPOOL
         _rentedArrays.AddOrUpdate(
             array,
             new STArrayPoolRentReturnStatus { IsRented = true, StackTrace = Environment.StackTrace }
         );
-    #endif
+#endif
 
         return array;
     }
@@ -131,7 +131,7 @@ public sealed class STArrayPool<T> : ArrayPool<T>
                 Array.Clear(array);
             }
 
-        #if DEBUG_ARRAYPOOL
+#if DEBUG_ARRAYPOOL
             if (array.Length != GetMaxSizeForBucket(bucketIndex) || !_rentedArrays.TryGetValue(array, out var status))
             {
                 throw new ArgumentException("Buffer is not from the pool", nameof(array));
@@ -145,16 +145,16 @@ public sealed class STArrayPool<T> : ArrayPool<T>
             // Mark it as returned
             status.IsRented = false;
             status.StackTrace = Environment.StackTrace;
-        #else
+#else
             if (array.Length != GetMaxSizeForBucket(bucketIndex))
             {
                 throw new ArgumentException("Buffer is not from the pool", nameof(array));
             }
-        #endif
+#endif
 
             ref var bucketArray = ref cacheBuckets[bucketIndex];
             var prev = bucketArray.Array;
-            bucketArray = new(array);
+            bucketArray = new STArrayPoolBucket<T>(array);
 
             if (prev is not null)
             {
@@ -204,7 +204,7 @@ public sealed class STArrayPool<T> : ArrayPool<T>
         uint threshold = pressure switch
         {
             STArrayPoolMemoryPressureType.Medium => 10000,
-            _                                    => 30000
+            _ => 30000
         };
 
         for (var i = 0; i < cacheBuckets.Length; i++)
@@ -231,7 +231,9 @@ public sealed class STArrayPool<T> : ArrayPool<T>
     }
 
     private static STArrayPoolStack<T> CreateBucketStack(STArrayPoolThreadState<T> state, int bucketIndex)
-        => state.Buckets[bucketIndex] = new(StackArraySize);
+    {
+        return state.Buckets[bucketIndex] = new STArrayPoolStack<T>(StackArraySize);
+    }
 
     // Buffers are bucketed so that a request between 2^(n-1) + 1 and 2^n is given a buffer of 2^n
     // Bucket index is log2(bufferSize - 1) with the exception that buffers between 1 and 16 bytes
@@ -240,7 +242,9 @@ public sealed class STArrayPool<T> : ArrayPool<T>
     // buffers are not retained by the pool. The pool will return the Array.Empty singleton for these.
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static int SelectBucketIndex(int bufferSize)
-        => BitOperations.Log2(((uint)bufferSize - 1) | 15) - 3;
+    {
+        return BitOperations.Log2(((uint)bufferSize - 1) | 15) - 3;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static int GetMaxSizeForBucket(int binIndex)

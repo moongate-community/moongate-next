@@ -12,19 +12,14 @@ public sealed class EmailPluginTests : IDisposable
 {
     private readonly string _root = Path.Combine(Path.GetTempPath(), $"moongate-email-plugin-{Guid.NewGuid():N}");
 
-    private sealed class CapturingTester : IEmailConfigurationTester
+    public void Dispose()
     {
-        public EmailPluginConfig? Config { get; private set; }
-
-        public ValueTask<PluginTestResult> TestAsync(
-            EmailPluginConfig config,
-            CancellationToken cancellationToken = default
-        )
+        if (Directory.Exists(_root))
         {
-            Config = config;
-
-            return ValueTask.FromResult(new PluginTestResult(true, "OK", []));
+            Directory.Delete(_root, true);
         }
+
+        GC.SuppressFinalize(this);
     }
 
     [Fact]
@@ -40,16 +35,6 @@ public sealed class EmailPluginTests : IDisposable
 
         var yaml = File.ReadAllText(Path.Combine(pluginDirectory, PluginContext.PluginConfigFileName));
         Assert.Contains("url_template: https://play.moongate.io/activate?activation_id={activation_id}", yaml);
-    }
-
-    public void Dispose()
-    {
-        if (Directory.Exists(_root))
-        {
-            Directory.Delete(_root, true);
-        }
-
-        GC.SuppressFinalize(this);
     }
 
     [Fact]
@@ -112,7 +97,7 @@ public sealed class EmailPluginTests : IDisposable
         );
         var plugin = ConfigurePlugin(pluginDirectory);
         var request = new PluginConfigSaveRequest(
-            new()
+            new Dictionary<string, object?>
             {
                 ["smtp.host"] = "new.example.com"
             }
@@ -132,7 +117,7 @@ public sealed class EmailPluginTests : IDisposable
         var pluginDirectory = CreatePluginDirectory();
         var plugin = ConfigurePlugin(pluginDirectory);
         var request = new PluginConfigSaveRequest(
-            new()
+            new Dictionary<string, object?>
             {
                 ["smtp.host"] = "smtp.example.com",
                 ["smtp.unknown"] = "value"
@@ -153,7 +138,7 @@ public sealed class EmailPluginTests : IDisposable
         var pluginDirectory = CreatePluginDirectory();
         var plugin = ConfigurePlugin(pluginDirectory);
         var request = new PluginConfigSaveRequest(
-            new()
+            new Dictionary<string, object?>
             {
                 ["enabled"] = true,
                 ["from.address"] = "noreply@example.com",
@@ -204,8 +189,8 @@ public sealed class EmailPluginTests : IDisposable
     private EmailPlugin ConfigurePlugin(string pluginDirectory, CapturingTester? tester = null)
     {
         var plugin = tester is null
-                         ? new EmailPlugin()
-                         : new EmailPlugin(_ => tester);
+            ? new EmailPlugin()
+            : new EmailPlugin(_ => tester);
         var container = new Container();
         var directories = new DirectoriesConfig(_root, Enum.GetNames<DirectoryType>());
         var context = new PluginContext(pluginDirectory, directories);
@@ -229,5 +214,22 @@ public sealed class EmailPluginTests : IDisposable
     }
 
     private static PluginConfigField FindField(PluginConfigForm form, string path)
-        => form.Sections.SelectMany(section => section.Fields).Single(field => field.Path == path);
+    {
+        return form.Sections.SelectMany(section => section.Fields).Single(field => field.Path == path);
+    }
+
+    private sealed class CapturingTester : IEmailConfigurationTester
+    {
+        public EmailPluginConfig? Config { get; private set; }
+
+        public ValueTask<PluginTestResult> TestAsync(
+            EmailPluginConfig config,
+            CancellationToken cancellationToken = default
+        )
+        {
+            Config = config;
+
+            return ValueTask.FromResult(new PluginTestResult(true, "OK", []));
+        }
+    }
 }

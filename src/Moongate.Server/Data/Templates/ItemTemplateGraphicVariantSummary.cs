@@ -14,7 +14,7 @@ public sealed record ItemTemplateGraphicVariantSummary(
 
         var itemIdHex = ItemTemplateSummary.FormatItemId(variant.ItemId);
 
-        return new(
+        return new ItemTemplateGraphicVariantSummary(
             variant.ItemId,
             itemIdHex,
             $"/api/items/{itemIdHex}.png"

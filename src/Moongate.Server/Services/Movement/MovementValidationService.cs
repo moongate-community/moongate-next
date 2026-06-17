@@ -9,18 +9,18 @@ using Moongate.UO.Data.Types.Tiles;
 namespace Moongate.Server.Services.Movement;
 
 /// <summary>
-/// Validates player movement against map land/static tiles (bounds, diagonal, Z step, blocking)
-/// and mobile-vs-mobile collision via the spatial index.
+///     Validates player movement against map land/static tiles (bounds, diagonal, Z step, blocking)
+///     and mobile-vs-mobile collision via the spatial index.
 /// </summary>
 public sealed class MovementValidationService : IMovementValidationService
 {
     private const int PersonHeight = 16;
     private const int StepHeight = 2;
     private const int FallbackStepHeight = 16;
+    private readonly IWorldSpatialIndex _index;
+    private readonly ITileDataStore _tileData;
 
     private readonly IMovementTileQueryService _tiles;
-    private readonly ITileDataStore _tileData;
-    private readonly IWorldSpatialIndex _index;
 
     public MovementValidationService(IMovementTileQueryService tiles, ITileDataStore tileData, IWorldSpatialIndex index)
     {
@@ -81,11 +81,15 @@ public sealed class MovementValidationService : IMovementValidationService
     }
 
     private static bool IsInsideMap(int width, int height, int x, int y)
-        => x >= 0 && y >= 0 && x < width && y < height;
+    {
+        return x >= 0 && y >= 0 && x < width && y < height;
+    }
 
     private static bool IsDiagonal(DirectionType direction)
-        => direction is DirectionType.NorthEast or DirectionType.SouthEast
-                     or DirectionType.SouthWest or DirectionType.NorthWest;
+    {
+        return direction is DirectionType.NorthEast or DirectionType.SouthEast
+            or DirectionType.SouthWest or DirectionType.NorthWest;
+    }
 
     private bool CanMoveDiagonal(MobileEntity mobile, Point3D current, Point3D destination)
     {
@@ -169,7 +173,7 @@ public sealed class MovementValidationService : IMovementValidationService
     {
         var ourTop = resolvedZ + PersonHeight;
 
-        foreach (var other in _index.GetMobilesInRange(mobile.MapId, destination, range: 1))
+        foreach (var other in _index.GetMobilesInRange(mobile.MapId, destination, 1))
         {
             if (other.Id == mobile.Id)
             {
@@ -254,7 +258,7 @@ public sealed class MovementValidationService : IMovementValidationService
 
             var diff = Math.Abs(candidate - startZ);
 
-            if (diff < bestDiff || (diff == bestDiff && (!best.HasValue || candidate > best.Value)))
+            if (diff < bestDiff || diff == bestDiff && (!best.HasValue || candidate > best.Value))
             {
                 best = candidate;
                 bestDiff = diff;

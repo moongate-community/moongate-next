@@ -5,7 +5,7 @@ using Moongate.Server.Data.Config;
 namespace Moongate.Server.Extensions.Configuration;
 
 /// <summary>
-/// DryIoc-native registration for the core <c>server</c> config section.
+///     DryIoc-native registration for the core <c>server</c> config section.
 /// </summary>
 public static class ServerConfigContainerExtensions
 {

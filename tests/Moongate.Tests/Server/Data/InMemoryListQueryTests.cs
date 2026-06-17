@@ -5,8 +5,6 @@ namespace Moongate.Tests.Server.Data;
 
 public sealed class InMemoryListQueryTests
 {
-    private sealed record Entry(string Id, string Name, string Tag, bool Enabled);
-
     [Fact]
     public void Apply_ComposesFiltersBeforePaging()
     {
@@ -33,8 +31,8 @@ public sealed class InMemoryListQueryTests
     public void Apply_ReturnsRequestedPageMetadata()
     {
         var entries = Enumerable.Range(1, 5)
-                                .Select(index => new Entry($"id-{index}", $"Name {index}", "tag", true))
-                                .ToArray();
+            .Select(index => new Entry($"id-{index}", $"Name {index}", "tag", true))
+            .ToArray();
 
         var result = InMemoryListQuery.Apply(
             entries,
@@ -70,4 +68,6 @@ public sealed class InMemoryListQueryTests
         Assert.Equal("alpha", item.Id);
         Assert.Equal(1, result.TotalCount);
     }
+
+    private sealed record Entry(string Id, string Name, string Tag, bool Enabled);
 }

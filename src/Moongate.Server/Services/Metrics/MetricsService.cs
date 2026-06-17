@@ -9,19 +9,19 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.Metrics;
 
 /// <summary>
-/// Background metrics aggregator. Builds a <see cref="MetricsSnapshot" /> every
-/// <see cref="MetricsConfig.RefreshInterval" /> from a timer registered on
-/// <see cref="ITimerService" />, and serves the cached snapshot on every scrape.
+///     Background metrics aggregator. Builds a <see cref="MetricsSnapshot" /> every
+///     <see cref="MetricsConfig.RefreshInterval" /> from a timer registered on
+///     <see cref="ITimerService" />, and serves the cached snapshot on every scrape.
 /// </summary>
 public sealed class MetricsService : IMetricsService
 {
     private const string RefreshTimerName = "metrics-refresh";
     private const string LogTimerName = "metrics-log";
+    private readonly MetricsConfig _config;
 
     private readonly ILogger _logger = Log.ForContext<MetricsService>();
     private readonly IReadOnlyList<IMetricProvider> _providers;
     private readonly ITimerService _timer;
-    private readonly MetricsConfig _config;
 
     private MetricsSnapshot _latestSnapshot;
     private string? _logTimerId;
@@ -32,11 +32,13 @@ public sealed class MetricsService : IMetricsService
         _providers = providers.ToArray();
         _timer = timer;
         _config = config;
-        _latestSnapshot = new(DateTimeOffset.MinValue, Array.Empty<MetricSample>());
+        _latestSnapshot = new MetricsSnapshot(DateTimeOffset.MinValue, Array.Empty<MetricSample>());
     }
 
     public MetricsSnapshot GetSnapshot()
-        => Volatile.Read(ref _latestSnapshot);
+    {
+        return Volatile.Read(ref _latestSnapshot);
+    }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
@@ -141,6 +143,6 @@ public sealed class MetricsService : IMetricsService
             }
         }
 
-        Volatile.Write(ref _latestSnapshot, new(collectedAt, samples));
+        Volatile.Write(ref _latestSnapshot, new MetricsSnapshot(collectedAt, samples));
     }
 }

@@ -4,8 +4,8 @@ namespace Moongate.Tests.Hosting.EventBus.Support;
 
 internal sealed class TimelineAsyncHandler : IAsyncEventHandler<TestAsyncEvent>
 {
-    private readonly List<string> _timeline;
     private readonly string _name;
+    private readonly List<string> _timeline;
 
     public TimelineAsyncHandler(string name, List<string> timeline)
     {
@@ -26,8 +26,8 @@ internal sealed class TimelineAsyncHandler : IAsyncEventHandler<TestAsyncEvent>
 
 internal sealed class TimelineTickHandler : ITickEventHandler<TestTickEvent>
 {
-    private readonly List<string> _timeline;
     private readonly string _name;
+    private readonly List<string> _timeline;
 
     public TimelineTickHandler(string name, List<string> timeline)
     {

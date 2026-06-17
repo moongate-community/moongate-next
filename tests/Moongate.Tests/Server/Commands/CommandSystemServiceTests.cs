@@ -6,12 +6,6 @@ namespace Moongate.Tests.Server.Commands;
 
 public sealed class CommandSystemServiceTests
 {
-    private sealed class EmptyServiceProvider : IServiceProvider
-    {
-        public object? GetService(Type serviceType)
-            => null;
-    }
-
     [Fact]
     public async Task ExecuteCommandWithOutputAsync_ParsesQuotedArgumentsAndCapturesOutput()
     {
@@ -29,9 +23,9 @@ public sealed class CommandSystemServiceTests
         );
 
         var output = await service.ExecuteCommandWithOutputAsync(
-                         "s \"hello world\" Britannia",
-                         CommandSourceType.InGame
-                     );
+            "s \"hello world\" Britannia",
+            CommandSourceType.InGame
+        );
 
         Assert.Equal(["hello world,Britannia"], output);
     }
@@ -69,24 +63,31 @@ public sealed class CommandSystemServiceTests
             static _ => Task.CompletedTask,
             source: CommandSourceType.All,
             autocompleteProvider: static context =>
-                                  {
-                                      if (context.Arguments.Count == 0 || context.EndsWithWhitespace)
-                                      {
-                                          return new[] { "britain", "moonglow" };
-                                      }
+            {
+                if (context.Arguments.Count == 0 || context.EndsWithWhitespace)
+                {
+                    return new[] { "britain", "moonglow" };
+                }
 
-                                      return new[] { "britain", "moonglow" }
-                                             .Where(
-                                                 value => value.StartsWith(
-                                                     context.Arguments[^1],
-                                                     StringComparison.OrdinalIgnoreCase
-                                                 )
-                                             )
-                                             .ToArray();
-                                  }
+                return new[] { "britain", "moonglow" }
+                    .Where(value => value.StartsWith(
+                            context.Arguments[^1],
+                            StringComparison.OrdinalIgnoreCase
+                        )
+                    )
+                    .ToArray();
+            }
         );
 
         Assert.Equal(["teleport", "tp"], service.GetAutocompleteSuggestions("t"));
         Assert.Equal(["britain"], service.GetAutocompleteSuggestions("tp br"));
+    }
+
+    private sealed class EmptyServiceProvider : IServiceProvider
+    {
+        public object? GetService(Type serviceType)
+        {
+            return null;
+        }
     }
 }

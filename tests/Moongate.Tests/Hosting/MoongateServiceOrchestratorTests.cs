@@ -7,15 +7,6 @@ namespace Moongate.Tests.Hosting;
 
 public class MoongateServiceOrchestratorTests
 {
-    internal sealed class ThrowingStopService : IMoongateService
-    {
-        public Task StartAsync(CancellationToken cancellationToken)
-            => Task.CompletedTask;
-
-        public Task StopAsync(CancellationToken cancellationToken)
-            => throw new InvalidOperationException("boom");
-    }
-
     [Fact]
     public async Task Start_EqualPriorities_PreserveRegistrationOrder()
     {
@@ -124,6 +115,19 @@ public class MoongateServiceOrchestratorTests
         }
 
         return container;
+    }
+
+    internal sealed class ThrowingStopService : IMoongateService
+    {
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            throw new InvalidOperationException("boom");
+        }
     }
 }
 

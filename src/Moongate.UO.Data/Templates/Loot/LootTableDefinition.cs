@@ -1,8 +1,8 @@
 namespace Moongate.UO.Data.Templates.Loot;
 
 /// <summary>
-/// A named loot table: a top-level group of nodes (its <see cref="Content" />)
-/// resolved to produce items.
+///     A named loot table: a top-level group of nodes (its <see cref="Content" />)
+///     resolved to produce items.
 /// </summary>
 public sealed class LootTableDefinition
 {

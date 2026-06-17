@@ -40,10 +40,12 @@ public sealed class GumpDecoderTests
     // A 2x1 gump: row-lookup table (1 dword = row 0 at dword offset 1),
     // then row 0 RLE: (color 0x0000, run 1) = transparent, (color 0x7C00, run 1) = red.
     private static byte[] BuildGump()
-        =>
+    {
+        return
         [
             0x01, 0x00, 0x00, 0x00, // lookup[0] = 1 (dwords) -> byte offset 4
             0x00, 0x00, 0x01, 0x00, // color 0x0000, run 1  (transparent)
             0x00, 0x7C, 0x01, 0x00  // color 0x7C00, run 1  (red)
         ];
+    }
 }

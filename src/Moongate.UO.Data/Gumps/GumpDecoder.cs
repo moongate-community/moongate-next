@@ -8,10 +8,10 @@ namespace Moongate.UO.Data.Gumps;
 public static class GumpDecoder
 {
     /// <summary>
-    /// Decodes gump pixel <paramref name="data" /> of the given <paramref name="width" />/<paramref name="height" />.
-    /// Layout: <paramref name="height" /> little-endian uint row offsets (in dwords from the data start),
-    /// then per row a sequence of (color: u16, run: u16) pairs; color 0 is transparent, otherwise opaque.
-    /// Tolerates truncated/short data by leaving the remaining pixels transparent.
+    ///     Decodes gump pixel <paramref name="data" /> of the given <paramref name="width" />/<paramref name="height" />.
+    ///     Layout: <paramref name="height" /> little-endian uint row offsets (in dwords from the data start),
+    ///     then per row a sequence of (color: u16, run: u16) pairs; color 0 is transparent, otherwise opaque.
+    ///     Tolerates truncated/short data by leaving the remaining pixels transparent.
     /// </summary>
     public static Image<Rgba32> Decode(ReadOnlySpan<byte> data, int width, int height)
     {
@@ -70,6 +70,6 @@ public static class GumpDecoder
         var g = (byte)(((value >> 5) & 0x1F) * 255 / 31);
         var b = (byte)((value & 0x1F) * 255 / 31);
 
-        return new(r, g, b, 255);
+        return new Rgba32(r, g, b, 255);
     }
 }

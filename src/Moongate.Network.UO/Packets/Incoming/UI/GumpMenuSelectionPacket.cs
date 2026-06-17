@@ -9,21 +9,23 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Incoming.UI;
 
 /// <summary>
-/// Represents a gump menu selection packet.
+///     Represents a gump menu selection packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Variable, Description = "Gump Menu Selection")]
 public class GumpMenuSelectionPacket : BaseGameNetworkPacket
 {
     private const byte OpCodeValue = 0xB1;
 
+    public GumpMenuSelectionPacket()
+        : base(OpCodeValue)
+    {
+    }
+
     public int ButtonId { get; private set; }
     public int GumpId { get; private set; }
     public Serial Serial { get; private set; }
     public IReadOnlyList<int> Switches { get; private set; } = [];
     public IReadOnlyDictionary<ushort, string> TextEntries { get; private set; } = new Dictionary<ushort, string>();
-
-    public GumpMenuSelectionPacket()
-        : base(OpCodeValue) { }
 
     protected override bool ParsePayload(ref SpanReader reader)
     {

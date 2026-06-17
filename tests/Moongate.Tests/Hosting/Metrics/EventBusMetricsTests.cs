@@ -11,8 +11,7 @@ public class EventBusMetricsTests
     [Fact]
     public async Task Collect_AfterAsyncHandlerThrows_ErrorCounterIncrements()
     {
-        var bus = BuildBus(
-            services =>
+        var bus = BuildBus(services =>
             {
                 services.AddSingleton<IAsyncEventHandler<TestAsyncEvent>>(_ => new ThrowingAsyncHandler());
             }
@@ -37,8 +36,7 @@ public class EventBusMetricsTests
     [Fact]
     public void Collect_AfterTickHandlerThrows_ErrorCounterIncrements()
     {
-        var bus = BuildBus(
-            services =>
+        var bus = BuildBus(services =>
             {
                 services.AddSingleton<ITickEventHandler<TestTickEvent>>(_ => new ThrowingTickHandler());
             }
@@ -86,9 +84,11 @@ public class EventBusMetricsTests
         var services = new ServiceCollection();
         configure(services);
 
-        return new(services.BuildServiceProvider());
+        return new EventBusService(services.BuildServiceProvider());
     }
 
     private static double ValueOf(EventBusService bus, string name)
-        => bus.Collect().Single(s => s.Name == name).Value;
+    {
+        return bus.Collect().Single(s => s.Name == name).Value;
+    }
 }

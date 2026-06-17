@@ -11,6 +11,16 @@ public sealed class LoggerConfigTests : IDisposable
     private readonly string _dir = Path.Combine(Path.GetTempPath(), $"nr-logger-config-{Guid.NewGuid():N}");
     private string ConfigPath => Path.Combine(_dir, "moongate.yaml");
 
+    public void Dispose()
+    {
+        if (Directory.Exists(_dir))
+        {
+            Directory.Delete(_dir, true);
+        }
+
+        GC.SuppressFinalize(this);
+    }
+
     [Fact]
     public void AddMoongateLogging_RegistersLoggerConfigSection()
     {
@@ -40,15 +50,5 @@ public sealed class LoggerConfigTests : IDisposable
         Assert.False(config.LogPackets);
         Assert.False(config.WriteToFile);
         Assert.Equal("moongate.log", config.FileName);
-    }
-
-    public void Dispose()
-    {
-        if (Directory.Exists(_dir))
-        {
-            Directory.Delete(_dir, true);
-        }
-
-        GC.SuppressFinalize(this);
     }
 }

@@ -5,19 +5,14 @@ using Moongate.Server.Services.Loot;
 using Moongate.Server.Services.Mobiles;
 using Moongate.Server.Services.Templates;
 using Moongate.Tests.Support;
+using Moongate.UO.Data.Templates.Items;
+using Moongate.UO.Data.Templates.Loot;
+using Moongate.UO.Data.Templates.Mobiles;
 
 namespace Moongate.Tests.Server.Mobiles;
 
 public sealed class MobileTemplateAuthoringServiceTests
 {
-    private sealed record AuthoringContext(
-        string MobilesPath,
-        MobileTemplateService Templates,
-        ItemTemplateService ItemTemplates,
-        LootTableRegistryStore RegistryStore,
-        MobileTemplateAuthoringService Service
-    );
-
     [Fact]
     public async Task CreateAsync_DuplicateId_Throws()
     {
@@ -52,7 +47,7 @@ public sealed class MobileTemplateAuthoringServiceTests
         // Seed a template that has BaseMobile set directly into the registry
         ctx.Templates.UpsertRange(
             [
-                new()
+                new MobileTemplateDefinition
                 {
                     Id = "orc_base",
                     Body = 7,
@@ -61,8 +56,8 @@ public sealed class MobileTemplateAuthoringServiceTests
             ]
         );
 
-        await Assert.ThrowsAsync<InvalidOperationException>(
-            () => ctx.Service.UpdateAsync("orc_base", CreateRequest("orc_base", 7)).AsTask()
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            ctx.Service.UpdateAsync("orc_base", CreateRequest("orc_base", 7)).AsTask()
         );
     }
 
@@ -87,8 +82,8 @@ public sealed class MobileTemplateAuthoringServiceTests
         using var dir = new TempTemplateDirectory();
         var ctx = NewContext(dir);
 
-        await Assert.ThrowsAsync<InvalidOperationException>(
-            () => ctx.Service.UpdateAsync("orc", CreateRequest("goblin", 7)).AsTask()
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            ctx.Service.UpdateAsync("orc", CreateRequest("goblin", 7)).AsTask()
         );
     }
 
@@ -174,7 +169,9 @@ public sealed class MobileTemplateAuthoringServiceTests
     }
 
     private static MobileTemplateEditRequest CreateRequest(string id, int body)
-        => new() { Id = id, Body = body };
+    {
+        return new MobileTemplateEditRequest { Id = id, Body = body };
+    }
 
     private static AuthoringContext NewContext(TempTemplateDirectory dir)
     {
@@ -184,18 +181,26 @@ public sealed class MobileTemplateAuthoringServiceTests
         var itemTemplates = new ItemTemplateService();
         itemTemplates.ReplaceAll(
             [
-                new() { Id = "leather_chest", ItemId = 5131, Name = "Leather Chest" }
+                new ItemTemplateDefinition { Id = "leather_chest", ItemId = 5131, Name = "Leather Chest" }
             ]
         );
         var registryStore = new LootTableRegistryStore();
         registryStore.SetRegistry(
-            new(
-                [new() { Id = "basic_loot", Content = [] }],
+            new LootTableRegistry(
+                [new LootTableDefinition { Id = "basic_loot", Content = [] }],
                 []
             )
         );
         var service = new MobileTemplateAuthoringService(directories, templates, itemTemplates, registryStore);
 
-        return new(mobilesPath, templates, itemTemplates, registryStore, service);
+        return new AuthoringContext(mobilesPath, templates, itemTemplates, registryStore, service);
     }
+
+    private sealed record AuthoringContext(
+        string MobilesPath,
+        MobileTemplateService Templates,
+        ItemTemplateService ItemTemplates,
+        LootTableRegistryStore RegistryStore,
+        MobileTemplateAuthoringService Service
+    );
 }

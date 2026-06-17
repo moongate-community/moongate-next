@@ -9,7 +9,7 @@ using Moongate.Server.Services.Metrics;
 namespace Moongate.Server.Extensions.Metrics;
 
 /// <summary>
-/// DryIoc-native bootstrap helpers for the Moongate metrics service.
+///     DryIoc-native bootstrap helpers for the Moongate metrics service.
 /// </summary>
 public static class MetricsContainerExtensions
 {
@@ -19,9 +19,9 @@ public static class MetricsContainerExtensions
     extension(IContainer container)
     {
         /// <summary>
-        /// Registers <see cref="MetricsService" /> with the Moongate hosting orchestrator.
-        /// Requires <c>AddMoongateTimerWheel</c> to have been called earlier so
-        /// <see cref="ITimerService" /> is resolvable.
+        ///     Registers <see cref="MetricsService" /> with the Moongate hosting orchestrator.
+        ///     Requires <c>AddMoongateTimerWheel</c> to have been called earlier so
+        ///     <see cref="ITimerService" /> is resolvable.
         /// </summary>
         public IContainer AddMoongateMetrics()
         {

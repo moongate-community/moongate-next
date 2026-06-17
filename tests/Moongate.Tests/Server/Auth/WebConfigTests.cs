@@ -9,6 +9,16 @@ public sealed class WebConfigTests : IDisposable
     private readonly string _dir = Path.Combine(Path.GetTempPath(), $"moongate-web-config-{Guid.NewGuid():N}");
     private string ConfigPath => Path.Combine(_dir, "moongate.yaml");
 
+    public void Dispose()
+    {
+        if (Directory.Exists(_dir))
+        {
+            Directory.Delete(_dir, true);
+        }
+
+        GC.SuppressFinalize(this);
+    }
+
     [Fact]
     public void Defaults_AreValidAndUseDevelopmentSigningKey()
     {
@@ -19,16 +29,6 @@ public sealed class WebConfigTests : IDisposable
         Assert.Equal("Moongate", config.Jwt.Issuer);
         Assert.Equal("Moongate.Web", config.Jwt.Audience);
         Assert.True(config.Jwt.IsUsingDevelopmentSigningKey);
-    }
-
-    public void Dispose()
-    {
-        if (Directory.Exists(_dir))
-        {
-            Directory.Delete(_dir, true);
-        }
-
-        GC.SuppressFinalize(this);
     }
 
     [Fact]
@@ -95,5 +95,7 @@ public sealed class WebConfigTests : IDisposable
     }
 
     private static ConfigSectionRegistration WebSection()
-        => new("web", typeof(WebConfig), () => new WebConfig());
+    {
+        return new ConfigSectionRegistration("web", typeof(WebConfig), () => new WebConfig());
+    }
 }

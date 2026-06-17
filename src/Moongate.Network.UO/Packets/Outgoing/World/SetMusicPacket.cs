@@ -6,7 +6,7 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Outgoing.World;
 
 /// <summary>
-/// Represents a music change packet.
+///     Represents a music change packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Set Music")]
 public class SetMusicPacket : BaseGameNetworkPacket
@@ -14,16 +14,18 @@ public class SetMusicPacket : BaseGameNetworkPacket
     private const byte OpCodeValue = 0x6D;
     private const int LengthValue = 3;
 
-    public int MusicId { get; set; }
-
     public SetMusicPacket()
-        : base(OpCodeValue, LengthValue) { }
+        : base(OpCodeValue, LengthValue)
+    {
+    }
 
     public SetMusicPacket(int musicId)
         : this()
     {
         MusicId = musicId;
     }
+
+    public int MusicId { get; set; }
 
     public override void Write(ref SpanWriter writer)
     {

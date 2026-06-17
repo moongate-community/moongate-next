@@ -8,9 +8,9 @@ using Moongate.Persistence.Internal;
 namespace Moongate.Persistence.Services.Persistence;
 
 /// <summary>
-/// Stores each registered entity type as its own MessagePack snapshot file
-/// (<c>&lt;snake_case type name&gt;&lt;suffix&gt;</c> under the save directory), written atomically
-/// via temp + rename and verified by a payload checksum on load.
+///     Stores each registered entity type as its own MessagePack snapshot file
+///     (<c>&lt;snake_case type name&gt;&lt;suffix&gt;</c> under the save directory), written atomically
+///     via temp + rename and verified by a payload checksum on load.
 /// </summary>
 public sealed class MessagePackSnapshotService : ISnapshotService, IDisposable
 {
@@ -19,8 +19,9 @@ public sealed class MessagePackSnapshotService : ISnapshotService, IDisposable
     private static readonly char[] _invalidTypeNameChars =
         [.. Path.GetInvalidFileNameChars(), Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar];
 
-    private readonly SemaphoreSlim _ioLock = new(1, 1);
     private readonly string _directory;
+
+    private readonly SemaphoreSlim _ioLock = new(1, 1);
     private readonly string _suffix;
 
     public MessagePackSnapshotService(string saveDirectory, string fileSuffix)
@@ -32,6 +33,11 @@ public sealed class MessagePackSnapshotService : ISnapshotService, IDisposable
         _suffix = fileSuffix;
 
         Directory.CreateDirectory(_directory);
+    }
+
+    public void Dispose()
+    {
+        _ioLock.Dispose();
     }
 
     public async ValueTask DeleteBucketAsync(string typeName, CancellationToken cancellationToken = default)
@@ -52,9 +58,6 @@ public sealed class MessagePackSnapshotService : ISnapshotService, IDisposable
             _ioLock.Release();
         }
     }
-
-    public void Dispose()
-        => _ioLock.Dispose();
 
     public async ValueTask<PersistedBucket?> LoadBucketAsync(string typeName, CancellationToken cancellationToken = default)
     {
@@ -81,7 +84,7 @@ public sealed class MessagePackSnapshotService : ISnapshotService, IDisposable
                 return null;
             }
 
-            return new(envelope.Bucket, envelope.LastSequenceId);
+            return new PersistedBucket(envelope.Bucket, envelope.LastSequenceId);
         }
         catch (OperationCanceledException)
         {

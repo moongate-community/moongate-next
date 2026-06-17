@@ -5,7 +5,7 @@ using Moongate.Network.Spans;
 namespace Moongate.Network.UO.Data.Login;
 
 /// <summary>
-/// Represents a shard entry in the UO server list packet.
+///     Represents a shard entry in the UO server list packet.
 /// </summary>
 public class GameServerEntry
 {

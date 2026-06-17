@@ -1,7 +1,7 @@
 namespace Moongate.UO.Data.Types.Localization;
 
 /// <summary>
-/// Origin marker for a cliloc string entry.
+///     Origin marker for a cliloc string entry.
 /// </summary>
 [Flags]
 public enum CliLocFlagType

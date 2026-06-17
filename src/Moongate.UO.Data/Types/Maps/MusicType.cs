@@ -1,7 +1,7 @@
 namespace Moongate.UO.Data.Types.Maps;
 
 /// <summary>
-/// UO music track identifiers (the numeric id the client maps to a music file).
+///     UO music track identifiers (the numeric id the client maps to a music file).
 /// </summary>
 public enum MusicType
 {

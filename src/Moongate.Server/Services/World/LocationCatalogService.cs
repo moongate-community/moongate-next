@@ -6,7 +6,7 @@ using Moongate.Server.Services.WorldData;
 namespace Moongate.Server.Services.World;
 
 /// <summary>
-/// Lazy in-memory location catalog populated by server asset data.
+///     Lazy in-memory location catalog populated by server asset data.
 /// </summary>
 public class LocationCatalogService : LazyDataService, ILocationCatalogService
 {
@@ -14,7 +14,9 @@ public class LocationCatalogService : LazyDataService, ILocationCatalogService
     private readonly Lock _sync = new();
     private List<WorldLocationEntry> _locations = [];
 
-    public LocationCatalogService() { }
+    public LocationCatalogService()
+    {
+    }
 
     public LocationCatalogService(ServerAssetDataLoader loader)
     {
@@ -48,5 +50,7 @@ public class LocationCatalogService : LazyDataService, ILocationCatalogService
     }
 
     protected override void LoadCore()
-        => _loader?.LoadLocations(this);
+    {
+        _loader?.LoadLocations(this);
+    }
 }

@@ -221,7 +221,9 @@ public class PacketParserTests
     }
 
     private static Action<byte, IGameNetworkPacket, byte[]> Capture(List<IGameNetworkPacket> sink)
-        => (_, packet, _) => sink.Add(packet);
+    {
+        return (_, packet, _) => sink.Add(packet);
+    }
 
     private static (PacketParser parser, NetworkParserSessionMetrics metrics, List<IGameNetworkPacket> captured, List<byte>
         pending) Setup(
@@ -237,6 +239,6 @@ public class PacketParserTests
 
         var parser = new PacketParser(registry, maxPendingBufferBytes, maxDeclaredPacketLength);
 
-        return (parser, new(), [], []);
+        return (parser, new NetworkParserSessionMetrics(), [], []);
     }
 }

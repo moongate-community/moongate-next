@@ -3,12 +3,12 @@ using Moongate.Server.Data.Auth;
 namespace Moongate.Server.Interfaces.Auth;
 
 /// <summary>
-/// Issues and revokes access and refresh tokens for web clients.
+///     Issues and revokes access and refresh tokens for web clients.
 /// </summary>
 public interface IAuthTokenService
 {
     /// <summary>
-    /// Validates credentials and creates a new token pair.
+    ///     Validates credentials and creates a new token pair.
     /// </summary>
     /// <param name="username">Account username.</param>
     /// <param name="password">Plain account password.</param>
@@ -21,7 +21,7 @@ public interface IAuthTokenService
     );
 
     /// <summary>
-    /// Revokes an active refresh token.
+    ///     Revokes an active refresh token.
     /// </summary>
     /// <param name="refreshToken">Opaque refresh token.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
@@ -29,7 +29,7 @@ public interface IAuthTokenService
     ValueTask<bool> LogoutAsync(string refreshToken, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Exchanges an active refresh token for a new access token and refresh token.
+    ///     Exchanges an active refresh token for a new access token and refresh token.
     /// </summary>
     /// <param name="refreshToken">Opaque refresh token.</param>
     /// <param name="cancellationToken">Cancellation token.</param>

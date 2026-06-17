@@ -11,6 +11,16 @@ public class TimerWheelExtensionsTests : IDisposable
     private readonly string _dir = Path.Combine(Path.GetTempPath(), $"nh-timing-config-{Guid.NewGuid():N}");
     private string Path_ => Path.Combine(_dir, "moongate.yaml");
 
+    public void Dispose()
+    {
+        if (Directory.Exists(_dir))
+        {
+            Directory.Delete(_dir, true);
+        }
+
+        GC.SuppressFinalize(this);
+    }
+
     [Fact]
     public void AddMoongateTimerWheel_AppliesCustomConfig()
     {
@@ -47,15 +57,5 @@ public class TimerWheelExtensionsTests : IDisposable
 
         Assert.NotNull(container.Resolve<ITimerService>());
         Assert.NotNull(container.Resolve<TimerWheelConfig>());
-    }
-
-    public void Dispose()
-    {
-        if (Directory.Exists(_dir))
-        {
-            Directory.Delete(_dir, true);
-        }
-
-        GC.SuppressFinalize(this);
     }
 }

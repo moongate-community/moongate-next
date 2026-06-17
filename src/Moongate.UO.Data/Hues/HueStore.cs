@@ -7,8 +7,8 @@ using Serilog;
 namespace Moongate.UO.Data.Hues;
 
 /// <summary>
-/// Loads the UO hue table from <c>hues.mul</c> (groups of 8 entries). A missing file yields an
-/// empty store (non-fatal).
+///     Loads the UO hue table from <c>hues.mul</c> (groups of 8 entries). A missing file yields an
+///     empty store (non-fatal).
 /// </summary>
 public sealed class HueStore : IHueStore
 {
@@ -54,7 +54,7 @@ public sealed class HueStore : IHueStore
                 var nameBytes = reader.ReadBytes(20);
                 var name = Encoding.ASCII.GetString(nameBytes).TrimEnd('\0', ' ');
 
-                _hues.Add(new(colors, tableStart, tableEnd, name));
+                _hues.Add(new Hue(colors, tableStart, tableEnd, name));
             }
         }
 
@@ -66,5 +66,7 @@ public sealed class HueStore : IHueStore
     public int Count => _hues.Count;
 
     public Hue? GetHue(int index)
-        => index >= 0 && index < _hues.Count ? _hues[index] : null;
+    {
+        return index >= 0 && index < _hues.Count ? _hues[index] : null;
+    }
 }

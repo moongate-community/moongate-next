@@ -11,7 +11,7 @@ using Moongate.UO.Data.Interfaces.Services;
 namespace Moongate.Server.Extensions.Items;
 
 /// <summary>
-/// DryIoc-native registration helpers for UO item services.
+///     DryIoc-native registration helpers for UO item services.
 /// </summary>
 public static class ItemContainerExtensions
 {
@@ -19,7 +19,7 @@ public static class ItemContainerExtensions
     private const int ItemEntitySchemaVersion = 1;
 
     /// <summary>
-    /// Registers the UO item entity persistence and the item service.
+    ///     Registers the UO item entity persistence and the item service.
     /// </summary>
     public static IContainer AddMoongateItems(this IContainer container)
     {

@@ -1,5 +1,6 @@
 using Moongate.Core.Ids;
 using Moongate.Persistence.Interfaces.Persistence;
+using Moongate.UO.Data.Data;
 using Moongate.UO.Data.Entities.Items;
 
 namespace Moongate.Tests.Server.Items.Support;
@@ -10,22 +11,34 @@ public sealed class FakeItemAccess : IAutoDataAccess<ItemEntity, Serial>
     private uint _nextId = 1;
 
     public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
-        => ValueTask.FromResult(_items.Count);
+    {
+        return ValueTask.FromResult(_items.Count);
+    }
 
     public ValueTask<IReadOnlyCollection<ItemEntity>> GetAllAsync(CancellationToken cancellationToken = default)
-        => ValueTask.FromResult<IReadOnlyCollection<ItemEntity>>(_items.Values.Select(Clone).ToArray());
+    {
+        return ValueTask.FromResult<IReadOnlyCollection<ItemEntity>>(_items.Values.Select(Clone).ToArray());
+    }
 
     public ValueTask<ItemEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
-        => ValueTask.FromResult(_items.TryGetValue(id, out var item) ? Clone(item) : null);
+    {
+        return ValueTask.FromResult(_items.TryGetValue(id, out var item) ? Clone(item) : null);
+    }
 
     public ValueTask<Serial> NextIdAsync(CancellationToken cancellationToken = default)
-        => ValueTask.FromResult(new Serial(_nextId++));
+    {
+        return ValueTask.FromResult(new Serial(_nextId++));
+    }
 
     public IQueryable<ItemEntity> Query()
-        => _items.Values.Select(Clone).AsQueryable();
+    {
+        return _items.Values.Select(Clone).AsQueryable();
+    }
 
     public ValueTask<bool> RemoveAsync(Serial id, CancellationToken cancellationToken = default)
-        => ValueTask.FromResult(_items.Remove(id));
+    {
+        return ValueTask.FromResult(_items.Remove(id));
+    }
 
     public ValueTask UpsertAsync(ItemEntity entity, CancellationToken cancellationToken = default)
     {
@@ -35,7 +48,8 @@ public sealed class FakeItemAccess : IAutoDataAccess<ItemEntity, Serial>
     }
 
     private static ItemEntity Clone(ItemEntity item)
-        => new()
+    {
+        return new ItemEntity
         {
             Id = item.Id,
             Name = item.Name,
@@ -48,6 +62,7 @@ public sealed class FakeItemAccess : IAutoDataAccess<ItemEntity, Serial>
             EquippedMobileId = item.EquippedMobileId,
             ContainerPosition = item.ContainerPosition,
             ContainedItemIds = [.. item.ContainedItemIds],
-            CustomProperties = new(item.CustomProperties)
+            CustomProperties = new Dictionary<string, CustomProperty>(item.CustomProperties)
         };
+    }
 }

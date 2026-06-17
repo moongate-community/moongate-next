@@ -1,7 +1,7 @@
 namespace Moongate.Tests.UO.Data.Support;
 
 /// <summary>
-/// Writes a synthetic <c>radarcol.mul</c> (0x8000 ushort RGB555 entries) with caller-specified colours.
+///     Writes a synthetic <c>radarcol.mul</c> (0x8000 ushort RGB555 entries) with caller-specified colours.
 /// </summary>
 public static class RadarColFixture
 {

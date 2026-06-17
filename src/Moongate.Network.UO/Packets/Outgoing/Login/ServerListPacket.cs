@@ -7,7 +7,7 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Outgoing.Login;
 
 /// <summary>
-/// Represents a game server list packet.
+///     Represents a game server list packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Variable, Description = "Game Server List")]
 public class ServerListPacket : BaseGameNetworkPacket
@@ -16,10 +16,10 @@ public class ServerListPacket : BaseGameNetworkPacket
     private const int HeaderLength = 6;
     private const int ShardEntryLength = 40;
 
-    public List<GameServerEntry> Shards { get; } = [];
-
     public ServerListPacket()
-        : base(OpCodeValue) { }
+        : base(OpCodeValue)
+    {
+    }
 
     public ServerListPacket(params GameServerEntry[] entries)
         : this()
@@ -29,6 +29,8 @@ public class ServerListPacket : BaseGameNetworkPacket
             Shards.AddRange(entries);
         }
     }
+
+    public List<GameServerEntry> Shards { get; } = [];
 
     public void AddShard(GameServerEntry entry)
     {
@@ -51,5 +53,7 @@ public class ServerListPacket : BaseGameNetworkPacket
     }
 
     protected override bool ParsePayload(ref SpanReader reader)
-        => reader.Remaining >= 2;
+    {
+        return reader.Remaining >= 2;
+    }
 }

@@ -9,13 +9,18 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Outgoing.World;
 
 /// <summary>
-/// Represents a graphical effect packet.
+///     Represents a graphical effect packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Graphical Effect")]
 public class GraphicalEffectPacket : BaseGameNetworkPacket
 {
     private const byte OpCodeValue = 0x70;
     private const int LengthValue = 28;
+
+    public GraphicalEffectPacket()
+        : base(OpCodeValue, LengthValue)
+    {
+    }
 
     public EffectDirectionType DirectionType { get; set; }
     public Serial SourceSerial { get; set; }
@@ -28,9 +33,6 @@ public class GraphicalEffectPacket : BaseGameNetworkPacket
     public ushort Unknown2 { get; set; }
     public bool AdjustDirectionDuringAnimation { get; set; } = true;
     public bool ExplodeOnImpact { get; set; }
-
-    public GraphicalEffectPacket()
-        : base(OpCodeValue, LengthValue) { }
 
     public override void Write(ref SpanWriter writer)
     {
@@ -77,8 +79,8 @@ public class GraphicalEffectPacket : BaseGameNetworkPacket
         var targetY = reader.ReadInt16();
         var targetZ = reader.ReadSByte();
 
-        SourceLocation = new(sourceX, sourceY, sourceZ);
-        TargetLocation = new(targetX, targetY, targetZ);
+        SourceLocation = new Point3D(sourceX, sourceY, sourceZ);
+        TargetLocation = new Point3D(targetX, targetY, targetZ);
     }
 
     private void WriteLocations(ref SpanWriter writer)

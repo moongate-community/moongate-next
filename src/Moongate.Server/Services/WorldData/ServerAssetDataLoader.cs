@@ -11,7 +11,7 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.WorldData;
 
 /// <summary>
-/// Loads server world data from bundled YAML asset models.
+///     Loads server world data from bundled YAML asset models.
 /// </summary>
 public class ServerAssetDataLoader
 {
@@ -23,9 +23,9 @@ public class ServerAssetDataLoader
     private const int TokunoMapId = 4;
     private const int TermurMapId = 5;
     private const int InternalMapId = 0x7F;
+    private readonly string _dataDirectory;
 
     private readonly ILogger _logger = Log.ForContext<ServerAssetDataLoader>();
-    private readonly string _dataDirectory;
 
     public ServerAssetDataLoader(string dataDirectory)
     {
@@ -84,16 +84,15 @@ public class ServerAssetDataLoader
         {
             var table = YamlUtils.DeserializeFromFile<ServerAssetContainerTable>(containersPath);
             var entries = table.Container
-                               .Select(
-                                   static definition => new ContainerEntry(
-                                       definition.Id,
-                                       definition.ItemId,
-                                       definition.Width,
-                                       definition.Height,
-                                       definition.Name
-                                   )
-                               )
-                               .ToArray();
+                .Select(static definition => new ContainerEntry(
+                        definition.Id,
+                        definition.ItemId,
+                        definition.Width,
+                        definition.Height,
+                        definition.Name
+                    )
+                )
+                .ToArray();
 
             containerDataService.SetContainers(entries);
         }
@@ -107,15 +106,14 @@ public class ServerAssetDataLoader
         {
             var table = YamlUtils.DeserializeFromFile<ServerAssetContainerLayoutTable>(layoutsPath);
             var entries = table.ContainerLayout
-                               .Select(
-                                   static definition => new ContainerLayoutEntry(
-                                       definition.GumpId,
-                                       definition.Bounds,
-                                       definition.DropSound,
-                                       definition.ItemIds
-                                   )
-                               )
-                               .ToArray();
+                .Select(static definition => new ContainerLayoutEntry(
+                        definition.GumpId,
+                        definition.Bounds,
+                        definition.DropSound,
+                        definition.ItemIds
+                    )
+                )
+                .ToArray();
 
             containerDataService.SetLayouts(entries);
         }
@@ -175,13 +173,13 @@ public class ServerAssetDataLoader
                     }
 
                     var target = TryParsePoint3D(placement.Target, out var placementTarget)
-                                     ? placementTarget
-                                     : (Point3D?)null;
+                        ? placementTarget
+                        : (Point3D?)null;
 
                     foreach (var mapId in mapIds)
                     {
                         entries.Add(
-                            new(
+                            new DecorationEntry(
                                 mapId,
                                 sourceGroup,
                                 sourceFile,
@@ -283,12 +281,15 @@ public class ServerAssetDataLoader
         }
 
         var table = YamlUtils.DeserializeFromFile<ServerAssetConversionTable>(conversionsPath);
-        var mountsSection = table.ConversionSection.FirstOrDefault(
-            static section => section.Name.Equals("Mounts", StringComparison.OrdinalIgnoreCase)
+        var mountsSection = table.ConversionSection.FirstOrDefault(static section =>
+            section.Name.Equals("Mounts", StringComparison.OrdinalIgnoreCase)
         );
-        var tilesEntry = mountsSection?.Entries.FirstOrDefault(
-            static entry => entry.Name.Equals("Tiles", StringComparison.OrdinalIgnoreCase)
-        );
+        var tilesEntry =
+            mountsSection?.Entries.FirstOrDefault(static entry => entry.Name.Equals(
+                    "Tiles",
+                    StringComparison.OrdinalIgnoreCase
+                )
+            );
 
         if (tilesEntry is null)
         {
@@ -391,15 +392,15 @@ public class ServerAssetDataLoader
                 }
 
                 entries.Add(
-                    new(
+                    new RegionEntry(
                         definition.Type,
                         mapId,
                         canonicalMap,
                         definition.Name,
                         definition.Priority,
                         definition.Area
-                                  .Select(static area => new RegionAreaEntry(area.X1, area.Y1, area.X2, area.Y2))
-                                  .ToArray(),
+                            .Select(static area => new RegionAreaEntry(area.X1, area.Y1, area.X2, area.Y2))
+                            .ToArray(),
                         definition.Music,
                         ToPoint3D(definition.Entrance),
                         ToPoint3D(definition.GoLocation)
@@ -454,7 +455,7 @@ public class ServerAssetDataLoader
 
                 foreach (var mapId in mapIds)
                 {
-                    entries.Add(new(mapId, definition.Map, definition.ItemId, location, definition.Text));
+                    entries.Add(new SignEntry(mapId, definition.Map, definition.ItemId, location, definition.Text));
                 }
             }
         }
@@ -478,16 +479,15 @@ public class ServerAssetDataLoader
 
         var entries = new List<SpawnDefinitionEntry>();
         var spawnFiles = Directory
-                         .EnumerateFiles(spawnsDirectory, "*.yaml", SearchOption.AllDirectories)
-                         .Select(
-                             path => (
-                                         FullPath: path,
-                                         SourcePath: ToSourcePath(Path.GetRelativePath(spawnsDirectory, path))
-                                     )
-                         )
-                         .OrderBy(file => file.SourcePath, StringComparer.OrdinalIgnoreCase)
-                         .ThenBy(file => file.SourcePath, StringComparer.Ordinal)
-                         .ToArray();
+            .EnumerateFiles(spawnsDirectory, "*.yaml", SearchOption.AllDirectories)
+            .Select(path => (
+                    FullPath: path,
+                    SourcePath: ToSourcePath(Path.GetRelativePath(spawnsDirectory, path))
+                )
+            )
+            .OrderBy(file => file.SourcePath, StringComparer.OrdinalIgnoreCase)
+            .ThenBy(file => file.SourcePath, StringComparer.Ordinal)
+            .ToArray();
 
         foreach (var (FullPath, SourcePath) in spawnFiles)
         {
@@ -586,7 +586,7 @@ public class ServerAssetDataLoader
                 continue;
             }
 
-            output.Add(new(mapId, mapName, categoryPath, location.Name, point));
+            output.Add(new WorldLocationEntry(mapId, mapName, categoryPath, location.Name, point));
         }
     }
 
@@ -594,17 +594,18 @@ public class ServerAssetDataLoader
         string directory,
         SearchOption searchOption
     )
-        => Directory
-           .EnumerateFiles(directory, "*.yaml", searchOption)
-           .Select(
-               path => (
-                           FullPath: path,
-                           SourcePath: ToSourcePath(Path.GetRelativePath(directory, path))
-                       )
-           )
-           .OrderBy(file => file.SourcePath, StringComparer.OrdinalIgnoreCase)
-           .ThenBy(file => file.SourcePath, StringComparer.Ordinal)
-           .ToArray();
+    {
+        return Directory
+            .EnumerateFiles(directory, "*.yaml", searchOption)
+            .Select(path => (
+                    FullPath: path,
+                    SourcePath: ToSourcePath(Path.GetRelativePath(directory, path))
+                )
+            )
+            .OrderBy(file => file.SourcePath, StringComparer.OrdinalIgnoreCase)
+            .ThenBy(file => file.SourcePath, StringComparer.Ordinal)
+            .ToArray();
+    }
 
     private void FlattenLocationCategory(
         int mapId,
@@ -617,7 +618,7 @@ public class ServerAssetDataLoader
     {
         var categoryName = category.Name.Trim();
         var categoryPath = string.IsNullOrWhiteSpace(parentPath) ? categoryName :
-                           string.IsNullOrWhiteSpace(categoryName) ? parentPath : $"{parentPath} / {categoryName}";
+            string.IsNullOrWhiteSpace(categoryName) ? parentPath : $"{parentPath} / {categoryName}";
 
         AddLocationPoints(mapId, mapName, categoryPath, category.Locations, sourcePath, output);
 
@@ -628,7 +629,9 @@ public class ServerAssetDataLoader
     }
 
     private static int GetDoorPiece(IReadOnlyList<int> pieces, int index)
-        => index < MaxDoorPieces && index < pieces.Count ? pieces[index] : 0;
+    {
+        return index < MaxDoorPieces && index < pieces.Count ? pieces[index] : 0;
+    }
 
     private static string GetFirstSourceSegment(string relativeFilePath)
     {
@@ -690,7 +693,7 @@ public class ServerAssetDataLoader
     {
         var pieces = definition.Pieces;
 
-        return new(
+        return new DoorComponentEntry(
             definition.Category,
             GetDoorPiece(pieces, 0),
             GetDoorPiece(pieces, 1),
@@ -706,7 +709,8 @@ public class ServerAssetDataLoader
     }
 
     private static ProfessionEntry MapProfession(ServerAssetProfession profession)
-        => new(
+    {
+        return new ProfessionEntry(
             profession.Name,
             profession.TrueName,
             profession.NameId,
@@ -716,15 +720,17 @@ public class ServerAssetDataLoader
             profession.Gump,
             profession.Type,
             profession.Skills
-                      .Select(static skill => new ProfessionSkillEntry(skill.Name, skill.Value))
-                      .ToArray(),
+                .Select(static skill => new ProfessionSkillEntry(skill.Name, skill.Value))
+                .ToArray(),
             profession.Stats
-                      .Select(static stat => new ProfessionStatEntry(stat.Type, stat.Value))
-                      .ToArray()
+                .Select(static stat => new ProfessionStatEntry(stat.Type, stat.Value))
+                .ToArray()
         );
+    }
 
     private static WeatherEntry MapWeatherDefinition(ServerAssetWeatherDefinition definition)
-        => new(
+    {
+        return new WeatherEntry(
             definition.Id,
             definition.Name,
             definition.Rainchance,
@@ -745,11 +751,14 @@ public class ServerAssetDataLoader
             definition.Lightmin,
             definition.Lightmax
         );
+    }
 
     private static SpawnDefinitionKind ResolveKind(string type)
-        => type.Equals("ProximitySpawner", StringComparison.OrdinalIgnoreCase)
-               ? SpawnDefinitionKind.ProximitySpawner
-               : SpawnDefinitionKind.Spawner;
+    {
+        return type.Equals("ProximitySpawner", StringComparison.OrdinalIgnoreCase)
+            ? SpawnDefinitionKind.ProximitySpawner
+            : SpawnDefinitionKind.Spawner;
+    }
 
     private static string ResolveMapName(ServerAssetSpawnDefinition definition, string sourceGroup)
     {
@@ -775,18 +784,26 @@ public class ServerAssetDataLoader
     }
 
     private static int ToItemId(int? value)
-        => value is null or <= 0 ? 0 : value.Value;
+    {
+        return value is null or <= 0 ? 0 : value.Value;
+    }
 
     private static Point3D? ToPoint3D(ServerAssetWorldPoint? point)
-        => point is null ? null : new Point3D(point.X, point.Y, point.Z);
+    {
+        return point is null ? null : new Point3D(point.X, point.Y, point.Z);
+    }
 
     private static string ToSourcePath(string path)
-        => path
-           .Replace(Path.DirectorySeparatorChar, '/')
-           .Replace(Path.AltDirectorySeparatorChar, '/');
+    {
+        return path
+            .Replace(Path.DirectorySeparatorChar, '/')
+            .Replace(Path.AltDirectorySeparatorChar, '/');
+    }
 
     private static WeatherRange ToWeatherRange(ServerAssetRange range)
-        => new(range.Min, range.Max);
+    {
+        return new WeatherRange(range.Min, range.Max);
+    }
 
     private bool TryMapSpawnDefinition(
         ServerAssetSpawnDefinition definition,
@@ -834,7 +851,7 @@ public class ServerAssetDataLoader
             return false;
         }
 
-        entry = new(
+        entry = new SpawnDefinitionEntry(
             mapId,
             canonicalMap,
             sourceGroup,
@@ -842,7 +859,7 @@ public class ServerAssetDataLoader
             guid,
             ResolveKind(definition.Type),
             definition.Name,
-            new(definition.Location[0], definition.Location[1], definition.Location[2]),
+            new Point3D(definition.Location[0], definition.Location[1], definition.Location[2]),
             definition.Count,
             definition.MinDelay,
             definition.MaxDelay,
@@ -850,14 +867,13 @@ public class ServerAssetDataLoader
             definition.HomeRange,
             definition.WalkingRange,
             definition.Entries
-                      .Select(
-                          static spawnEntry => new SpawnEntryDefinition(
-                              spawnEntry.Name,
-                              spawnEntry.MaxCount,
-                              spawnEntry.Probability
-                          )
-                      )
-                      .ToArray()
+                .Select(static spawnEntry => new SpawnEntryDefinition(
+                        spawnEntry.Name,
+                        spawnEntry.MaxCount,
+                        spawnEntry.Probability
+                    )
+                )
+                .ToArray()
         );
 
         return true;
@@ -895,7 +911,7 @@ public class ServerAssetDataLoader
             return false;
         }
 
-        entry = new(
+        entry = new TeleporterEntry(
             sourceMapId,
             sourceMapName,
             sourceLocation,
@@ -930,7 +946,7 @@ public class ServerAssetDataLoader
             return false;
         }
 
-        location = new(coordinates[0], coordinates[1], coordinates[2]);
+        location = new Point3D(coordinates[0], coordinates[1], coordinates[2]);
 
         return true;
     }

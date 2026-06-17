@@ -7,7 +7,7 @@ using Moongate.UO.Data.Types.Maps;
 namespace Moongate.Server.Services.World;
 
 /// <summary>
-/// Sector-indexed region resolver over <see cref="IRegionDataService" />.
+///     Sector-indexed region resolver over <see cref="IRegionDataService" />.
 /// </summary>
 public sealed class RegionResolverService : IRegionResolverService
 {
@@ -23,7 +23,9 @@ public sealed class RegionResolverService : IRegionResolverService
     }
 
     public MusicType GetMusic(int mapId, Point3D location)
-        => MusicTypeParser.FromName(ResolveRegion(mapId, location)?.Music);
+    {
+        return MusicTypeParser.FromName(ResolveRegion(mapId, location)?.Music);
+    }
 
     public RegionEntry? GetRegionByName(string name)
     {

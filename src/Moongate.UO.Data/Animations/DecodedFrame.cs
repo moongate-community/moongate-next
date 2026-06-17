@@ -22,5 +22,7 @@ public sealed class DecodedFrame : IDisposable
     public int CenterY { get; }
 
     public void Dispose()
-        => Image.Dispose();
+    {
+        Image.Dispose();
+    }
 }

@@ -1,7 +1,7 @@
 namespace Moongate.Network.UO.Types.Effects;
 
 /// <summary>
-/// Defines movement behavior for graphical effect packets.
+///     Defines movement behavior for graphical effect packets.
 /// </summary>
 public enum EffectDirectionType : byte
 {

@@ -1,3 +1,4 @@
+using Moongate.Server.Data.World;
 using Moongate.Server.Services.World;
 using Moongate.Server.Services.WorldData;
 
@@ -21,7 +22,7 @@ public sealed class DoorDataLoaderTests : IDisposable
         var service = new DoorDataService();
         service.SetEntries(
             [
-                new(
+                new DoorComponentEntry(
                     0,
                     1701,
                     0,

@@ -7,30 +7,13 @@ using Moongate.Plugins.Types;
 namespace Moongate.Plugins.Configuration;
 
 /// <summary>
-/// Builds a <see cref="PluginConfigForm" /> by reflecting over <see cref="ConfigSectionAttribute" /> and
-/// <see cref="ConfigFieldAttribute" /> on a typed config object. The structural schema is cached per type
-/// on first scan; current values are projected from the supplied instance on every call.
+///     Builds a <see cref="PluginConfigForm" /> by reflecting over <see cref="ConfigSectionAttribute" /> and
+///     <see cref="ConfigFieldAttribute" /> on a typed config object. The structural schema is cached per type
+///     on first scan; current values are projected from the supplied instance on every call.
 /// </summary>
 public static class ConfigFormScanner
 {
     private static readonly ConcurrentDictionary<Type, FormSchema> _cache = new();
-
-    private sealed record FormSchema(IReadOnlyList<SectionSchema> Sections);
-
-    private sealed record SectionSchema(string Id, string Label, int Order, List<FieldSchema> Fields);
-
-    private sealed record FieldSchema(
-        string Path,
-        string Label,
-        string Type,
-        bool Required,
-        string? Help,
-        IReadOnlyList<string> Options,
-        bool Secret,
-        int Order,
-        PropertyInfo[] Chain,
-        object? DefaultValue
-    );
 
     /// <summary>Builds the config form for <paramref name="instance" />'s type, filled with its current values.</summary>
     public static PluginConfigForm BuildForm<T>(T instance)
@@ -48,7 +31,7 @@ public static class ConfigFormScanner
             foreach (var field in section.Fields)
             {
                 fields.Add(
-                    new(
+                    new PluginConfigField(
                         field.Path,
                         field.Label,
                         field.Type,
@@ -62,10 +45,10 @@ public static class ConfigFormScanner
                 );
             }
 
-            sections.Add(new(section.Id, section.Label, fields));
+            sections.Add(new PluginConfigSection(section.Id, section.Label, fields));
         }
 
-        return new(sections);
+        return new PluginConfigForm(sections);
     }
 
     private static SectionSchema AddGeneralSection(List<SectionSchema> sections)
@@ -83,7 +66,8 @@ public static class ConfigFormScanner
         PropertyInfo[] chain,
         object? defaultInstance
     )
-        => new(
+    {
+        return new FieldSchema(
             path,
             attr.Label,
             ResolveType(property, attr),
@@ -95,6 +79,7 @@ public static class ConfigFormScanner
             chain,
             ReadChain(defaultInstance, chain)
         );
+    }
 
     private static List<FieldSchema> BuildFields(
         Type type,
@@ -142,7 +127,9 @@ public static class ConfigFormScanner
 
                 var prefix = ConfigYamlOptions.ToConfigKey(property.Name);
                 var fields = BuildFields(property.PropertyType, prefix, [property], defaultInstance);
-                sections.Add(new(ToSectionId(sectionAttr.Label), sectionAttr.Label, sectionAttr.Order, fields));
+                sections.Add(
+                    new SectionSchema(ToSectionId(sectionAttr.Label), sectionAttr.Label, sectionAttr.Order, fields)
+                );
 
                 continue;
             }
@@ -161,27 +148,29 @@ public static class ConfigFormScanner
         }
 
         var orderedSections = sections
-                              .Select((section, index) => (section, index))
-                              .OrderBy(item => item.section.Order)
-                              .ThenBy(item => item.index)
-                              .Select(item => SortFields(item.section))
-                              .ToList();
+            .Select((section, index) => (section, index))
+            .OrderBy(item => item.section.Order)
+            .ThenBy(item => item.index)
+            .Select(item => SortFields(item.section))
+            .ToList();
 
-        return new(orderedSections);
+        return new FormSchema(orderedSections);
     }
 
     private static bool IsNumeric(Type type)
-        => type == typeof(int) ||
-           type == typeof(long) ||
-           type == typeof(short) ||
-           type == typeof(byte) ||
-           type == typeof(uint) ||
-           type == typeof(ulong) ||
-           type == typeof(ushort) ||
-           type == typeof(sbyte) ||
-           type == typeof(double) ||
-           type == typeof(float) ||
-           type == typeof(decimal);
+    {
+        return type == typeof(int) ||
+               type == typeof(long) ||
+               type == typeof(short) ||
+               type == typeof(byte) ||
+               type == typeof(uint) ||
+               type == typeof(ulong) ||
+               type == typeof(ushort) ||
+               type == typeof(sbyte) ||
+               type == typeof(double) ||
+               type == typeof(float) ||
+               type == typeof(decimal);
+    }
 
     private static object? ReadChain(object? root, PropertyInfo[] chain)
     {
@@ -232,25 +221,46 @@ public static class ConfigFormScanner
     private static SectionSchema SortFields(SectionSchema section)
     {
         var ordered = section.Fields
-                             .Select((field, index) => (field, index))
-                             .OrderBy(item => item.field.Order)
-                             .ThenBy(item => item.index)
-                             .Select(item => item.field)
-                             .ToList();
+            .Select((field, index) => (field, index))
+            .OrderBy(item => item.field.Order)
+            .ThenBy(item => item.index)
+            .Select(item => item.field)
+            .ToList();
 
         return section with { Fields = ordered };
     }
 
     private static string ToSectionId(string label)
-        => label.Trim().ToLowerInvariant().Replace(' ', '_');
+    {
+        return label.Trim().ToLowerInvariant().Replace(' ', '_');
+    }
 
     private static string ToToken(ConfigFieldType type)
-        => type switch
+    {
+        return type switch
         {
-            ConfigFieldType.Boolean  => PluginConfigFieldTypes.Boolean,
-            ConfigFieldType.Number   => PluginConfigFieldTypes.Number,
-            ConfigFieldType.Text     => PluginConfigFieldTypes.Text,
+            ConfigFieldType.Boolean => PluginConfigFieldTypes.Boolean,
+            ConfigFieldType.Number => PluginConfigFieldTypes.Number,
+            ConfigFieldType.Text => PluginConfigFieldTypes.Text,
             ConfigFieldType.TextArea => PluginConfigFieldTypes.TextArea,
-            _                        => PluginConfigFieldTypes.Text
+            _ => PluginConfigFieldTypes.Text
         };
+    }
+
+    private sealed record FormSchema(IReadOnlyList<SectionSchema> Sections);
+
+    private sealed record SectionSchema(string Id, string Label, int Order, List<FieldSchema> Fields);
+
+    private sealed record FieldSchema(
+        string Path,
+        string Label,
+        string Type,
+        bool Required,
+        string? Help,
+        IReadOnlyList<string> Options,
+        bool Secret,
+        int Order,
+        PropertyInfo[] Chain,
+        object? DefaultValue
+    );
 }

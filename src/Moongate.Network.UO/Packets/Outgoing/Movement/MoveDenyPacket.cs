@@ -7,7 +7,7 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Outgoing.Movement;
 
 /// <summary>
-/// Represents a character movement rejection packet.
+///     Represents a character movement rejection packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Character Move Rejection")]
 public class MoveDenyPacket : BaseGameNetworkPacket
@@ -15,14 +15,10 @@ public class MoveDenyPacket : BaseGameNetworkPacket
     private const byte OpCodeValue = 0x21;
     private const int LengthValue = 8;
 
-    public DirectionType Direction { get; set; }
-    public byte Sequence { get; set; }
-    public short X { get; set; }
-    public short Y { get; set; }
-    public sbyte Z { get; set; }
-
     public MoveDenyPacket()
-        : base(OpCodeValue, LengthValue) { }
+        : base(OpCodeValue, LengthValue)
+    {
+    }
 
     public MoveDenyPacket(byte sequence, short x, short y, DirectionType direction, sbyte z)
         : this()
@@ -33,6 +29,12 @@ public class MoveDenyPacket : BaseGameNetworkPacket
         Direction = direction;
         Z = z;
     }
+
+    public DirectionType Direction { get; set; }
+    public byte Sequence { get; set; }
+    public short X { get; set; }
+    public short Y { get; set; }
+    public sbyte Z { get; set; }
 
     public override void Write(ref SpanWriter writer)
     {

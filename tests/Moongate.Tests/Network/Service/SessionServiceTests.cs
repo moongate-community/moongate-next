@@ -10,34 +10,6 @@ namespace Moongate.Tests.Network.Service;
 
 public class SessionServiceTests
 {
-    private sealed class CapturingEventBusService : IEventBusService
-    {
-        public List<IMoongateEvent> Events { get; } = [];
-        public Action<Type, Exception, IMoongateEvent>? OnEventError { get; set; }
-        public int CurrentTickQueueDepth => 0;
-
-        public int DrainTickEvents(int maxItems)
-            => 0;
-
-        public void Publish<TEvent>(TEvent evt)
-            where TEvent : ITickEvent
-            => Events.Add(evt);
-
-        public Task PublishAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
-            where TEvent : IAsyncEvent
-        {
-            Events.Add(evt);
-
-            return Task.CompletedTask;
-        }
-
-        public Task StartAsync(CancellationToken cancellationToken)
-            => Task.CompletedTask;
-
-        public Task StopAsync(CancellationToken cancellationToken)
-            => Task.CompletedTask;
-    }
-
     [Fact]
     public void Clear_RemovesEverySession()
     {
@@ -93,14 +65,14 @@ public class SessionServiceTests
         var second = service.GetOrCreate(b);
 
         var evenIds = service.QuerySessionIds()
-                             .Where(static sessionId => sessionId % 2 == 0)
-                             .ToArray();
+            .Where(static sessionId => sessionId % 2 == 0)
+            .ToArray();
 
         var expected = new[] { first.SessionId, second.SessionId }
-                       .AsValueEnumerable()
-                       .Where(static sessionId => sessionId % 2 == 0)
-                       .Order()
-                       .ToArray();
+            .AsValueEnumerable()
+            .Where(static sessionId => sessionId % 2 == 0)
+            .Order()
+            .ToArray();
 
         Assert.Equal(expected, evenIds.AsValueEnumerable().Order().ToArray());
     }
@@ -154,5 +126,43 @@ public class SessionServiceTests
     }
 
     private static MoongateTCPClient NewClient()
-        => new(new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp));
+    {
+        return new MoongateTCPClient(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp));
+    }
+
+    private sealed class CapturingEventBusService : IEventBusService
+    {
+        public List<IMoongateEvent> Events { get; } = [];
+        public Action<Type, Exception, IMoongateEvent>? OnEventError { get; set; }
+        public int CurrentTickQueueDepth => 0;
+
+        public int DrainTickEvents(int maxItems)
+        {
+            return 0;
+        }
+
+        public void Publish<TEvent>(TEvent evt)
+            where TEvent : ITickEvent
+        {
+            Events.Add(evt);
+        }
+
+        public Task PublishAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
+            where TEvent : IAsyncEvent
+        {
+            Events.Add(evt);
+
+            return Task.CompletedTask;
+        }
+
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+    }
 }

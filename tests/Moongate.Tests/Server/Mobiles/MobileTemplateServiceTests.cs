@@ -40,7 +40,7 @@ public sealed class MobileTemplateServiceTests
     {
         var service = new MobileTemplateService();
         service.UpsertRange([New("guard")]);
-        service.UpsertRange([new() { Id = "guard", Name = "Replaced" }]);
+        service.UpsertRange([new MobileTemplateDefinition { Id = "guard", Name = "Replaced" }]);
 
         Assert.Equal(1, service.Count);
         Assert.True(service.TryGet("guard", out var definition));
@@ -48,5 +48,7 @@ public sealed class MobileTemplateServiceTests
     }
 
     private static MobileTemplateDefinition New(string id)
-        => new() { Id = id, Name = id };
+    {
+        return new MobileTemplateDefinition { Id = id, Name = id };
+    }
 }

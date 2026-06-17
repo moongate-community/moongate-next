@@ -6,15 +6,13 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Outgoing.World;
 
 /// <summary>
-/// Represents a world time packet.
+///     Represents a world time packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Set Time")]
 public class SetTimePacket : BaseGameNetworkPacket
 {
     private const byte OpCodeValue = 0x5B;
     private const int LengthValue = 4;
-
-    public DateTime Time { get; set; }
 
     public SetTimePacket()
         : base(OpCodeValue, LengthValue)
@@ -27,6 +25,8 @@ public class SetTimePacket : BaseGameNetworkPacket
     {
         Time = time;
     }
+
+    public DateTime Time { get; set; }
 
     public override void Write(ref SpanWriter writer)
     {

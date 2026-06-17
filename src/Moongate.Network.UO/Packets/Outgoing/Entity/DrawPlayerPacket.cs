@@ -7,15 +7,13 @@ using Moongate.UO.Data.Entities.Mobiles;
 namespace Moongate.Network.UO.Packets.Outgoing.Entity;
 
 /// <summary>
-/// Outgoing "Draw Game Player" (0x20): renders the player's own mobile in the world.
+///     Outgoing "Draw Game Player" (0x20): renders the player's own mobile in the world.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Draw Game Player")]
 public class DrawPlayerPacket : BaseGameNetworkPacket
 {
     private const byte OpCodeValue = 0x20;
     private const int LengthValue = 19;
-
-    public MobileEntity Mobile { get; }
 
     public DrawPlayerPacket(MobileEntity mobile)
         : base(OpCodeValue, LengthValue)
@@ -24,6 +22,8 @@ public class DrawPlayerPacket : BaseGameNetworkPacket
 
         Mobile = mobile;
     }
+
+    public MobileEntity Mobile { get; }
 
     public override void Write(ref SpanWriter writer)
     {
@@ -41,5 +41,7 @@ public class DrawPlayerPacket : BaseGameNetworkPacket
     }
 
     protected override bool ParsePayload(ref SpanReader reader)
-        => false;
+    {
+        return false;
+    }
 }

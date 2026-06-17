@@ -7,20 +7,22 @@ using Moongate.Server.Extensions.Configuration;
 namespace Moongate.Server.Extensions.Plugins;
 
 /// <summary>
-/// DryIoc-native registration helper for boot-time .NET plugins.
+///     DryIoc-native registration helper for boot-time .NET plugins.
 /// </summary>
 public static class PluginContainerExtensions
 {
     /// <summary>
-    /// Loads trusted .NET plugins from the configured plugins directory and lets them register into the container.
-    /// Must run before <see cref="ConfigContainerExtensions.AddMoongateConfig" />.
+    ///     Loads trusted .NET plugins from the configured plugins directory and lets them register into the container.
+    ///     Must run before <see cref="ConfigContainerExtensions.AddMoongateConfig" />.
     /// </summary>
     public static IContainer AddMoongatePlugins(this IContainer container, DirectoriesConfig directoriesConfig)
-        => container.AddMoongatePlugins(directoriesConfig, []);
+    {
+        return container.AddMoongatePlugins(directoriesConfig, []);
+    }
 
     /// <summary>
-    /// Loads trusted .NET plugins from the configured plugins directory and registers embedded plugins.
-    /// Must run before <see cref="ConfigContainerExtensions.AddMoongateConfig" />.
+    ///     Loads trusted .NET plugins from the configured plugins directory and registers embedded plugins.
+    ///     Must run before <see cref="ConfigContainerExtensions.AddMoongateConfig" />.
     /// </summary>
     public static IContainer AddMoongatePlugins(
         this IContainer container,

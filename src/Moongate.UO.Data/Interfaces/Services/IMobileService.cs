@@ -8,7 +8,7 @@ using Moongate.UO.Data.Types.Skills;
 namespace Moongate.UO.Data.Interfaces.Services;
 
 /// <summary>
-/// Provides mobile persistence plus skill access and equipment behavior.
+///     Provides mobile persistence plus skill access and equipment behavior.
 /// </summary>
 public interface IMobileService
 {
@@ -22,10 +22,10 @@ public interface IMobileService
     ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Equips an item on the mobile at the given layer and persists the affected entities,
-    /// first detaching the item from any previous owner (another mobile's layer or a
-    /// container) so no dangling reference is left behind. Returns true (idempotent) when the
-    /// same item already occupies the layer, and false when a different item occupies it.
+    ///     Equips an item on the mobile at the given layer and persists the affected entities,
+    ///     first detaching the item from any previous owner (another mobile's layer or a
+    ///     container) so no dangling reference is left behind. Returns true (idempotent) when the
+    ///     same item already occupies the layer, and false when a different item occupies it.
     /// </summary>
     ValueTask<bool> EquipAsync(
         MobileEntity mobile,
@@ -44,9 +44,9 @@ public interface IMobileService
     ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Returns the mobile's skill entry, or a fresh default entry when not yet trained.
-    /// Read-only: when the skill is untrained the returned entry is NOT stored, so mutating
-    /// it has no effect — use <see cref="SetSkillAsync" /> to change a skill.
+    ///     Returns the mobile's skill entry, or a fresh default entry when not yet trained.
+    ///     Read-only: when the skill is untrained the returned entry is NOT stored, so mutating
+    ///     it has no effect — use <see cref="SetSkillAsync" /> to change a skill.
     /// </summary>
     SkillEntry GetSkill(MobileEntity mobile, UOSkillName skill);
 
@@ -59,8 +59,8 @@ public interface IMobileService
     );
 
     /// <summary>
-    /// Removes the item equipped at the given layer and persists both; returns false when
-    /// the layer is empty.
+    ///     Removes the item equipped at the given layer and persists both; returns false when
+    ///     the layer is empty.
     /// </summary>
     ValueTask<bool> UnequipAsync(MobileEntity mobile, ItemLayerType layer, CancellationToken cancellationToken = default);
 }

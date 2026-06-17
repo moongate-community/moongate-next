@@ -8,6 +8,7 @@ using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Entities.Mobiles;
 using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Races.Base;
+using Moongate.UO.Data.Templates.Items;
 using Moongate.UO.Data.Templates.Mobiles;
 using Moongate.UO.Data.Types.Items;
 using Moongate.UO.Data.Types.Mobiles;
@@ -18,104 +19,6 @@ namespace Moongate.Tests.Server.Mobiles;
 
 public sealed class MobileFactoryServiceTests
 {
-    private sealed class FakeItemFactory : IItemFactoryService
-    {
-        private uint _next = Serial.ItemOffset + 1;
-
-        public List<(string Template, Serial Id)> Created { get; } = [];
-
-        public ValueTask<ItemEntity> CreateFromTemplateAsync(
-            string templateId,
-            CancellationToken cancellationToken = default
-        )
-        {
-            var id = new Serial(_next++);
-            var itemId = templateId switch
-            {
-                "katana"   => 5119,
-                "backpack" => 3701,
-                _          => 1
-            };
-            var item = new ItemEntity { Id = id, ItemId = itemId, IsStackable = false };
-            Created.Add((templateId, id));
-
-            return ValueTask.FromResult(item);
-        }
-
-        public ValueTask<ItemEntity> CreateFromTemplateAsync(
-            string templateId,
-            int amount,
-            CancellationToken cancellationToken = default
-        )
-            => CreateFromTemplateAsync(templateId, cancellationToken);
-    }
-
-    private sealed class FakeMobileService : IMobileService
-    {
-        private uint _next = 1;
-
-        public List<(Serial MobileId, ItemLayerType Layer)> Equipped { get; } = [];
-        public MobileEntity? LastCreated { get; private set; }
-
-        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
-
-        public ValueTask<MobileEntity> CreateAsync(MobileEntity mobile, CancellationToken cancellationToken = default)
-        {
-            if (!mobile.Id.IsValid)
-            {
-                mobile.Id = new(_next++);
-            }
-
-            LastCreated = mobile;
-
-            return ValueTask.FromResult(mobile);
-        }
-
-        public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
-
-        public ValueTask<bool> EquipAsync(
-            MobileEntity mobile,
-            ItemEntity item,
-            ItemLayerType layer,
-            CancellationToken cancellationToken = default
-        )
-        {
-            mobile.EquippedItemIds[layer] = item.Id;
-            Equipped.Add((mobile.Id, layer));
-
-            return ValueTask.FromResult(true);
-        }
-
-        public ValueTask<IReadOnlyList<MobileEntity>> GetByAccountIdAsync(
-            Serial accountId,
-            CancellationToken cancellationToken = default
-        )
-            => throw new NotSupportedException();
-
-        public ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
-
-        public SkillEntry GetSkill(MobileEntity mobile, UOSkillName skill)
-            => throw new NotSupportedException();
-
-        public ValueTask<SkillEntry> SetSkillAsync(
-            MobileEntity mobile,
-            UOSkillName skill,
-            double value,
-            CancellationToken cancellationToken = default
-        )
-            => throw new NotSupportedException();
-
-        public ValueTask<bool> UnequipAsync(
-            MobileEntity mobile,
-            ItemLayerType layer,
-            CancellationToken cancellationToken = default
-        )
-            => throw new NotSupportedException();
-    }
-
     [Fact]
     public async Task CreateFromTemplateAsync_AbstractTemplate_Throws()
     {
@@ -275,15 +178,15 @@ public sealed class MobileFactoryServiceTests
             Karma = -500,
             Fame = 1200,
             FactionId = "town_britannia",
-            Stats = new() { Strength = 100, Dexterity = 90, Intelligence = 50 },
-            Resources = new() { Hits = 120, Mana = 50, Stamina = 90 },
-            Resistances = new() { Physical = 40 },
+            Stats = new MobileStatsTemplate { Strength = 100, Dexterity = 90, Intelligence = 50 },
+            Resources = new MobileResourcesTemplate { Hits = 120, Mana = 50, Stamina = 90 },
+            Resistances = new MobileResistancesTemplate { Physical = 40 },
             BackpackTemplate = "backpack"
         };
         m.Skills["Swords"] = 90;
-        m.Equipment.Add(new() { Item = "katana" });
+        m.Equipment.Add(new MobileEquipmentEntry { Item = "katana" });
         m.LootTables.Add("common");
-        m.Params["faction_rank"] = new() { Type = ItemTemplateParamType.Integer, Value = "3" };
+        m.Params["faction_rank"] = new ItemTemplateParamDefinition { Type = ItemTemplateParamType.Integer, Value = "3" };
 
         return m;
     }
@@ -293,8 +196,8 @@ public sealed class MobileFactoryServiceTests
         var registry = new ItemTemplateService();
         registry.UpsertRange(
             [
-                new() { Id = "katana", ItemId = 5119, Layer = ItemLayerType.OneHanded },
-                new() { Id = "backpack", ItemId = 3701, Layer = ItemLayerType.Backpack }
+                new ItemTemplateDefinition { Id = "katana", ItemId = 5119, Layer = ItemLayerType.OneHanded },
+                new ItemTemplateDefinition { Id = "backpack", ItemId = 3701, Layer = ItemLayerType.Backpack }
             ]
         );
 
@@ -322,7 +225,9 @@ public sealed class MobileFactoryServiceTests
         var packet = new CharacterCreationPacket();
 
         void Set(string prop, object? value)
-            => typeof(CharacterCreationPacket).GetProperty(prop)!.SetValue(packet, value);
+        {
+            typeof(CharacterCreationPacket).GetProperty(prop)!.SetValue(packet, value);
+        }
 
         Set(nameof(CharacterCreationPacket.CharacterName), name);
         Set(nameof(CharacterCreationPacket.Gender), gender);
@@ -339,7 +244,7 @@ public sealed class MobileFactoryServiceTests
 
         foreach (var (skill, value) in skills)
         {
-            packet.Skills.Add(new(skill, value));
+            packet.Skills.Add(new SkillKeyValue(skill, value));
         }
 
         return packet;
@@ -354,8 +259,8 @@ public sealed class MobileFactoryServiceTests
         var service = new MobileFactoryService(
             Registry(def),
             ItemTemplates(),
-            new(() => mobiles),
-            new(() => items)
+            new Lazy<IMobileService>(() => mobiles),
+            new Lazy<IItemFactoryService>(() => items)
         );
 
         return (service, items, mobiles);
@@ -367,5 +272,119 @@ public sealed class MobileFactoryServiceTests
         registry.UpsertRange([definition]);
 
         return registry;
+    }
+
+    private sealed class FakeItemFactory : IItemFactoryService
+    {
+        private uint _next = Serial.ItemOffset + 1;
+
+        public List<(string Template, Serial Id)> Created { get; } = [];
+
+        public ValueTask<ItemEntity> CreateFromTemplateAsync(
+            string templateId,
+            CancellationToken cancellationToken = default
+        )
+        {
+            var id = new Serial(_next++);
+            var itemId = templateId switch
+            {
+                "katana" => 5119,
+                "backpack" => 3701,
+                _ => 1
+            };
+            var item = new ItemEntity { Id = id, ItemId = itemId, IsStackable = false };
+            Created.Add((templateId, id));
+
+            return ValueTask.FromResult(item);
+        }
+
+        public ValueTask<ItemEntity> CreateFromTemplateAsync(
+            string templateId,
+            int amount,
+            CancellationToken cancellationToken = default
+        )
+        {
+            return CreateFromTemplateAsync(templateId, cancellationToken);
+        }
+    }
+
+    private sealed class FakeMobileService : IMobileService
+    {
+        private uint _next = 1;
+
+        public List<(Serial MobileId, ItemLayerType Layer)> Equipped { get; } = [];
+        public MobileEntity? LastCreated { get; private set; }
+
+        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<MobileEntity> CreateAsync(MobileEntity mobile, CancellationToken cancellationToken = default)
+        {
+            if (!mobile.Id.IsValid)
+            {
+                mobile.Id = new Serial(_next++);
+            }
+
+            LastCreated = mobile;
+
+            return ValueTask.FromResult(mobile);
+        }
+
+        public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<bool> EquipAsync(
+            MobileEntity mobile,
+            ItemEntity item,
+            ItemLayerType layer,
+            CancellationToken cancellationToken = default
+        )
+        {
+            mobile.EquippedItemIds[layer] = item.Id;
+            Equipped.Add((mobile.Id, layer));
+
+            return ValueTask.FromResult(true);
+        }
+
+        public ValueTask<IReadOnlyList<MobileEntity>> GetByAccountIdAsync(
+            Serial accountId,
+            CancellationToken cancellationToken = default
+        )
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public SkillEntry GetSkill(MobileEntity mobile, UOSkillName skill)
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<SkillEntry> SetSkillAsync(
+            MobileEntity mobile,
+            UOSkillName skill,
+            double value,
+            CancellationToken cancellationToken = default
+        )
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<bool> UnequipAsync(
+            MobileEntity mobile,
+            ItemLayerType layer,
+            CancellationToken cancellationToken = default
+        )
+        {
+            throw new NotSupportedException();
+        }
     }
 }

@@ -1,7 +1,7 @@
 namespace Moongate.Persistence.Data;
 
 /// <summary>
-/// Serialized snapshot bucket for a single registered entity type.
+///     Serialized snapshot bucket for a single registered entity type.
 /// </summary>
 public sealed class EntitySnapshotBucket
 {

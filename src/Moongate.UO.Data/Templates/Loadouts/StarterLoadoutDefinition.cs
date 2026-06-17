@@ -1,8 +1,8 @@
 namespace Moongate.UO.Data.Templates.Loadouts;
 
 /// <summary>
-/// Declarative starter loadout: a universal base section plus additive per-race
-/// and per-profession overlays, all referencing item templates by id.
+///     Declarative starter loadout: a universal base section plus additive per-race
+///     and per-profession overlays, all referencing item templates by id.
 /// </summary>
 public sealed class StarterLoadoutDefinition
 {

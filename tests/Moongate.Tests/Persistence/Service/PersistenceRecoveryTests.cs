@@ -13,33 +13,6 @@ public class PersistenceRecoveryTests : IDisposable
 {
     private readonly string _dir = Path.Combine(Path.GetTempPath(), $"nh-persist-{Guid.NewGuid():N}");
 
-    private sealed class CapturingEventBusService : IEventBusService
-    {
-        public List<IAsyncEvent> AsyncEvents { get; } = [];
-        public Action<Type, Exception, IMoongateEvent>? OnEventError { get; set; }
-        public int CurrentTickQueueDepth => 0;
-
-        public int DrainTickEvents(int maxItems)
-            => 0;
-
-        public void Publish<TEvent>(TEvent evt)
-            where TEvent : ITickEvent { }
-
-        public Task PublishAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
-            where TEvent : IAsyncEvent
-        {
-            AsyncEvents.Add(evt);
-
-            return Task.CompletedTask;
-        }
-
-        public Task StartAsync(CancellationToken cancellationToken)
-            => Task.CompletedTask;
-
-        public Task StopAsync(CancellationToken cancellationToken)
-            => Task.CompletedTask;
-    }
-
     public void Dispose()
     {
         if (Directory.Exists(_dir))
@@ -57,15 +30,15 @@ public class PersistenceRecoveryTests : IDisposable
 
         var first = NewService();
         await first.StartAsync(CancellationToken.None);
-        await first.GetDataAccess<TestPlayer, Serial>().UpsertAsync(new() { Id = new(1), Name = "Bob" });
-        await first.GetDataAccess<TestItem, Serial>().UpsertAsync(new() { Id = itemId, Label = "Sword" });
+        await first.GetDataAccess<TestPlayer, Serial>().UpsertAsync(new TestPlayer { Id = new Serial(1), Name = "Bob" });
+        await first.GetDataAccess<TestItem, Serial>().UpsertAsync(new TestItem { Id = itemId, Label = "Sword" });
         await first.StopWithoutSnapshotAsync();
 
         var second = NewService();
         await second.StartAsync(CancellationToken.None);
 
         Assert.Equal(1, await second.GetDataAccess<TestPlayer, Serial>().CountAsync());
-        Assert.Equal("Bob", (await second.GetDataAccess<TestPlayer, Serial>().GetByIdAsync(new(1)))!.Name);
+        Assert.Equal("Bob", (await second.GetDataAccess<TestPlayer, Serial>().GetByIdAsync(new Serial(1)))!.Name);
         Assert.Equal("Sword", (await second.GetDataAccess<TestItem, Serial>().GetByIdAsync(itemId))!.Label);
         await second.StopAsync(CancellationToken.None);
     }
@@ -75,14 +48,14 @@ public class PersistenceRecoveryTests : IDisposable
     {
         var first = NewService();
         await first.StartAsync(CancellationToken.None);
-        await first.GetDataAccess<TestPlayer, Serial>().UpsertAsync(new() { Id = new(5), Name = "Snap" });
+        await first.GetDataAccess<TestPlayer, Serial>().UpsertAsync(new TestPlayer { Id = new Serial(5), Name = "Snap" });
         await first.SaveSnapshotAsync();
         await first.StopAsync(CancellationToken.None);
 
         var second = NewService();
         await second.StartAsync(CancellationToken.None);
 
-        Assert.Equal("Snap", (await second.GetDataAccess<TestPlayer, Serial>().GetByIdAsync(new(5)))!.Name);
+        Assert.Equal("Snap", (await second.GetDataAccess<TestPlayer, Serial>().GetByIdAsync(new Serial(5)))!.Name);
         await second.StopAsync(CancellationToken.None);
     }
 
@@ -92,16 +65,16 @@ public class PersistenceRecoveryTests : IDisposable
         var first = NewService();
         await first.StartAsync(CancellationToken.None);
         var players = first.GetDataAccess<TestPlayer, Serial>();
-        await players.UpsertAsync(new() { Id = new(1), Name = "InSnapshot" });
+        await players.UpsertAsync(new TestPlayer { Id = new Serial(1), Name = "InSnapshot" });
         await first.SaveSnapshotAsync();
-        await players.UpsertAsync(new() { Id = new(2), Name = "AfterSnapshot" });
+        await players.UpsertAsync(new TestPlayer { Id = new Serial(2), Name = "AfterSnapshot" });
         await first.StopWithoutSnapshotAsync();
 
         var second = NewService();
         await second.StartAsync(CancellationToken.None);
 
         Assert.Equal(2, await second.GetDataAccess<TestPlayer, Serial>().CountAsync());
-        Assert.Equal("AfterSnapshot", (await second.GetDataAccess<TestPlayer, Serial>().GetByIdAsync(new(2)))!.Name);
+        Assert.Equal("AfterSnapshot", (await second.GetDataAccess<TestPlayer, Serial>().GetByIdAsync(new Serial(2)))!.Name);
         await second.StopAsync(CancellationToken.None);
     }
 
@@ -111,7 +84,8 @@ public class PersistenceRecoveryTests : IDisposable
         var bus = new CapturingEventBusService();
         var service = NewService(bus);
         await service.StartAsync(CancellationToken.None);
-        await service.GetDataAccess<TestPlayer, Serial>().UpsertAsync(new() { Id = new(1), Name = "Evented" });
+        await service.GetDataAccess<TestPlayer, Serial>()
+            .UpsertAsync(new TestPlayer { Id = new Serial(1), Name = "Evented" });
 
         await service.SaveSnapshotAsync();
 
@@ -134,6 +108,41 @@ public class PersistenceRecoveryTests : IDisposable
             new(new PersistenceEntityDescriptor<TestItem, Serial>(2, "TestItem", 1, i => i.Id))
         };
 
-        return new(_dir, config, registrations, eventBus: eventBus);
+        return new PersistenceService(_dir, config, registrations, eventBus: eventBus);
+    }
+
+    private sealed class CapturingEventBusService : IEventBusService
+    {
+        public List<IAsyncEvent> AsyncEvents { get; } = [];
+        public Action<Type, Exception, IMoongateEvent>? OnEventError { get; set; }
+        public int CurrentTickQueueDepth => 0;
+
+        public int DrainTickEvents(int maxItems)
+        {
+            return 0;
+        }
+
+        public void Publish<TEvent>(TEvent evt)
+            where TEvent : ITickEvent
+        {
+        }
+
+        public Task PublishAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
+            where TEvent : IAsyncEvent
+        {
+            AsyncEvents.Add(evt);
+
+            return Task.CompletedTask;
+        }
+
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
     }
 }

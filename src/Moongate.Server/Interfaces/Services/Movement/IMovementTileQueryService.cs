@@ -3,7 +3,7 @@ using Moongate.UO.Data.Data.Tiles;
 namespace Moongate.Server.Interfaces.Services.Movement;
 
 /// <summary>
-/// Reads map/tile data required by movement validation.
+///     Reads map/tile data required by movement validation.
 /// </summary>
 public interface IMovementTileQueryService
 {

@@ -1,8 +1,8 @@
 namespace Moongate.Tests.UO.Data.Support;
 
 /// <summary>
-/// Writes a synthetic <c>texidx.mul</c> + <c>texmaps.mul</c> with one 64×64 texture (single RGB555
-/// colour) at the given index.
+///     Writes a synthetic <c>texidx.mul</c> + <c>texmaps.mul</c> with one 64×64 texture (single RGB555
+///     colour) at the given index.
 /// </summary>
 public static class TextureFixture
 {

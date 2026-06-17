@@ -1,8 +1,8 @@
 namespace Moongate.Abstractions.Data.Metrics;
 
 /// <summary>
-/// One raw runtime reading captured by <see cref="Interfaces.Metrics.IProcessRuntimeSampler" />.
-/// CPU percentage is derived from the delta between two readings, so the timestamp is part of the reading.
+///     One raw runtime reading captured by <see cref="Interfaces.Metrics.IProcessRuntimeSampler" />.
+///     CPU percentage is derived from the delta between two readings, so the timestamp is part of the reading.
 /// </summary>
 public sealed record ProcessRuntimeReading
 {

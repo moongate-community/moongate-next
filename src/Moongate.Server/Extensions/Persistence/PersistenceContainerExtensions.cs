@@ -13,7 +13,7 @@ using Moongate.Server.Extensions.Hosting;
 namespace Moongate.Server.Extensions.Persistence;
 
 /// <summary>
-/// DryIoc-native bootstrap helpers for the Moongate persistence engine.
+///     DryIoc-native bootstrap helpers for the Moongate persistence engine.
 /// </summary>
 public static class PersistenceContainerExtensions
 {
@@ -23,8 +23,8 @@ public static class PersistenceContainerExtensions
     extension(IContainer container)
     {
         /// <summary>
-        /// Registers the persistence service (snapshot + journal) with the hosting orchestrator and the
-        /// open-generic <see cref="IDataAccess{TEntity,TKey}" />.
+        ///     Registers the persistence service (snapshot + journal) with the hosting orchestrator and the
+        ///     open-generic <see cref="IDataAccess{TEntity,TKey}" />.
         /// </summary>
         /// <param name="saveDirectory">Directory for snapshot/journal files.</param>
         public IContainer AddMoongatePersistence(string saveDirectory)
@@ -74,7 +74,7 @@ public static class PersistenceContainerExtensions
                 typeof(IDataAccess<,>),
                 made: Made.Of(
                     request => typeof(IPersistenceService).GetMethod(nameof(IPersistenceService.GetDataAccess))!
-                                                          .MakeGenericMethod(request.ServiceType.GetGenericArguments()),
+                        .MakeGenericMethod(request.ServiceType.GetGenericArguments()),
                     ServiceInfo.Of<IPersistenceService>()
                 ),
                 setup: Setup.With(asResolutionCall: true)
@@ -85,7 +85,7 @@ public static class PersistenceContainerExtensions
                 typeof(IAutoDataAccess<,>),
                 made: Made.Of(
                     request => typeof(IPersistenceService).GetMethod(nameof(IPersistenceService.GetAutoDataAccess))!
-                                                          .MakeGenericMethod(request.ServiceType.GetGenericArguments()),
+                        .MakeGenericMethod(request.ServiceType.GetGenericArguments()),
                     ServiceInfo.Of<IPersistenceService>()
                 ),
                 setup: Setup.With(asResolutionCall: true)

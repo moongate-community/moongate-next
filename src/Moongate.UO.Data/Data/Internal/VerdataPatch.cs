@@ -1,8 +1,8 @@
 namespace Moongate.UO.Data.Data.Internal;
 
 /// <summary>
-/// A single <c>verdata.mul</c> patch entry: which file/index it overrides and where the replacement
-/// data lives within the verdata stream.
+///     A single <c>verdata.mul</c> patch entry: which file/index it overrides and where the replacement
+///     data lives within the verdata stream.
 /// </summary>
 public struct VerdataPatch
 {

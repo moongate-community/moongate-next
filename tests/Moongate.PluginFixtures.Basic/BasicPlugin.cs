@@ -13,7 +13,7 @@ public sealed class BasicPlugin : IMoongatePlugin
     {
         Id = "moongate.fixture.basic",
         Name = "Basic Fixture Plugin",
-        Version = new(1, 0, 0),
+        Version = new Version(1, 0, 0),
         Author = "Moongate Tests"
     };
 

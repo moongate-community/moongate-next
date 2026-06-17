@@ -3,8 +3,8 @@ using System.Text;
 namespace Moongate.Tests.UO.Data.Support;
 
 /// <summary>
-/// Writes a synthetic <c>hues.mul</c> with a single group of 8 entries; entry 0 gets the given
-/// first colour and name, the rest are zeroed.
+///     Writes a synthetic <c>hues.mul</c> with a single group of 8 entries; entry 0 gets the given
+///     first colour and name, the rest are zeroed.
 /// </summary>
 public static class HuesFixture
 {

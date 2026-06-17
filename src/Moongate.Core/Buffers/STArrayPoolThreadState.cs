@@ -2,8 +2,8 @@ namespace Moongate.Core.Buffers;
 
 internal sealed class STArrayPoolThreadState<T>
 {
-    public readonly STArrayPoolBucket<T>[] CacheBuckets;
     public readonly STArrayPoolStack<T>?[] Buckets;
+    public readonly STArrayPoolBucket<T>[] CacheBuckets;
 
     public STArrayPoolThreadState(int bucketCount)
     {

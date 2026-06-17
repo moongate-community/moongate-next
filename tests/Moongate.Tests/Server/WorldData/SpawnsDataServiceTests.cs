@@ -1,3 +1,4 @@
+using Moongate.Core.Geometry;
 using Moongate.Server.Data.World;
 using Moongate.Server.Services.World;
 using Moongate.Server.Types.World;
@@ -18,7 +19,7 @@ public class SpawnsDataServiceTests
         var service = new SpawnsDataService();
 
         service.SetEntries([feluccaSpawn, trammelSpawn]);
-        spawnEntries.Add(new("Cat", 1, 100));
+        spawnEntries.Add(new SpawnEntryDefinition("Cat", 1, 100));
 
         var feluccaEntries = service.GetEntriesByMap(0);
         var trammelEntries = service.GetEntriesByMap(1);
@@ -44,7 +45,8 @@ public class SpawnsDataServiceTests
         int mapId,
         IReadOnlyList<SpawnEntryDefinition>? entries = null
     )
-        => new(
+    {
+        return new SpawnDefinitionEntry(
             mapId,
             map,
             "shared",
@@ -52,13 +54,14 @@ public class SpawnsDataServiceTests
             Guid.NewGuid(),
             SpawnDefinitionKind.Spawner,
             $"{map} Spawner",
-            new(100, 200, 0),
+            new Point3D(100, 200, 0),
             1,
             TimeSpan.FromMinutes(1),
             TimeSpan.FromMinutes(2),
             0,
             10,
             10,
-            entries ?? [new("Rat", 1, 100)]
+            entries ?? [new SpawnEntryDefinition("Rat", 1, 100)]
         );
+    }
 }

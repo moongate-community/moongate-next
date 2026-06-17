@@ -9,19 +9,21 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Incoming.Login;
 
 /// <summary>
-/// Represents a KR or SA client type packet.
+///     Represents a KR or SA client type packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Variable, Description = "Client Type")]
 public class ClientTypePacket : BaseGameNetworkPacket
 {
     private const byte OpCodeValue = 0xE1;
 
+    public ClientTypePacket()
+        : base(OpCodeValue)
+    {
+    }
+
     public uint AdvertisedClientType { get; private set; }
     public ClientType ResolvedClientType { get; private set; } = ClientType.Classic;
     public string VersionString { get; private set; } = "";
-
-    public ClientTypePacket()
-        : base(OpCodeValue) { }
 
     protected override bool ParsePayload(ref SpanReader reader)
     {
@@ -56,7 +58,7 @@ public class ClientTypePacket : BaseGameNetworkPacket
         {
             0x02 => ClientType.KingdomReborn,
             0x03 => ClientType.StygianAbyss,
-            _    => ClientType.Classic
+            _ => ClientType.Classic
         };
 
         return true;

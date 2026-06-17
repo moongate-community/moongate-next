@@ -12,9 +12,6 @@ public sealed class FakeTileDataStore : ITileDataStore
     public IReadOnlyList<LandData> LandTable => [];
     public IReadOnlyList<ItemData> ItemTable => [];
 
-    public void Container(int itemId)
-        => _containers.Add(itemId);
-
     public ItemData GetItem(int id)
     {
         var flags = UoTileFlag.None;
@@ -29,12 +26,21 @@ public sealed class FakeTileDataStore : ITileDataStore
             flags |= UoTileFlag.Door;
         }
 
-        return new() { Flags = flags };
+        return new ItemData { Flags = flags };
     }
 
     public LandData GetLand(int id)
-        => default;
+    {
+        return default;
+    }
+
+    public void Container(int itemId)
+    {
+        _containers.Add(itemId);
+    }
 
     public void MakeDoor(int itemId)
-        => _doors.Add(itemId);
+    {
+        _doors.Add(itemId);
+    }
 }

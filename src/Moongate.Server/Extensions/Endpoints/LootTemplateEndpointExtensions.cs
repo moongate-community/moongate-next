@@ -12,24 +12,24 @@ public static class LootTemplateEndpointExtensions
     public static IEndpointRouteBuilder MapMoongateLootTemplates(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/api/admin/loot-templates")
-                             .WithTags("Admin Loot Templates")
-                             .RequireAuthorization(policy => policy.RequireRole(nameof(UserLevelType.Administrator)));
+            .WithTags("Admin Loot Templates")
+            .RequireAuthorization(policy => policy.RequireRole(nameof(UserLevelType.Administrator)));
 
         group.MapGet(
-                 "/",
-                 (LootTableRegistryStore store, int? page, int? pageSize, string? search)
-                     => HandleList(store.Registry, page, pageSize, search)
-             )
-             .WithName("ListLootTemplates")
-             .WithSummary("Returns a paginated, searchable list of loot templates.");
+                "/",
+                (LootTableRegistryStore store, int? page, int? pageSize, string? search)
+                    => HandleList(store.Registry, page, pageSize, search)
+            )
+            .WithName("ListLootTemplates")
+            .WithSummary("Returns a paginated, searchable list of loot templates.");
 
         group.MapGet(
-                 "/{id}",
-                 (LootTableRegistryStore store, LootTemplateProjectionService projector, string id)
-                     => HandleDetail(store.Registry, projector, id)
-             )
-             .WithName("GetLootTemplate")
-             .WithSummary("Returns a full read-only loot template definition.");
+                "/{id}",
+                (LootTableRegistryStore store, LootTemplateProjectionService projector, string id)
+                    => HandleDetail(store.Registry, projector, id)
+            )
+            .WithName("GetLootTemplate")
+            .WithSummary("Returns a full read-only loot template definition.");
 
         return endpoints;
     }
@@ -44,8 +44,8 @@ public static class LootTemplateEndpointExtensions
         ArgumentNullException.ThrowIfNull(projector);
 
         return registry.TryGet(id, out var table)
-                   ? TypedResults.Ok(projector.Project(table))
-                   : TypedResults.NotFound();
+            ? TypedResults.Ok(projector.Project(table))
+            : TypedResults.NotFound();
     }
 
     internal static IResult HandleList(LootTableRegistry registry, int? page, int? pageSize, string? search)

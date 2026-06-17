@@ -1,8 +1,8 @@
 namespace Moongate.Tests.UO.Data.Support;
 
 /// <summary>
-/// Writes a minimal classic <c>artidx.mul</c> + <c>art.mul</c> containing a single decodable static
-/// (a 1×1 opaque-white pixel) at the index slot for <paramref name="itemId" /> (= itemId + 0x4000).
+///     Writes a minimal classic <c>artidx.mul</c> + <c>art.mul</c> containing a single decodable static
+///     (a 1×1 opaque-white pixel) at the index slot for <paramref name="itemId" /> (= itemId + 0x4000).
 /// </summary>
 public static class ArtFixture
 {

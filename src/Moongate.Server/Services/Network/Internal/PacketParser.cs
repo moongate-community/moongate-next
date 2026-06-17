@@ -9,10 +9,10 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.Network.Internal;
 
 /// <summary>
-/// Pure per-session byte-stream parser: accumulates incoming bytes into a pending buffer and
-/// extracts complete UO packets, invoking a callback per parsed packet. No sockets or event bus,
-/// so the full framing behaviour (fixed/variable length, partial buffering, unknown opcodes,
-/// invalid lengths, parse failures, buffer overflow) is unit-testable in isolation.
+///     Pure per-session byte-stream parser: accumulates incoming bytes into a pending buffer and
+///     extracts complete UO packets, invoking a callback per parsed packet. No sockets or event bus,
+///     so the full framing behaviour (fixed/variable length, partial buffering, unknown opcodes,
+///     invalid lengths, parse failures, buffer overflow) is unit-testable in isolation.
 /// </summary>
 internal sealed class PacketParser
 {
@@ -21,9 +21,9 @@ internal sealed class PacketParser
     private const byte LoginSeedOpCode = 0xEF;
 
     private readonly ILogger _logger = Log.ForContext<PacketParser>();
-    private readonly PacketRegistry _registry;
-    private readonly int _maxPendingBufferBytes;
     private readonly int _maxDeclaredPacketLength;
+    private readonly int _maxPendingBufferBytes;
+    private readonly PacketRegistry _registry;
 
     public PacketParser(PacketRegistry registry, int maxPendingBufferBytes, int maxDeclaredPacketLength)
     {
@@ -33,9 +33,9 @@ internal sealed class PacketParser
     }
 
     /// <summary>
-    /// Appends <paramref name="incoming" /> to <paramref name="pendingBytes" /> and extracts every
-    /// complete packet, invoking <paramref name="onPacket" /> for each. Drops the buffer when it
-    /// exceeds the pending limit, on unknown opcodes, or on invalid declared lengths.
+    ///     Appends <paramref name="incoming" /> to <paramref name="pendingBytes" /> and extracts every
+    ///     complete packet, invoking <paramref name="onPacket" /> for each. Drops the buffer when it
+    ///     exceeds the pending limit, on unknown opcodes, or on invalid declared lengths.
     /// </summary>
     public void Append(
         List<byte> pendingBytes,

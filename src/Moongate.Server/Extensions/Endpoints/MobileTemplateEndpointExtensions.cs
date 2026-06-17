@@ -15,61 +15,61 @@ public static class MobileTemplateEndpointExtensions
     public static IEndpointRouteBuilder MapMoongateMobileTemplates(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/api/admin/mobile-templates")
-                             .WithTags("Admin Mobile Templates")
-                             .RequireAuthorization(policy => policy.RequireRole(nameof(UserLevelType.Administrator)));
+            .WithTags("Admin Mobile Templates")
+            .RequireAuthorization(policy => policy.RequireRole(nameof(UserLevelType.Administrator)));
 
         group.MapGet(
-                 "/",
-                 (
-                     IMobileTemplateService templates,
-                     HttpRequest request,
-                     int? page,
-                     int? pageSize,
-                     string? search,
-                     string? tag,
-                     string? notoriety
-                 ) => HandleList(
-                     templates,
-                     page,
-                     pageSize,
-                     search,
-                     tag,
-                     notoriety,
-                     request.Query["abstract"].FirstOrDefault()
-                 )
-             )
-             .WithName("ListMobileTemplates")
-             .WithSummary("Returns a paginated, searchable list of mobile templates.");
+                "/",
+                (
+                    IMobileTemplateService templates,
+                    HttpRequest request,
+                    int? page,
+                    int? pageSize,
+                    string? search,
+                    string? tag,
+                    string? notoriety
+                ) => HandleList(
+                    templates,
+                    page,
+                    pageSize,
+                    search,
+                    tag,
+                    notoriety,
+                    request.Query["abstract"].FirstOrDefault()
+                )
+            )
+            .WithName("ListMobileTemplates")
+            .WithSummary("Returns a paginated, searchable list of mobile templates.");
 
         group.MapGet(
-                 "/{id}",
-                 (IMobileTemplateService templates, string id) => HandleDetail(templates, id)
-             )
-             .WithName("GetMobileTemplate")
-             .WithSummary("Returns a full read-only mobile template definition.");
+                "/{id}",
+                (IMobileTemplateService templates, string id) => HandleDetail(templates, id)
+            )
+            .WithName("GetMobileTemplate")
+            .WithSummary("Returns a full read-only mobile template definition.");
 
         group.MapPost(
-                 "/",
-                 (
-                     IMobileTemplateAuthoringService authoring,
-                     MobileTemplateEditRequest request,
-                     CancellationToken cancellationToken
-                 ) => HandleCreateAsync(authoring, request, cancellationToken)
-             )
-             .WithName("CreateMobileTemplate")
-             .WithSummary("Creates a mobile template in the managed web YAML file.");
+                "/",
+                (
+                    IMobileTemplateAuthoringService authoring,
+                    MobileTemplateEditRequest request,
+                    CancellationToken cancellationToken
+                ) => HandleCreateAsync(authoring, request, cancellationToken)
+            )
+            .WithName("CreateMobileTemplate")
+            .WithSummary("Creates a mobile template in the managed web YAML file.");
 
         group.MapPut(
-                 "/{id}",
-                 (
-                     IMobileTemplateAuthoringService authoring,
-                     string id,
-                     MobileTemplateEditRequest request,
-                     CancellationToken cancellationToken
-                 ) => HandleUpdateAsync(authoring, id, request, cancellationToken)
-             )
-             .WithName("UpdateMobileTemplate")
-             .WithSummary("Updates an existing mobile template in its owning YAML file.");
+                "/{id}",
+                (
+                    IMobileTemplateAuthoringService authoring,
+                    string id,
+                    MobileTemplateEditRequest request,
+                    CancellationToken cancellationToken
+                ) => HandleUpdateAsync(authoring, id, request, cancellationToken)
+            )
+            .WithName("UpdateMobileTemplate")
+            .WithSummary("Updates an existing mobile template in its owning YAML file.");
 
         return endpoints;
     }
@@ -100,8 +100,8 @@ public static class MobileTemplateEndpointExtensions
         ArgumentNullException.ThrowIfNull(templates);
 
         return templates.TryGet(id, out var template)
-                   ? TypedResults.Ok(MobileTemplateDetail.FromDefinition(template!))
-                   : TypedResults.NotFound();
+            ? TypedResults.Ok(MobileTemplateDetail.FromDefinition(template!))
+            : TypedResults.NotFound();
     }
 
     internal static IResult HandleList(
@@ -130,9 +130,8 @@ public static class MobileTemplateEndpointExtensions
 
         if (!string.IsNullOrWhiteSpace(tag))
         {
-            filters.Add(
-                template => template.Tags.Any(
-                    templateTag => string.Equals(templateTag, tag.Trim(), StringComparison.OrdinalIgnoreCase)
+            filters.Add(template =>
+                template.Tags.Any(templateTag => string.Equals(templateTag, tag.Trim(), StringComparison.OrdinalIgnoreCase)
                 )
             );
         }

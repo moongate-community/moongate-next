@@ -6,8 +6,8 @@ using Serilog;
 namespace Moongate.UO.Data.Tiles;
 
 /// <summary>
-/// Loads <c>radarcol.mul</c> into an RGB555 colour table for land and static tiles. A missing file
-/// yields a zeroed table (non-fatal).
+///     Loads <c>radarcol.mul</c> into an RGB555 colour table for land and static tiles. A missing file
+///     yields a zeroed table (non-fatal).
 /// </summary>
 public sealed class RadarColorStore : IRadarColorStore
 {
@@ -48,8 +48,12 @@ public sealed class RadarColorStore : IRadarColorStore
     public int Count => _colors.Length;
 
     public (byte R, byte G, byte B) GetLandColor(int tileId)
-        => Rgb555.ToRgb(_colors[tileId & 0x3FFF]);
+    {
+        return Rgb555.ToRgb(_colors[tileId & 0x3FFF]);
+    }
 
     public (byte R, byte G, byte B) GetStaticColor(int tileId)
-        => Rgb555.ToRgb(_colors[(tileId & 0x3FFF) + 0x4000]);
+    {
+        return Rgb555.ToRgb(_colors[(tileId & 0x3FFF) + 0x4000]);
+    }
 }

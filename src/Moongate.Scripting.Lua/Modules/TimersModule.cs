@@ -12,13 +12,26 @@ namespace Moongate.Scripting.Lua.Modules;
 public sealed class TimersModule : IDisposable
 {
     private readonly ILuaEventBridge _events;
-    private readonly ConcurrentDictionary<string, string> _timers = new(StringComparer.Ordinal);
     private readonly ITimerService? _timer;
+    private readonly ConcurrentDictionary<string, string> _timers = new(StringComparer.Ordinal);
 
     public TimersModule(ILuaEventBridge events, ITimerService? timer = null)
     {
         _events = events;
         _timer = timer;
+    }
+
+    public void Dispose()
+    {
+        if (_timer is not null)
+        {
+            foreach (var (_, timerId) in _timers)
+            {
+                _timer.UnregisterTimer(timerId);
+            }
+        }
+
+        _timers.Clear();
     }
 
     [ScriptFunction("cancel", "Cancels a timer by Lua timer name.")]
@@ -39,26 +52,17 @@ public sealed class TimersModule : IDisposable
         return _timer.UnregisterTimersByName(name) > 0;
     }
 
-    public void Dispose()
-    {
-        if (_timer is not null)
-        {
-            foreach (var (_, timerId) in _timers)
-            {
-                _timer.UnregisterTimer(timerId);
-            }
-        }
-
-        _timers.Clear();
-    }
-
     [ScriptFunction("every", "Registers a repeating timer.")]
     public string Every(string name, string interval, Closure callback)
-        => Register(name, interval, callback, true);
+    {
+        return Register(name, interval, callback, true);
+    }
 
     [ScriptFunction("once", "Registers a one-shot timer.")]
     public string Once(string name, string interval, Closure callback)
-        => Register(name, interval, callback, false);
+    {
+        return Register(name, interval, callback, false);
+    }
 
     private static TimeSpan ParseInterval(string interval)
     {

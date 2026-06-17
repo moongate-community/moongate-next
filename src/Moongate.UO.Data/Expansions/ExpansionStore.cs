@@ -8,22 +8,22 @@ using Serilog;
 namespace Moongate.UO.Data.Expansions;
 
 /// <summary>
-/// Loads the UO expansion table from <c>expansions.yaml</c> in the data directory. A missing or
-/// malformed file yields an empty store (non-fatal).
+///     Loads the UO expansion table from <c>expansions.yaml</c> in the data directory. A missing or
+///     malformed file yields an empty store (non-fatal).
 /// </summary>
 public sealed class ExpansionStore : IExpansionStore
 {
     private static readonly ILogger _logger = Log.ForContext<ExpansionStore>();
+    private readonly Dictionary<int, ExpansionInfo> _byId;
 
     private readonly List<ExpansionInfo> _table;
-    private readonly Dictionary<int, ExpansionInfo> _byId;
 
     public ExpansionStore(string dataDirectory)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(dataDirectory);
 
         _table = [];
-        _byId = new();
+        _byId = new Dictionary<int, ExpansionInfo>();
 
         var path = Path.Combine(dataDirectory, "expansions.yaml");
 
@@ -77,8 +77,12 @@ public sealed class ExpansionStore : IExpansionStore
     }
 
     public ExpansionInfo? GetInfo(int id)
-        => _byId.GetValueOrDefault(id);
+    {
+        return _byId.GetValueOrDefault(id);
+    }
 
     public ExpansionInfo? GetInfo(UoExpansionType expansion)
-        => GetInfo((int)expansion);
+    {
+        return GetInfo((int)expansion);
+    }
 }

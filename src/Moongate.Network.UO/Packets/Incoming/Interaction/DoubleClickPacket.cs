@@ -7,16 +7,17 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Incoming.Interaction;
 
 [PacketHandler(0x06, PacketSizing.Fixed, Length = 5, Description = "Double Click")]
-
 /// <summary>
 /// Represents DoubleClickPacket.
 /// </summary>
 public class DoubleClickPacket : BaseGameNetworkPacket
 {
-    public Serial TargetSerial { get; set; }
-
     public DoubleClickPacket()
-        : base(0x06, 5) { }
+        : base(0x06, 5)
+    {
+    }
+
+    public Serial TargetSerial { get; set; }
 
     protected override bool ParsePayload(ref SpanReader reader)
     {

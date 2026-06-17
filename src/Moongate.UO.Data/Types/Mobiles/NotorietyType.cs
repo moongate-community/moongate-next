@@ -1,7 +1,7 @@
 namespace Moongate.UO.Data.Types.Mobiles;
 
 /// <summary>
-/// Notoriety / standing of a mobile, driving the client name colour and attackability.
+///     Notoriety / standing of a mobile, driving the client name colour and attackability.
 /// </summary>
 public enum NotorietyType : byte
 {
@@ -27,8 +27,8 @@ public enum NotorietyType : byte
     Murdered = 6,
 
     /// <summary>
-    /// Invulnerable (0x07): conventionally the yellow GM name in UO;
-    /// here rendered translucent (0x4000-hue style) for "unknown use".
+    ///     Invulnerable (0x07): conventionally the yellow GM name in UO;
+    ///     here rendered translucent (0x4000-hue style) for "unknown use".
     /// </summary>
     Invulnerable = 7
 }

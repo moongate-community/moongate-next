@@ -11,18 +11,18 @@ using Serilog;
 namespace Moongate.Server.Extensions.Seed;
 
 /// <summary>
-/// DryIoc-native bootstrap helpers for boot-time seed actions.
+///     DryIoc-native bootstrap helpers for boot-time seed actions.
 /// </summary>
 public static class SeedContainerExtensions
 {
     extension(IContainer container)
     {
         /// <summary>
-        /// Adds the default first-user seed: admin/admin with administrator level when no users exist.
+        ///     Adds the default first-user seed: admin/admin with administrator level when no users exist.
         /// </summary>
         public IContainer AddDefaultAdminUserSeed()
-            => container.AddSeed(
-                async (serviceProvider, cancellationToken) =>
+        {
+            return container.AddSeed(async (serviceProvider, cancellationToken) =>
                 {
                     var log = Log.ForContext(typeof(SeedContainerExtensions));
                     var users = serviceProvider.GetRequiredService<IUserService>();
@@ -45,9 +45,10 @@ public static class SeedContainerExtensions
                     );
                 }
             );
+        }
 
         /// <summary>
-        /// Registers the seed service and its <see cref="ServerStartedEvent" /> handler.
+        ///     Registers the seed service and its <see cref="ServerStartedEvent" /> handler.
         /// </summary>
         public IContainer AddMoongateSeeds()
         {

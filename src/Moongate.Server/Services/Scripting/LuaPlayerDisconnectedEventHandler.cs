@@ -15,8 +15,10 @@ public sealed class LuaPlayerDisconnectedEventHandler : ITickEventHandler<Player
     }
 
     public void Handle(PlayerDisconnectedEvent evt)
-        => _events.Publish(
+    {
+        _events.Publish(
             "player.disconnected",
             LuaPayloadBuilder.PlayerConnection(evt.SessionId, evt.RemoteEndPoint, evt.At)
         );
+    }
 }

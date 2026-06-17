@@ -1,3 +1,4 @@
+using Moongate.Abstractions.Data.Persistence;
 using Moongate.Core.Ids;
 using Moongate.Persistence.Data;
 using Moongate.Persistence.Services.Persistence;
@@ -16,7 +17,7 @@ public class PersistenceDescriptorAvailabilityTests
         {
             var descriptor = new PersistenceEntityDescriptor<TestPlayer, Serial>(1, "TestPlayer", 1, player => player.Id);
             var registrations = new[] { new PersistenceEntityRegistration(descriptor) };
-            var service = new PersistenceService(directory, new() { EnableFileLock = false }, registrations);
+            var service = new PersistenceService(directory, new PersistenceConfig { EnableFileLock = false }, registrations);
 
             // A boot service with a lower priority than persistence resolves entity data access
             // before StartAsync runs; the descriptor must already be available.

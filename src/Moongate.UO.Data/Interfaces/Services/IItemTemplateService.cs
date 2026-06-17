@@ -4,8 +4,8 @@ using Moongate.UO.Data.Templates.Items;
 namespace Moongate.UO.Data.Interfaces.Services;
 
 /// <summary>
-/// In-memory registry of resolved item templates keyed by case-insensitive id.
-/// Populated at boot by the item template boot service.
+///     In-memory registry of resolved item templates keyed by case-insensitive id.
+///     Populated at boot by the item template boot service.
 /// </summary>
 public interface IItemTemplateService
 {

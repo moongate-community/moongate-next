@@ -24,7 +24,7 @@ public sealed class ItemTemplateYamlDocumentStore
 
         if (!File.Exists(normalized))
         {
-            return new() { ItemTemplates = [] };
+            return new ItemTemplateTable { ItemTemplates = [] };
         }
 
         var table = YamlUtils.DeserializeFromFile<ItemTemplateTable>(normalized);
@@ -43,8 +43,7 @@ public sealed class ItemTemplateYamlDocumentStore
             {
                 var table = LoadTable(file);
 
-                if (table.ItemTemplates.Any(
-                        template => string.Equals(
+                if (table.ItemTemplates.Any(template => string.Equals(
                             template.Id,
                             templateId,
                             StringComparison.OrdinalIgnoreCase
@@ -65,8 +64,11 @@ public sealed class ItemTemplateYamlDocumentStore
 
         var normalized = NormalizeInsideTemplatesDirectory(filePath);
         var table = LoadTable(normalized);
-        var existingIndex = table.ItemTemplates.FindIndex(
-            existing => string.Equals(existing.Id, template.Id, StringComparison.OrdinalIgnoreCase)
+        var existingIndex = table.ItemTemplates.FindIndex(existing => string.Equals(
+                existing.Id,
+                template.Id,
+                StringComparison.OrdinalIgnoreCase
+            )
         );
 
         if (existingIndex >= 0)

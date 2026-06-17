@@ -1,7 +1,7 @@
 namespace Moongate.Core.Interfaces.Ids;
 
 /// <summary>
-/// Non-generic marker for runtime checks in type-erased persistence code.
+///     Non-generic marker for runtime checks in type-erased persistence code.
 /// </summary>
 public interface IAutoIncrementKey
 {

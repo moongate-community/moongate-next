@@ -5,14 +5,14 @@ using Moongate.Persistence.Data;
 namespace Moongate.Persistence.Extensions.DryIoc;
 
 /// <summary>
-/// DryIoc-native registration helpers for Moongate persistence entity declarations.
+///     DryIoc-native registration helpers for Moongate persistence entity declarations.
 /// </summary>
 public static class PersistenceEntityContainerExtensions
 {
     extension(IContainer container)
     {
         /// <summary>
-        /// Registers a persisted entity type consumed by the persistence service at boot.
+        ///     Registers a persisted entity type consumed by the persistence service at boot.
         /// </summary>
         /// <param name="typeId">Stable numeric identifier for the entity kind.</param>
         /// <param name="schemaVersion">Version of the persisted entity schema.</param>

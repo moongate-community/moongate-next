@@ -1,7 +1,7 @@
 namespace Moongate.Server.Data.World.Internal;
 
 /// <summary>
-/// Pure day/night light-cycle math and the accelerated UO world clock used by the light/time service.
+///     Pure day/night light-cycle math and the accelerated UO world clock used by the light/time service.
 /// </summary>
 public static class LightCycle
 {
@@ -12,14 +12,16 @@ public static class LightCycle
 
     /// <summary>Light level (0 = brightest day, higher = darker) for a UO time-of-day.</summary>
     public static int LevelFromHourMinute(int hour, int minute)
-        => hour switch
+    {
+        return hour switch
         {
-            < 4  => NightLevel,
-            < 6  => NightLevel + ((hour - 4) * 60 + minute) * (DayLevel - NightLevel) / 120,
+            < 4 => NightLevel,
+            < 6 => NightLevel + ((hour - 4) * 60 + minute) * (DayLevel - NightLevel) / 120,
             < 22 => DayLevel,
             < 24 => DayLevel + ((hour - 22) * 60 + minute) * (NightLevel - DayLevel) / 120,
-            _    => NightLevel
+            _ => NightLevel
         };
+    }
 
     /// <summary>Normalizes total UO minutes to a 24-hour time-of-day (wraps negatives).</summary>
     public static (int Hour, int Minute, int Second) TimeOfDay(double totalUoMinutes)
@@ -33,5 +35,7 @@ public static class LightCycle
 
     /// <summary>Elapsed UO minutes since the world start, given the real-seconds-per-UO-minute rate.</summary>
     public static double TotalUoMinutes(DateTime utcNow, DateTime worldStartUtc, double secondsPerUoMinute)
-        => (utcNow - worldStartUtc).TotalSeconds / secondsPerUoMinute;
+    {
+        return (utcNow - worldStartUtc).TotalSeconds / secondsPerUoMinute;
+    }
 }

@@ -1,5 +1,7 @@
+using Moongate.Core.Ids;
 using Moongate.Network.UO.Packets.Outgoing.Entity;
 using Moongate.Tests.Support;
+using Moongate.UO.Data.Data.Mobiles;
 using Moongate.UO.Data.Entities.Mobiles;
 using Moongate.UO.Data.Types.Mobiles;
 
@@ -12,9 +14,10 @@ public class PlayerStatusPacketTests
     {
         var mobile = new MobileEntity
         {
-            Id = new(0x55), Name = "Tom", Gender = GenderType.Male,
-            BaseStats = new() { Strength = 50, Dexterity = 40, Intelligence = 30 },
-            Resources = new() { Hits = 45, MaxHits = 50, Mana = 30, MaxMana = 30, Stamina = 40, MaxStamina = 40 }
+            Id = new Serial(0x55), Name = "Tom", Gender = GenderType.Male,
+            BaseStats = new MobileStats { Strength = 50, Dexterity = 40, Intelligence = 30 },
+            Resources = new MobileResources
+            { Hits = 45, MaxHits = 50, Mana = 30, MaxMana = 30, Stamina = 40, MaxStamina = 40 }
         };
         var bytes = PacketSerializer.Serialize(new PlayerStatusPacket(mobile));
         Assert.Equal(0x11, bytes[0]);

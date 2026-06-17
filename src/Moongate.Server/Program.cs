@@ -6,7 +6,7 @@ await ConsoleApp.RunAsync(
     async (CancellationToken cancellationToken, string? rootDirectory = null, bool debug = false, bool header = true) =>
     {
         await MoongateBootstrap.RunAsync(
-            new(args, rootDirectory, debug, header),
+            new MoongateBootstrapOptions(args, rootDirectory, debug, header),
             cancellationToken
         );
     }

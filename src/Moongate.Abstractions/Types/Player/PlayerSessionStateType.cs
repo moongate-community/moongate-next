@@ -1,7 +1,7 @@
 namespace Moongate.Abstractions.Types.Player;
 
 /// <summary>
-/// Represents the logical lifecycle state of a connected player session.
+///     Represents the logical lifecycle state of a connected player session.
 /// </summary>
 public enum PlayerSessionStateType
 {

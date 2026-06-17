@@ -11,20 +11,19 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.Loadouts;
 
 /// <summary>
-/// Default starter loadout service: composes the additive base + race +
-/// profession overlays into resolved items and applies them to a mobile.
+///     Default starter loadout service: composes the additive base + race +
+///     profession overlays into resolved items and applies them to a mobile.
 /// </summary>
 public sealed class StarterLoadoutService : IStarterLoadoutService
 {
-    private readonly ILogger _logger = Log.ForContext<StarterLoadoutService>();
-    private readonly IItemTemplateService _templates;
-
     // Lazy: this singleton is constructed with the boot services (before the
     // persistence service starts), but the item/mobile services resolve their
     // persistence data access eagerly — defer until ApplyAsync actually runs.
     private readonly Lazy<IItemFactoryService> _itemFactory;
-    private readonly Lazy<IMobileService> _mobiles;
     private readonly Lazy<IItemService> _items;
+    private readonly ILogger _logger = Log.ForContext<StarterLoadoutService>();
+    private readonly Lazy<IMobileService> _mobiles;
+    private readonly IItemTemplateService _templates;
 
     private StarterLoadoutDefinition? _definition;
 
@@ -62,9 +61,9 @@ public sealed class StarterLoadoutService : IStarterLoadoutService
         if (loadout.Backpack is not null && loadout.Backpack.Layer is { } backpackLayer)
         {
             backpackEntity = await _itemFactory.Value.CreateFromTemplateAsync(
-                                 loadout.Backpack.Template.Id,
-                                 cancellationToken
-                             );
+                loadout.Backpack.Template.Id,
+                cancellationToken
+            );
 
             // Set before EquipAsync: the mobile upsert inside it persists the reference.
             mobile.BackpackId = backpackEntity.Id;
@@ -86,7 +85,7 @@ public sealed class StarterLoadoutService : IStarterLoadoutService
             {
                 PacketHueSource.Shirt => shirtHue,
                 PacketHueSource.Pants => pantsHue,
-                _                     => (short)0
+                _ => (short)0
             };
 
             // EquipAsync upserts the item, persisting the hue/amount mutations.
@@ -138,7 +137,7 @@ public sealed class StarterLoadoutService : IStarterLoadoutService
 
         if (!string.IsNullOrWhiteSpace(definition.BackpackTemplate))
         {
-            loadout.Backpack = Resolve(new() { Template = definition.BackpackTemplate });
+            loadout.Backpack = Resolve(new LoadoutItemEntry { Template = definition.BackpackTemplate });
         }
 
         AppendSection(loadout, definition.Base);
@@ -166,7 +165,9 @@ public sealed class StarterLoadoutService : IStarterLoadoutService
     }
 
     public void SetDefinition(StarterLoadoutDefinition? definition)
-        => _definition = definition;
+    {
+        _definition = definition;
+    }
 
     private void AppendSection(StarterLoadout loadout, LoadoutSection section)
     {
@@ -203,6 +204,6 @@ public sealed class StarterLoadoutService : IStarterLoadoutService
             throw new InvalidOperationException($"Starter loadout references unknown item template '{entry.Template}'.");
         }
 
-        return new(template, entry.Amount ?? template.Amount, entry.PacketHue, template.Layer);
+        return new StarterLoadoutItem(template, entry.Amount ?? template.Amount, entry.PacketHue, template.Layer);
     }
 }

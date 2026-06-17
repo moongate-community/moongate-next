@@ -1,8 +1,8 @@
 namespace Moongate.Plugins.Data;
 
 /// <summary>
-/// Field-type tokens for <see cref="PluginConfigField.Type" />. Shared by every configurable plugin
-/// when building its config form and matched verbatim by the admin UI renderer.
+///     Field-type tokens for <see cref="PluginConfigField.Type" />. Shared by every configurable plugin
+///     when building its config form and matched verbatim by the admin UI renderer.
 /// </summary>
 public static class PluginConfigFieldTypes
 {

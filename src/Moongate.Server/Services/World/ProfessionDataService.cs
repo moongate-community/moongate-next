@@ -6,7 +6,7 @@ using Moongate.Server.Services.WorldData;
 namespace Moongate.Server.Services.World;
 
 /// <summary>
-/// Lazy in-memory store for profession definitions.
+///     Lazy in-memory store for profession definitions.
 /// </summary>
 public class ProfessionDataService : LazyDataService, IProfessionDataService
 {
@@ -14,7 +14,9 @@ public class ProfessionDataService : LazyDataService, IProfessionDataService
     private readonly Lock _sync = new();
     private List<ProfessionEntry> _professions = [];
 
-    public ProfessionDataService() { }
+    public ProfessionDataService()
+    {
+    }
 
     public ProfessionDataService(ServerAssetDataLoader loader)
     {
@@ -48,5 +50,7 @@ public class ProfessionDataService : LazyDataService, IProfessionDataService
     }
 
     protected override void LoadCore()
-        => _loader?.LoadProfessions(this);
+    {
+        _loader?.LoadProfessions(this);
+    }
 }

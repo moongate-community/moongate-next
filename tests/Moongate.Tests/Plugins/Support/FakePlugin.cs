@@ -8,11 +8,11 @@ public sealed class FakePlugin : IMoongatePlugin
 {
     public FakePlugin(string id, params string[] dependencies)
     {
-        Metadata = new()
+        Metadata = new PluginMetadata
         {
             Id = id,
             Name = id,
-            Version = new(1, 0, 0),
+            Version = new Version(1, 0, 0),
             Author = "Moongate Tests",
             Dependencies = dependencies
         };
@@ -20,5 +20,7 @@ public sealed class FakePlugin : IMoongatePlugin
 
     public PluginMetadata Metadata { get; }
 
-    public void Configure(IContainer container, PluginContext context) { }
+    public void Configure(IContainer container, PluginContext context)
+    {
+    }
 }

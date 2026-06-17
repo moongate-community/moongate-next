@@ -4,40 +4,10 @@ using Moongate.Server.Types.World;
 namespace Moongate.Server.Data.World;
 
 /// <summary>
-/// Represents one spawn definition loaded from ModernUO spawn YAML files.
+///     Represents one spawn definition loaded from ModernUO spawn YAML files.
 /// </summary>
 public readonly record struct SpawnDefinitionEntry
 {
-    public int MapId { get; }
-
-    public string Map { get; }
-
-    public string SourceGroup { get; }
-
-    public string SourceFile { get; }
-
-    public Guid Guid { get; }
-
-    public SpawnDefinitionKind Kind { get; }
-
-    public string Name { get; }
-
-    public Point3D Location { get; }
-
-    public int Count { get; }
-
-    public TimeSpan MinDelay { get; }
-
-    public TimeSpan MaxDelay { get; }
-
-    public int Team { get; }
-
-    public int HomeRange { get; }
-
-    public int WalkingRange { get; }
-
-    public IReadOnlyList<SpawnEntryDefinition> Entries { get; }
-
     public SpawnDefinitionEntry(
         int mapId,
         string map,
@@ -74,4 +44,34 @@ public readonly record struct SpawnDefinitionEntry
         WalkingRange = walkingRange;
         Entries = [.. entries];
     }
+
+    public int MapId { get; }
+
+    public string Map { get; }
+
+    public string SourceGroup { get; }
+
+    public string SourceFile { get; }
+
+    public Guid Guid { get; }
+
+    public SpawnDefinitionKind Kind { get; }
+
+    public string Name { get; }
+
+    public Point3D Location { get; }
+
+    public int Count { get; }
+
+    public TimeSpan MinDelay { get; }
+
+    public TimeSpan MaxDelay { get; }
+
+    public int Team { get; }
+
+    public int HomeRange { get; }
+
+    public int WalkingRange { get; }
+
+    public IReadOnlyList<SpawnEntryDefinition> Entries { get; }
 }

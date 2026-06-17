@@ -1,7 +1,7 @@
 namespace Moongate.UO.Data.Types.Maps;
 
 /// <summary>
-/// Gameplay rule flags for a map facet (movement and beneficial/harmful action restrictions).
+///     Gameplay rule flags for a map facet (movement and beneficial/harmful action restrictions).
 /// </summary>
 [Flags]
 public enum MapRulesType

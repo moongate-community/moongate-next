@@ -9,15 +9,15 @@ using SixLabors.ImageSharp.PixelFormats;
 namespace Moongate.UO.Data.Maps;
 
 /// <summary>
-/// Renders UO map tiles into radar-colour images.
+///     Renders UO map tiles into radar-colour images.
 /// </summary>
 public sealed class MapImageService : IMapImageService
 {
     private const int TileBlockSize = 8;
 
     private readonly IMapService _maps;
-    private readonly IUoFileResolver _resolver;
     private readonly IRadarColorStore _radarColors;
+    private readonly IUoFileResolver _resolver;
     private readonly ITileDataStore _tileData;
 
     public MapImageService(
@@ -62,8 +62,10 @@ public sealed class MapImageService : IMapImageService
     }
 
     private bool HasMapFile(int fileIndex)
-        => _resolver.Contains($"map{fileIndex}.mul") ||
-           _resolver.Contains($"map{fileIndex}LegacyMUL.uop");
+    {
+        return _resolver.Contains($"map{fileIndex}.mul") ||
+               _resolver.Contains($"map{fileIndex}LegacyMUL.uop");
+    }
 
     private void RenderBlock(Image<Rgb24> image, TileMatrix tiles, int blockX, int blockY)
     {
@@ -104,6 +106,6 @@ public sealed class MapImageService : IMapImageService
             }
         }
 
-        return new(color.Item1, color.Item2, color.Item3);
+        return new Rgb24(color.Item1, color.Item2, color.Item3);
     }
 }

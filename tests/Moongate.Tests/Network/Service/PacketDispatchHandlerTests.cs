@@ -22,132 +22,6 @@ namespace Moongate.Tests.Network.Service;
 
 public class PacketDispatchHandlerTests
 {
-    private sealed class CapturingHandler : IPacketHandler<TestPacket>
-    {
-        public List<long> SessionIds { get; } = [];
-
-        public Task HandleAsync(PacketContext<TestPacket> context, CancellationToken cancellationToken = default)
-        {
-            SessionIds.Add(context.SessionId);
-
-            return Task.CompletedTask;
-        }
-    }
-
-    private sealed class ThrowingHandler : IPacketHandler<TestPacket>
-    {
-        public Task HandleAsync(PacketContext<TestPacket> context, CancellationToken cancellationToken = default)
-            => throw new InvalidOperationException("handler failed");
-    }
-
-    private sealed class SessionCapturingHandler : IPacketHandler<TestPacket>
-    {
-        public IGameSession? Session { get; private set; }
-
-        public Task HandleAsync(PacketContext<TestPacket> context, CancellationToken cancellationToken = default)
-        {
-            Session = context.Session;
-
-            return Task.CompletedTask;
-        }
-    }
-
-    private sealed class FakeServiceProvider : IServiceProvider
-    {
-        private readonly IReadOnlyList<IPacketHandler<TestPacket>> _handlers;
-
-        public FakeServiceProvider(IReadOnlyList<IPacketHandler<TestPacket>> handlers)
-        {
-            _handlers = handlers;
-        }
-
-        public object? GetService(Type serviceType)
-        {
-            if (serviceType == typeof(IEnumerable<IPacketHandler<TestPacket>>))
-            {
-                return _handlers;
-            }
-
-            return null;
-        }
-    }
-
-    private sealed class IntegrationCapture
-    {
-        public List<long> SessionIds { get; } = [];
-    }
-
-    private sealed class BaseHandlerProbe
-    {
-        public IEventBusService? EventBus { get; set; }
-        public INetworkSessionManager? Sessions { get; set; }
-    }
-
-    private sealed class BaseHandler : PacketHandlerBase<TestPacket>
-    {
-        private readonly BaseHandlerProbe _probe;
-
-        public BaseHandler(
-            IEventBusService eventBus,
-            INetworkSessionManager sessions,
-            IPlayerSessionService playerSessions,
-            BaseHandlerProbe probe
-        )
-            : base(eventBus, sessions, playerSessions)
-        {
-            _probe = probe;
-        }
-
-        public override Task HandleAsync(PacketContext<TestPacket> context, CancellationToken cancellationToken = default)
-        {
-            _probe.EventBus = EventBus;
-            _probe.Sessions = Sessions;
-
-            return Task.CompletedTask;
-        }
-    }
-
-    private sealed class IntegrationHandler : IPacketHandler<TestPacket>
-    {
-        private readonly IntegrationCapture _capture;
-
-        public IntegrationHandler(IntegrationCapture capture)
-        {
-            _capture = capture;
-        }
-
-        public Task HandleAsync(PacketContext<TestPacket> context, CancellationToken cancellationToken = default)
-        {
-            _capture.SessionIds.Add(context.SessionId);
-
-            return Task.CompletedTask;
-        }
-    }
-
-    private sealed class TestPacket : BaseGameNetworkPacket
-    {
-        public TestPacket(byte opCode)
-            : base(opCode, 1) { }
-
-        public override void Write(ref SpanWriter writer)
-            => writer.Write(OpCode);
-
-        protected override bool ParsePayload(ref SpanReader reader)
-            => true;
-    }
-
-    private sealed class OtherPacket : BaseGameNetworkPacket
-    {
-        public OtherPacket()
-            : base(0xA2, 1) { }
-
-        public override void Write(ref SpanWriter writer)
-            => writer.Write(OpCode);
-
-        protected override bool ParsePayload(ref SpanReader reader)
-            => true;
-    }
-
     [Fact]
     public void AddMoongateNetwork_RegistersPlayerSessionServiceAndEventHandlers()
     {
@@ -255,7 +129,7 @@ public class PacketDispatchHandlerTests
         var capturing = new CapturingHandler();
         var dispatcher = NewDispatcher([new ThrowingHandler(), capturing], sessions);
 
-        dispatcher.Handle(new(sessionId, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
+        dispatcher.Handle(new PacketReceivedEvent(sessionId, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
 
         Assert.Equal(new[] { sessionId }, capturing.SessionIds);
     }
@@ -269,7 +143,7 @@ public class PacketDispatchHandlerTests
         var handler = new CapturingHandler();
         var dispatcher = NewDispatcher([handler], sessions);
 
-        dispatcher.Handle(new(sessionId, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
+        dispatcher.Handle(new PacketReceivedEvent(sessionId, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
 
         Assert.Equal(new[] { sessionId }, handler.SessionIds);
     }
@@ -284,7 +158,7 @@ public class PacketDispatchHandlerTests
         var second = new CapturingHandler();
         var dispatcher = NewDispatcher([first, second], sessions);
 
-        dispatcher.Handle(new(sessionId, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
+        dispatcher.Handle(new PacketReceivedEvent(sessionId, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
 
         Assert.Equal(new[] { sessionId }, first.SessionIds);
         Assert.Equal(new[] { sessionId }, second.SessionIds);
@@ -299,7 +173,7 @@ public class PacketDispatchHandlerTests
         var handler = new CapturingHandler();
         var dispatcher = NewDispatcher([handler], sessions);
 
-        dispatcher.Handle(new(sessionId, 0xA2, new OtherPacket(), DateTimeOffset.UtcNow));
+        dispatcher.Handle(new PacketReceivedEvent(sessionId, 0xA2, new OtherPacket(), DateTimeOffset.UtcNow));
 
         Assert.Empty(handler.SessionIds);
     }
@@ -313,7 +187,7 @@ public class PacketDispatchHandlerTests
         var handler = new SessionCapturingHandler();
         var dispatcher = NewDispatcher([handler], sessions);
 
-        dispatcher.Handle(new(gameSession.SessionId, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
+        dispatcher.Handle(new PacketReceivedEvent(gameSession.SessionId, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
 
         Assert.Same(gameSession, handler.Session);
     }
@@ -322,9 +196,9 @@ public class PacketDispatchHandlerTests
     public void Handle_UnknownSession_SkipsDispatch()
     {
         var handler = new CapturingHandler();
-        var dispatcher = NewDispatcher([handler], new());
+        var dispatcher = NewDispatcher([handler], new SessionService());
 
-        dispatcher.Handle(new(404, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
+        dispatcher.Handle(new PacketReceivedEvent(404, 0xA1, new TestPacket(0xA1), DateTimeOffset.UtcNow));
 
         Assert.Empty(handler.SessionIds);
     }
@@ -344,15 +218,159 @@ public class PacketDispatchHandlerTests
     }
 
     private static MoongateTCPClient NewClient()
-        => new(new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp));
+    {
+        return new MoongateTCPClient(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp));
+    }
 
     private static PacketDispatchHandler NewDispatcher(
         IReadOnlyList<IPacketHandler<TestPacket>> handlers,
         SessionService sessions
     )
-        => new(
+    {
+        return new PacketDispatchHandler(
             new FakeServiceProvider(handlers),
             new OutgoingPacketQueue(),
             sessions
         );
+    }
+
+    private sealed class CapturingHandler : IPacketHandler<TestPacket>
+    {
+        public List<long> SessionIds { get; } = [];
+
+        public Task HandleAsync(PacketContext<TestPacket> context, CancellationToken cancellationToken = default)
+        {
+            SessionIds.Add(context.SessionId);
+
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class ThrowingHandler : IPacketHandler<TestPacket>
+    {
+        public Task HandleAsync(PacketContext<TestPacket> context, CancellationToken cancellationToken = default)
+        {
+            throw new InvalidOperationException("handler failed");
+        }
+    }
+
+    private sealed class SessionCapturingHandler : IPacketHandler<TestPacket>
+    {
+        public IGameSession? Session { get; private set; }
+
+        public Task HandleAsync(PacketContext<TestPacket> context, CancellationToken cancellationToken = default)
+        {
+            Session = context.Session;
+
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class FakeServiceProvider : IServiceProvider
+    {
+        private readonly IReadOnlyList<IPacketHandler<TestPacket>> _handlers;
+
+        public FakeServiceProvider(IReadOnlyList<IPacketHandler<TestPacket>> handlers)
+        {
+            _handlers = handlers;
+        }
+
+        public object? GetService(Type serviceType)
+        {
+            if (serviceType == typeof(IEnumerable<IPacketHandler<TestPacket>>))
+            {
+                return _handlers;
+            }
+
+            return null;
+        }
+    }
+
+    private sealed class IntegrationCapture
+    {
+        public List<long> SessionIds { get; } = [];
+    }
+
+    private sealed class BaseHandlerProbe
+    {
+        public IEventBusService? EventBus { get; set; }
+        public INetworkSessionManager? Sessions { get; set; }
+    }
+
+    private sealed class BaseHandler : PacketHandlerBase<TestPacket>
+    {
+        private readonly BaseHandlerProbe _probe;
+
+        public BaseHandler(
+            IEventBusService eventBus,
+            INetworkSessionManager sessions,
+            IPlayerSessionService playerSessions,
+            BaseHandlerProbe probe
+        )
+            : base(eventBus, sessions, playerSessions)
+        {
+            _probe = probe;
+        }
+
+        public override Task HandleAsync(PacketContext<TestPacket> context, CancellationToken cancellationToken = default)
+        {
+            _probe.EventBus = EventBus;
+            _probe.Sessions = Sessions;
+
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class IntegrationHandler : IPacketHandler<TestPacket>
+    {
+        private readonly IntegrationCapture _capture;
+
+        public IntegrationHandler(IntegrationCapture capture)
+        {
+            _capture = capture;
+        }
+
+        public Task HandleAsync(PacketContext<TestPacket> context, CancellationToken cancellationToken = default)
+        {
+            _capture.SessionIds.Add(context.SessionId);
+
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class TestPacket : BaseGameNetworkPacket
+    {
+        public TestPacket(byte opCode)
+            : base(opCode, 1)
+        {
+        }
+
+        public override void Write(ref SpanWriter writer)
+        {
+            writer.Write(OpCode);
+        }
+
+        protected override bool ParsePayload(ref SpanReader reader)
+        {
+            return true;
+        }
+    }
+
+    private sealed class OtherPacket : BaseGameNetworkPacket
+    {
+        public OtherPacket()
+            : base(0xA2, 1)
+        {
+        }
+
+        public override void Write(ref SpanWriter writer)
+        {
+            writer.Write(OpCode);
+        }
+
+        protected override bool ParsePayload(ref SpanReader reader)
+        {
+            return true;
+        }
+    }
 }

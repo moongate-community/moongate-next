@@ -4,9 +4,9 @@ using SixLabors.ImageSharp.PixelFormats;
 namespace Moongate.UO.Data.Animations;
 
 /// <summary>
-/// Composites decoded animation frames (body, then hair, then facial hair, …) onto a shared canvas,
-/// aligned by frame centre, drawing opaque pixels top-over-bottom in list order. The returned canvas is
-/// not trimmed (the caller's CropAndPad does that). Does not dispose the input layers.
+///     Composites decoded animation frames (body, then hair, then facial hair, …) onto a shared canvas,
+///     aligned by frame centre, drawing opaque pixels top-over-bottom in list order. The returned canvas is
+///     not trimmed (the caller's CropAndPad does that). Does not dispose the input layers.
 /// </summary>
 public static class AnimationCompositor
 {
@@ -16,7 +16,7 @@ public static class AnimationCompositor
 
         if (layers.Count == 0)
         {
-            return new(1, 1);
+            return new Image<Rgba32>(1, 1);
         }
 
         var topLeftX = new int[layers.Count];

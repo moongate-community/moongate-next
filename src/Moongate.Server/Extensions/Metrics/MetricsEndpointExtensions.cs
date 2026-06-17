@@ -9,12 +9,14 @@ public static class MetricsEndpointExtensions
         this IEndpointRouteBuilder endpoints,
         string pattern = "/metrics"
     )
-        => endpoints.MapGet(
-                        pattern,
-                        (IMetricsService metrics) => Results.Text(
-                            OpenMetricsFormatter.Format(metrics.GetSnapshot()),
-                            "text/plain; charset=utf-8"
-                        )
-                    )
-                    .WithName("GetMetrics");
+    {
+        return endpoints.MapGet(
+                pattern,
+                (IMetricsService metrics) => Results.Text(
+                    OpenMetricsFormatter.Format(metrics.GetSnapshot()),
+                    "text/plain; charset=utf-8"
+                )
+            )
+            .WithName("GetMetrics");
+    }
 }

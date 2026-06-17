@@ -6,15 +6,15 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Abstractions.Configuration;
 
 /// <summary>
-/// Loads the single YAML config file once at boot: creates it with defaults when missing, binds each
-/// registered section, validates, and fails fast on malformed YAML or invalid values. Stateless.
+///     Loads the single YAML config file once at boot: creates it with defaults when missing, binds each
+///     registered section, validates, and fails fast on malformed YAML or invalid values. Stateless.
 /// </summary>
 public static class ConfigService
 {
     private static readonly ILogger _logger = Log.ForContext(typeof(ConfigService));
 
     /// <summary>
-    /// Loads (and self-heals) the config file for the given section registrations.
+    ///     Loads (and self-heals) the config file for the given section registrations.
     /// </summary>
     /// <param name="filePath">Full path to the YAML file.</param>
     /// <param name="sections">Registered config sections.</param>
@@ -36,7 +36,7 @@ public static class ConfigService
         }
 
         var fileExisted = File.Exists(fullPath);
-        var root = fileExisted ? ParseRoot(fullPath) : new();
+        var root = fileExisted ? ParseRoot(fullPath) : new Dictionary<string, object?>();
 
         var results = new List<ConfigLoadResult>(sections.Count);
         var errors = new List<string>();
@@ -61,7 +61,7 @@ public static class ConfigService
                 errors.AddRange(validatable.Validate().Select(e => $"[{section.Name}] {e}"));
             }
 
-            results.Add(new(section.Type, instance));
+            results.Add(new ConfigLoadResult(section.Type, instance));
         }
 
         WarnUnknownSections(root, sections);

@@ -8,32 +8,28 @@ using Serilog;
 namespace Moongate.UO.Data.Tiles;
 
 /// <summary>
-/// Reads land and static tile blocks for a single map facet from <c>map{n}</c> (mul or uop),
-/// <c>staidx{n}.mul</c> and <c>statics{n}.mul</c>. Blocks are cached on first access.
+///     Reads land and static tile blocks for a single map facet from <c>map{n}</c> (mul or uop),
+///     <c>staidx{n}.mul</c> and <c>statics{n}.mul</c>. Blocks are cached on first access.
 /// </summary>
 public sealed class TileMatrix : IDisposable
 {
     private const int SectorShift = 3;
 
     private static readonly ILogger _logger = Log.ForContext<TileMatrix>();
+    private readonly FileStream? _dataStream;
+    private readonly StaticTile[][][] _emptyStaticBlock;
+    private readonly BinaryReader? _indexReader;
+    private readonly FileStream? _indexStream;
+    private readonly LandTile[] _invalidLandBlock;
+    private readonly LandTile[][][] _landTiles;
+    private readonly FileStream? _mapStream;
 
     private readonly StaticTile[][][][][] _staticTiles;
-    private readonly LandTile[][][] _landTiles;
-    private readonly LandTile[] _invalidLandBlock;
-    private readonly StaticTile[][][] _emptyStaticBlock;
     private readonly UopEntry[]? _uopMapEntries;
-    private readonly FileStream? _mapStream;
-    private readonly FileStream? _indexStream;
-    private readonly FileStream? _dataStream;
-    private readonly BinaryReader? _indexReader;
-    private TileList[][]? _lists;
-    private StaticTile[] _tileBuffer = new StaticTile[128];
     private bool _landWarned;
+    private TileList[][]? _lists;
     private bool _staticWarned;
-
-    public int BlockWidth { get; }
-
-    public int BlockHeight { get; }
+    private StaticTile[] _tileBuffer = new StaticTile[128];
 
     public TileMatrix(IUoFileResolver resolver, int fileIndex, int mapId, int width, int height)
     {
@@ -48,7 +44,7 @@ public sealed class TileMatrix : IDisposable
 
             if (mapPath != null)
             {
-                _mapStream = new(mapPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                _mapStream = new FileStream(mapPath, FileMode.Open, FileAccess.Read, FileShare.Read);
             }
             else
             {
@@ -56,7 +52,7 @@ public sealed class TileMatrix : IDisposable
 
                 if (mapPath != null)
                 {
-                    _mapStream = new(mapPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    _mapStream = new FileStream(mapPath, FileMode.Open, FileAccess.Read, FileShare.Read);
 
                     var uopEntries = UopIndexReader.ReadIndexes(_mapStream, ".dat", 0x14000, 5);
                     _uopMapEntries = new UopEntry[uopEntries.Count];
@@ -74,8 +70,8 @@ public sealed class TileMatrix : IDisposable
 
             if (indexPath != null)
             {
-                _indexStream = new(indexPath, FileMode.Open, FileAccess.Read, FileShare.Read);
-                _indexReader = new(_indexStream);
+                _indexStream = new FileStream(indexPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                _indexReader = new BinaryReader(_indexStream);
             }
             else
             {
@@ -86,7 +82,7 @@ public sealed class TileMatrix : IDisposable
 
             if (staticsPath != null)
             {
-                _dataStream = new(staticsPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                _dataStream = new FileStream(staticsPath, FileMode.Open, FileAccess.Read, FileShare.Read);
             }
             else
             {
@@ -110,6 +106,10 @@ public sealed class TileMatrix : IDisposable
         _landTiles = new LandTile[BlockWidth][][];
         _staticTiles = new StaticTile[BlockWidth][][][][];
     }
+
+    public int BlockWidth { get; }
+
+    public int BlockHeight { get; }
 
     public void Dispose()
     {
@@ -228,7 +228,7 @@ public sealed class TileMatrix : IDisposable
 
             fixed (LandTile* pTiles = tiles)
             {
-                _ = _mapStream.Read(new(pTiles, 192));
+                _ = _mapStream.Read(new Span<byte>(pTiles, 192));
             }
 
             return tiles;
@@ -272,7 +272,7 @@ public sealed class TileMatrix : IDisposable
 
             fixed (StaticTile* pTiles = staTiles)
             {
-                _ = _dataStream.Read(new(pTiles, length));
+                _ = _dataStream.Read(new Span<byte>(pTiles, length));
 
                 if (_lists == null)
                 {
@@ -284,7 +284,7 @@ public sealed class TileMatrix : IDisposable
 
                         for (var j = 0; j < 8; ++j)
                         {
-                            _lists[i][j] = new();
+                            _lists[i][j] = new TileList();
                         }
                     }
                 }
@@ -292,7 +292,7 @@ public sealed class TileMatrix : IDisposable
                 var lists = _lists;
 
                 StaticTile* pCur = pTiles,
-                            pEnd = pTiles + count;
+                    pEnd = pTiles + count;
 
                 while (pCur < pEnd)
                 {

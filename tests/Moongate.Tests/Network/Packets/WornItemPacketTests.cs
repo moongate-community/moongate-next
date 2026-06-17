@@ -12,8 +12,8 @@ public sealed class WornItemPacketTests
     [Fact]
     public void Write_ProducesFixed15ByteLayout()
     {
-        var mobile = new MobileEntity { Id = new(0x55) };
-        var item = new ItemEntity { Id = new(Serial.ItemOffset + 9), ItemId = 0x1F03, Hue = (Hue)0x44 };
+        var mobile = new MobileEntity { Id = new Serial(0x55) };
+        var item = new ItemEntity { Id = new Serial(Serial.ItemOffset + 9), ItemId = 0x1F03, Hue = (Hue)0x44 };
 
         var bytes = PacketSerializer.Serialize(new WornItemPacket(mobile, item, ItemLayerType.OuterTorso));
 

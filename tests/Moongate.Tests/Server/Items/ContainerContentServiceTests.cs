@@ -7,127 +7,13 @@ using Moongate.Server.Services.Templates;
 using Moongate.UO.Data.Data;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Interfaces.Services;
+using Moongate.UO.Data.Templates.Items;
 using Moongate.UO.Data.Types.Properties;
 
 namespace Moongate.Tests.Server.Items;
 
 public sealed class ContainerContentServiceTests
 {
-    private sealed class FakeLootService : ILootService
-    {
-        private readonly IReadOnlyList<ItemEntity> _generatedItems;
-
-        public int GenerateCalls { get; private set; }
-
-        public FakeLootService(IReadOnlyList<ItemEntity> generatedItems)
-        {
-            _generatedItems = generatedItems;
-        }
-
-        public ValueTask<IReadOnlyList<ItemEntity>> GenerateAsync(
-            string lootTableId,
-            CancellationToken cancellationToken = default
-        )
-        {
-            Assert.Equal("common", lootTableId);
-            GenerateCalls++;
-
-            return ValueTask.FromResult(_generatedItems);
-        }
-
-        public bool Has(string lootTableId)
-            => string.Equals(lootTableId, "common", StringComparison.OrdinalIgnoreCase);
-    }
-
-    private sealed class FakeItemService : IItemService
-    {
-        private readonly HashSet<int> _containerItemIds;
-
-        public List<(ItemEntity Container, ItemEntity Child, Point2D Position)> Added { get; } = [];
-
-        public FakeItemService(params int[] containerItemIds)
-        {
-            _containerItemIds = [..containerItemIds];
-        }
-
-        public ValueTask<bool> AddItemAsync(
-            ItemEntity container,
-            ItemEntity child,
-            Point2D position,
-            CancellationToken cancellationToken = default
-        )
-        {
-            child.ParentContainerId = container.Id;
-            child.ContainerPosition = position;
-            container.ContainedItemIds.Add(child.Id);
-            Added.Add((container, child, position));
-
-            return ValueTask.FromResult(true);
-        }
-
-        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
-
-        public ValueTask<ItemEntity> CreateAsync(ItemEntity item, CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
-
-        public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
-
-        public ValueTask<ItemEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
-
-        public bool IsContainer(ItemEntity item)
-            => IsContainer(item.ItemId);
-
-        public bool IsContainer(int itemId)
-            => _containerItemIds.Contains(itemId);
-
-        public bool IsDoor(ItemEntity item)
-            => throw new NotSupportedException();
-
-        public bool IsDoor(int itemId)
-            => throw new NotSupportedException();
-
-        public ValueTask<bool> RemoveItemAsync(
-            ItemEntity container,
-            Serial itemId,
-            CancellationToken cancellationToken = default
-        )
-            => throw new NotSupportedException();
-
-        public ValueTask<int> TotalWeightAsync(ItemEntity item, CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
-    }
-
-    private sealed class FakeContainerDataService : IContainerDataService
-    {
-        private readonly IReadOnlyList<ContainerLayoutEntry> _layouts;
-
-        public FakeContainerDataService(params ContainerLayoutEntry[] layouts)
-        {
-            _layouts = layouts;
-        }
-
-        public bool IsLazy => false;
-
-        public bool IsLoaded => true;
-
-        public void EnsureLoaded() { }
-
-        public IReadOnlyList<ContainerEntry> GetAllContainers()
-            => [];
-
-        public IReadOnlyList<ContainerLayoutEntry> GetAllLayouts()
-            => _layouts;
-
-        public void Reload() { }
-
-        public void SetContainers(IReadOnlyList<ContainerEntry> entries) { }
-
-        public void SetLayouts(IReadOnlyList<ContainerLayoutEntry> entries) { }
-    }
-
     [Fact]
     public async Task EnsureContentsAsync_EmptyGeneratedContainerBeforeRefillDue_DoesNotRefill()
     {
@@ -177,7 +63,7 @@ public sealed class ContainerContentServiceTests
     {
         var service = NewService([Item(Serial.ItemOffset + 2, 3821)], out var items, out var loot);
         var container = Container();
-        container.ContainedItemIds.Add(new(Serial.ItemOffset + 10));
+        container.ContainedItemIds.Add(new Serial(Serial.ItemOffset + 10));
 
         await service.EnsureContentsAsync(container);
 
@@ -190,7 +76,7 @@ public sealed class ContainerContentServiceTests
     {
         var service = NewService([Item(Serial.ItemOffset + 2, 3821)], out var items, out var loot);
         var container = Container();
-        container.ParentContainerId = new(Serial.ItemOffset + 9);
+        container.ParentContainerId = new Serial(Serial.ItemOffset + 9);
 
         await service.EnsureContentsAsync(container);
 
@@ -211,7 +97,7 @@ public sealed class ContainerContentServiceTests
         var added = Assert.Single(items.Added);
         Assert.Same(container, added.Container);
         Assert.Same(child, added.Child);
-        Assert.Equal(new(44, 65), added.Position);
+        Assert.Equal(new Point2D(44, 65), added.Position);
         Assert.Contains(child.Id, container.ContainedItemIds);
         Assert.Equal(container.Id, child.ParentContainerId);
         Assert.True(container.CustomProperties.ContainsKey(ItemTemplateDefinitionKeys.ContentsGeneratedAt));
@@ -219,9 +105,10 @@ public sealed class ContainerContentServiceTests
     }
 
     private static ItemEntity Container()
-        => new()
+    {
+        return new ItemEntity
         {
-            Id = new(Serial.ItemOffset + 1),
+            Id = new Serial(Serial.ItemOffset + 1),
             ItemId = 3651,
             GumpId = 60,
             CustomProperties =
@@ -229,20 +116,25 @@ public sealed class ContainerContentServiceTests
                 [ItemTemplateDefinitionKeys.TemplateId] = StringProperty("wooden_chest")
             }
         };
+    }
 
     private static CustomProperty IntegerProperty(long value)
-        => new()
+    {
+        return new CustomProperty
         {
             Type = CustomPropertyType.Integer,
             IntegerValue = value
         };
+    }
 
     private static ItemEntity Item(uint serial, int itemId)
-        => new()
+    {
+        return new ItemEntity
         {
-            Id = new(serial),
+            Id = new Serial(serial),
             ItemId = itemId
         };
+    }
 
     private static ContainerContentService NewService(
         IReadOnlyList<ItemEntity> generatedItems,
@@ -253,11 +145,11 @@ public sealed class ContainerContentServiceTests
         var templates = new ItemTemplateService();
         templates.UpsertRange(
             [
-                new()
+                new ItemTemplateDefinition
                 {
                     Id = "wooden_chest",
                     ItemId = 3651,
-                    Contents = new()
+                    Contents = new ItemTemplateContentsDefinition
                     {
                         LootTemplate = "common",
                         RefillEvery = TimeSpan.FromHours(6)
@@ -265,17 +157,168 @@ public sealed class ContainerContentServiceTests
                 }
             ]
         );
-        items = new(3651);
-        loot = new(generatedItems);
+        items = new FakeItemService(3651);
+        loot = new FakeLootService(generatedItems);
         var containers = new FakeContainerDataService(new ContainerLayoutEntry(60, [44, 65, 142, 94], 0, [3651]));
 
-        return new(templates, items, loot, containers);
+        return new ContainerContentService(templates, items, loot, containers);
     }
 
     private static CustomProperty StringProperty(string value)
-        => new()
+    {
+        return new CustomProperty
         {
             Type = CustomPropertyType.String,
             StringValue = value
         };
+    }
+
+    private sealed class FakeLootService : ILootService
+    {
+        private readonly IReadOnlyList<ItemEntity> _generatedItems;
+
+        public FakeLootService(IReadOnlyList<ItemEntity> generatedItems)
+        {
+            _generatedItems = generatedItems;
+        }
+
+        public int GenerateCalls { get; private set; }
+
+        public ValueTask<IReadOnlyList<ItemEntity>> GenerateAsync(
+            string lootTableId,
+            CancellationToken cancellationToken = default
+        )
+        {
+            Assert.Equal("common", lootTableId);
+            GenerateCalls++;
+
+            return ValueTask.FromResult(_generatedItems);
+        }
+
+        public bool Has(string lootTableId)
+        {
+            return string.Equals(lootTableId, "common", StringComparison.OrdinalIgnoreCase);
+        }
+    }
+
+    private sealed class FakeItemService : IItemService
+    {
+        private readonly HashSet<int> _containerItemIds;
+
+        public FakeItemService(params int[] containerItemIds)
+        {
+            _containerItemIds = [.. containerItemIds];
+        }
+
+        public List<(ItemEntity Container, ItemEntity Child, Point2D Position)> Added { get; } = [];
+
+        public ValueTask<bool> AddItemAsync(
+            ItemEntity container,
+            ItemEntity child,
+            Point2D position,
+            CancellationToken cancellationToken = default
+        )
+        {
+            child.ParentContainerId = container.Id;
+            child.ContainerPosition = position;
+            container.ContainedItemIds.Add(child.Id);
+            Added.Add((container, child, position));
+
+            return ValueTask.FromResult(true);
+        }
+
+        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<ItemEntity> CreateAsync(ItemEntity item, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<ItemEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public bool IsContainer(ItemEntity item)
+        {
+            return IsContainer(item.ItemId);
+        }
+
+        public bool IsContainer(int itemId)
+        {
+            return _containerItemIds.Contains(itemId);
+        }
+
+        public bool IsDoor(ItemEntity item)
+        {
+            throw new NotSupportedException();
+        }
+
+        public bool IsDoor(int itemId)
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<bool> RemoveItemAsync(
+            ItemEntity container,
+            Serial itemId,
+            CancellationToken cancellationToken = default
+        )
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<int> TotalWeightAsync(ItemEntity item, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+    }
+
+    private sealed class FakeContainerDataService : IContainerDataService
+    {
+        private readonly IReadOnlyList<ContainerLayoutEntry> _layouts;
+
+        public FakeContainerDataService(params ContainerLayoutEntry[] layouts)
+        {
+            _layouts = layouts;
+        }
+
+        public bool IsLazy => false;
+
+        public bool IsLoaded => true;
+
+        public void EnsureLoaded()
+        {
+        }
+
+        public IReadOnlyList<ContainerEntry> GetAllContainers()
+        {
+            return [];
+        }
+
+        public IReadOnlyList<ContainerLayoutEntry> GetAllLayouts()
+        {
+            return _layouts;
+        }
+
+        public void Reload()
+        {
+        }
+
+        public void SetContainers(IReadOnlyList<ContainerEntry> entries)
+        {
+        }
+
+        public void SetLayouts(IReadOnlyList<ContainerLayoutEntry> entries)
+        {
+        }
+    }
 }

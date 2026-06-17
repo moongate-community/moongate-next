@@ -1,4 +1,5 @@
 using Moongate.UO.Data.Animations;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace Moongate.Tests.UO.Data.Animations;
 
@@ -6,7 +7,9 @@ public sealed class AnimationFrameDecoderTests
 {
     [Fact]
     public void Decode_FrameOutOfRange_ReturnsNull()
-        => Assert.Null(AnimationFrameDecoder.Decode(BuildBlock(), 5));
+    {
+        Assert.Null(AnimationFrameDecoder.Decode(BuildBlock(), 5));
+    }
 
     [Fact]
     public void Decode_PaintsRunPixels_RestTransparent()
@@ -16,8 +19,8 @@ public sealed class AnimationFrameDecoderTests
         Assert.NotNull(image);
         Assert.Equal(2, image!.Width);
         Assert.Equal(2, image.Height);
-        Assert.Equal(new(255, 0, 0, 255), image[0, 0]);
-        Assert.Equal(new(255, 0, 0, 255), image[1, 0]);
+        Assert.Equal(new Rgba32(255, 0, 0, 255), image[0, 0]);
+        Assert.Equal(new Rgba32(255, 0, 0, 255), image[1, 0]);
         Assert.Equal(0, image[0, 1].A); // uncovered -> transparent
         Assert.Equal(0, image[1, 1].A);
     }
@@ -28,7 +31,11 @@ public sealed class AnimationFrameDecoderTests
         using var ms = new MemoryStream();
         using var w = new BinaryWriter(ms);
 
-        for (var i = 0; i < 256; i++) { w.Write((ushort)0); }
+        for (var i = 0; i < 256; i++)
+        {
+            w.Write((ushort)0);
+        }
+
         w.Write(1);
         w.Write(8);
         w.Write((short)0);
@@ -49,7 +56,7 @@ public sealed class AnimationFrameDecoderTests
         Assert.Equal(0x200, decoded!.CenterX);
         Assert.Equal(0x200 - 2, decoded.CenterY);
         Assert.Equal(2, decoded.Image.Width);
-        Assert.Equal(new(255, 0, 0, 255), decoded.Image[0, 0]); // same content as Decode
+        Assert.Equal(new Rgba32(255, 0, 0, 255), decoded.Image[0, 0]); // same content as Decode
     }
 
     private static byte[] BuildBlock()

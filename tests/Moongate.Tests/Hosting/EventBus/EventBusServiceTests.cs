@@ -12,8 +12,7 @@ public class EventBusServiceTests
     public void DrainTickEvents_BoundedByMaxItems()
     {
         var timeline = new List<string>();
-        var bus = BuildBus(
-            services =>
+        var bus = BuildBus(services =>
             {
                 services.AddSingleton<ITickEventHandler<TestTickEvent>>(_ => new TimelineTickHandler("A", timeline));
             }
@@ -35,8 +34,7 @@ public class EventBusServiceTests
     public void DrainTickEvents_DispatchesQueuedEvents()
     {
         var timeline = new List<string>();
-        var bus = BuildBus(
-            services =>
+        var bus = BuildBus(services =>
             {
                 services.AddSingleton<ITickEventHandler<TestTickEvent>>(_ => new TimelineTickHandler("A", timeline));
             }
@@ -57,8 +55,7 @@ public class EventBusServiceTests
     public void DrainTickEvents_HandlerThrows_FiresOnEventErrorAndContinues()
     {
         var timeline = new List<string>();
-        var bus = BuildBus(
-            services =>
+        var bus = BuildBus(services =>
             {
                 services.AddSingleton<ITickEventHandler<TestTickEvent>>(_ => new ThrowingTickHandler());
                 services.AddSingleton<ITickEventHandler<TestTickEvent>>(_ => new TimelineTickHandler("survivor", timeline));
@@ -88,8 +85,7 @@ public class EventBusServiceTests
         for (var t = 0; t < threads; t++)
         {
             var local = t;
-            workers[t] = new(
-                () =>
+            workers[t] = new Thread(() =>
                 {
                     for (var i = 0; i < publishesPerThread; i++)
                     {
@@ -116,8 +112,7 @@ public class EventBusServiceTests
     public void Publish_Tick_EnqueuesAndDoesNotInvokeSynchronously()
     {
         var timeline = new List<string>();
-        var bus = BuildBus(
-            services =>
+        var bus = BuildBus(services =>
             {
                 services.AddSingleton<ITickEventHandler<TestTickEvent>>(_ => new TimelineTickHandler("A", timeline));
             }
@@ -133,12 +128,10 @@ public class EventBusServiceTests
     public async Task PublishAsync_HandlerThrows_ContinuesChainAndFiresOnEventError()
     {
         var timeline = new List<string>();
-        var bus = BuildBus(
-            services =>
+        var bus = BuildBus(services =>
             {
                 services.AddSingleton<IAsyncEventHandler<TestAsyncEvent>>(_ => new ThrowingAsyncHandler());
-                services.AddSingleton<IAsyncEventHandler<TestAsyncEvent>>(
-                    _ => new TimelineAsyncHandler("survivor", timeline)
+                services.AddSingleton<IAsyncEventHandler<TestAsyncEvent>>(_ => new TimelineAsyncHandler("survivor", timeline)
                 );
             }
         );
@@ -147,11 +140,11 @@ public class EventBusServiceTests
         Exception? errorException = null;
         IMoongateEvent? errorEvent = null;
         bus.OnEventError = (handlerType, ex, evt) =>
-                           {
-                               errorHandler = handlerType;
-                               errorException = ex;
-                               errorEvent = evt;
-                           };
+        {
+            errorHandler = handlerType;
+            errorException = ex;
+            errorEvent = evt;
+        };
 
         await bus.PublishAsync(new TestAsyncEvent("x"));
 
@@ -166,8 +159,7 @@ public class EventBusServiceTests
     public async Task PublishAsync_MultipleHandlers_InvokedInRegistrationOrder()
     {
         var timeline = new List<string>();
-        var bus = BuildBus(
-            services =>
+        var bus = BuildBus(services =>
             {
                 services.AddSingleton<IAsyncEventHandler<TestAsyncEvent>>(_ => new TimelineAsyncHandler("first", timeline));
                 services.AddSingleton<IAsyncEventHandler<TestAsyncEvent>>(_ => new TimelineAsyncHandler("second", timeline));
@@ -191,8 +183,7 @@ public class EventBusServiceTests
     public async Task PublishAsync_SingleHandler_InvokesHandler()
     {
         var timeline = new List<string>();
-        var bus = BuildBus(
-            services =>
+        var bus = BuildBus(services =>
             {
                 services.AddSingleton<IAsyncEventHandler<TestAsyncEvent>>(_ => new TimelineAsyncHandler("A", timeline));
             }
@@ -208,6 +199,6 @@ public class EventBusServiceTests
         var services = new ServiceCollection();
         configure(services);
 
-        return new(services.BuildServiceProvider());
+        return new EventBusService(services.BuildServiceProvider());
     }
 }

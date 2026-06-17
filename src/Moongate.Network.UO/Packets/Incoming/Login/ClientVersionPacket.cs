@@ -6,16 +6,17 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Incoming.Login;
 
 [PacketHandler(0xBD, PacketSizing.Variable, Description = "Client Version")]
-
 /// <summary>
 /// Represents ClientVersionPacket.
 /// </summary>
 public class ClientVersionPacket : BaseGameNetworkPacket
 {
-    public string Version { get; set; }
-
     public ClientVersionPacket()
-        : base(0xBD) { }
+        : base(0xBD)
+    {
+    }
+
+    public string Version { get; set; }
 
     public override void Write(ref SpanWriter writer)
     {

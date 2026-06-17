@@ -8,19 +8,19 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.Loot;
 
 /// <summary>
-/// Default loot service: walks a loot table tree and produces persisted item
-/// entities via the item factory. Stackable items collapse to one entity with
-/// the rolled amount; non-stackable items become that many separate entities
-/// (capped). The active registry is set at boot.
+///     Default loot service: walks a loot table tree and produces persisted item
+///     entities via the item factory. Stackable items collapse to one entity with
+///     the rolled amount; non-stackable items become that many separate entities
+///     (capped). The active registry is set at boot.
 /// </summary>
 public sealed class LootService : ILootService
 {
     private const int MaxNonStackableCount = 100;
+    private readonly Lazy<IItemFactoryService> _itemFactory;
 
     private readonly ILogger _logger = Log.ForContext<LootService>();
-    private readonly IItemTemplateService _templates;
-    private readonly Lazy<IItemFactoryService> _itemFactory;
     private readonly IEnhancedRandom _random;
+    private readonly IItemTemplateService _templates;
 
     private LootTableRegistry? _registry;
 
@@ -62,10 +62,14 @@ public sealed class LootService : ILootService
     }
 
     public bool Has(string lootTableId)
-        => _registry is not null && _registry.TryGet(lootTableId, out _);
+    {
+        return _registry is not null && _registry.TryGet(lootTableId, out _);
+    }
 
     public void SetRegistry(LootTableRegistry? registry)
-        => _registry = registry;
+    {
+        _registry = registry;
+    }
 
     private async ValueTask CreateItemsAsync(
         string templateId,

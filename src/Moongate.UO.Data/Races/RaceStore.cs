@@ -7,22 +7,22 @@ using Serilog;
 namespace Moongate.UO.Data.Races;
 
 /// <summary>
-/// Loads the UO race definitions from <c>races.yaml</c> in the data directory. A missing or
-/// malformed file yields an empty store (non-fatal).
+///     Loads the UO race definitions from <c>races.yaml</c> in the data directory. A missing or
+///     malformed file yields an empty store (non-fatal).
 /// </summary>
 public sealed class RaceStore : IRaceStore
 {
     private static readonly ILogger _logger = Log.ForContext<RaceStore>();
+    private readonly Dictionary<int, RaceDefinition> _byId;
 
     private readonly List<RaceDefinition> _races;
-    private readonly Dictionary<int, RaceDefinition> _byId;
 
     public RaceStore(string dataDirectory)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(dataDirectory);
 
         _races = [];
-        _byId = new();
+        _byId = new Dictionary<int, RaceDefinition>();
 
         var path = Path.Combine(dataDirectory, "races.yaml");
 
@@ -56,5 +56,7 @@ public sealed class RaceStore : IRaceStore
     public IReadOnlyList<RaceDefinition> Races => _races;
 
     public RaceDefinition? GetById(int raceId)
-        => _byId.GetValueOrDefault(raceId);
+    {
+        return _byId.GetValueOrDefault(raceId);
+    }
 }

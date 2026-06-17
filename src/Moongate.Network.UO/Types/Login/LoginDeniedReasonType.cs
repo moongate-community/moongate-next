@@ -1,7 +1,7 @@
 namespace Moongate.Network.UO.Types.Login;
 
 /// <summary>
-/// Defines login denial reasons sent by packet 0x82.
+///     Defines login denial reasons sent by packet 0x82.
 /// </summary>
 public enum LoginDeniedReasonType : byte
 {

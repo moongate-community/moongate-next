@@ -7,20 +7,15 @@ using Events = YamlDotNet.Core.Events;
 namespace Moongate.Server.Services.Loot;
 
 /// <summary>
-/// Reads the loot <c>amount</c> field in either form: a scalar (<c>amount: 5</c>,
-/// fixed) or a mapping (<c>amount: { min: 1, max: 100 }</c>, range).
+///     Reads the loot <c>amount</c> field in either form: a scalar (<c>amount: 5</c>,
+///     fixed) or a mapping (<c>amount: { min: 1, max: 100 }</c>, range).
 /// </summary>
 public sealed class LootAmountYamlConverter : IYamlTypeConverter
 {
-    private sealed class LootAmountRaw
-    {
-        public int? Min { get; set; }
-
-        public int? Max { get; set; }
-    }
-
     public bool Accepts(Type type)
-        => type == typeof(LootAmount);
+    {
+        return type == typeof(LootAmount);
+    }
 
     public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
     {
@@ -48,5 +43,12 @@ public sealed class LootAmountYamlConverter : IYamlTypeConverter
         emitter.Emit(new Events.Scalar("max"));
         emitter.Emit(new Events.Scalar(amount.Max.ToString(CultureInfo.InvariantCulture)));
         emitter.Emit(new Events.MappingEnd());
+    }
+
+    private sealed class LootAmountRaw
+    {
+        public int? Min { get; set; }
+
+        public int? Max { get; set; }
     }
 }

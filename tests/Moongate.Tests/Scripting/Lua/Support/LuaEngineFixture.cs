@@ -7,8 +7,8 @@ using Moongate.Scripting.Lua.Services;
 namespace Moongate.Tests.Scripting.Lua.Support;
 
 /// <summary>
-/// Builds a real <see cref="LuaScriptEngineService" /> backed by a throwaway temp scripts directory
-/// and a DryIoc container, and cleans both up on dispose. Used by the Lua engine unit tests.
+///     Builds a real <see cref="LuaScriptEngineService" /> backed by a throwaway temp scripts directory
+///     and a DryIoc container, and cleans both up on dispose. Used by the Lua engine unit tests.
 /// </summary>
 internal sealed class LuaEngineFixture : IDisposable
 {
@@ -19,13 +19,13 @@ internal sealed class LuaEngineFixture : IDisposable
         ScriptsDirectory = Path.Combine(Path.GetTempPath(), $"nh-lua-{Guid.NewGuid():N}");
         Directory.CreateDirectory(ScriptsDirectory);
 
-        _container = new();
+        _container = new Container();
         configure?.Invoke(_container);
 
         var directoriesConfig = new DirectoriesConfig(ScriptsDirectory, Array.Empty<string>());
         var config = new LuaEngineConfig(ScriptsDirectory, ScriptsDirectory, "test");
 
-        Engine = new(
+        Engine = new LuaScriptEngineService(
             directoriesConfig,
             _container,
             config,

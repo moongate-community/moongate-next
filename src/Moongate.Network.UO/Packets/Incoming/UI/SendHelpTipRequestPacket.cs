@@ -6,7 +6,7 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Incoming.UI;
 
 /// <summary>
-/// Represents a help or tip request packet.
+///     Represents a help or tip request packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Send Help/Tip Request")]
 public class SendHelpTipRequestPacket : BaseGameNetworkPacket
@@ -14,11 +14,13 @@ public class SendHelpTipRequestPacket : BaseGameNetworkPacket
     private const byte OpCodeValue = 0xB6;
     private const int LengthValue = 9;
 
+    public SendHelpTipRequestPacket()
+        : base(OpCodeValue, LengthValue)
+    {
+    }
+
     public uint LastTipId { get; private set; }
     public uint RequestFlag { get; private set; }
-
-    public SendHelpTipRequestPacket()
-        : base(OpCodeValue, LengthValue) { }
 
     protected override bool ParsePayload(ref SpanReader reader)
     {

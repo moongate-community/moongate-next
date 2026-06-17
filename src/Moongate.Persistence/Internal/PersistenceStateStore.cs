@@ -3,8 +3,8 @@ using Moongate.Core.Interfaces.Ids;
 namespace Moongate.Persistence.Internal;
 
 /// <summary>
-/// In-memory mutable world state shared by persistence data-access instances. Not thread-safe by
-/// itself; callers synchronize on <see cref="SyncRoot" />.
+///     In-memory mutable world state shared by persistence data-access instances. Not thread-safe by
+///     itself; callers synchronize on <see cref="SyncRoot" />.
 /// </summary>
 internal sealed class PersistenceStateStore
 {

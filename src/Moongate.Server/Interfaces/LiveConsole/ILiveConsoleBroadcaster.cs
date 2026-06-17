@@ -3,8 +3,8 @@ using Moongate.Server.Data.LiveConsole;
 namespace Moongate.Server.Interfaces.LiveConsole;
 
 /// <summary>
-/// In-memory fan-out for the live admin console. Holds a bounded backlog of recent entries and
-/// raises an event for every new entry, decoupling Serilog and command execution from SignalR.
+///     In-memory fan-out for the live admin console. Holds a bounded backlog of recent entries and
+///     raises an event for every new entry, decoupling Serilog and command execution from SignalR.
 /// </summary>
 public interface ILiveConsoleBroadcaster
 {

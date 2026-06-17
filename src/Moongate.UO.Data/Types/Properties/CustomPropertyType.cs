@@ -1,7 +1,7 @@
 namespace Moongate.UO.Data.Types.Properties;
 
 /// <summary>
-/// Declares the supported value kind for a custom property.
+///     Declares the supported value kind for a custom property.
 /// </summary>
 public enum CustomPropertyType : byte
 {

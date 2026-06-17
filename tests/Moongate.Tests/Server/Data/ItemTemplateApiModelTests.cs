@@ -9,21 +9,6 @@ namespace Moongate.Tests.Server.Data;
 
 public sealed class ItemTemplateApiModelTests
 {
-    private sealed class FakeHueStore : IHueStore
-    {
-        private readonly List<Hue> _hues = [];
-
-        public IReadOnlyList<Hue> Hues => _hues;
-
-        public int Count => _hues.Count;
-
-        public void Add(Hue hue)
-            => _hues.Add(hue);
-
-        public Hue? GetHue(int index)
-            => index >= 0 && index < _hues.Count ? _hues[index] : null;
-    }
-
     [Fact]
     public void HueSummary_FromUnknownHue_ReturnsUnknownDescriptor()
     {
@@ -40,7 +25,7 @@ public sealed class ItemTemplateApiModelTests
     {
         var store = new FakeHueStore();
         var colors = Enumerable.Repeat((ushort)0x7FFF, 32).ToArray();
-        store.Add(new(colors, 0, 31, "Bright White"));
+        store.Add(new Hue(colors, 0, 31, "Bright White"));
 
         var summary = HueSummary.FromValue(1, store);
 
@@ -75,7 +60,7 @@ public sealed class ItemTemplateApiModelTests
             ItemId = 0x0E3F,
             GraphicVariants =
             [
-                new() { ItemId = 0x0E40 }
+                new ItemTemplateGraphicVariantDefinition { ItemId = 0x0E40 }
             ],
             ScriptId = "container_script",
             Visibility = UserLevelType.GameMaster,
@@ -84,14 +69,14 @@ public sealed class ItemTemplateApiModelTests
             IsMovable = true,
             IsStackable = false,
             GumpId = 42,
-            Contents = new()
+            Contents = new ItemTemplateContentsDefinition
             {
                 LootTemplate = "common",
                 RefillEvery = TimeSpan.FromHours(6)
             },
             Params =
             {
-                ["capacity"] = new() { Type = ItemTemplateParamType.Integer, Value = "125" }
+                ["capacity"] = new ItemTemplateParamDefinition { Type = ItemTemplateParamType.Integer, Value = "125" }
             }
         };
 
@@ -132,7 +117,7 @@ public sealed class ItemTemplateApiModelTests
             Name = "Rare Katana",
             ItemId = 0x13FF,
             Rarity = ItemRarity.Rare,
-            Value = new()
+            Value = new ItemTemplateValueDefinition
             {
                 Buy = 25,
                 Sell = 10
@@ -157,13 +142,13 @@ public sealed class ItemTemplateApiModelTests
             ItemId = 0x0F61,
             GraphicVariants =
             [
-                new() { ItemId = 0x0F62 },
-                new() { ItemId = 0x0F63 }
+                new ItemTemplateGraphicVariantDefinition { ItemId = 0x0F62 },
+                new ItemTemplateGraphicVariantDefinition { ItemId = 0x0F63 }
             ],
             Hue = 1,
             Rarity = ItemRarity.Common,
             Layer = ItemLayerType.OneHanded,
-            Value = new()
+            Value = new ItemTemplateValueDefinition
             {
                 Buy = 25,
                 Sell = 12
@@ -201,5 +186,24 @@ public sealed class ItemTemplateApiModelTests
         Assert.Equal(25, summary.Value.EffectiveBuy);
         Assert.Equal(12, summary.Value.EffectiveSell);
         Assert.Equal(["weapon"], summary.Tags);
+    }
+
+    private sealed class FakeHueStore : IHueStore
+    {
+        private readonly List<Hue> _hues = [];
+
+        public IReadOnlyList<Hue> Hues => _hues;
+
+        public int Count => _hues.Count;
+
+        public Hue? GetHue(int index)
+        {
+            return index >= 0 && index < _hues.Count ? _hues[index] : null;
+        }
+
+        public void Add(Hue hue)
+        {
+            _hues.Add(hue);
+        }
     }
 }

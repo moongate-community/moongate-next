@@ -18,43 +18,43 @@ public static class HairImageEndpointExtensions
     public static IEndpointRouteBuilder MapMoongateHairImages(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet(
-                     "/api/mobiles/hair/{style}.png",
-                     (
-                         string style,
-                         int? hue,
-                         int? body,
-                         bool? facial,
-                         IMobileFigureRenderer renderer,
-                         DirectoriesConfig directories,
-                         CancellationToken cancellationToken
-                     ) => TryParseStyle(style, out var styleId)
-                              ? HandleGetHairImageAsync(
-                                  styleId,
-                                  hue.GetValueOrDefault(),
-                                  body,
-                                  facial.GetValueOrDefault(),
-                                  renderer,
-                                  directories,
-                                  cancellationToken
-                              )
-                              : Task.FromResult<IResult>(TypedResults.BadRequest("style must be an integer"))
-                 )
-                 .WithName("GetHairImage")
-                 .WithTags("Mobiles")
-                 .WithSummary("Returns a lazily generated PNG of a hair style rendered over a reference body.")
-                 .Produces(StatusCodes.Status200OK, contentType: "image/png")
-                 .Produces(StatusCodes.Status400BadRequest)
-                 .Produces(StatusCodes.Status404NotFound);
+                "/api/mobiles/hair/{style}.png",
+                (
+                    string style,
+                    int? hue,
+                    int? body,
+                    bool? facial,
+                    IMobileFigureRenderer renderer,
+                    DirectoriesConfig directories,
+                    CancellationToken cancellationToken
+                ) => TryParseStyle(style, out var styleId)
+                    ? HandleGetHairImageAsync(
+                        styleId,
+                        hue.GetValueOrDefault(),
+                        body,
+                        facial.GetValueOrDefault(),
+                        renderer,
+                        directories,
+                        cancellationToken
+                    )
+                    : Task.FromResult<IResult>(TypedResults.BadRequest("style must be an integer"))
+            )
+            .WithName("GetHairImage")
+            .WithTags("Mobiles")
+            .WithSummary("Returns a lazily generated PNG of a hair style rendered over a reference body.")
+            .Produces(StatusCodes.Status200OK, contentType: "image/png")
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status404NotFound);
 
         endpoints.MapGet(
-                     "/api/admin/hair-styles",
-                     (bool? facial, string? search) => HandleListHairStyles(facial.GetValueOrDefault(), search)
-                 )
-                 .WithName("ListAdminHairStyles")
-                 .WithTags("Admin Mobiles")
-                 .RequireAuthorization(policy => policy.RequireRole(nameof(UserLevelType.Administrator)))
-                 .WithSummary("Returns the selectable hair (or facial-hair) styles.")
-                 .Produces<PagedResult<HairStyleSummary>>();
+                "/api/admin/hair-styles",
+                (bool? facial, string? search) => HandleListHairStyles(facial.GetValueOrDefault(), search)
+            )
+            .WithName("ListAdminHairStyles")
+            .WithTags("Admin Mobiles")
+            .RequireAuthorization(policy => policy.RequireRole(nameof(UserLevelType.Administrator)))
+            .WithSummary("Returns the selectable hair (or facial-hair) styles.")
+            .Produces<PagedResult<HairStyleSummary>>();
 
         return endpoints;
     }
@@ -94,7 +94,7 @@ public static class HairImageEndpointExtensions
             return Results.File(cachePath, "image/png");
         }
 
-        var generationLock = _generationLocks.GetOrAdd(cachePath, static _ => new(1, 1));
+        var generationLock = _generationLocks.GetOrAdd(cachePath, static _ => new SemaphoreSlim(1, 1));
         await generationLock.WaitAsync(cancellationToken);
 
         try
@@ -159,24 +159,22 @@ public static class HairImageEndpointExtensions
         if (!string.IsNullOrWhiteSpace(search))
         {
             var term = search.Trim();
-            entries = entries.Where(
-                entry => entry.Name.Contains(term, StringComparison.OrdinalIgnoreCase) ||
-                         entry.StyleHex.Contains(term, StringComparison.OrdinalIgnoreCase) ||
-                         entry.Style.ToString(CultureInfo.InvariantCulture).Contains(term)
+            entries = entries.Where(entry => entry.Name.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                                             entry.StyleHex.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                                             entry.Style.ToString(CultureInfo.InvariantCulture).Contains(term)
             );
         }
 
         var items = entries
-                    .Select(
-                        entry => new HairStyleSummary(
-                            entry.Style,
-                            entry.StyleHex,
-                            entry.Name,
-                            entry.IsFacial,
-                            $"/api/mobiles/hair/{entry.Style.ToString(CultureInfo.InvariantCulture)}.png?facial={entry.IsFacial.ToString().ToLowerInvariant()}"
-                        )
-                    )
-                    .ToArray();
+            .Select(entry => new HairStyleSummary(
+                    entry.Style,
+                    entry.StyleHex,
+                    entry.Name,
+                    entry.IsFacial,
+                    $"/api/mobiles/hair/{entry.Style.ToString(CultureInfo.InvariantCulture)}.png?facial={entry.IsFacial.ToString().ToLowerInvariant()}"
+                )
+            )
+            .ToArray();
 
         return TypedResults.Ok(new PagedResult<HairStyleSummary>(items, 1, catalogCount, items.Length));
     }

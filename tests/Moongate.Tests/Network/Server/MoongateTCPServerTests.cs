@@ -9,7 +9,7 @@ public class MoongateTCPServerTests
     [Fact]
     public async Task Start_AcceptsClient()
     {
-        await using var server = new MoongateTCPServer(new(IPAddress.Loopback, 0));
+        await using var server = new MoongateTCPServer(new IPEndPoint(IPAddress.Loopback, 0));
         await server.StartAsync(CancellationToken.None);
 
         var connectedSignal = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -28,7 +28,7 @@ public class MoongateTCPServerTests
     [Fact]
     public async Task Start_BindsAndListens()
     {
-        await using var server = new MoongateTCPServer(new(IPAddress.Loopback, 0));
+        await using var server = new MoongateTCPServer(new IPEndPoint(IPAddress.Loopback, 0));
 
         await server.StartAsync(CancellationToken.None);
 
@@ -43,7 +43,7 @@ public class MoongateTCPServerTests
     {
         // Regression: previous implementation kept a single socket field, so Stop closed
         // it and a subsequent Start tried to listen on a disposed socket.
-        await using var server = new MoongateTCPServer(new(IPAddress.Loopback, 0));
+        await using var server = new MoongateTCPServer(new IPEndPoint(IPAddress.Loopback, 0));
 
         await server.StartAsync(CancellationToken.None);
         var firstPort = server.Port;

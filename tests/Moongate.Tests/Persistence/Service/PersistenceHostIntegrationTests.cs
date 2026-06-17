@@ -36,9 +36,9 @@ public class PersistenceHostIntegrationTests : IDisposable
         try
         {
             var players = container.Resolve<IDataAccess<TestPlayer, Serial>>();
-            await players.UpsertAsync(new() { Id = new(1), Name = "Hosted" });
+            await players.UpsertAsync(new TestPlayer { Id = new Serial(1), Name = "Hosted" });
 
-            Assert.Equal("Hosted", (await players.GetByIdAsync(new(1)))!.Name);
+            Assert.Equal("Hosted", (await players.GetByIdAsync(new Serial(1)))!.Name);
         }
         finally
         {

@@ -5,8 +5,8 @@ using Moongate.UO.Data.Entities.Mobiles;
 namespace Moongate.Server.Services.World.Internal;
 
 /// <summary>
-/// Bucket of positioned entities within a single map sector: all mobiles, the player
-/// subset, and ground items. Not thread-safe on its own; guarded by the owning index lock.
+///     Bucket of positioned entities within a single map sector: all mobiles, the player
+///     subset, and ground items. Not thread-safe on its own; guarded by the owning index lock.
 /// </summary>
 internal sealed class SpatialSector
 {

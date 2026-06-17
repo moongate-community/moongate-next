@@ -5,7 +5,7 @@ using Moongate.Core.Data.Directories;
 namespace Moongate.Server.Services.Diagnostics;
 
 /// <summary>
-/// Owns the server pid file for the current process lifetime.
+///     Owns the server pid file for the current process lifetime.
 /// </summary>
 public sealed class PidFileGuard : IDisposable
 {
@@ -19,29 +19,6 @@ public sealed class PidFileGuard : IDisposable
     {
         _pidFilePath = pidFilePath;
         _currentProcessId = currentProcessId;
-    }
-
-    public static PidFileGuard Acquire(DirectoriesConfig directories)
-    {
-        ArgumentNullException.ThrowIfNull(directories);
-
-        return Acquire(
-            directories.Root,
-            () => Environment.ProcessId,
-            static pid =>
-            {
-                try
-                {
-                    _ = Process.GetProcessById(pid);
-
-                    return true;
-                }
-                catch (ArgumentException)
-                {
-                    return false;
-                }
-            }
-        );
     }
 
     public void Dispose()
@@ -66,6 +43,29 @@ public sealed class PidFileGuard : IDisposable
         }
 
         File.Delete(_pidFilePath);
+    }
+
+    public static PidFileGuard Acquire(DirectoriesConfig directories)
+    {
+        ArgumentNullException.ThrowIfNull(directories);
+
+        return Acquire(
+            directories.Root,
+            () => Environment.ProcessId,
+            static pid =>
+            {
+                try
+                {
+                    _ = Process.GetProcessById(pid);
+
+                    return true;
+                }
+                catch (ArgumentException)
+                {
+                    return false;
+                }
+            }
+        );
     }
 
     internal static PidFileGuard Acquire(
@@ -101,11 +101,13 @@ public sealed class PidFileGuard : IDisposable
 
         File.WriteAllText(pidFilePath, currentProcessId.ToString(), _utf8WithoutBom);
 
-        return new(pidFilePath, currentProcessId);
+        return new PidFileGuard(pidFilePath, currentProcessId);
     }
 
     private static string ReadPidFile(string pidFilePath)
-        => File.ReadAllText(pidFilePath, Encoding.UTF8)
-               .Trim()
-               .TrimStart('\uFEFF');
+    {
+        return File.ReadAllText(pidFilePath, Encoding.UTF8)
+            .Trim()
+            .TrimStart('\uFEFF');
+    }
 }

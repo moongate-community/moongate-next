@@ -1,8 +1,8 @@
 namespace Moongate.UO.Data.Types.Tiles;
 
 /// <summary>
-/// Bit flags describing the behaviour of a land or item tile, as stored in <c>tiledata.mul</c>.
-/// Values mirror the Ultima Online client; the high 32 bits (<c>HS33</c>+) are High Seas additions.
+///     Bit flags describing the behaviour of a land or item tile, as stored in <c>tiledata.mul</c>.
+///     Values mirror the Ultima Online client; the high 32 bits (<c>HS33</c>+) are High Seas additions.
 /// </summary>
 [Flags]
 public enum UoTileFlag : ulong

@@ -72,5 +72,7 @@ public sealed class ItemTemplateServiceTests
     }
 
     private static ItemTemplateDefinition NewTemplate(string id)
-        => new() { Id = id, Name = id };
+    {
+        return new ItemTemplateDefinition { Id = id, Name = id };
+    }
 }

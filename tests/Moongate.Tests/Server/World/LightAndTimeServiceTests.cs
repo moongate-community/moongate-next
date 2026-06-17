@@ -1,7 +1,9 @@
 using Moongate.Abstractions.Data.Player;
 using Moongate.Abstractions.Types.Player;
+using Moongate.Core.Geometry;
 using Moongate.Core.Ids;
 using Moongate.Network.UO.Packets.Outgoing.World;
+using Moongate.Server.Data.Config;
 using Moongate.Server.Data.World;
 using Moongate.Server.Services.World;
 using Moongate.Tests.Support;
@@ -18,83 +20,24 @@ public sealed class LightAndTimeServiceTests
 {
     private static readonly DateTime Start = new(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-    private sealed class ThrowingForIdMobileService : IMobileService
+    [Fact]
+    public void ComputeGlobalLightLevel_DungeonRegion_ReturnsDungeonLevel()
     {
-        private readonly Serial _badId;
-        private readonly MobileEntity _good;
-
-        public ThrowingForIdMobileService(Serial badId, MobileEntity good)
-        {
-            _badId = badId;
-            _good = good;
-        }
-
-        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
-
-        public ValueTask<MobileEntity> CreateAsync(MobileEntity mobile, CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
-
-        public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
-
-        public ValueTask<bool> EquipAsync(
-            MobileEntity mobile,
-            ItemEntity item,
-            ItemLayerType layer,
-            CancellationToken cancellationToken = default
-        )
-            => throw new NotSupportedException();
-
-        public ValueTask<IReadOnlyList<MobileEntity>> GetByAccountIdAsync(
-            Serial accountId,
-            CancellationToken cancellationToken = default
-        )
-            => throw new NotSupportedException();
-
-        public ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
-        {
-            if (id == _badId)
-            {
-                throw new InvalidOperationException("boom");
-            }
-
-            return new(id == _good.Id ? _good : null);
-        }
-
-        public SkillEntry GetSkill(MobileEntity mobile, UOSkillName skill)
-            => throw new NotSupportedException();
-
-        public ValueTask<SkillEntry> SetSkillAsync(
-            MobileEntity mobile,
-            UOSkillName skill,
-            double value,
-            CancellationToken cancellationToken = default
-        )
-            => throw new NotSupportedException();
-
-        public ValueTask<bool> UnequipAsync(
-            MobileEntity mobile,
-            ItemLayerType layer,
-            CancellationToken cancellationToken = default
-        )
-            => throw new NotSupportedException();
+        Assert.Equal(26, Build(Region("DungeonRegion")).ComputeGlobalLightLevel(0, new Point3D(10, 10, 0), Start));
     }
 
     [Fact]
-    public void ComputeGlobalLightLevel_DungeonRegion_ReturnsDungeonLevel()
-        => Assert.Equal(26, Build(Region("DungeonRegion")).ComputeGlobalLightLevel(0, new(10, 10, 0), Start));
-
-    [Fact]
     public void ComputeGlobalLightLevel_JailRegion_ReturnsJailLevel()
-        => Assert.Equal(9, Build(Region("JailRegion")).ComputeGlobalLightLevel(0, new(10, 10, 0), Start));
+    {
+        Assert.Equal(9, Build(Region("JailRegion")).ComputeGlobalLightLevel(0, new Point3D(10, 10, 0), Start));
+    }
 
     [Fact]
     public void ComputeGlobalLightLevel_NoRegion_FollowsDayNightCycle()
     {
         var service = Build(null);
-        Assert.Equal(12, service.ComputeGlobalLightLevel(0, new(0, 0, 0), Start));                 // 00:00 night
-        Assert.Equal(12, service.ComputeGlobalLightLevel(0, new(0, 0, 0), Start.AddSeconds(720))); // 02:24 night
+        Assert.Equal(12, service.ComputeGlobalLightLevel(0, new Point3D(0, 0, 0), Start));                 // 00:00 night
+        Assert.Equal(12, service.ComputeGlobalLightLevel(0, new Point3D(0, 0, 0), Start.AddSeconds(720))); // 02:24 night
     }
 
     [Fact]
@@ -109,17 +52,17 @@ public sealed class LightAndTimeServiceTests
     public async Task ProcessLightAndTime_OneFailingSession_IsIsolated_AndOthersStillUpdated()
     {
         var bad = new Serial(7);
-        var good = new MobileEntity { Id = new(8), MapId = 0, Location = new(10, 10, 0) };
+        var good = new MobileEntity { Id = new Serial(8), MapId = 0, Location = new Point3D(10, 10, 0) };
         var sessions = new StubPlayerSessions(InWorld(42, bad), InWorld(43, good.Id));
         var outgoing = new RecordingOutgoingQueue();
         var jobs = new CapturingJobService();
         var service = new LightAndTimeService(
             sessions,
-            new(() => new ThrowingForIdMobileService(bad, good)),
+            new Lazy<IMobileService>(() => new ThrowingForIdMobileService(bad, good)),
             outgoing,
             new StubRegionResolver(null),
             jobs,
-            new()
+            new ServerConfig()
         );
 
         await service.StartAsync(CancellationToken.None);
@@ -136,17 +79,17 @@ public sealed class LightAndTimeServiceTests
     [Fact]
     public async Task ProcessLightAndTime_RemovesStaleSessions_AndResendsOnReentry()
     {
-        var mobile = new MobileEntity { Id = new(7), MapId = 0, Location = new(10, 10, 0) };
+        var mobile = new MobileEntity { Id = new Serial(7), MapId = 0, Location = new Point3D(10, 10, 0) };
         var sessions = new StubPlayerSessions(InWorld(42, mobile.Id));
         var outgoing = new RecordingOutgoingQueue();
         var jobs = new CapturingJobService();
         var service = new LightAndTimeService(
             sessions,
-            new(() => new MapItemMobileService(mobile)),
+            new Lazy<IMobileService>(() => new MapItemMobileService(mobile)),
             outgoing,
             new StubRegionResolver(null),
             jobs,
-            new()
+            new ServerConfig()
         );
 
         await service.StartAsync(CancellationToken.None);
@@ -167,17 +110,17 @@ public sealed class LightAndTimeServiceTests
     [Fact]
     public async Task ProcessLightAndTime_SendsOnChange_AndNotWhenUnchanged()
     {
-        var mobile = new MobileEntity { Id = new(7), MapId = 0, Location = new(10, 10, 0) };
+        var mobile = new MobileEntity { Id = new Serial(7), MapId = 0, Location = new Point3D(10, 10, 0) };
         var sessions = new StubPlayerSessions(InWorld(42, mobile.Id));
         var outgoing = new RecordingOutgoingQueue();
         var jobs = new CapturingJobService();
         var service = new LightAndTimeService(
             sessions,
-            new(() => new MapItemMobileService(mobile)),
+            new Lazy<IMobileService>(() => new MapItemMobileService(mobile)),
             outgoing,
             new StubRegionResolver(null),
             jobs,
-            new()
+            new ServerConfig()
         );
 
         await service.StartAsync(CancellationToken.None);
@@ -196,10 +139,10 @@ public sealed class LightAndTimeServiceTests
         var service = Build(null);
 
         service.SetGlobalLightOverride(300, false);
-        Assert.Equal(255, service.ComputeGlobalLightLevel(0, new(0, 0, 0), Start));
+        Assert.Equal(255, service.ComputeGlobalLightLevel(0, new Point3D(0, 0, 0), Start));
 
         service.SetGlobalLightOverride(-5, false);
-        Assert.Equal(0, service.ComputeGlobalLightLevel(0, new(0, 0, 0), Start));
+        Assert.Equal(0, service.ComputeGlobalLightLevel(0, new Point3D(0, 0, 0), Start));
     }
 
     [Fact]
@@ -207,24 +150,110 @@ public sealed class LightAndTimeServiceTests
     {
         var service = Build(Region("DungeonRegion"));
         service.SetGlobalLightOverride(3, false);
-        Assert.Equal(3, service.ComputeGlobalLightLevel(0, new(10, 10, 0), Start));
+        Assert.Equal(3, service.ComputeGlobalLightLevel(0, new Point3D(10, 10, 0), Start));
         service.SetGlobalLightOverride(null, false);
-        Assert.Equal(26, service.ComputeGlobalLightLevel(0, new(10, 10, 0), Start));
+        Assert.Equal(26, service.ComputeGlobalLightLevel(0, new Point3D(10, 10, 0), Start));
     }
 
     private static LightAndTimeService Build(RegionEntry? region)
-        => new(
+    {
+        return new LightAndTimeService(
             new StubPlayerSessions(),
-            new(() => new ThrowingMobileService()),
+            new Lazy<IMobileService>(() => new ThrowingMobileService()),
             new RecordingOutgoingQueue(),
             new StubRegionResolver(region),
             new CapturingJobService(),
-            new()
+            new ServerConfig()
         );
+    }
 
     private static PlayerSession InWorld(long sessionId, Serial mobileSerial)
-        => new() { SessionId = sessionId, MobileSerial = mobileSerial, State = PlayerSessionStateType.InWorld };
+    {
+        return new PlayerSession
+        { SessionId = sessionId, MobileSerial = mobileSerial, State = PlayerSessionStateType.InWorld };
+    }
 
     private static RegionEntry Region(string type)
-        => new(type, 0, "Map", "R", 1, new[] { new RegionAreaEntry(0, 0, 100, 100) }, "", null, null);
+    {
+        return new RegionEntry(type, 0, "Map", "R", 1, new[] { new RegionAreaEntry(0, 0, 100, 100) }, "", null, null);
+    }
+
+    private sealed class ThrowingForIdMobileService : IMobileService
+    {
+        private readonly Serial _badId;
+        private readonly MobileEntity _good;
+
+        public ThrowingForIdMobileService(Serial badId, MobileEntity good)
+        {
+            _badId = badId;
+            _good = good;
+        }
+
+        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<MobileEntity> CreateAsync(MobileEntity mobile, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<bool> EquipAsync(
+            MobileEntity mobile,
+            ItemEntity item,
+            ItemLayerType layer,
+            CancellationToken cancellationToken = default
+        )
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<IReadOnlyList<MobileEntity>> GetByAccountIdAsync(
+            Serial accountId,
+            CancellationToken cancellationToken = default
+        )
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
+        {
+            if (id == _badId)
+            {
+                throw new InvalidOperationException("boom");
+            }
+
+            return new ValueTask<MobileEntity?>(id == _good.Id ? _good : null);
+        }
+
+        public SkillEntry GetSkill(MobileEntity mobile, UOSkillName skill)
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<SkillEntry> SetSkillAsync(
+            MobileEntity mobile,
+            UOSkillName skill,
+            double value,
+            CancellationToken cancellationToken = default
+        )
+        {
+            throw new NotSupportedException();
+        }
+
+        public ValueTask<bool> UnequipAsync(
+            MobileEntity mobile,
+            ItemLayerType layer,
+            CancellationToken cancellationToken = default
+        )
+        {
+            throw new NotSupportedException();
+        }
+    }
 }

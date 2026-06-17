@@ -8,7 +8,7 @@ using SixLabors.ImageSharp.PixelFormats;
 namespace Moongate.UO.Data.Art;
 
 /// <summary>
-/// Decodes item-art statics (RLE ARGB1555) from the UO art files into <see cref="Image{Rgba32}" />.
+///     Decodes item-art statics (RLE ARGB1555) from the UO art files into <see cref="Image{Rgba32}" />.
 /// </summary>
 public sealed class ArtService : IArtService
 {
@@ -21,7 +21,7 @@ public sealed class ArtService : IArtService
     {
         ArgumentNullException.ThrowIfNull(resolver);
 
-        _fileIndex = new(
+        _fileIndex = new FileIndex(
             resolver.Resolve("artidx.mul"),
             resolver.Resolve("art.mul"),
             resolver.Resolve("artLegacyMUL.uop"),
@@ -71,7 +71,9 @@ public sealed class ArtService : IArtService
     }
 
     public bool IsValidArt(int itemId)
-        => GetArt(itemId) is not null;
+    {
+        return GetArt(itemId) is not null;
+    }
 
     private static Rgba32 ConvertArgb1555ToRgba(ushort value)
     {
@@ -80,7 +82,7 @@ public sealed class ArtService : IArtService
         var g = (byte)(((value >> 5) & 0x1F) * 255 / 31);
         var b = (byte)((value & 0x1F) * 255 / 31);
 
-        return new(r, g, b, a);
+        return new Rgba32(r, g, b, a);
     }
 
     private int GetLegalItemId(int itemId)

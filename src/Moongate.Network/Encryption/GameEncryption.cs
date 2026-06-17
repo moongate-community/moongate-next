@@ -6,7 +6,7 @@ using Moongate.Network.Interfaces.Encryption;
 namespace Moongate.Network.Encryption;
 
 /// <summary>
-/// Implements game transport encryption using Twofish and MD5-derived XOR state.
+///     Implements game transport encryption using Twofish and MD5-derived XOR state.
 /// </summary>
 public sealed class GameEncryption : IClientEncryption
 {
@@ -15,9 +15,9 @@ public sealed class GameEncryption : IClientEncryption
     private const int GameLoginPacketSize = 65;
 
     private static readonly byte[] _identityTable = CreateIdentityTable();
+    private readonly byte[] _cipherTable;
 
     private readonly TwofishEngine _twofish;
-    private readonly byte[] _cipherTable;
     private readonly byte[] _xorKey;
     private ushort _recvPos;
     private byte _sendPos;
@@ -30,7 +30,7 @@ public sealed class GameEncryption : IClientEncryption
         key[2] = key[6] = key[10] = key[14] = (byte)((seed >> 8) & 0xFF);
         key[3] = key[7] = key[11] = key[15] = (byte)(seed & 0xFF);
 
-        _twofish = new(key);
+        _twofish = new TwofishEngine(key);
         _cipherTable = GC.AllocateUninitializedArray<byte>(CipherTableSize);
         _identityTable.CopyTo(_cipherTable, 0);
         RefreshCipherTable();
@@ -93,7 +93,7 @@ public sealed class GameEncryption : IClientEncryption
             return false;
         }
 
-        encryption = new(seed);
+        encryption = new GameEncryption(seed);
 
         return true;
     }
@@ -116,7 +116,9 @@ public sealed class GameEncryption : IClientEncryption
         Justification = "Ultima Online game encryption uses a legacy MD5-derived XOR stream for protocol compatibility."
     )]
     private static byte[] CreateXorKey(byte[] cipherTable)
-        => MD5.HashData(cipherTable);
+    {
+        return MD5.HashData(cipherTable);
+    }
 
     private void RefreshCipherTable()
     {

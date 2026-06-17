@@ -5,8 +5,8 @@ using Moongate.UO.Data.Entities.Mobiles;
 namespace Moongate.Server.Interfaces.Services.World;
 
 /// <summary>
-/// Tracks which entities each player's client knows about and emits draw/move/delete packets
-/// as entities enter, move within, and leave each client's view.
+///     Tracks which entities each player's client knows about and emits draw/move/delete packets
+///     as entities enter, move within, and leave each client's view.
 /// </summary>
 public interface IInterestManagementService
 {

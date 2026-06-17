@@ -94,7 +94,9 @@ public ref struct ValueStringBuilder
 
     // Compiler generated
     public void Append(ref RawInterpolatedStringHandler handler)
-        => Append(handler.Text);
+    {
+        Append(handler.Text);
+    }
 
     // Compiler generated
     public void Append(
@@ -102,7 +104,9 @@ public ref struct ValueStringBuilder
         [InterpolatedStringHandlerArgument("formatProvider")]
         ref RawInterpolatedStringHandler handler
     )
-        => Append(handler.Text);
+    {
+        Append(handler.Text);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Append(string? s)
@@ -155,6 +159,7 @@ public ref struct ValueStringBuilder
         {
             dst[i] = *value++;
         }
+
         Length += length;
     }
 
@@ -209,7 +214,7 @@ public ref struct ValueStringBuilder
     }
 
     /// <summary>
-    /// Returns a span around the contents of the builder.
+    ///     Returns a span around the contents of the builder.
     /// </summary>
     /// <param name="terminate">Ensures that the builder has a null char after <see cref="Length" /></param>
     public ReadOnlySpan<char> AsSpan(bool terminate)
@@ -225,23 +230,33 @@ public ref struct ValueStringBuilder
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ReadOnlySpan<char> AsSpan()
-        => _chars[..Length];
+    {
+        return _chars[..Length];
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ReadOnlySpan<char> AsSpan(int start)
-        => _chars[start..];
+    {
+        return _chars[start..];
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ReadOnlySpan<char> AsSpan(int start, int length)
-        => _chars.Slice(start, length);
+    {
+        return _chars.Slice(start, length);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ValueStringBuilder Create(int capacity = 64, bool mt = false)
-        => new(capacity, mt);
+    {
+        return new ValueStringBuilder(capacity, mt);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ValueStringBuilder CreateMT(int capacity = 64)
-        => new(capacity, true);
+    {
+        return new ValueStringBuilder(capacity, true);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Dispose()
@@ -264,16 +279,18 @@ public ref struct ValueStringBuilder
     }
 
     /// <summary>
-    /// Get a pinnable reference to the builder.
-    /// Does not ensure there is a null char after <see cref="Length" />
-    /// This overload is pattern matched in the C# 7.3+ compiler so you can omit
-    /// the explicit method call, and write eg "fixed (char* c = builder)"
+    ///     Get a pinnable reference to the builder.
+    ///     Does not ensure there is a null char after <see cref="Length" />
+    ///     This overload is pattern matched in the C# 7.3+ compiler so you can omit
+    ///     the explicit method call, and write eg "fixed (char* c = builder)"
     /// </summary>
     public ref char GetPinnableReference()
-        => ref MemoryMarshal.GetReference(_chars);
+    {
+        return ref MemoryMarshal.GetReference(_chars);
+    }
 
     /// <summary>
-    /// Get a pinnable reference to the builder.
+    ///     Get a pinnable reference to the builder.
     /// </summary>
     /// <param name="terminate">Ensures that the builder has a null char after <see cref="Length" /></param>
     public ref char GetPinnableReference(bool terminate)
@@ -423,11 +440,15 @@ public ref struct ValueStringBuilder
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Reset()
-        => Length = 0;
+    {
+        Length = 0;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override string ToString()
-        => _chars[..Length].ToString();
+    {
+        return _chars[..Length].ToString();
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryCopyTo(Span<char> destination, out int charsWritten)
@@ -459,12 +480,12 @@ public ref struct ValueStringBuilder
     }
 
     /// <summary>
-    /// Resize the internal buffer either by doubling current buffer size or
-    /// by adding <paramref name="additionalCapacityBeyondPos" /> to
-    /// <see cref="Length" /> whichever is greater.
+    ///     Resize the internal buffer either by doubling current buffer size or
+    ///     by adding <paramref name="additionalCapacityBeyondPos" /> to
+    ///     <see cref="Length" /> whichever is greater.
     /// </summary>
     /// <param name="additionalCapacityBeyondPos">
-    /// Number of chars requested beyond current position.
+    ///     Number of chars requested beyond current position.
     /// </param>
     [MethodImpl(MethodImplOptions.NoInlining)]
     private void Grow(int additionalCapacityBeyondPos)

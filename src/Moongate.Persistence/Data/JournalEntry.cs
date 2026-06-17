@@ -3,7 +3,7 @@ using Moongate.Persistence.Types;
 namespace Moongate.Persistence.Data;
 
 /// <summary>
-/// Journal record appended for every persisted mutation.
+///     Journal record appended for every persisted mutation.
 /// </summary>
 public sealed class JournalEntry
 {

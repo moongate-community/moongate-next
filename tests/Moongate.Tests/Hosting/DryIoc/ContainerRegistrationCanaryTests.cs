@@ -16,16 +16,6 @@ public class ContainerRegistrationCanaryTests : IDisposable
 
     private string ConfigPath => Path.Combine(_dir, "moongate.yaml");
 
-    [Fact]
-    public void AddMoongateHosting_CalledTwice_ResolvesSingleOrchestrator()
-    {
-        var container = new Container();
-        container.AddMoongateHosting();
-        container.AddMoongateHosting();
-
-        Assert.Same(container.Orchestrator(), container.Orchestrator());
-    }
-
     public void Dispose()
     {
         if (Directory.Exists(_dir))
@@ -34,6 +24,16 @@ public class ContainerRegistrationCanaryTests : IDisposable
         }
 
         GC.SuppressFinalize(this);
+    }
+
+    [Fact]
+    public void AddMoongateHosting_CalledTwice_ResolvesSingleOrchestrator()
+    {
+        var container = new Container();
+        container.AddMoongateHosting();
+        container.AddMoongateHosting();
+
+        Assert.Same(container.Orchestrator(), container.Orchestrator());
     }
 
     [Fact]

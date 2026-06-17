@@ -1,4 +1,5 @@
 using Moongate.Abstractions.Configuration;
+using Moongate.Core.Geometry;
 using Moongate.UO.Data.Data;
 using Moongate.UO.Data.Types.Maps;
 
@@ -20,7 +21,7 @@ public class UoConfigTests
         var config = new UoConfig();
 
         Assert.Equal(UoMapFacetType.Trammel, config.StartingMap);
-        Assert.Equal(new(1496, 1628, 10), config.Starting);
+        Assert.Equal(new Point3D(1496, 1628, 10), config.Starting);
         Assert.Equal("Britain", config.StartingCity);
     }
 
@@ -38,7 +39,7 @@ public class UoConfigTests
 
         Assert.NotNull(config);
         Assert.Equal(UoMapFacetType.Trammel, config.StartingMap);
-        Assert.Equal(new(1496, 1628, 10), config.Starting);
+        Assert.Equal(new Point3D(1496, 1628, 10), config.Starting);
     }
 
     [Fact]

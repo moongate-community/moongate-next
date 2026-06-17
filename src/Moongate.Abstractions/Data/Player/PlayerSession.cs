@@ -5,7 +5,7 @@ using Moongate.Core.Ids;
 namespace Moongate.Abstractions.Data.Player;
 
 /// <summary>
-/// Logical player session state associated with a network session.
+///     Logical player session state associated with a network session.
 /// </summary>
 public sealed class PlayerSession
 {

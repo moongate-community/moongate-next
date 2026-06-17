@@ -11,11 +11,20 @@ using Moongate.UO.Data.Types.Skills;
 namespace Moongate.UO.Data.Entities.Mobiles;
 
 /// <summary>
-/// Concrete persisted mobile entity. Holds mobile state only; derived facts and
-/// behavior are provided by the mobile service. Serialized via contractless MessagePack.
+///     Concrete persisted mobile entity. Holds mobile state only; derived facts and
+///     behavior are provided by the mobile service. Serialized via contractless MessagePack.
 /// </summary>
 public sealed class MobileEntity : IMobileEntity
 {
+    public string? BrainId { get; set; }
+
+    public NotorietyType Notoriety { get; set; } = NotorietyType.Innocent;
+
+    public int Karma { get; set; }
+
+    public int Fame { get; set; }
+
+    public string? FactionId { get; set; }
     public Serial Id { get; set; }
 
     public string? Name { get; set; }
@@ -51,16 +60,6 @@ public sealed class MobileEntity : IMobileEntity
     public bool IsPlayer { get; set; }
 
     public bool IsAlive { get; set; } = true;
-
-    public string? BrainId { get; set; }
-
-    public NotorietyType Notoriety { get; set; } = NotorietyType.Innocent;
-
-    public int Karma { get; set; }
-
-    public int Fame { get; set; }
-
-    public string? FactionId { get; set; }
 
     public MobileStats BaseStats { get; set; } = new();
 

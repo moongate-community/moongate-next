@@ -16,20 +16,20 @@ public static class MobileTemplateImageEndpointExtensions
     public static IEndpointRouteBuilder MapMoongateMobileTemplateImages(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet(
-                     "/api/mobile-templates/{id}/image.png",
-                     (
-                         string id,
-                         IMobileTemplateService templates,
-                         IMobileFigureRenderer renderer,
-                         DirectoriesConfig directories,
-                         CancellationToken cancellationToken
-                     ) => HandleGetTemplateImageAsync(id, templates, renderer, directories, cancellationToken)
-                 )
-                 .WithName("GetMobileTemplateImage")
-                 .WithTags("Mobiles")
-                 .WithSummary("Returns a lazily generated PNG of the dressed mobile figure (body + hair).")
-                 .Produces(StatusCodes.Status200OK, contentType: "image/png")
-                 .Produces(StatusCodes.Status404NotFound);
+                "/api/mobile-templates/{id}/image.png",
+                (
+                    string id,
+                    IMobileTemplateService templates,
+                    IMobileFigureRenderer renderer,
+                    DirectoriesConfig directories,
+                    CancellationToken cancellationToken
+                ) => HandleGetTemplateImageAsync(id, templates, renderer, directories, cancellationToken)
+            )
+            .WithName("GetMobileTemplateImage")
+            .WithTags("Mobiles")
+            .WithSummary("Returns a lazily generated PNG of the dressed mobile figure (body + hair).")
+            .Produces(StatusCodes.Status200OK, contentType: "image/png")
+            .Produces(StatusCodes.Status404NotFound);
 
         return endpoints;
     }
@@ -70,7 +70,7 @@ public static class MobileTemplateImageEndpointExtensions
             return Results.File(cachePath, "image/png");
         }
 
-        var generationLock = _generationLocks.GetOrAdd(cachePath, static _ => new(1, 1));
+        var generationLock = _generationLocks.GetOrAdd(cachePath, static _ => new SemaphoreSlim(1, 1));
         await generationLock.WaitAsync(cancellationToken);
 
         try

@@ -8,7 +8,7 @@ using Moongate.UO.Data.Utils;
 namespace Moongate.Server.Services.World;
 
 /// <summary>
-/// Lazy in-memory store for teleporter definitions.
+///     Lazy in-memory store for teleporter definitions.
 /// </summary>
 public class TeleportersDataService : LazyDataService, ITeleportersDataService
 {
@@ -18,7 +18,9 @@ public class TeleportersDataService : LazyDataService, ITeleportersDataService
     private Dictionary<int, List<TeleporterEntry>> _entriesBySourceMap = [];
     private Dictionary<(int MapId, int SectorX, int SectorY), List<TeleporterEntry>> _entriesBySourceSector = [];
 
-    public TeleportersDataService() { }
+    public TeleportersDataService()
+    {
+    }
 
     public TeleportersDataService(ServerAssetDataLoader loader)
     {
@@ -77,23 +79,22 @@ public class TeleportersDataService : LazyDataService, ITeleportersDataService
         {
             _entries = snapshot;
             _entriesBySourceMap = snapshot
-                                  .GroupBy(static entry => entry.SourceMapId)
-                                  .ToDictionary(
-                                      static grouping => grouping.Key,
-                                      static grouping => grouping.ToList()
-                                  );
+                .GroupBy(static entry => entry.SourceMapId)
+                .ToDictionary(
+                    static grouping => grouping.Key,
+                    static grouping => grouping.ToList()
+                );
             _entriesBySourceSector = snapshot
-                                     .GroupBy(
-                                         static entry => (
-                                                             entry.SourceMapId,
-                                                             entry.SourceLocation.X >> MapSectorConsts.SectorShift,
-                                                             entry.SourceLocation.Y >> MapSectorConsts.SectorShift
-                                                         )
-                                     )
-                                     .ToDictionary(
-                                         static grouping => grouping.Key,
-                                         static grouping => grouping.ToList()
-                                     );
+                .GroupBy(static entry => (
+                        entry.SourceMapId,
+                        entry.SourceLocation.X >> MapSectorConsts.SectorShift,
+                        entry.SourceLocation.Y >> MapSectorConsts.SectorShift
+                    )
+                )
+                .ToDictionary(
+                    static grouping => grouping.Key,
+                    static grouping => grouping.ToList()
+                );
         }
 
         MarkLoaded();
@@ -154,5 +155,7 @@ public class TeleportersDataService : LazyDataService, ITeleportersDataService
     }
 
     protected override void LoadCore()
-        => _loader?.LoadTeleporters(this);
+    {
+        _loader?.LoadTeleporters(this);
+    }
 }

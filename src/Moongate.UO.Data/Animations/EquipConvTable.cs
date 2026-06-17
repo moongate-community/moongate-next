@@ -3,9 +3,9 @@ using System.Text.RegularExpressions;
 namespace Moongate.UO.Data.Animations;
 
 /// <summary>
-/// Parses <c>Equipconv.def</c> into a <c>(bodyType, equipmentAnim) → (convertedAnim, hue)</c> table that
-/// fits a worn equipment animation to a body type (e.g. male/female) and may override its hue. A missing
-/// or malformed file yields an empty table (every <see cref="TryConvert" /> returns false).
+///     Parses <c>Equipconv.def</c> into a <c>(bodyType, equipmentAnim) → (convertedAnim, hue)</c> table that
+///     fits a worn equipment animation to a body type (e.g. male/female) and may override its hue. A missing
+///     or malformed file yields an empty table (every <see cref="TryConvert" /> returns false).
 /// </summary>
 public sealed class EquipConvTable
 {
@@ -58,5 +58,7 @@ public sealed class EquipConvTable
     public int Count => _map.Count;
 
     public bool TryConvert(int bodyType, int equipmentAnim, out (int AnimId, int Hue) result)
-        => _map.TryGetValue((bodyType, equipmentAnim), out result);
+    {
+        return _map.TryGetValue((bodyType, equipmentAnim), out result);
+    }
 }

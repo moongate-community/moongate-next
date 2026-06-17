@@ -1,32 +1,10 @@
 namespace Moongate.Server.Data.World;
 
 /// <summary>
-/// Represents one row from data/components/doors.txt.
+///     Represents one row from data/components/doors.txt.
 /// </summary>
 public readonly record struct DoorComponentEntry
 {
-    public int Category { get; }
-
-    public int Piece1 { get; }
-
-    public int Piece2 { get; }
-
-    public int Piece3 { get; }
-
-    public int Piece4 { get; }
-
-    public int Piece5 { get; }
-
-    public int Piece6 { get; }
-
-    public int Piece7 { get; }
-
-    public int Piece8 { get; }
-
-    public int FeatureMask { get; }
-
-    public string Comment { get; }
-
     public DoorComponentEntry(
         int category,
         int piece1,
@@ -53,4 +31,26 @@ public readonly record struct DoorComponentEntry
         FeatureMask = featureMask;
         Comment = comment;
     }
+
+    public int Category { get; }
+
+    public int Piece1 { get; }
+
+    public int Piece2 { get; }
+
+    public int Piece3 { get; }
+
+    public int Piece4 { get; }
+
+    public int Piece5 { get; }
+
+    public int Piece6 { get; }
+
+    public int Piece7 { get; }
+
+    public int Piece8 { get; }
+
+    public int FeatureMask { get; }
+
+    public string Comment { get; }
 }

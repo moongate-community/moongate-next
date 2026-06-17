@@ -11,9 +11,9 @@ namespace Moongate.Scripting.Lua.Modules;
 [ScriptModule("commands", "Allows Lua scripts to register and execute server commands.")]
 public sealed class CommandsModule
 {
-    private readonly ICommandRegistry? _registry;
     private readonly ICommandSystemService? _commands;
     private readonly ILuaEventBridge _events;
+    private readonly ICommandRegistry? _registry;
 
     public CommandsModule(
         ILuaEventBridge events,
@@ -36,8 +36,8 @@ public sealed class CommandsModule
         var commands = GetCommandSystem();
         var commandSource = ParseSource(source, CommandSourceType.Console);
         var output = commands.ExecuteCommandWithOutputAsync(commandWithArgs, commandSource)
-                             .GetAwaiter()
-                             .GetResult();
+            .GetAwaiter()
+            .GetResult();
 
         return string.Join(Environment.NewLine, output);
     }
@@ -79,21 +79,27 @@ public sealed class CommandsModule
     }
 
     private ICommandSystemService GetCommandSystem()
-        => _commands ?? throw new ScriptRuntimeException("Command system is not registered.");
+    {
+        return _commands ?? throw new ScriptRuntimeException("Command system is not registered.");
+    }
 
     private static string? GetOutput(DynValue result)
-        => result.Type switch
+    {
+        return result.Type switch
         {
-            DataType.Nil     => null,
-            DataType.Void    => null,
-            DataType.String  => result.String,
-            DataType.Number  => result.Number.ToString(CultureInfo.InvariantCulture),
+            DataType.Nil => null,
+            DataType.Void => null,
+            DataType.String => result.String,
+            DataType.Number => result.Number.ToString(CultureInfo.InvariantCulture),
             DataType.Boolean => result.Boolean.ToString(),
-            _                => result.ToObject()?.ToString()
+            _ => result.ToObject()?.ToString()
         };
+    }
 
     private ICommandRegistry GetRegistry()
-        => _registry ?? throw new ScriptRuntimeException("Command registry is not registered.");
+    {
+        return _registry ?? throw new ScriptRuntimeException("Command registry is not registered.");
+    }
 
     private static CommandSourceType ParseSource(string? source, CommandSourceType defaultSource)
     {
@@ -104,11 +110,11 @@ public sealed class CommandsModule
 
         return source.Trim().ToLowerInvariant() switch
         {
-            "*" or "all"           => CommandSourceType.All,
-            "console"              => CommandSourceType.Console,
-            "game" or "ingame"     => CommandSourceType.InGame,
+            "*" or "all" => CommandSourceType.All,
+            "console" => CommandSourceType.Console,
+            "game" or "ingame" => CommandSourceType.InGame,
             "in_game" or "in-game" => CommandSourceType.InGame,
-            _                      => throw new ScriptRuntimeException($"Invalid command source '{source}'.")
+            _ => throw new ScriptRuntimeException($"Invalid command source '{source}'.")
         };
     }
 }

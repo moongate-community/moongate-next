@@ -8,21 +8,22 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Incoming.Interaction;
 
 [PacketHandler(0x08, PacketSizing.Fixed, Length = 14, Description = "Drop Item")]
-
 /// <summary>
 /// Represents DropItemPacket.
 /// </summary>
 public class DropItemPacket : BaseGameNetworkPacket
 {
+    public DropItemPacket()
+        : base(0x08)
+    {
+    }
+
     public Serial DestinationSerial { get; set; }
     public bool IsGroundDrop => DestinationSerial == Serial.MinusOne;
 
     public Serial ItemSerial { get; set; }
 
     public Point3D Location { get; set; }
-
-    public DropItemPacket()
-        : base(0x08) { }
 
     protected override bool ParsePayload(ref SpanReader reader)
     {
@@ -42,7 +43,7 @@ public class DropItemPacket : BaseGameNetworkPacket
         }
 
         DestinationSerial = (Serial)reader.ReadUInt32();
-        Location = new(x, y, z);
+        Location = new Point3D(x, y, z);
 
         return reader.Remaining == 0;
     }

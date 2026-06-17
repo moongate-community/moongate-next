@@ -5,14 +5,8 @@ namespace Moongate.Tests.Support;
 internal sealed class TestHostApplicationLifetime : IHostApplicationLifetime, IDisposable
 {
     private readonly CancellationTokenSource _started = new();
-    private readonly CancellationTokenSource _stopping = new();
     private readonly CancellationTokenSource _stopped = new();
-
-    public CancellationToken ApplicationStarted => _started.Token;
-
-    public CancellationToken ApplicationStopping => _stopping.Token;
-
-    public CancellationToken ApplicationStopped => _stopped.Token;
+    private readonly CancellationTokenSource _stopping = new();
 
     public void Dispose()
     {
@@ -21,12 +15,24 @@ internal sealed class TestHostApplicationLifetime : IHostApplicationLifetime, ID
         _stopped.Dispose();
     }
 
-    public void Start()
-        => _started.Cancel();
+    public CancellationToken ApplicationStarted => _started.Token;
 
-    public void Stop()
-        => _stopped.Cancel();
+    public CancellationToken ApplicationStopping => _stopping.Token;
+
+    public CancellationToken ApplicationStopped => _stopped.Token;
 
     public void StopApplication()
-        => _stopping.Cancel();
+    {
+        _stopping.Cancel();
+    }
+
+    public void Start()
+    {
+        _started.Cancel();
+    }
+
+    public void Stop()
+    {
+        _stopped.Cancel();
+    }
 }

@@ -10,17 +10,17 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Persistence.Services.Persistence;
 
 /// <summary>
-/// Append-only journal stored as length+checksum framed MessagePack records. A corrupt trailing
-/// record (truncated write) is detected on read and the tail is discarded.
+///     Append-only journal stored as length+checksum framed MessagePack records. A corrupt trailing
+///     record (truncated write) is detected on read and the tail is discarded.
 /// </summary>
 public sealed class BinaryJournalService : IJournalService, IAsyncDisposable
 {
     private const int HeaderSize = 8; // int length + uint checksum
 
     private static readonly MessagePackSerializerOptions _options = ContractlessStandardResolver.Options;
+    private readonly SemaphoreSlim _ioLock = new(1, 1);
 
     private readonly ILogger _logger = Log.ForContext<BinaryJournalService>();
-    private readonly SemaphoreSlim _ioLock = new(1, 1);
     private readonly string _path;
 
     public BinaryJournalService(string journalFilePath, bool enableFileLock = true)
@@ -36,6 +36,13 @@ public sealed class BinaryJournalService : IJournalService, IAsyncDisposable
         {
             Directory.CreateDirectory(directory);
         }
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        _ioLock.Dispose();
+
+        return ValueTask.CompletedTask;
     }
 
     public async ValueTask AppendAsync(JournalEntry entry, CancellationToken cancellationToken = default)
@@ -77,13 +84,6 @@ public sealed class BinaryJournalService : IJournalService, IAsyncDisposable
         {
             _ioLock.Release();
         }
-    }
-
-    public ValueTask DisposeAsync()
-    {
-        _ioLock.Dispose();
-
-        return ValueTask.CompletedTask;
     }
 
     public async ValueTask<IReadOnlyCollection<JournalEntry>> ReadAllAsync(CancellationToken cancellationToken = default)
@@ -136,8 +136,8 @@ public sealed class BinaryJournalService : IJournalService, IAsyncDisposable
             }
 
             var kept = ParseAll(await File.ReadAllBytesAsync(_path, cancellationToken))
-                       .Where(e => e.SequenceId > inclusiveSequenceId)
-                       .ToArray();
+                .Where(e => e.SequenceId > inclusiveSequenceId)
+                .ToArray();
 
             await RewriteAsync(kept, cancellationToken);
         }

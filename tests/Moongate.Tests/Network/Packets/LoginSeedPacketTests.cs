@@ -1,3 +1,4 @@
+using Moongate.Abstractions.Data.Version;
 using Moongate.Network.UO.Packets.Incoming.Login;
 using Moongate.Network.UO.Registry;
 
@@ -30,7 +31,7 @@ public sealed class LoginSeedPacketTests
 
         Assert.True(parsed);
         Assert.Equal(0x12345678, packet.Seed);
-        Assert.Equal(new(7, 0, 114, 0), packet.ClientVersion);
+        Assert.Equal(new ClientVersion(7, 0, 114, 0), packet.ClientVersion);
     }
 
     private static byte[] BuildLoginSeedPacket(int seed, int major, int minor, int revision, int patch)

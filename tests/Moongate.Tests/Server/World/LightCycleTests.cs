@@ -4,8 +4,14 @@ namespace Moongate.Tests.Server.World;
 
 public sealed class LightCycleTests
 {
-    [Theory, InlineData(3, 0, 12), InlineData(12, 0, 0), InlineData(5, 0, 6), InlineData(23, 0, 6), InlineData(6, 0, 0),
-     InlineData(22, 0, 0), InlineData(0, 0, 12)]
+    [Theory]
+    [InlineData(3, 0, 12)]
+    [InlineData(12, 0, 0)]
+    [InlineData(5, 0, 6)]
+    [InlineData(23, 0, 6)]
+    [InlineData(6, 0, 0)]
+    [InlineData(22, 0, 0)]
+    [InlineData(0, 0, 12)]
 
     // night
     // day
@@ -13,9 +19,11 @@ public sealed class LightCycleTests
     // dusk midpoint: 0 + (60)*(12-0)/120 = 6
     // dawn complete: full day
     // dusk start: still full day
-     // pre-dawn night
+    // pre-dawn night
     public void LevelFromHourMinute_FollowsDayNightCurve(int hour, int minute, int expected)
-        => Assert.Equal(expected, LightCycle.LevelFromHourMinute(hour, minute));
+    {
+        Assert.Equal(expected, LightCycle.LevelFromHourMinute(hour, minute));
+    }
 
     [Fact]
     public void TimeOfDay_NormalizesTo24HoursAndWrapsNegative()

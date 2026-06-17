@@ -3,7 +3,7 @@ namespace Moongate.UO.Data.Types.Items;
 #pragma warning disable CA1069 // Enums should not have duplicate values
 
 /// <summary>
-/// Enumeration of item layer values (the paperdoll/equipment slot an item occupies).
+///     Enumeration of item layer values (the paperdoll/equipment slot an item occupies).
 /// </summary>
 public enum ItemLayerType : byte
 {

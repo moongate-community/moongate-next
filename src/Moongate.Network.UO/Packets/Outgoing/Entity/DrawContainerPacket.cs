@@ -7,7 +7,7 @@ using Moongate.UO.Data.Entities.Items;
 namespace Moongate.Network.UO.Packets.Outgoing.Entity;
 
 /// <summary>
-/// Outgoing "Draw Container" (0x24): opens a container gump on the client.
+///     Outgoing "Draw Container" (0x24): opens a container gump on the client.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Draw Container")]
 public class DrawContainerPacket : BaseGameNetworkPacket
@@ -17,8 +17,6 @@ public class DrawContainerPacket : BaseGameNetworkPacket
     private const int DefaultBackpackGumpId = 0x3C;
     private const short ContainerDisplayFlag = 0x7D; // UO protocol trailer (standard container value)
 
-    public ItemEntity Container { get; }
-
     public DrawContainerPacket(ItemEntity container)
         : base(OpCodeValue, LengthValue)
     {
@@ -26,6 +24,8 @@ public class DrawContainerPacket : BaseGameNetworkPacket
 
         Container = container;
     }
+
+    public ItemEntity Container { get; }
 
     public override void Write(ref SpanWriter writer)
     {
@@ -36,5 +36,7 @@ public class DrawContainerPacket : BaseGameNetworkPacket
     }
 
     protected override bool ParsePayload(ref SpanReader reader)
-        => false;
+    {
+        return false;
+    }
 }

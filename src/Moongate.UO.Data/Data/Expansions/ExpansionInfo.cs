@@ -5,8 +5,8 @@ using Moongate.UO.Data.Types.Expansions;
 namespace Moongate.UO.Data.Data.Expansions;
 
 /// <summary>
-/// Capability metadata for a UO expansion era: advertised client/feature/housing flags, selectable
-/// facets, the minimum client version, and the mobile-status packet version.
+///     Capability metadata for a UO expansion era: advertised client/feature/housing flags, selectable
+///     facets, the minimum client version, and the mobile-status packet version.
 /// </summary>
 public sealed class ExpansionInfo
 {

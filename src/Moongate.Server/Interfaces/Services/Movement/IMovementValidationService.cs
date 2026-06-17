@@ -5,7 +5,7 @@ using Moongate.UO.Data.Entities.Mobiles;
 namespace Moongate.Server.Interfaces.Services.Movement;
 
 /// <summary>
-/// Server-authoritative movement validation against the map (bounds, diagonal, Z, statics).
+///     Server-authoritative movement validation against the map (bounds, diagonal, Z, statics).
 /// </summary>
 public interface IMovementValidationService
 {

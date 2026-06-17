@@ -1,8 +1,8 @@
 namespace Moongate.Plugins.Types;
 
 /// <summary>
-/// Form-field rendering hint for a config property. <see cref="Auto" /> infers the concrete type
-/// from the property's CLR type (bool → boolean, integer → number, string → text).
+///     Form-field rendering hint for a config property. <see cref="Auto" /> infers the concrete type
+///     from the property's CLR type (bool → boolean, integer → number, string → text).
 /// </summary>
 public enum ConfigFieldType
 {

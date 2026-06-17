@@ -23,5 +23,5 @@ public static class StartingCities
         new("Vesper", "The Ironwood Inn", 2771, 976, 0, TrammelMapId, 1075080)
     ];
 
-    public static CityInfo[] AvailableStartingCities => [..NewHavenStartingCities, ..TrammelStartingCities];
+    public static CityInfo[] AvailableStartingCities => [.. NewHavenStartingCities, .. TrammelStartingCities];
 }

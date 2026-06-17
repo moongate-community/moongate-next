@@ -5,12 +5,12 @@ using Moongate.Core.Extensions.Container;
 namespace Moongate.Abstractions.Extensions.DryIoc;
 
 /// <summary>
-/// DryIoc-native registration helpers for Moongate config declarations.
+///     DryIoc-native registration helpers for Moongate config declarations.
 /// </summary>
 public static class ConfigContainerExtensions
 {
     /// <summary>
-    /// Declares a config section consumed by the server config loader at boot.
+    ///     Declares a config section consumed by the server config loader at boot.
     /// </summary>
     /// <param name="container">DryIoc container.</param>
     /// <param name="name">YAML section name.</param>

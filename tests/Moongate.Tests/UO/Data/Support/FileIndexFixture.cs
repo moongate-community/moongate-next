@@ -1,13 +1,11 @@
 namespace Moongate.Tests.UO.Data.Support;
 
 /// <summary>
-/// Writes a synthetic <c>.idx</c> + <c>.mul</c> pair: each entry is 12 bytes (lookup, length, extra)
-/// in the idx, pointing at a payload appended to the mul.
+///     Writes a synthetic <c>.idx</c> + <c>.mul</c> pair: each entry is 12 bytes (lookup, length, extra)
+///     in the idx, pointing at a payload appended to the mul.
 /// </summary>
 public static class FileIndexFixture
 {
-    public sealed record Payload(int Extra, byte[] Data);
-
     public static (string IdxPath, string MulPath) Write(string directory, string baseName, IReadOnlyList<Payload> payloads)
     {
         var idxPath = Path.Combine(directory, baseName + ".idx");
@@ -37,4 +35,6 @@ public static class FileIndexFixture
 
         return (idxPath, mulPath);
     }
+
+    public sealed record Payload(int Extra, byte[] Data);
 }

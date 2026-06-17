@@ -15,9 +15,6 @@ public class MobileIncomingPacket : BaseGameNetworkPacket
 {
     private const byte OpCodeValue = 0x78;
 
-    public MobileEntity Mobile { get; }
-    public IReadOnlyList<(ItemLayerType Layer, ItemEntity Item)> Equipped { get; }
-
     public MobileIncomingPacket(MobileEntity mobile, IReadOnlyList<(ItemLayerType Layer, ItemEntity Item)> equipped)
         : base(OpCodeValue)
     {
@@ -28,10 +25,13 @@ public class MobileIncomingPacket : BaseGameNetworkPacket
         Equipped = equipped;
     }
 
+    public MobileEntity Mobile { get; }
+    public IReadOnlyList<(ItemLayerType Layer, ItemEntity Item)> Equipped { get; }
+
     public override void Write(ref SpanWriter writer)
     {
         writer.Write(OpCode);
-        writer.Write((ushort)0);                    // length placeholder
+        writer.Write((ushort)0); // length placeholder
 
         writer.Write(Mobile.Id.Value);
         writer.Write((short)Mobile.BodyId);
@@ -63,10 +63,12 @@ public class MobileIncomingPacket : BaseGameNetworkPacket
             }
         }
 
-        writer.Write((uint)0);                       // terminator
+        writer.Write((uint)0); // terminator
         writer.WritePacketLength();
     }
 
     protected override bool ParsePayload(ref SpanReader reader)
-        => false;
+    {
+        return false;
+    }
 }

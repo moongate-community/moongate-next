@@ -22,11 +22,21 @@ public sealed class MoongateBootstrapTests : IDisposable
 {
     private readonly string _root = Path.Combine(Path.GetTempPath(), $"nr-bootstrap-{Guid.NewGuid():N}");
 
+    public void Dispose()
+    {
+        if (Directory.Exists(_root))
+        {
+            Directory.Delete(_root, true);
+        }
+
+        GC.SuppressFinalize(this);
+    }
+
     [Fact]
     public void ConfigureContainer_RegistersCoreServicesAndConfig()
     {
         using var container = new Container();
-        var context = MoongateBootstrap.CreateContext(new([], _root, false, false));
+        var context = MoongateBootstrap.CreateContext(new MoongateBootstrapOptions([], _root, false, false));
         WriteTestConfig(context);
 
         MoongateBootstrap.ConfigureContainer(container, context);
@@ -77,16 +87,6 @@ public sealed class MoongateBootstrapTests : IDisposable
         Assert.True(context.RegisteredPacketCount > 0);
         Assert.NotNull(context.PacketRegistry);
         Assert.True(Directory.Exists(context.Directories[DirectoryType.Config]));
-    }
-
-    public void Dispose()
-    {
-        if (Directory.Exists(_root))
-        {
-            Directory.Delete(_root, true);
-        }
-
-        GC.SuppressFinalize(this);
     }
 
     [Fact]

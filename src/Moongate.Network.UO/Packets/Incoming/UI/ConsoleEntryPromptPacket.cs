@@ -7,17 +7,19 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Incoming.UI;
 
 /// <summary>
-/// Represents a console entry prompt response packet.
+///     Represents a console entry prompt response packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Variable, Description = "Console Entry Prompt")]
 public class ConsoleEntryPromptPacket : BaseGameNetworkPacket
 {
     private const byte OpCodeValue = 0x9A;
 
-    public byte[] Payload { get; private set; } = [];
-
     public ConsoleEntryPromptPacket()
-        : base(OpCodeValue) { }
+        : base(OpCodeValue)
+    {
+    }
+
+    public byte[] Payload { get; private set; } = [];
 
     protected override bool ParsePayload(ref SpanReader reader)
     {

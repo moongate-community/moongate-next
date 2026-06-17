@@ -3,6 +3,7 @@ using Moongate.Server.Services.Loot;
 using Moongate.Server.Services.Templates;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Interfaces.Services;
+using Moongate.UO.Data.Templates.Items;
 using Moongate.UO.Data.Templates.Loot;
 using ShaiRandom.Generators;
 
@@ -10,49 +11,6 @@ namespace Moongate.Tests.Server.Loot;
 
 public sealed class LootServiceTests
 {
-    private sealed class FakeItemFactory : IItemFactoryService
-    {
-        private readonly IItemTemplateService _templates;
-        private uint _next = Serial.ItemOffset + 1;
-
-        public List<ItemEntity> Created { get; } = [];
-
-        public FakeItemFactory(IItemTemplateService templates)
-        {
-            _templates = templates;
-        }
-
-        public ValueTask<ItemEntity> CreateFromTemplateAsync(
-            string templateId,
-            CancellationToken cancellationToken = default
-        )
-            => CreateFromTemplateAsync(templateId, 1, cancellationToken);
-
-        public ValueTask<ItemEntity> CreateFromTemplateAsync(
-            string templateId,
-            int amount,
-            CancellationToken cancellationToken = default
-        )
-        {
-            if (!_templates.TryGet(templateId, out var template))
-            {
-                throw new InvalidOperationException($"Item template '{templateId}' not found.");
-            }
-
-            var item = new ItemEntity
-            {
-                Id = new(_next++),
-                ItemId = template.ItemId,
-                Amount = amount,
-                IsStackable = template.IsStackable
-            };
-
-            Created.Add(item);
-
-            return ValueTask.FromResult(item);
-        }
-    }
-
     [Fact]
     public async Task GenerateAsync_Category_DrawsFromTag()
     {
@@ -117,7 +75,7 @@ public sealed class LootServiceTests
         var service = NewService(
             templates,
             3UL,
-            Table("t", new LootNode { Item = "apple", Amount = new(3, 3) })
+            Table("t", new LootNode { Item = "apple", Amount = new LootAmount(3, 3) })
         );
 
         var items = await service.GenerateAsync("t");
@@ -138,8 +96,8 @@ public sealed class LootServiceTests
             {
                 PickOneOf =
                 [
-                    new() { Item = "apple", Weight = 1 },
-                    new() { Item = "dagger", Weight = 9 }
+                    new LootNode { Item = "apple", Weight = 1 },
+                    new LootNode { Item = "dagger", Weight = 9 }
                 ]
             };
             var service = NewService(templates, seed, Table("t", pick));
@@ -162,7 +120,7 @@ public sealed class LootServiceTests
         var templates = Templates();
         var pick = new LootNode
         {
-            PickOneOf = [new() { Item = "apple" }, new() { Item = "dagger" }]
+            PickOneOf = [new LootNode { Item = "apple" }, new LootNode { Item = "dagger" }]
         };
         var service = NewService(templates, 11UL, Table("t", pick));
 
@@ -176,7 +134,7 @@ public sealed class LootServiceTests
         var service = NewService(
             templates,
             7UL,
-            Table("t", new LootNode { Item = "gold_coin", Amount = new(1, 100) })
+            Table("t", new LootNode { Item = "gold_coin", Amount = new LootAmount(1, 100) })
         );
 
         var items = await service.GenerateAsync("t");
@@ -199,30 +157,77 @@ public sealed class LootServiceTests
         var factory = new FakeItemFactory(templates);
         var service = new LootService(
             templates,
-            new(() => factory),
+            new Lazy<IItemFactoryService>(() => factory),
             new MizuchiRandom(seed, 1UL)
         );
-        service.SetRegistry(new(tables, templates.GetAll()));
+        service.SetRegistry(new LootTableRegistry(tables, templates.GetAll()));
 
         return service;
     }
 
     private static LootTableDefinition Table(string id, params LootNode[] content)
-        => new() { Id = id, Content = [.. content] };
+    {
+        return new LootTableDefinition { Id = id, Content = [.. content] };
+    }
 
     private static ItemTemplateService Templates()
     {
         var registry = new ItemTemplateService();
         registry.UpsertRange(
             [
-                new() { Id = "gold_coin", ItemId = 3821, IsStackable = true, Tags = ["currency"] },
-                new() { Id = "apple", ItemId = 2512, Tags = ["food"] },
-                new() { Id = "bread_loaf", ItemId = 4155, Tags = ["food"] },
-                new() { Id = "leather_cap", ItemId = 7609, Tags = ["armor"] },
-                new() { Id = "dagger", ItemId = 3922, Tags = ["weapon"] }
+                new ItemTemplateDefinition { Id = "gold_coin", ItemId = 3821, IsStackable = true, Tags = ["currency"] },
+                new ItemTemplateDefinition { Id = "apple", ItemId = 2512, Tags = ["food"] },
+                new ItemTemplateDefinition { Id = "bread_loaf", ItemId = 4155, Tags = ["food"] },
+                new ItemTemplateDefinition { Id = "leather_cap", ItemId = 7609, Tags = ["armor"] },
+                new ItemTemplateDefinition { Id = "dagger", ItemId = 3922, Tags = ["weapon"] }
             ]
         );
 
         return registry;
+    }
+
+    private sealed class FakeItemFactory : IItemFactoryService
+    {
+        private readonly IItemTemplateService _templates;
+        private uint _next = Serial.ItemOffset + 1;
+
+        public FakeItemFactory(IItemTemplateService templates)
+        {
+            _templates = templates;
+        }
+
+        public List<ItemEntity> Created { get; } = [];
+
+        public ValueTask<ItemEntity> CreateFromTemplateAsync(
+            string templateId,
+            CancellationToken cancellationToken = default
+        )
+        {
+            return CreateFromTemplateAsync(templateId, 1, cancellationToken);
+        }
+
+        public ValueTask<ItemEntity> CreateFromTemplateAsync(
+            string templateId,
+            int amount,
+            CancellationToken cancellationToken = default
+        )
+        {
+            if (!_templates.TryGet(templateId, out var template))
+            {
+                throw new InvalidOperationException($"Item template '{templateId}' not found.");
+            }
+
+            var item = new ItemEntity
+            {
+                Id = new Serial(_next++),
+                ItemId = template.ItemId,
+                Amount = amount,
+                IsStackable = template.IsStackable
+            };
+
+            Created.Add(item);
+
+            return ValueTask.FromResult(item);
+        }
     }
 }

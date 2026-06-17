@@ -5,17 +5,10 @@ using Moongate.Core.Types;
 namespace Moongate.UO.Domain.Events;
 
 /// <summary>
-/// Async event published after a user account's profile has been updated.
+///     Async event published after a user account's profile has been updated.
 /// </summary>
 public sealed record UserUpdatedEvent : IAsyncEvent
 {
-    public Serial UserId { get; }
-    public string Username { get; }
-    public string Email { get; }
-    public UserLevelType Level { get; }
-    public bool IsActive { get; }
-    public DateTimeOffset At { get; }
-
     public UserUpdatedEvent(
         Serial userId,
         string username,
@@ -34,4 +27,11 @@ public sealed record UserUpdatedEvent : IAsyncEvent
         IsActive = isActive;
         At = at;
     }
+
+    public Serial UserId { get; }
+    public string Username { get; }
+    public string Email { get; }
+    public UserLevelType Level { get; }
+    public bool IsActive { get; }
+    public DateTimeOffset At { get; }
 }

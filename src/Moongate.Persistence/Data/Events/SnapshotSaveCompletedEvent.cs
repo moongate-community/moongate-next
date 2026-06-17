@@ -3,15 +3,10 @@ using Moongate.Abstractions.Interfaces.Events;
 namespace Moongate.Persistence.Data.Events;
 
 /// <summary>
-/// Async event published after a persistence snapshot completes successfully.
+///     Async event published after a persistence snapshot completes successfully.
 /// </summary>
 public sealed record SnapshotSaveCompletedEvent : IAsyncEvent
 {
-    public long LastSequenceId { get; }
-    public int EntityBucketCount { get; }
-    public DateTimeOffset StartedAt { get; }
-    public DateTimeOffset At { get; }
-
     public SnapshotSaveCompletedEvent(
         long lastSequenceId,
         int entityBucketCount,
@@ -24,4 +19,9 @@ public sealed record SnapshotSaveCompletedEvent : IAsyncEvent
         StartedAt = startedAt;
         At = at;
     }
+
+    public long LastSequenceId { get; }
+    public int EntityBucketCount { get; }
+    public DateTimeOffset StartedAt { get; }
+    public DateTimeOffset At { get; }
 }

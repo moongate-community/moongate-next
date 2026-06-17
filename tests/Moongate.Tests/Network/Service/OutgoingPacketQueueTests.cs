@@ -6,18 +6,6 @@ namespace Moongate.Tests.Network.Service;
 
 public class OutgoingPacketQueueTests
 {
-    private sealed class TestOutgoingPacket : BaseGameNetworkPacket
-    {
-        public TestOutgoingPacket(byte opCode)
-            : base(opCode, 1) { }
-
-        public override void Write(ref SpanWriter writer)
-            => writer.Write(OpCode);
-
-        protected override bool ParsePayload(ref SpanReader reader)
-            => true;
-    }
-
     [Fact]
     public void Drain_InvalidMaxItems_Throws()
     {
@@ -82,5 +70,23 @@ public class OutgoingPacketQueueTests
         var exception = Record.Exception(() => queue.Enqueue<TestOutgoingPacket>(1, null!));
 
         Assert.IsType<ArgumentNullException>(exception);
+    }
+
+    private sealed class TestOutgoingPacket : BaseGameNetworkPacket
+    {
+        public TestOutgoingPacket(byte opCode)
+            : base(opCode, 1)
+        {
+        }
+
+        public override void Write(ref SpanWriter writer)
+        {
+            writer.Write(OpCode);
+        }
+
+        protected override bool ParsePayload(ref SpanReader reader)
+        {
+            return true;
+        }
     }
 }

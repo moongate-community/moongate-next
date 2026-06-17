@@ -10,31 +10,24 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.Templates;
 
 /// <summary>
-/// Loads item template YAML files from a directory, resolving the
-/// <c>base_item</c> inheritance chain and validating the whole set. Any
-/// invalid file or template throws so the server fails fast at boot.
-/// A missing or empty directory is a warning, not an error.
+///     Loads item template YAML files from a directory, resolving the
+///     <c>base_item</c> inheritance chain and validating the whole set. Any
+///     invalid file or template throws so the server fails fast at boot.
+///     A missing or empty directory is a warning, not an error.
 /// </summary>
 /// <remarks>
-/// Inheritance uses default-value sentinels: a child field at its default
-/// (0, false, empty, Common rarity) inherits the parent value, so a child cannot
-/// explicitly re-state a default over a non-default parent value
-/// (e.g. <c>hue: 0</c> over a parent's <c>hue: 7</c>, or <c>amount: 1</c>
-/// over a parent's <c>amount: 5</c>). Deliberate KISS tradeoff; if explicit
-/// overrides become necessary, switch the DTO fields to nullables.
+///     Inheritance uses default-value sentinels: a child field at its default
+///     (0, false, empty, Common rarity) inherits the parent value, so a child cannot
+///     explicitly re-state a default over a non-default parent value
+///     (e.g. <c>hue: 0</c> over a parent's <c>hue: 7</c>, or <c>amount: 1</c>
+///     over a parent's <c>amount: 5</c>). Deliberate KISS tradeoff; if explicit
+///     overrides become necessary, switch the DTO fields to nullables.
 /// </remarks>
 public sealed class ItemTemplateYamlLoader
 {
-    private enum ResolveState : byte
-    {
-        Unvisited = 0,
-        Visiting = 1,
-        Done = 2
-    }
-
     private readonly ILogger _logger = Log.ForContext<ItemTemplateYamlLoader>();
-    private readonly ITileDataStore? _tileData;
     private readonly string _templatesDirectory;
+    private readonly ITileDataStore? _tileData;
 
     public ItemTemplateYamlLoader(string templatesDirectory, ITileDataStore? tileData = null)
     {
@@ -57,8 +50,8 @@ public sealed class ItemTemplateYamlLoader
         }
 
         var files = Directory.GetFiles(_templatesDirectory, "*.yaml", SearchOption.AllDirectories)
-                             .OrderBy(static path => path, StringComparer.OrdinalIgnoreCase)
-                             .ToArray();
+            .OrderBy(static path => path, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
 
         if (files.Length == 0)
         {
@@ -102,7 +95,7 @@ public sealed class ItemTemplateYamlLoader
 
                 // YamlDotNet replaces the pre-initialized dictionary, dropping its
                 // case-insensitive comparer; rebuild so param keys stay case-insensitive.
-                template.Params = new(
+                template.Params = new Dictionary<string, ItemTemplateParamDefinition>(
                     template.Params ?? new Dictionary<string, ItemTemplateParamDefinition>(),
                     StringComparer.OrdinalIgnoreCase
                 );
@@ -131,9 +124,11 @@ public sealed class ItemTemplateYamlLoader
     }
 
     internal static long ParseLong(string value)
-        => value.StartsWith("0x", StringComparison.OrdinalIgnoreCase)
-               ? Convert.ToInt64(value[2..], 16)
-               : long.Parse(value, CultureInfo.InvariantCulture);
+    {
+        return value.StartsWith("0x", StringComparison.OrdinalIgnoreCase)
+            ? Convert.ToInt64(value[2..], 16)
+            : long.Parse(value, CultureInfo.InvariantCulture);
+    }
 
     private static void ApplyInheritance(ItemTemplateDefinition parent, ItemTemplateDefinition child)
     {
@@ -200,12 +195,12 @@ public sealed class ItemTemplateYamlLoader
 
         if (child.Tags.Count == 0 && parent.Tags.Count > 0)
         {
-            child.Tags = [..parent.Tags];
+            child.Tags = [.. parent.Tags];
         }
 
         if (child.GraphicVariants.Count == 0 && parent.GraphicVariants.Count > 0)
         {
-            child.GraphicVariants = [..parent.GraphicVariants.Select(CloneGraphicVariant)];
+            child.GraphicVariants = [.. parent.GraphicVariants.Select(CloneGraphicVariant)];
         }
 
         child.Params = MergeParams(parent.Params, child.Params);
@@ -235,7 +230,8 @@ public sealed class ItemTemplateYamlLoader
     }
 
     private static ItemTemplateContentsDefinition CloneContents(ItemTemplateContentsDefinition contents)
-        => new()
+    {
+        return new ItemTemplateContentsDefinition
         {
             LootTemplate = contents.LootTemplate,
             Generate = contents.Generate,
@@ -243,25 +239,32 @@ public sealed class ItemTemplateYamlLoader
             RefillPolicy = contents.RefillPolicy,
             RefillScope = contents.RefillScope
         };
+    }
 
     private static ItemTemplateGraphicVariantDefinition CloneGraphicVariant(ItemTemplateGraphicVariantDefinition variant)
-        => new()
+    {
+        return new ItemTemplateGraphicVariantDefinition
         {
             ItemId = variant.ItemId
         };
+    }
 
     private static ItemTemplateParamDefinition CloneParam(ItemTemplateParamDefinition param)
-        => new()
+    {
+        return new ItemTemplateParamDefinition
         {
             Type = param.Type,
             Value = param.Value
         };
+    }
 
     private static bool IsReservedParamKey(string key)
-        => string.Equals(key, ItemTemplateDefinition.ReservedIsMovableParamKey, StringComparison.OrdinalIgnoreCase) ||
-           string.Equals(key, ItemTemplateDefinitionKeys.TemplateId, StringComparison.OrdinalIgnoreCase) ||
-           string.Equals(key, ItemTemplateDefinitionKeys.ContentsGeneratedAt, StringComparison.OrdinalIgnoreCase) ||
-           string.Equals(key, ItemTemplateDefinitionKeys.ContentsNextRefillAt, StringComparison.OrdinalIgnoreCase);
+    {
+        return string.Equals(key, ItemTemplateDefinition.ReservedIsMovableParamKey, StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(key, ItemTemplateDefinitionKeys.TemplateId, StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(key, ItemTemplateDefinitionKeys.ContentsGeneratedAt, StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(key, ItemTemplateDefinitionKeys.ContentsNextRefillAt, StringComparison.OrdinalIgnoreCase);
+    }
 
     private static Dictionary<string, ItemTemplateParamDefinition> MergeParams(
         Dictionary<string, ItemTemplateParamDefinition> parentParams,
@@ -420,5 +423,12 @@ public sealed class ItemTemplateYamlLoader
                 }
             }
         }
+    }
+
+    private enum ResolveState : byte
+    {
+        Unvisited = 0,
+        Visiting = 1,
+        Done = 2
     }
 }

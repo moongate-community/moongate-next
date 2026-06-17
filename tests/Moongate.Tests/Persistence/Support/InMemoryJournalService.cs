@@ -22,7 +22,9 @@ internal sealed class InMemoryJournalService : IJournalService
     }
 
     public ValueTask<IReadOnlyCollection<JournalEntry>> ReadAllAsync(CancellationToken cancellationToken = default)
-        => ValueTask.FromResult<IReadOnlyCollection<JournalEntry>>(Entries.ToArray());
+    {
+        return ValueTask.FromResult<IReadOnlyCollection<JournalEntry>>(Entries.ToArray());
+    }
 
     public ValueTask ResetAsync(CancellationToken cancellationToken = default)
     {

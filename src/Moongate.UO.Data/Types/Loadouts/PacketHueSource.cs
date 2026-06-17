@@ -1,7 +1,7 @@
 namespace Moongate.UO.Data.Types.Loadouts;
 
 /// <summary>
-/// Declares which character-creation (0xF8) packet hue applies to a loadout equip entry.
+///     Declares which character-creation (0xF8) packet hue applies to a loadout equip entry.
 /// </summary>
 public enum PacketHueSource : byte
 {

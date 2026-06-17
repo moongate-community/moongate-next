@@ -1,7 +1,7 @@
 namespace Moongate.UO.Data.Types.Maps;
 
 /// <summary>
-/// Standard Ultima Online map facets.
+///     Standard Ultima Online map facets.
 /// </summary>
 public enum UoMapFacetType
 {

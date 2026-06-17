@@ -14,9 +14,10 @@ public class TextEncodingTests
 
     [Fact]
     public void GetByteLengthForEncoding_Utf32_ReturnsFour()
-
-        // Regression: UTF-32 was previously reported as 3 bytes, breaking buffer sizing.
-        => Assert.Equal(4, Encoding.UTF32.GetByteLengthForEncoding());
+    // Regression: UTF-32 was previously reported as 3 bytes, breaking buffer sizing.
+    {
+        Assert.Equal(4, Encoding.UTF32.GetByteLengthForEncoding());
+    }
 
     [Fact]
     public void GetByteLengthForEncoding_Utf8_ReturnsOne()
@@ -27,7 +28,9 @@ public class TextEncodingTests
 
     [Fact]
     public void GetBytesUtf8_EmptyString_ReturnsEmptyArray()
-        => Assert.Empty("".GetBytesUtf8());
+    {
+        Assert.Empty("".GetBytesUtf8());
+    }
 
     [Fact]
     public void GetBytesUtf8_Span_WritesIntoBuffer()

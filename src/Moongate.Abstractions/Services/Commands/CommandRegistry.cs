@@ -5,22 +5,22 @@ using Moongate.Abstractions.Types.Commands;
 namespace Moongate.Abstractions.Services.Commands;
 
 /// <summary>
-/// Thread-safe command registry shared by built-in server code and trusted plugins.
+///     Thread-safe command registry shared by built-in server code and trusted plugins.
 /// </summary>
 public sealed class CommandRegistry : ICommandRegistry
 {
-    private readonly Lock _sync = new();
     private readonly Dictionary<string, CommandDefinition> _commands = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Lock _sync = new();
 
     public IReadOnlyList<CommandDefinition> GetRegisteredCommands()
     {
         lock (_sync)
         {
             return _commands
-                   .Values
-                   .Distinct()
-                   .OrderBy(static command => command.Name, StringComparer.OrdinalIgnoreCase)
-                   .ToArray();
+                .Values
+                .Distinct()
+                .OrderBy(static command => command.Name, StringComparer.OrdinalIgnoreCase)
+                .ToArray();
         }
     }
 
@@ -36,10 +36,10 @@ public sealed class CommandRegistry : ICommandRegistry
         ArgumentNullException.ThrowIfNull(handler);
 
         var aliases = commandName
-                      .Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                      .Select(static alias => alias.ToLowerInvariant())
-                      .Distinct(StringComparer.OrdinalIgnoreCase)
-                      .ToArray();
+            .Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Select(static alias => alias.ToLowerInvariant())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
 
         if (aliases.Length == 0)
         {

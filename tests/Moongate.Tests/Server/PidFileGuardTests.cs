@@ -6,6 +6,16 @@ public sealed class PidFileGuardTests : IDisposable
 {
     private readonly string _root = Path.Combine(Path.GetTempPath(), $"nr-pid-{Guid.NewGuid():N}");
 
+    public void Dispose()
+    {
+        if (Directory.Exists(_root))
+        {
+            Directory.Delete(_root, true);
+        }
+
+        GC.SuppressFinalize(this);
+    }
+
     [Fact]
     public void Acquire_ReplacesStalePid()
     {
@@ -23,8 +33,11 @@ public sealed class PidFileGuardTests : IDisposable
         Directory.CreateDirectory(_root);
         File.WriteAllText(Path.Combine(_root, "moongate.pid"), "456");
 
-        var ex = Assert.Throws<InvalidOperationException>(
-            () => PidFileGuard.Acquire(_root, static () => 123, static pid => pid == 456)
+        var ex = Assert.Throws<InvalidOperationException>(() => PidFileGuard.Acquire(
+                _root,
+                static () => 123,
+                static pid => pid == 456
+            )
         );
 
         Assert.Contains("PID 456", ex.Message);
@@ -38,16 +51,6 @@ public sealed class PidFileGuardTests : IDisposable
         var pidPath = Path.Combine(_root, "moongate.pid");
 
         Assert.Equal("123", File.ReadAllText(pidPath).Trim());
-    }
-
-    public void Dispose()
-    {
-        if (Directory.Exists(_root))
-        {
-            Directory.Delete(_root, true);
-        }
-
-        GC.SuppressFinalize(this);
     }
 
     [Fact]

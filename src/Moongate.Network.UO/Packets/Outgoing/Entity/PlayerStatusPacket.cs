@@ -8,15 +8,13 @@ using Moongate.UO.Data.Types.Mobiles;
 namespace Moongate.Network.UO.Packets.Outgoing.Entity;
 
 /// <summary>
-/// Outgoing "Status Bar Info" (0x11), MVP version-1 layout: name, vitals, base stats.
+///     Outgoing "Status Bar Info" (0x11), MVP version-1 layout: name, vitals, base stats.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Variable, Description = "Status Bar Info")]
 public class PlayerStatusPacket : BaseGameNetworkPacket
 {
     private const byte OpCodeValue = 0x11;
     private const byte Version = 1;
-
-    public MobileEntity Mobile { get; }
 
     public PlayerStatusPacket(MobileEntity mobile)
         : base(OpCodeValue)
@@ -25,6 +23,8 @@ public class PlayerStatusPacket : BaseGameNetworkPacket
 
         Mobile = mobile;
     }
+
+    public MobileEntity Mobile { get; }
 
     public override void Write(ref SpanWriter writer)
     {
@@ -55,5 +55,7 @@ public class PlayerStatusPacket : BaseGameNetworkPacket
     }
 
     protected override bool ParsePayload(ref SpanReader reader)
-        => false;
+    {
+        return false;
+    }
 }

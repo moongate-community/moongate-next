@@ -3,12 +3,12 @@ using System.Reflection;
 namespace Moongate.Core.Utils;
 
 /// <summary>
-/// Provides utility methods for reading assembly version metadata.
+///     Provides utility methods for reading assembly version metadata.
 /// </summary>
 public static class VersionUtils
 {
     /// <summary>
-    /// Gets the value of an <see cref="AssemblyMetadataAttribute" /> by key from the specified assembly.
+    ///     Gets the value of an <see cref="AssemblyMetadataAttribute" /> by key from the specified assembly.
     /// </summary>
     /// <param name="assembly">The assembly to read metadata from.</param>
     /// <param name="key">The metadata key to look up.</param>
@@ -18,20 +18,22 @@ public static class VersionUtils
         ArgumentNullException.ThrowIfNull(assembly);
 
         return assembly.GetCustomAttributes<AssemblyMetadataAttribute>()
-                       .FirstOrDefault(a => string.Equals(a.Key, key, StringComparison.Ordinal))
-                       ?.Value ??
+                   .FirstOrDefault(a => string.Equals(a.Key, key, StringComparison.Ordinal))
+                   ?.Value ??
                "";
     }
 
     /// <summary>
-    /// Gets the informational version for the Moongate.Core assembly.
+    ///     Gets the informational version for the Moongate.Core assembly.
     /// </summary>
     /// <returns>The package version declared for Moongate.Core.</returns>
     public static string GetVersion()
-        => GetVersion(typeof(VersionUtils).Assembly);
+    {
+        return GetVersion(typeof(VersionUtils).Assembly);
+    }
 
     /// <summary>
-    /// Gets the informational version for the specified assembly.
+    ///     Gets the informational version for the specified assembly.
     /// </summary>
     /// <param name="assembly">The assembly to read version metadata from.</param>
     /// <returns>The assembly informational version, or the assembly version when informational metadata is unavailable.</returns>
@@ -40,7 +42,7 @@ public static class VersionUtils
         ArgumentNullException.ThrowIfNull(assembly);
 
         var informationalVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                                           ?.InformationalVersion;
+            ?.InformationalVersion;
 
         if (!string.IsNullOrWhiteSpace(informationalVersion))
         {

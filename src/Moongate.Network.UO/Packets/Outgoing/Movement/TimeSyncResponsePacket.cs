@@ -6,17 +6,13 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Outgoing.Movement;
 
 /// <summary>
-/// Represents a time sync response packet.
+///     Represents a time sync response packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Time Sync Response")]
 public class TimeSyncResponsePacket : BaseGameNetworkPacket
 {
     private const byte OpCodeValue = 0xF2;
     private const int LengthValue = 13;
-
-    public int Tick1 { get; set; }
-    public int Tick2 { get; set; }
-    public int Tick3 { get; set; }
 
     public TimeSyncResponsePacket()
         : base(OpCodeValue, LengthValue)
@@ -34,6 +30,10 @@ public class TimeSyncResponsePacket : BaseGameNetworkPacket
         Tick2 = tick2;
         Tick3 = tick3;
     }
+
+    public int Tick1 { get; set; }
+    public int Tick2 { get; set; }
+    public int Tick3 { get; set; }
 
     public override void Write(ref SpanWriter writer)
     {

@@ -4,6 +4,7 @@ using Moongate.Abstractions.Interfaces.Services;
 using Moongate.Core.Ids;
 using Moongate.Core.Types;
 using Moongate.Core.Utils;
+using Moongate.Persistence.Data;
 using Moongate.Persistence.Interfaces.Persistence;
 using Moongate.Server.Extensions.Configuration;
 using Moongate.Server.Extensions.EventBus;
@@ -22,77 +23,14 @@ public sealed class UserServiceTests : IDisposable
     private readonly string _dir = Path.Combine(Path.GetTempPath(), $"nr-users-{Guid.NewGuid():N}");
     private string ConfigPath => Path.Combine(_dir, "moongate.yaml");
 
-    private sealed class CapturingEventBusService : IEventBusService
+    public void Dispose()
     {
-        public List<IAsyncEvent> AsyncEvents { get; } = [];
-        public Action<Type, Exception, IMoongateEvent>? OnEventError { get; set; }
-        public int CurrentTickQueueDepth => 0;
-
-        public int DrainTickEvents(int maxItems)
-            => 0;
-
-        public void Publish<TEvent>(TEvent evt)
-            where TEvent : ITickEvent { }
-
-        public Task PublishAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
-            where TEvent : IAsyncEvent
+        if (Directory.Exists(_dir))
         {
-            AsyncEvents.Add(evt);
-
-            return Task.CompletedTask;
+            Directory.Delete(_dir, true);
         }
 
-        public Task StartAsync(CancellationToken cancellationToken)
-            => Task.CompletedTask;
-
-        public Task StopAsync(CancellationToken cancellationToken)
-            => Task.CompletedTask;
-    }
-
-    private sealed class FakeUserAccess : IAutoDataAccess<UserEntity, Serial>
-    {
-        private readonly Dictionary<Serial, UserEntity> _users = [];
-        private uint _nextId = 1;
-
-        public IReadOnlyCollection<UserEntity> Users => _users.Values.ToArray();
-
-        public void Add(UserEntity user)
-        {
-            _users[user.Id] = Clone(user);
-
-            if (user.Id.Value >= _nextId)
-            {
-                _nextId = user.Id.Value + 1;
-            }
-        }
-
-        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(_users.Count);
-
-        public ValueTask<IReadOnlyCollection<UserEntity>> GetAllAsync(CancellationToken cancellationToken = default)
-            => ValueTask.FromResult<IReadOnlyCollection<UserEntity>>(_users.Values.Select(Clone).ToArray());
-
-        public ValueTask<UserEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(_users.TryGetValue(id, out var user) ? Clone(user) : null);
-
-        public ValueTask<Serial> NextIdAsync(CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(new Serial(_nextId++));
-
-        public IQueryable<UserEntity> Query()
-            => _users.Values.Select(Clone).AsQueryable();
-
-        public ValueTask<bool> RemoveAsync(Serial id, CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(_users.Remove(id));
-
-        public ValueTask UpsertAsync(UserEntity entity, CancellationToken cancellationToken = default)
-        {
-            _users[entity.Id] = Clone(entity);
-
-            return ValueTask.CompletedTask;
-        }
-
-        private static UserEntity Clone(UserEntity user)
-            => new(user.Id, user.Username, user.Email, user.Password, user.Level, user.IsActive, user.ActivationId);
+        GC.SuppressFinalize(this);
     }
 
     [Fact]
@@ -108,8 +46,8 @@ public sealed class UserServiceTests : IDisposable
     {
         var access = new FakeUserAccess();
         access.Add(
-            new(
-                new(9),
+            new UserEntity(
+                new Serial(9),
                 "pending",
                 "pending@realm.local",
                 HashUtils.HashPassword("secret"),
@@ -141,8 +79,8 @@ public sealed class UserServiceTests : IDisposable
     {
         var access = new FakeUserAccess();
         access.Add(
-            new(
-                new(9),
+            new UserEntity(
+                new Serial(9),
                 "pending",
                 "pending@realm.local",
                 HashUtils.HashPassword("secret"),
@@ -181,7 +119,7 @@ public sealed class UserServiceTests : IDisposable
 
             var user = await service.CreateAsync("ContainerUser", "container@test.local", "secret");
 
-            Assert.Equal(new(1), user.Id);
+            Assert.Equal(new Serial(1), user.Id);
             Assert.True(HashUtils.VerifyPassword("secret", user.Password));
         }
         finally
@@ -194,8 +132,26 @@ public sealed class UserServiceTests : IDisposable
     public async Task CountAsync_ReturnsPersistedUserCount()
     {
         var access = new FakeUserAccess();
-        access.Add(new(new(1), "one", "one@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, true));
-        access.Add(new(new(2), "two", "two@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, true));
+        access.Add(
+            new UserEntity(
+                new Serial(1),
+                "one",
+                "one@test.local",
+                HashUtils.HashPassword("secret"),
+                UserLevelType.Player,
+                true
+            )
+        );
+        access.Add(
+            new UserEntity(
+                new Serial(2),
+                "two",
+                "two@test.local",
+                HashUtils.HashPassword("secret"),
+                UserLevelType.Player,
+                true
+            )
+        );
         var service = new UserService(access, new CapturingEventBusService());
 
         var count = await service.CountAsync();
@@ -210,11 +166,11 @@ public sealed class UserServiceTests : IDisposable
         var service = new UserService(access, new CapturingEventBusService());
 
         var user = await service.CreateAsync(
-                       "Pending",
-                       "pending@test.local",
-                       "secret",
-                       activationId: "   "
-                   );
+            "Pending",
+            "pending@test.local",
+            "secret",
+            activationId: "   "
+        );
 
         Assert.Null(user.ActivationId);
         Assert.Null(Assert.Single(access.Users).ActivationId);
@@ -224,11 +180,20 @@ public sealed class UserServiceTests : IDisposable
     public async Task CreateAsync_DuplicateEmailCaseInsensitive_Throws()
     {
         var access = new FakeUserAccess();
-        access.Add(new(new(1), "first", "Taken@Realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
+        access.Add(
+            new UserEntity(
+                new Serial(1),
+                "first",
+                "Taken@Realm.local",
+                HashUtils.HashPassword("p"),
+                UserLevelType.Player,
+                true
+            )
+        );
         var service = new UserService(access, new CapturingEventBusService());
 
-        await Assert.ThrowsAsync<InvalidOperationException>(
-            async () => await service.CreateAsync("second", "taken@realm.local", "secret")
+        await Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            await service.CreateAsync("second", "taken@realm.local", "secret")
         );
     }
 
@@ -236,12 +201,21 @@ public sealed class UserServiceTests : IDisposable
     public async Task CreateAsync_DuplicateUsernameCaseInsensitive_ThrowsAndDoesNotPublish()
     {
         var access = new FakeUserAccess();
-        access.Add(new(new(7), "Arthorius", "art@test.local", HashUtils.HashPassword("old"), UserLevelType.Player, true));
+        access.Add(
+            new UserEntity(
+                new Serial(7),
+                "Arthorius",
+                "art@test.local",
+                HashUtils.HashPassword("old"),
+                UserLevelType.Player,
+                true
+            )
+        );
         var bus = new CapturingEventBusService();
         var service = new UserService(access, bus);
 
-        await Assert.ThrowsAsync<InvalidOperationException>(
-            async () => await service.CreateAsync("arthorius", "dupe@test.local", "secret")
+        await Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            await service.CreateAsync("arthorius", "dupe@test.local", "secret")
         );
 
         Assert.Single(access.Users);
@@ -257,7 +231,7 @@ public sealed class UserServiceTests : IDisposable
 
         var user = await service.CreateAsync("Arthorius", "arthorius@test.local", "secret", UserLevelType.GameMaster);
 
-        Assert.Equal(new(1), user.Id);
+        Assert.Equal(new Serial(1), user.Id);
         Assert.Equal("Arthorius", user.Username);
         Assert.Equal(UserLevelType.GameMaster, user.Level);
         Assert.True(user.IsActive);
@@ -292,13 +266,13 @@ public sealed class UserServiceTests : IDisposable
         var service = new UserService(access, bus);
 
         var user = await service.CreateAsync(
-                       "Pending",
-                       "pending@test.local",
-                       "secret",
-                       UserLevelType.Player,
-                       false,
-                       "  activation-token  "
-                   );
+            "Pending",
+            "pending@test.local",
+            "secret",
+            UserLevelType.Player,
+            false,
+            "  activation-token  "
+        );
 
         Assert.Equal("activation-token", user.ActivationId);
         Assert.Equal("activation-token", Assert.Single(access.Users).ActivationId);
@@ -311,16 +285,18 @@ public sealed class UserServiceTests : IDisposable
     public async Task DeleteAsync_RemovesUser_PublishesDeletedEvent_ReturnsTrue()
     {
         var access = new FakeUserAccess();
-        access.Add(new(new(11), "zed", "z@realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
+        access.Add(
+            new UserEntity(new Serial(11), "zed", "z@realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true)
+        );
         var bus = new CapturingEventBusService();
         var service = new UserService(access, bus);
 
-        var deleted = await service.DeleteAsync(new(11));
+        var deleted = await service.DeleteAsync(new Serial(11));
 
         Assert.True(deleted);
         Assert.Empty(access.Users);
         var evt = Assert.Single(bus.AsyncEvents.OfType<UserDeletedEvent>());
-        Assert.Equal(new(11), evt.UserId);
+        Assert.Equal(new Serial(11), evt.UserId);
     }
 
     [Fact]
@@ -328,17 +304,7 @@ public sealed class UserServiceTests : IDisposable
     {
         var service = new UserService(new FakeUserAccess(), new CapturingEventBusService());
 
-        Assert.False(await service.DeleteAsync(new(404)));
-    }
-
-    public void Dispose()
-    {
-        if (Directory.Exists(_dir))
-        {
-            Directory.Delete(_dir, true);
-        }
-
-        GC.SuppressFinalize(this);
+        Assert.False(await service.DeleteAsync(new Serial(404)));
     }
 
     [Fact]
@@ -346,27 +312,40 @@ public sealed class UserServiceTests : IDisposable
     {
         var access = new FakeUserAccess();
         access.Add(
-            new(new(42), "Arthorius", "art@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, true)
+            new UserEntity(
+                new Serial(42),
+                "Arthorius",
+                "art@test.local",
+                HashUtils.HashPassword("secret"),
+                UserLevelType.Player,
+                true
+            )
         );
         var service = new UserService(access, new CapturingEventBusService());
 
         var user = await service.GetByUsernameAsync("arthorius");
 
         Assert.NotNull(user);
-        Assert.Equal(new(42), user!.Id);
+        Assert.Equal(new Serial(42), user!.Id);
     }
 
     [Fact]
     public async Task ListAsync_PaginatesAndReportsTotalOrderedByUsername()
     {
         var access = new FakeUserAccess();
-        access.Add(new(new(3), "carol", "c@x.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
-        access.Add(new(new(1), "alice", "a@x.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
-        access.Add(new(new(2), "bob", "b@x.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
+        access.Add(
+            new UserEntity(new Serial(3), "carol", "c@x.local", HashUtils.HashPassword("p"), UserLevelType.Player, true)
+        );
+        access.Add(
+            new UserEntity(new Serial(1), "alice", "a@x.local", HashUtils.HashPassword("p"), UserLevelType.Player, true)
+        );
+        access.Add(
+            new UserEntity(new Serial(2), "bob", "b@x.local", HashUtils.HashPassword("p"), UserLevelType.Player, true)
+        );
         var service = new UserService(access, new CapturingEventBusService());
 
-        var firstPage = await service.ListAsync(new(1, 2, null));
-        var secondPage = await service.ListAsync(new(2, 2, null));
+        var firstPage = await service.ListAsync(new PageRequest(1, 2, null));
+        var secondPage = await service.ListAsync(new PageRequest(2, 2, null));
 
         Assert.Equal(3, firstPage.TotalCount);
         Assert.Equal(["alice", "bob"], firstPage.Items.Select(u => u.Username));
@@ -377,22 +356,52 @@ public sealed class UserServiceTests : IDisposable
     public async Task ListAsync_SearchMatchesUsernameOrEmail_CaseInsensitive()
     {
         var access = new FakeUserAccess();
-        access.Add(new(new(1), "Arthorius", "art@realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
-        access.Add(new(new(2), "Bob", "bob@elsewhere.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
+        access.Add(
+            new UserEntity(
+                new Serial(1),
+                "Arthorius",
+                "art@realm.local",
+                HashUtils.HashPassword("p"),
+                UserLevelType.Player,
+                true
+            )
+        );
+        access.Add(
+            new UserEntity(
+                new Serial(2),
+                "Bob",
+                "bob@elsewhere.local",
+                HashUtils.HashPassword("p"),
+                UserLevelType.Player,
+                true
+            )
+        );
         var service = new UserService(access, new CapturingEventBusService());
 
-        var byName = await service.ListAsync(new(1, 20, "arthor"));
-        var byEmail = await service.ListAsync(new(1, 20, "ELSEWHERE"));
+        var byName = await service.ListAsync(new PageRequest(1, 20, "arthor"));
+        var byEmail = await service.ListAsync(new PageRequest(1, 20, "ELSEWHERE"));
 
         Assert.Equal("Arthorius", Assert.Single(byName.Items).Username);
         Assert.Equal("Bob", Assert.Single(byEmail.Items).Username);
     }
 
-    [Theory, InlineData("", "secret"), InlineData("Arthorius", ""), InlineData("   ", "secret")]
+    [Theory]
+    [InlineData("", "secret")]
+    [InlineData("Arthorius", "")]
+    [InlineData("   ", "secret")]
     public async Task LoginAsync_BlankInput_ReturnsNull(string username, string password)
     {
         var access = new FakeUserAccess();
-        access.Add(new(new(1), "Arthorius", "art@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, true));
+        access.Add(
+            new UserEntity(
+                new Serial(1),
+                "Arthorius",
+                "art@test.local",
+                HashUtils.HashPassword("secret"),
+                UserLevelType.Player,
+                true
+            )
+        );
         var service = new UserService(access, new CapturingEventBusService());
 
         Assert.Null(await service.LoginAsync(username, password));
@@ -403,7 +412,14 @@ public sealed class UserServiceTests : IDisposable
     {
         var access = new FakeUserAccess();
         access.Add(
-            new(new(1), "Arthorius", "art@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, false)
+            new UserEntity(
+                new Serial(1),
+                "Arthorius",
+                "art@test.local",
+                HashUtils.HashPassword("secret"),
+                UserLevelType.Player,
+                false
+            )
         );
         var service = new UserService(access, new CapturingEventBusService());
 
@@ -422,20 +438,38 @@ public sealed class UserServiceTests : IDisposable
     public async Task LoginAsync_ValidActiveCredentials_ReturnsUser()
     {
         var access = new FakeUserAccess();
-        access.Add(new(new(1), "Arthorius", "art@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, true));
+        access.Add(
+            new UserEntity(
+                new Serial(1),
+                "Arthorius",
+                "art@test.local",
+                HashUtils.HashPassword("secret"),
+                UserLevelType.Player,
+                true
+            )
+        );
         var service = new UserService(access, new CapturingEventBusService());
 
         var user = await service.LoginAsync("arthorius", "secret");
 
         Assert.NotNull(user);
-        Assert.Equal(new(1), user!.Id);
+        Assert.Equal(new Serial(1), user!.Id);
     }
 
     [Fact]
     public async Task LoginAsync_WrongPassword_ReturnsNull()
     {
         var access = new FakeUserAccess();
-        access.Add(new(new(1), "Arthorius", "art@test.local", HashUtils.HashPassword("secret"), UserLevelType.Player, true));
+        access.Add(
+            new UserEntity(
+                new Serial(1),
+                "Arthorius",
+                "art@test.local",
+                HashUtils.HashPassword("secret"),
+                UserLevelType.Player,
+                true
+            )
+        );
         var service = new UserService(access, new CapturingEventBusService());
 
         Assert.Null(await service.LoginAsync("Arthorius", "wrong"));
@@ -445,20 +479,24 @@ public sealed class UserServiceTests : IDisposable
     public async Task ResetPasswordAsync_EmptyPassword_Throws()
     {
         var access = new FakeUserAccess();
-        access.Add(new(new(9), "ivo", "i@realm.local", HashUtils.HashPassword("old"), UserLevelType.Player, true));
+        access.Add(
+            new UserEntity(new Serial(9), "ivo", "i@realm.local", HashUtils.HashPassword("old"), UserLevelType.Player, true)
+        );
         var service = new UserService(access, new CapturingEventBusService());
 
-        await Assert.ThrowsAsync<ArgumentException>(async () => await service.ResetPasswordAsync(new(9), "  "));
+        await Assert.ThrowsAsync<ArgumentException>(async () => await service.ResetPasswordAsync(new Serial(9), "  "));
     }
 
     [Fact]
     public async Task ResetPasswordAsync_RehashesPassword_ReturnsTrue()
     {
         var access = new FakeUserAccess();
-        access.Add(new(new(9), "ivo", "i@realm.local", HashUtils.HashPassword("old"), UserLevelType.Player, true));
+        access.Add(
+            new UserEntity(new Serial(9), "ivo", "i@realm.local", HashUtils.HashPassword("old"), UserLevelType.Player, true)
+        );
         var service = new UserService(access, new CapturingEventBusService());
 
-        var changed = await service.ResetPasswordAsync(new(9), "fresh");
+        var changed = await service.ResetPasswordAsync(new Serial(9), "fresh");
 
         Assert.True(changed);
         Assert.True(HashUtils.VerifyPassword("fresh", Assert.Single(access.Users).Password));
@@ -469,18 +507,20 @@ public sealed class UserServiceTests : IDisposable
     {
         var service = new UserService(new FakeUserAccess(), new CapturingEventBusService());
 
-        Assert.False(await service.ResetPasswordAsync(new(404), "fresh"));
+        Assert.False(await service.ResetPasswordAsync(new Serial(404), "fresh"));
     }
 
     [Fact]
     public async Task SetActiveAsync_TogglesIsActiveAndPublishesUpdate()
     {
         var access = new FakeUserAccess();
-        access.Add(new(new(8), "gwen", "g@realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
+        access.Add(
+            new UserEntity(new Serial(8), "gwen", "g@realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true)
+        );
         var bus = new CapturingEventBusService();
         var service = new UserService(access, bus);
 
-        var result = await service.SetActiveAsync(new(8), false);
+        var result = await service.SetActiveAsync(new Serial(8), false);
 
         Assert.NotNull(result);
         Assert.False(result!.IsActive);
@@ -493,18 +533,20 @@ public sealed class UserServiceTests : IDisposable
     {
         var service = new UserService(new FakeUserAccess(), new CapturingEventBusService());
 
-        Assert.Null(await service.SetActiveAsync(new(404), false));
+        Assert.Null(await service.SetActiveAsync(new Serial(404), false));
     }
 
     [Fact]
     public async Task UpdateAsync_ChangesEmailAndLevel_PublishesUpdatedEvent()
     {
         var access = new FakeUserAccess();
-        access.Add(new(new(5), "mara", "old@realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
+        access.Add(
+            new UserEntity(new Serial(5), "mara", "old@realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true)
+        );
         var bus = new CapturingEventBusService();
         var service = new UserService(access, bus);
 
-        var updated = await service.UpdateAsync(new(5), "new@realm.local", UserLevelType.GameMaster);
+        var updated = await service.UpdateAsync(new Serial(5), "new@realm.local", UserLevelType.GameMaster);
 
         Assert.NotNull(updated);
         Assert.Equal("new@realm.local", updated!.Email);
@@ -517,12 +559,16 @@ public sealed class UserServiceTests : IDisposable
     public async Task UpdateAsync_EmailTakenByAnotherUser_Throws()
     {
         var access = new FakeUserAccess();
-        access.Add(new(new(1), "a", "a@realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
-        access.Add(new(new(2), "b", "b@realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true));
+        access.Add(
+            new UserEntity(new Serial(1), "a", "a@realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true)
+        );
+        access.Add(
+            new UserEntity(new Serial(2), "b", "b@realm.local", HashUtils.HashPassword("p"), UserLevelType.Player, true)
+        );
         var service = new UserService(access, new CapturingEventBusService());
 
-        await Assert.ThrowsAsync<InvalidOperationException>(
-            async () => await service.UpdateAsync(new(2), "a@realm.local", UserLevelType.Player)
+        await Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            await service.UpdateAsync(new Serial(2), "a@realm.local", UserLevelType.Player)
         );
     }
 
@@ -531,8 +577,111 @@ public sealed class UserServiceTests : IDisposable
     {
         var service = new UserService(new FakeUserAccess(), new CapturingEventBusService());
 
-        var updated = await service.UpdateAsync(new(999), "x@realm.local", UserLevelType.Player);
+        var updated = await service.UpdateAsync(new Serial(999), "x@realm.local", UserLevelType.Player);
 
         Assert.Null(updated);
+    }
+
+    private sealed class CapturingEventBusService : IEventBusService
+    {
+        public List<IAsyncEvent> AsyncEvents { get; } = [];
+        public Action<Type, Exception, IMoongateEvent>? OnEventError { get; set; }
+        public int CurrentTickQueueDepth => 0;
+
+        public int DrainTickEvents(int maxItems)
+        {
+            return 0;
+        }
+
+        public void Publish<TEvent>(TEvent evt)
+            where TEvent : ITickEvent
+        {
+        }
+
+        public Task PublishAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
+            where TEvent : IAsyncEvent
+        {
+            AsyncEvents.Add(evt);
+
+            return Task.CompletedTask;
+        }
+
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class FakeUserAccess : IAutoDataAccess<UserEntity, Serial>
+    {
+        private readonly Dictionary<Serial, UserEntity> _users = [];
+        private uint _nextId = 1;
+
+        public IReadOnlyCollection<UserEntity> Users => _users.Values.ToArray();
+
+        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
+        {
+            return ValueTask.FromResult(_users.Count);
+        }
+
+        public ValueTask<IReadOnlyCollection<UserEntity>> GetAllAsync(CancellationToken cancellationToken = default)
+        {
+            return ValueTask.FromResult<IReadOnlyCollection<UserEntity>>(_users.Values.Select(Clone).ToArray());
+        }
+
+        public ValueTask<UserEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
+        {
+            return ValueTask.FromResult(_users.TryGetValue(id, out var user) ? Clone(user) : null);
+        }
+
+        public ValueTask<Serial> NextIdAsync(CancellationToken cancellationToken = default)
+        {
+            return ValueTask.FromResult(new Serial(_nextId++));
+        }
+
+        public IQueryable<UserEntity> Query()
+        {
+            return _users.Values.Select(Clone).AsQueryable();
+        }
+
+        public ValueTask<bool> RemoveAsync(Serial id, CancellationToken cancellationToken = default)
+        {
+            return ValueTask.FromResult(_users.Remove(id));
+        }
+
+        public ValueTask UpsertAsync(UserEntity entity, CancellationToken cancellationToken = default)
+        {
+            _users[entity.Id] = Clone(entity);
+
+            return ValueTask.CompletedTask;
+        }
+
+        public void Add(UserEntity user)
+        {
+            _users[user.Id] = Clone(user);
+
+            if (user.Id.Value >= _nextId)
+            {
+                _nextId = user.Id.Value + 1;
+            }
+        }
+
+        private static UserEntity Clone(UserEntity user)
+        {
+            return new UserEntity(
+                user.Id,
+                user.Username,
+                user.Email,
+                user.Password,
+                user.Level,
+                user.IsActive,
+                user.ActivationId
+            );
+        }
     }
 }

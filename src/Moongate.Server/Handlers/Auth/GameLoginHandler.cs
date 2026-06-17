@@ -20,15 +20,14 @@ namespace Moongate.Server.Handlers.Auth;
 [RegisterPacketHandler]
 public class GameLoginHandler : PacketHandlerBase<GameLoginPacket>, IPacketHandler<LoginSeedPacket>
 {
+    private readonly IExpansionStore _expansionStore;
     private readonly IGameLoginHandoffService _gameLoginHandoffService;
 
-    private readonly IUserService _userService;
-
-    private readonly IExpansionStore _expansionStore;
+    private readonly ILogger _logger = Log.ForContext<GameLoginHandler>();
 
     private readonly IMobileService _mobileService;
 
-    private readonly ILogger _logger = Log.ForContext<GameLoginHandler>();
+    private readonly IUserService _userService;
 
     public GameLoginHandler(
         IEventBusService eventBus,
@@ -44,6 +43,11 @@ public class GameLoginHandler : PacketHandlerBase<GameLoginPacket>, IPacketHandl
         _userService = userService;
         _expansionStore = expansionStore;
         _mobileService = mobileService;
+    }
+
+    public Task HandleAsync(PacketContext<LoginSeedPacket> context, CancellationToken cancellationToken = default)
+    {
+        return Task.CompletedTask;
     }
 
     public override async Task HandleAsync(
@@ -83,8 +87,8 @@ public class GameLoginHandler : PacketHandlerBase<GameLoginPacket>, IPacketHandl
         var characters = await _mobileService.GetByAccountIdAsync(userEntity.Id, cancellationToken);
 
         var characterEntries = characters
-                               .Select(m => new CharacterEntry(m.Name ?? string.Empty))
-                               .ToList();
+            .Select(m => new CharacterEntry(m.Name ?? string.Empty))
+            .ToList();
 
         var charListPacket = new CharactersStartingLocationsPacket();
         charListPacket.Cities.AddRange(StartingCities.AvailableStartingCities);
@@ -99,7 +103,4 @@ public class GameLoginHandler : PacketHandlerBase<GameLoginPacket>, IPacketHandl
         await context.SendAsync(new SupportFeaturesPacket(supportedFeatures, true), cancellationToken);
         await context.SendAsync(charListPacket, cancellationToken);
     }
-
-    public Task HandleAsync(PacketContext<LoginSeedPacket> context, CancellationToken cancellationToken = default)
-        => Task.CompletedTask;
 }

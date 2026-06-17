@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Moongate.Abstractions.Extensions.DryIoc;
 using Moongate.Abstractions.Interfaces.EventHandlers;
 using Moongate.Abstractions.Interfaces.Services;
+using Moongate.Core.Ids;
 using Moongate.Core.Types;
 using Moongate.Core.Utils;
 using Moongate.Server.Data.Events;
@@ -22,14 +23,14 @@ public sealed class SeedServiceTests : IDisposable
     private readonly string _dir = Path.Combine(Path.GetTempPath(), $"nr-seed-{Guid.NewGuid():N}");
     private string ConfigPath => Path.Combine(_dir, "moongate.yaml");
 
-    private sealed class SeedProbe
+    public void Dispose()
     {
-        public string Value { get; }
-
-        public SeedProbe(string value)
+        if (Directory.Exists(_dir))
         {
-            Value = value;
+            Directory.Delete(_dir, true);
         }
+
+        GC.SuppressFinalize(this);
     }
 
     [Fact]
@@ -39,8 +40,7 @@ public sealed class SeedServiceTests : IDisposable
         var container = new Container();
         container.AddMoongateEventBus();
         container.AddMoongateSeeds();
-        container.AddSeed(
-            (_, _) =>
+        container.AddSeed((_, _) =>
             {
                 calls++;
 
@@ -100,7 +100,7 @@ public sealed class SeedServiceTests : IDisposable
             var admin = await service.GetByUsernameAsync("admin");
 
             Assert.NotNull(admin);
-            Assert.Equal(new(1), admin!.Id);
+            Assert.Equal(new Serial(1), admin!.Id);
             Assert.Equal(UserLevelType.Administrator, admin.Level);
             Assert.True(admin.IsActive);
             Assert.True(HashUtils.VerifyPassword("admin", admin.Password));
@@ -110,16 +110,6 @@ public sealed class SeedServiceTests : IDisposable
         {
             await orchestrator.StopAsync(CancellationToken.None);
         }
-    }
-
-    public void Dispose()
-    {
-        if (Directory.Exists(_dir))
-        {
-            Directory.Delete(_dir, true);
-        }
-
-        GC.SuppressFinalize(this);
     }
 
     [Fact]
@@ -149,8 +139,8 @@ public sealed class SeedServiceTests : IDisposable
     public async Task RunAsync_PassesServiceProviderToActions()
     {
         var services = new ServiceCollection()
-                       .AddSingleton(new SeedProbe("admin"))
-                       .BuildServiceProvider();
+            .AddSingleton(new SeedProbe("admin"))
+            .BuildServiceProvider();
         string? captured = null;
         var service = new SeedService(
             services,
@@ -182,5 +172,15 @@ public sealed class SeedServiceTests : IDisposable
 
             await Task.Delay(10);
         }
+    }
+
+    private sealed class SeedProbe
+    {
+        public SeedProbe(string value)
+        {
+            Value = value;
+        }
+
+        public string Value { get; }
     }
 }

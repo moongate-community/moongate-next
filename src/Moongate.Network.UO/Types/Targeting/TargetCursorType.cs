@@ -1,7 +1,7 @@
 namespace Moongate.Network.UO.Types.Targeting;
 
 /// <summary>
-/// Defines cursor behavior for the target request.
+///     Defines cursor behavior for the target request.
 /// </summary>
 public enum TargetCursorType : byte
 {

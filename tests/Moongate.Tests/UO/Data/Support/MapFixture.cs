@@ -1,15 +1,11 @@
 namespace Moongate.Tests.UO.Data.Support;
 
 /// <summary>
-/// Writes synthetic <c>map{n}.mul</c>, <c>staidx{n}.mul</c> and <c>statics{n}.mul</c> files for a
-/// small facet (width/height multiples of 8), with caller-specified land cells and static tiles.
+///     Writes synthetic <c>map{n}.mul</c>, <c>staidx{n}.mul</c> and <c>statics{n}.mul</c> files for a
+///     small facet (width/height multiples of 8), with caller-specified land cells and static tiles.
 /// </summary>
 public static class MapFixture
 {
-    public sealed record LandCell(int X, int Y, short Id, sbyte Z);
-
-    public sealed record StaticTileSpec(int X, int Y, ushort Id, byte BlockX, byte BlockY, sbyte Z, short Hue);
-
     public static void Write(
         string directory,
         int fileIndex,
@@ -84,7 +80,7 @@ public static class MapFixture
 
             if (!byBlock.TryGetValue(block, out var list))
             {
-                list = new();
+                list = new List<StaticTileSpec>();
                 byBlock[block] = list;
             }
 
@@ -125,4 +121,8 @@ public static class MapFixture
             }
         }
     }
+
+    public sealed record LandCell(int X, int Y, short Id, sbyte Z);
+
+    public sealed record StaticTileSpec(int X, int Y, ushort Id, byte BlockX, byte BlockY, sbyte Z, short Hue);
 }

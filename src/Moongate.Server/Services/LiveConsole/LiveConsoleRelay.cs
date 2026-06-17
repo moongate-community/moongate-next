@@ -6,9 +6,9 @@ using Moongate.Server.Interfaces.LiveConsole;
 namespace Moongate.Server.Services.LiveConsole;
 
 /// <summary>
-/// Bridges the <see cref="ILiveConsoleBroadcaster" /> to SignalR: subscribes on start and forwards
-/// every published entry to all connected console clients via <see cref="IHubContext{THub}" />.
-/// Forwarding is fire-and-forget so it never blocks the logging or command-execution thread.
+///     Bridges the <see cref="ILiveConsoleBroadcaster" /> to SignalR: subscribes on start and forwards
+///     every published entry to all connected console clients via <see cref="IHubContext{THub}" />.
+///     Forwarding is fire-and-forget so it never blocks the logging or command-execution thread.
 /// </summary>
 public sealed class LiveConsoleRelay : IHostedService
 {
@@ -39,5 +39,7 @@ public sealed class LiveConsoleRelay : IHostedService
     }
 
     private void OnEntryPublished(LiveConsoleEntry entry)
-        => _ = _hub.Clients.All.SendAsync("line", entry);
+    {
+        _ = _hub.Clients.All.SendAsync("line", entry);
+    }
 }

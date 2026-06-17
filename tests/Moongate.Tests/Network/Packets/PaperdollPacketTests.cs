@@ -1,4 +1,5 @@
 using System.Text;
+using Moongate.Core.Ids;
 using Moongate.Network.UO.Packets.Outgoing.Entity;
 using Moongate.Tests.Support;
 using Moongate.UO.Data.Entities.Mobiles;
@@ -10,7 +11,7 @@ public sealed class PaperdollPacketTests
     [Fact]
     public void Write_ProducesFixed66ByteLayout()
     {
-        var mobile = new MobileEntity { Id = new(0x55), Name = "Tom the Brave" };
+        var mobile = new MobileEntity { Id = new Serial(0x55), Name = "Tom the Brave" };
 
         var bytes = PacketSerializer.Serialize(new PaperdollPacket(mobile, mobile.Name!));
 

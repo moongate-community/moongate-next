@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 namespace Moongate.UO.Data.Internal.Compression;
 
 /// <summary>
-/// Mythic.Package compression codec used by some UO client data files (e.g. compressed cliloc).
+///     Mythic.Package compression codec used by some UO client data files (e.g. compressed cliloc).
 /// </summary>
 public static class MythicDecompress
 {
@@ -19,7 +19,9 @@ public static class MythicDecompress
     }
 
     public static byte[] Detransform(byte[] buffer)
-        => InternalDecompress(MoveToFrontCoding.Decode(buffer));
+    {
+        return InternalDecompress(MoveToFrontCoding.Decode(buffer));
+    }
 
     public static byte[] InternalCompress(Span<byte> input)
     {
@@ -47,7 +49,7 @@ public static class MythicDecompress
         var output = new byte[input.Length + nonZeroCount + 1024];
 
         for (int i = 0,
-                 m = 0;
+             m = 0;
              i < nonZeroCount;
              ++i)
         {
@@ -98,7 +100,7 @@ public static class MythicDecompress
         } while (count >= 0);
 
         for (int i = 0,
-                 m = 0;
+             m = 0;
              i < nonZeroCount;
              ++i)
         {
@@ -152,7 +154,7 @@ public static class MythicDecompress
         Frequency(partialInput, frequency);
 
         for (int i = 0,
-                 m = 0;
+             m = 0;
              i < nonZeroCount;
              ++i)
         {
@@ -197,7 +199,9 @@ public static class MythicDecompress
     }
 
     public static byte[] Transform(byte[] buffer)
-        => MoveToFrontCoding.Encode(InternalCompress(buffer));
+    {
+        return MoveToFrontCoding.Encode(InternalCompress(buffer));
+    }
 
     private static void Frequency(Span<int> input, Span<byte> output)
     {

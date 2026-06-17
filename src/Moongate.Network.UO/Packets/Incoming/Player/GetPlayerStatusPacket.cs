@@ -7,17 +7,19 @@ using Moongate.Network.UO.Types.Player;
 namespace Moongate.Network.UO.Packets.Incoming.Player;
 
 /// <summary>
-/// Incoming "Get Player Status" (0x34): the client requests a mobile's status bar (0x04) or skills (0x05).
+///     Incoming "Get Player Status" (0x34): the client requests a mobile's status bar (0x04) or skills (0x05).
 /// </summary>
 [PacketHandler(0x34, PacketSizing.Fixed, Length = 10, Description = "Get Player Status")]
 public class GetPlayerStatusPacket : BaseGameNetworkPacket
 {
+    public GetPlayerStatusPacket()
+        : base(0x34, 10)
+    {
+    }
+
     public uint UnknownPattern { get; set; }
     public GetPlayerStatusType StatusType { get; set; }
     public uint MobileSerial { get; set; }
-
-    public GetPlayerStatusPacket()
-        : base(0x34, 10) { }
 
     protected override bool ParsePayload(ref SpanReader reader)
     {

@@ -10,34 +10,34 @@ using Serilog;
 namespace Moongate.Network.Server;
 
 /// <summary>
-/// High-throughput TCP server with client lifecycle events and middleware-enabled payload dispatch.
-/// Supports Start/Stop/Start cycles by recreating the underlying socket on each Start.
+///     High-throughput TCP server with client lifecycle events and middleware-enabled payload dispatch.
+///     Supports Start/Stop/Start cycles by recreating the underlying socket on each Start.
 /// </summary>
 public sealed class MoongateTCPServer : IAsyncDisposable, IDisposable
 {
     private const int DefaultBacklog = 512;
-
-    private readonly ILogger _logger = Log.ForContext<MoongateTCPServer>();
-    private readonly Lock _middlewareSync = new();
     private readonly ConcurrentDictionary<long, MoongateTCPClient> _clients = new();
     private readonly IPEndPoint _endPoint;
     private readonly INetFramer? _framer;
-    private readonly int _receiveBufferSize;
     private readonly int _historyBufferCapacity;
+
+    private readonly ILogger _logger = Log.ForContext<MoongateTCPServer>();
+    private readonly Lock _middlewareSync = new();
+    private readonly int _receiveBufferSize;
+    private Task? _acceptLoopTask;
+    private CancellationTokenSource? _listenerCancellationTokenSource;
 
     private INetMiddleware[] _middlewares = [];
     private Socket? _serverSocket;
-    private CancellationTokenSource? _listenerCancellationTokenSource;
-    private Task? _acceptLoopTask;
     private int _started;
 
     /// <summary>
-    /// Initializes a TCP server bound to the given endpoint.
+    ///     Initializes a TCP server bound to the given endpoint.
     /// </summary>
     /// <param name="endPoint">Endpoint to bind on every <see cref="StartAsync" />.</param>
     /// <param name="framer">
-    /// Optional framer template. The same instance is shared by all accepted clients,
-    /// so implementations must be stateless or thread-safe.
+    ///     Optional framer template. The same instance is shared by all accepted clients,
+    ///     so implementations must be stateless or thread-safe.
     /// </param>
     /// <param name="receiveBufferSize">Per-client receive chunk size.</param>
     /// <param name="historyBufferCapacity">Per-client history buffer capacity.</param>
@@ -55,37 +55,49 @@ public sealed class MoongateTCPServer : IAsyncDisposable, IDisposable
     }
 
     /// <summary>
-    /// Raised when a client connects.
-    /// </summary>
-    public event EventHandler<MoongateTCPClientEventArgs>? OnClientConnect;
-
-    /// <summary>
-    /// Raised when a client disconnects.
-    /// </summary>
-    public event EventHandler<MoongateTCPClientEventArgs>? OnClientDisconnect;
-
-    /// <summary>
-    /// Raised when a client sends data after middleware processing.
-    /// </summary>
-    public event EventHandler<MoongateTCPDataReceivedEventArgs>? OnDataReceived;
-
-    /// <summary>
-    /// Raised when an exception happens in accept loop or client loops.
-    /// </summary>
-    public event EventHandler<MoongateTCPExceptionEventArgs>? OnException;
-
-    /// <summary>
-    /// Current listening port. Returns 0 when the server is stopped.
+    ///     Current listening port. Returns 0 when the server is stopped.
     /// </summary>
     public int Port => ((IPEndPoint?)_serverSocket?.LocalEndPoint)?.Port ?? 0;
 
     /// <summary>
-    /// True when the server is currently accepting connections.
+    ///     True when the server is currently accepting connections.
     /// </summary>
     public bool IsRunning => Volatile.Read(ref _started) != 0;
 
+    /// <inheritdoc />
+    public async ValueTask DisposeAsync()
+    {
+        await StopAsync(CancellationToken.None);
+    }
+
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        DisposeAsync().AsTask().GetAwaiter().GetResult();
+    }
+
     /// <summary>
-    /// Registers middleware in execution order.
+    ///     Raised when a client connects.
+    /// </summary>
+    public event EventHandler<MoongateTCPClientEventArgs>? OnClientConnect;
+
+    /// <summary>
+    ///     Raised when a client disconnects.
+    /// </summary>
+    public event EventHandler<MoongateTCPClientEventArgs>? OnClientDisconnect;
+
+    /// <summary>
+    ///     Raised when a client sends data after middleware processing.
+    /// </summary>
+    public event EventHandler<MoongateTCPDataReceivedEventArgs>? OnDataReceived;
+
+    /// <summary>
+    ///     Raised when an exception happens in accept loop or client loops.
+    /// </summary>
+    public event EventHandler<MoongateTCPExceptionEventArgs>? OnException;
+
+    /// <summary>
+    ///     Registers middleware in execution order.
     /// </summary>
     public MoongateTCPServer AddMiddleware(INetMiddleware middleware)
     {
@@ -97,17 +109,9 @@ public sealed class MoongateTCPServer : IAsyncDisposable, IDisposable
         return this;
     }
 
-    /// <inheritdoc />
-    public void Dispose()
-        => DisposeAsync().AsTask().GetAwaiter().GetResult();
-
-    /// <inheritdoc />
-    public async ValueTask DisposeAsync()
-        => await StopAsync(CancellationToken.None);
-
     /// <summary>
-    /// Starts accepting clients. Recreates the listening socket on every call,
-    /// so Stop/Start cycles are supported.
+    ///     Starts accepting clients. Recreates the listening socket on every call,
+    ///     so Stop/Start cycles are supported.
     /// </summary>
     public Task StartAsync(CancellationToken cancellationToken)
     {
@@ -116,7 +120,7 @@ public sealed class MoongateTCPServer : IAsyncDisposable, IDisposable
             return Task.CompletedTask;
         }
 
-        _serverSocket = new(_endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+        _serverSocket = new Socket(_endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
         _serverSocket.Bind(_endPoint);
         _serverSocket.Listen(DefaultBacklog);
 
@@ -129,7 +133,7 @@ public sealed class MoongateTCPServer : IAsyncDisposable, IDisposable
     }
 
     /// <summary>
-    /// Stops accepting new clients and closes all active clients.
+    ///     Stops accepting new clients and closes all active clients.
     /// </summary>
     public async Task StopAsync(CancellationToken cancellationToken)
     {
@@ -223,7 +227,7 @@ public sealed class MoongateTCPServer : IAsyncDisposable, IDisposable
             catch (Exception ex)
             {
                 _logger.Error(ex, "Accept loop failed");
-                OnException?.Invoke(this, new(ex));
+                OnException?.Invoke(this, new MoongateTCPExceptionEventArgs(ex));
             }
         }
     }
@@ -231,41 +235,41 @@ public sealed class MoongateTCPServer : IAsyncDisposable, IDisposable
     private void WireClientEvents(MoongateTCPClient client)
     {
         client.OnConnected += (_, args) =>
-                              {
-                                  _logger.Information(
-                                      "OnClientConnect. SessionId={SessionId}, RemoteEndPoint={RemoteEndPoint}",
-                                      args.Client.SessionId,
-                                      args.Client.RemoteEndPoint
-                                  );
-                                  OnClientConnect?.Invoke(this, args);
-                              };
+        {
+            _logger.Information(
+                "OnClientConnect. SessionId={SessionId}, RemoteEndPoint={RemoteEndPoint}",
+                args.Client.SessionId,
+                args.Client.RemoteEndPoint
+            );
+            OnClientConnect?.Invoke(this, args);
+        };
         client.OnDataReceived += (_, args) =>
-                                 {
-                                     _logger.Verbose(
-                                         "OnDataReceived. SessionId={SessionId}, Bytes={Bytes}",
-                                         args.Client.SessionId,
-                                         args.Data.Length
-                                     );
-                                     OnDataReceived?.Invoke(this, args);
-                                 };
+        {
+            _logger.Verbose(
+                "OnDataReceived. SessionId={SessionId}, Bytes={Bytes}",
+                args.Client.SessionId,
+                args.Data.Length
+            );
+            OnDataReceived?.Invoke(this, args);
+        };
         client.OnException += (_, args) =>
-                              {
-                                  _logger.Error(
-                                      args.Exception,
-                                      "OnException. SessionId={SessionId}",
-                                      args.Client?.SessionId
-                                  );
-                                  OnException?.Invoke(this, args);
-                              };
+        {
+            _logger.Error(
+                args.Exception,
+                "OnException. SessionId={SessionId}",
+                args.Client?.SessionId
+            );
+            OnException?.Invoke(this, args);
+        };
         client.OnDisconnected += (_, args) =>
-                                 {
-                                     _clients.TryRemove(args.Client.SessionId, out var _);
-                                     _logger.Information(
-                                         "OnClientDisconnect. SessionId={SessionId}, RemoteEndPoint={RemoteEndPoint}",
-                                         args.Client.SessionId,
-                                         args.Client.RemoteEndPoint
-                                     );
-                                     OnClientDisconnect?.Invoke(this, args);
-                                 };
+        {
+            _clients.TryRemove(args.Client.SessionId, out var _);
+            _logger.Information(
+                "OnClientDisconnect. SessionId={SessionId}, RemoteEndPoint={RemoteEndPoint}",
+                args.Client.SessionId,
+                args.Client.RemoteEndPoint
+            );
+            OnClientDisconnect?.Invoke(this, args);
+        };
     }
 }

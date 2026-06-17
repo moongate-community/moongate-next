@@ -10,23 +10,6 @@ namespace Moongate.Tests.Server.Endpoints;
 
 public sealed class AdminHueEndpointExtensionsTests
 {
-    private sealed class FakeHueStore : IHueStore
-    {
-        private readonly List<Hue> _hues;
-
-        public FakeHueStore(params string[] names)
-        {
-            _hues = names.Select(name => new Hue(new ushort[32], 0, 31, name)).ToList();
-        }
-
-        public IReadOnlyList<Hue> Hues => _hues;
-
-        public int Count => _hues.Count;
-
-        public Hue? GetHue(int index)
-            => index >= 0 && index < _hues.Count ? _hues[index] : null;
-    }
-
     [Fact]
     public void HandleGetHue_KnownHue_ReturnsColors()
     {
@@ -58,7 +41,9 @@ public sealed class AdminHueEndpointExtensionsTests
 
     [Fact]
     public void HandleListHues_PageBeyondEnd_ReturnsEmpty()
-        => Assert.Empty(Ok(AdminHueEndpointExtensions.HandleListHues(new FakeHueStore("a", "b"), 9, 60, null)).Items);
+    {
+        Assert.Empty(Ok(AdminHueEndpointExtensions.HandleListHues(new FakeHueStore("a", "b"), 9, 60, null)).Items);
+    }
 
     [Fact]
     public void HandleListHues_Pagination_Bounds()
@@ -94,11 +79,13 @@ public sealed class AdminHueEndpointExtensionsTests
 
     [Fact]
     public void HandleListHues_SearchByName_IsCaseInsensitive()
-        => Assert.Equal(
+    {
+        Assert.Equal(
             1,
             Ok(AdminHueEndpointExtensions.HandleListHues(new FakeHueStore("Crimson", "Azure"), null, null, "crim"))
                 .TotalCount
         );
+    }
 
     [Fact]
     public void HandleListHues_SearchByValue_Filters()
@@ -110,5 +97,26 @@ public sealed class AdminHueEndpointExtensionsTests
     }
 
     private static PagedResult<HueSummary> Ok(IResult result)
-        => Assert.IsType<Ok<PagedResult<HueSummary>>>(result).Value!;
+    {
+        return Assert.IsType<Ok<PagedResult<HueSummary>>>(result).Value!;
+    }
+
+    private sealed class FakeHueStore : IHueStore
+    {
+        private readonly List<Hue> _hues;
+
+        public FakeHueStore(params string[] names)
+        {
+            _hues = names.Select(name => new Hue(new ushort[32], 0, 31, name)).ToList();
+        }
+
+        public IReadOnlyList<Hue> Hues => _hues;
+
+        public int Count => _hues.Count;
+
+        public Hue? GetHue(int index)
+        {
+            return index >= 0 && index < _hues.Count ? _hues[index] : null;
+        }
+    }
 }

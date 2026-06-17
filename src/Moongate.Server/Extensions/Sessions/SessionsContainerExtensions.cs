@@ -5,7 +5,7 @@ using Moongate.Server.Services.Sessions;
 namespace Moongate.Server.Extensions.Sessions;
 
 /// <summary>
-/// DryIoc-native registration for session-handoff services.
+///     DryIoc-native registration for session-handoff services.
 /// </summary>
 public static class SessionsContainerExtensions
 {

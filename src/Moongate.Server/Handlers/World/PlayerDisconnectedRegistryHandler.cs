@@ -6,12 +6,12 @@ using Moongate.Server.Interfaces.Services.World;
 namespace Moongate.Server.Handlers.World;
 
 /// <summary>
-/// Removes a player's live mobile from the registry when its session disconnects.
+///     Removes a player's live mobile from the registry when its session disconnects.
 /// </summary>
 public sealed class PlayerDisconnectedRegistryHandler : ITickEventHandler<PlayerDisconnectedEvent>
 {
-    private readonly IPlayerSessionService _playerSessions;
     private readonly IWorldSpatialIndex _index;
+    private readonly IPlayerSessionService _playerSessions;
 
     public PlayerDisconnectedRegistryHandler(IPlayerSessionService playerSessions, IWorldSpatialIndex index)
     {

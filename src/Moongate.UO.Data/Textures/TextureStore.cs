@@ -9,13 +9,13 @@ using SixLabors.ImageSharp.PixelFormats;
 namespace Moongate.UO.Data.Textures;
 
 /// <summary>
-/// Decodes land textures (raw RGB555 squares) from <c>texmaps.mul</c>. Missing files yield no
-/// textures (non-fatal).
+///     Decodes land textures (raw RGB555 squares) from <c>texmaps.mul</c>. Missing files yield no
+///     textures (non-fatal).
 /// </summary>
 public sealed class TextureStore : ITextureStore
 {
-    private readonly FileIndex _fileIndex;
     private readonly Dictionary<int, Image<Rgba32>> _cache = [];
+    private readonly FileIndex _fileIndex;
 
     private byte[]? _buffer;
 
@@ -23,7 +23,7 @@ public sealed class TextureStore : ITextureStore
     {
         ArgumentNullException.ThrowIfNull(resolver);
 
-        _fileIndex = new(
+        _fileIndex = new FileIndex(
             resolver.Resolve("texidx.mul"),
             resolver.Resolve("texmaps.mul"),
             0x4000,
@@ -74,7 +74,7 @@ public sealed class TextureStore : ITextureStore
             {
                 var color = BinaryPrimitives.ReadUInt16LittleEndian(pixels[((y * dim + x) * 2)..]);
                 var (r, g, b) = Rgb555.ToRgb(color);
-                image[x, y] = new(r, g, b, 255);
+                image[x, y] = new Rgba32(r, g, b, 255);
             }
         }
 
@@ -84,5 +84,7 @@ public sealed class TextureStore : ITextureStore
     }
 
     public bool IsValidTexture(int index)
-        => GetTexture(index) is not null;
+    {
+        return GetTexture(index) is not null;
+    }
 }

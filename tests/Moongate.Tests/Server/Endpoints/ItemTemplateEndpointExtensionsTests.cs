@@ -13,86 +13,6 @@ namespace Moongate.Tests.Server.Endpoints;
 
 public sealed class ItemTemplateEndpointExtensionsTests
 {
-    private sealed class FakeTemplateService : IItemTemplateService
-    {
-        private readonly Dictionary<string, ItemTemplateDefinition> _templates = new(StringComparer.OrdinalIgnoreCase);
-
-        public int Count => _templates.Count;
-
-        public void Clear()
-            => _templates.Clear();
-
-        public IReadOnlyCollection<ItemTemplateDefinition> GetAll()
-            => _templates.Values.ToArray();
-
-        public void ReplaceAll(IEnumerable<ItemTemplateDefinition> templates)
-        {
-            _templates.Clear();
-            UpsertRange(templates);
-        }
-
-        public bool TryGet(string id, out ItemTemplateDefinition? definition)
-            => _templates.TryGetValue(id, out definition);
-
-        public void UpsertRange(IEnumerable<ItemTemplateDefinition> templates)
-        {
-            foreach (var template in templates)
-            {
-                _templates[template.Id] = template;
-            }
-        }
-    }
-
-    private sealed class FakeHueStore : IHueStore
-    {
-        private readonly List<Hue> _hues = [];
-
-        public IReadOnlyList<Hue> Hues => _hues;
-
-        public int Count => _hues.Count;
-
-        public Hue? GetHue(int index)
-            => index >= 0 && index < _hues.Count ? _hues[index] : null;
-    }
-
-    private sealed class FakeAuthoringService : IItemTemplateAuthoringService
-    {
-        public ItemTemplateSaveResult? CreateResult { get; set; }
-
-        public ItemTemplateSaveResult? UpdateResult { get; set; }
-
-        public Exception? CreateException { get; set; }
-
-        public Exception? UpdateException { get; set; }
-
-        public ValueTask<ItemTemplateSaveResult> CreateAsync(
-            ItemTemplateEditRequest request,
-            CancellationToken cancellationToken = default
-        )
-        {
-            if (CreateException is not null)
-            {
-                throw CreateException;
-            }
-
-            return ValueTask.FromResult(CreateResult ?? NewSaveResult(request.Id));
-        }
-
-        public ValueTask<ItemTemplateSaveResult?> UpdateAsync(
-            string id,
-            ItemTemplateEditRequest request,
-            CancellationToken cancellationToken = default
-        )
-        {
-            if (UpdateException is not null)
-            {
-                throw UpdateException;
-            }
-
-            return ValueTask.FromResult(UpdateResult);
-        }
-    }
-
     [Fact]
     public async Task HandleCreate_InvalidRequest_ReturnsBadRequest()
     {
@@ -102,10 +22,10 @@ public sealed class ItemTemplateEndpointExtensionsTests
         };
 
         var result = await ItemTemplateEndpointExtensions.HandleCreateAsync(
-                         authoring,
-                         new() { Id = "", ItemId = -1 },
-                         CancellationToken.None
-                     );
+            authoring,
+            new ItemTemplateEditRequest { Id = "", ItemId = -1 },
+            CancellationToken.None
+        );
 
         var badRequest = Assert.IsType<BadRequest<string>>(result);
         Assert.Equal("invalid template", badRequest.Value);
@@ -117,10 +37,10 @@ public sealed class ItemTemplateEndpointExtensionsTests
         var authoring = new FakeAuthoringService();
 
         var result = await ItemTemplateEndpointExtensions.HandleCreateAsync(
-                         authoring,
-                         new() { Id = "web_crate", ItemId = 0x0E3F },
-                         CancellationToken.None
-                     );
+            authoring,
+            new ItemTemplateEditRequest { Id = "web_crate", ItemId = 0x0E3F },
+            CancellationToken.None
+        );
 
         var ok = Assert.IsType<Ok<ItemTemplateSaveResult>>(result);
         Assert.Equal("web_crate", ok.Value!.Template.Id);
@@ -231,9 +151,16 @@ public sealed class ItemTemplateEndpointExtensionsTests
         Assert.Equal(["crate_base", "longsword"], ok.Value.Items.Select(static item => item.Id));
     }
 
-    [Theory, InlineData("long", "longsword"), InlineData("Sharp", "longsword"), InlineData("weapon", "longsword"),
-     InlineData("combat_script", "longsword"), InlineData("3937", "longsword"), InlineData("0x0F61", "longsword"),
-     InlineData("0xF61", "longsword"), InlineData("125", "longsword"), InlineData("55", "longsword")]
+    [Theory]
+    [InlineData("long", "longsword")]
+    [InlineData("Sharp", "longsword")]
+    [InlineData("weapon", "longsword")]
+    [InlineData("combat_script", "longsword")]
+    [InlineData("3937", "longsword")]
+    [InlineData("0x0F61", "longsword")]
+    [InlineData("0xF61", "longsword")]
+    [InlineData("125", "longsword")]
+    [InlineData("55", "longsword")]
     public void HandleList_SearchesApprovedFields(string search, string expectedId)
     {
         var result = ItemTemplateEndpointExtensions.HandleList(
@@ -261,11 +188,11 @@ public sealed class ItemTemplateEndpointExtensionsTests
         };
 
         var result = await ItemTemplateEndpointExtensions.HandleUpdateAsync(
-                         authoring,
-                         "crate",
-                         new() { Id = "other", ItemId = 0x0E3F },
-                         CancellationToken.None
-                     );
+            authoring,
+            "crate",
+            new ItemTemplateEditRequest { Id = "other", ItemId = 0x0E3F },
+            CancellationToken.None
+        );
 
         var badRequest = Assert.IsType<BadRequest<string>>(result);
         Assert.Contains("match", badRequest.Value);
@@ -275,11 +202,11 @@ public sealed class ItemTemplateEndpointExtensionsTests
     public async Task HandleUpdate_MissingTemplate_ReturnsNotFound()
     {
         var result = await ItemTemplateEndpointExtensions.HandleUpdateAsync(
-                         new FakeAuthoringService(),
-                         "missing",
-                         new() { Id = "missing", ItemId = 0x0E3F },
-                         CancellationToken.None
-                     );
+            new FakeAuthoringService(),
+            "missing",
+            new ItemTemplateEditRequest { Id = "missing", ItemId = 0x0E3F },
+            CancellationToken.None
+        );
 
         Assert.IsType<NotFound>(result);
     }
@@ -293,20 +220,21 @@ public sealed class ItemTemplateEndpointExtensionsTests
         };
 
         var result = await ItemTemplateEndpointExtensions.HandleUpdateAsync(
-                         authoring,
-                         "web_crate",
-                         new() { Id = "web_crate", ItemId = 0x0E3F },
-                         CancellationToken.None
-                     );
+            authoring,
+            "web_crate",
+            new ItemTemplateEditRequest { Id = "web_crate", ItemId = 0x0E3F },
+            CancellationToken.None
+        );
 
         var ok = Assert.IsType<Ok<ItemTemplateSaveResult>>(result);
         Assert.Equal("web_crate", ok.Value!.Template.Id);
     }
 
     private static ItemTemplateSaveResult NewSaveResult(string id)
-        => new(
+    {
+        return new ItemTemplateSaveResult(
             ItemTemplateDetail.FromDefinition(
-                new()
+                new ItemTemplateDefinition
                 {
                     Id = id,
                     Name = id,
@@ -316,13 +244,14 @@ public sealed class ItemTemplateEndpointExtensionsTests
             ),
             "_web.yaml"
         );
+    }
 
     private static FakeTemplateService SeedTemplates()
     {
         var service = new FakeTemplateService();
         service.UpsertRange(
             [
-                new()
+                new ItemTemplateDefinition
                 {
                     Id = "longsword",
                     Name = "Longsword",
@@ -331,14 +260,14 @@ public sealed class ItemTemplateEndpointExtensionsTests
                     ScriptId = "combat_script",
                     Rarity = ItemRarity.Common,
                     Layer = ItemLayerType.OneHanded,
-                    Value = new()
+                    Value = new ItemTemplateValueDefinition
                     {
                         Buy = 125,
                         Sell = 55
                     },
                     Tags = ["weapon"]
                 },
-                new()
+                new ItemTemplateDefinition
                 {
                     Id = "crate_base",
                     Name = "Crate",
@@ -348,7 +277,7 @@ public sealed class ItemTemplateEndpointExtensionsTests
                     Tags = ["container"],
                     IsAbstract = true
                 },
-                new()
+                new ItemTemplateDefinition
                 {
                     Id = "robe_dark",
                     Name = "Dark Robe",
@@ -361,5 +290,93 @@ public sealed class ItemTemplateEndpointExtensionsTests
         );
 
         return service;
+    }
+
+    private sealed class FakeTemplateService : IItemTemplateService
+    {
+        private readonly Dictionary<string, ItemTemplateDefinition> _templates = new(StringComparer.OrdinalIgnoreCase);
+
+        public int Count => _templates.Count;
+
+        public void Clear()
+        {
+            _templates.Clear();
+        }
+
+        public IReadOnlyCollection<ItemTemplateDefinition> GetAll()
+        {
+            return _templates.Values.ToArray();
+        }
+
+        public void ReplaceAll(IEnumerable<ItemTemplateDefinition> templates)
+        {
+            _templates.Clear();
+            UpsertRange(templates);
+        }
+
+        public bool TryGet(string id, out ItemTemplateDefinition? definition)
+        {
+            return _templates.TryGetValue(id, out definition);
+        }
+
+        public void UpsertRange(IEnumerable<ItemTemplateDefinition> templates)
+        {
+            foreach (var template in templates)
+            {
+                _templates[template.Id] = template;
+            }
+        }
+    }
+
+    private sealed class FakeHueStore : IHueStore
+    {
+        private readonly List<Hue> _hues = [];
+
+        public IReadOnlyList<Hue> Hues => _hues;
+
+        public int Count => _hues.Count;
+
+        public Hue? GetHue(int index)
+        {
+            return index >= 0 && index < _hues.Count ? _hues[index] : null;
+        }
+    }
+
+    private sealed class FakeAuthoringService : IItemTemplateAuthoringService
+    {
+        public ItemTemplateSaveResult? CreateResult { get; set; }
+
+        public ItemTemplateSaveResult? UpdateResult { get; set; }
+
+        public Exception? CreateException { get; set; }
+
+        public Exception? UpdateException { get; set; }
+
+        public ValueTask<ItemTemplateSaveResult> CreateAsync(
+            ItemTemplateEditRequest request,
+            CancellationToken cancellationToken = default
+        )
+        {
+            if (CreateException is not null)
+            {
+                throw CreateException;
+            }
+
+            return ValueTask.FromResult(CreateResult ?? NewSaveResult(request.Id));
+        }
+
+        public ValueTask<ItemTemplateSaveResult?> UpdateAsync(
+            string id,
+            ItemTemplateEditRequest request,
+            CancellationToken cancellationToken = default
+        )
+        {
+            if (UpdateException is not null)
+            {
+                throw UpdateException;
+            }
+
+            return ValueTask.FromResult(UpdateResult);
+        }
     }
 }

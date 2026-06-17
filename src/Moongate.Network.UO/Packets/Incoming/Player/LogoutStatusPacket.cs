@@ -6,7 +6,7 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Incoming.Player;
 
 /// <summary>
-/// Represents a logout status packet.
+///     Represents a logout status packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Logout Status")]
 public class LogoutStatusPacket : BaseGameNetworkPacket
@@ -14,10 +14,12 @@ public class LogoutStatusPacket : BaseGameNetworkPacket
     private const byte OpCodeValue = 0xD1;
     private const int LengthValue = 2;
 
-    public byte Status { get; private set; }
-
     public LogoutStatusPacket()
-        : base(OpCodeValue, LengthValue) { }
+        : base(OpCodeValue, LengthValue)
+    {
+    }
+
+    public byte Status { get; private set; }
 
     protected override bool ParsePayload(ref SpanReader reader)
     {

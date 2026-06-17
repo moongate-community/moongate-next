@@ -78,8 +78,13 @@ public sealed class RegionSectorIndexTests
 
     [Fact]
     public void SectorShift_IsLog2OfSectorSize()
-        => Assert.Equal(4, MapSectorConsts.SectorShift); // 16 == 2^4
+    {
+        Assert.Equal(4, MapSectorConsts.SectorShift);
+        // 16 == 2^4
+    }
 
     private static RegionEntry Region(string name, int mapId, int priority, params RegionAreaEntry[] area)
-        => new("BaseRegion", mapId, "Map", name, priority, area, "", null, null);
+    {
+        return new RegionEntry("BaseRegion", mapId, "Map", name, priority, area, "", null, null);
+    }
 }

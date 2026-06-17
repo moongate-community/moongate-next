@@ -8,7 +8,7 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Outgoing.Login;
 
 /// <summary>
-/// Represents a game server redirect packet.
+///     Represents a game server redirect packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Connect To Game Server")]
 public class ServerRedirectPacket : BaseGameNetworkPacket
@@ -16,12 +16,14 @@ public class ServerRedirectPacket : BaseGameNetworkPacket
     private const byte OpCodeValue = 0x8C;
     private const int LengthValue = 11;
 
+    public ServerRedirectPacket()
+        : base(OpCodeValue, LengthValue)
+    {
+    }
+
     public IPAddress IpAddress { get; set; } = IPAddress.Loopback;
     public int Port { get; set; }
     public uint SessionKey { get; set; }
-
-    public ServerRedirectPacket()
-        : base(OpCodeValue, LengthValue) { }
 
     public override void Write(ref SpanWriter writer)
     {
@@ -32,5 +34,7 @@ public class ServerRedirectPacket : BaseGameNetworkPacket
     }
 
     protected override bool ParsePayload(ref SpanReader reader)
-        => reader.Remaining == LengthValue - 1;
+    {
+        return reader.Remaining == LengthValue - 1;
+    }
 }

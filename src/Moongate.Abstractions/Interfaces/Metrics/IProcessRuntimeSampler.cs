@@ -3,7 +3,7 @@ using Moongate.Abstractions.Data.Metrics;
 namespace Moongate.Abstractions.Interfaces.Metrics;
 
 /// <summary>
-/// Captures raw process runtime readings (CPU time, memory, GC counters) for the runtime metric provider.
+///     Captures raw process runtime readings (CPU time, memory, GC counters) for the runtime metric provider.
 /// </summary>
 public interface IProcessRuntimeSampler
 {

@@ -1,8 +1,8 @@
 namespace Moongate.Persistence.Interfaces.Persistence;
 
 /// <summary>
-/// CRUD access to a registered persisted entity type. Reads complete synchronously from memory;
-/// writes append to the journal.
+///     CRUD access to a registered persisted entity type. Reads complete synchronously from memory;
+///     writes append to the journal.
 /// </summary>
 public interface IDataAccess<TEntity, in TKey>
 {

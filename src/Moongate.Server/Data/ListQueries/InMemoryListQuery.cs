@@ -30,10 +30,10 @@ public static class InMemoryListQuery
 
         var filtered = query.ToArray();
         var pageItems = filtered.Skip((request.Page - 1) * request.PageSize)
-                                .Take(request.PageSize)
-                                .ToArray();
+            .Take(request.PageSize)
+            .ToArray();
 
-        return new(pageItems, request.Page, request.PageSize, filtered.Length);
+        return new PagedResult<T>(pageItems, request.Page, request.PageSize, filtered.Length);
     }
 
     private static bool MatchesSearch<T>(
@@ -41,6 +41,8 @@ public static class InMemoryListQuery
         string search,
         Func<T, IEnumerable<string?>> searchableFields
     )
-        => searchableFields(item)
+    {
+        return searchableFields(item)
             .Any(field => !string.IsNullOrWhiteSpace(field) && field.Contains(search, StringComparison.OrdinalIgnoreCase));
+    }
 }

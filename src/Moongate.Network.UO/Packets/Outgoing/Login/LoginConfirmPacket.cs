@@ -7,16 +7,12 @@ using Moongate.UO.Data.Entities.Mobiles;
 namespace Moongate.Network.UO.Packets.Outgoing.Login;
 
 /// <summary>
-/// Outgoing "Login Confirm" (0x1B): tells the client its serial, body, location, direction and map size.
+///     Outgoing "Login Confirm" (0x1B): tells the client its serial, body, location, direction and map size.
 /// </summary>
 [PacketHandler(0x1B, PacketSizing.Fixed, Length = 37, Description = "Char Locale and Body")]
 public class LoginConfirmPacket : BaseGameNetworkPacket
 {
     private const int LengthValue = 37;
-
-    public MobileEntity Mobile { get; }
-    public int MapWidth { get; }
-    public int MapHeight { get; }
 
     public LoginConfirmPacket(MobileEntity mobile, int mapWidth, int mapHeight)
         : base(0x1B, LengthValue)
@@ -27,6 +23,10 @@ public class LoginConfirmPacket : BaseGameNetworkPacket
         MapWidth = mapWidth;
         MapHeight = mapHeight;
     }
+
+    public MobileEntity Mobile { get; }
+    public int MapWidth { get; }
+    public int MapHeight { get; }
 
     public override void Write(ref SpanWriter writer)
     {
@@ -47,5 +47,7 @@ public class LoginConfirmPacket : BaseGameNetworkPacket
     }
 
     protected override bool ParsePayload(ref SpanReader reader)
-        => false;
+    {
+        return false;
+    }
 }

@@ -84,8 +84,8 @@ internal static class EmailTemplateAssetsBootstrapper
         ArgumentNullException.ThrowIfNull(paths);
 
         return Path.IsPathRooted(config.Templates.Directory)
-                   ? config.Templates.Directory
-                   : Path.Combine(paths.PluginDirectory, config.Templates.Directory);
+            ? config.Templates.Directory
+            : Path.Combine(paths.PluginDirectory, config.Templates.Directory);
     }
 
     private static string GetRelativePath(string resourceName, string normalizedPrefix)
@@ -102,17 +102,19 @@ internal static class EmailTemplateAssetsBootstrapper
     }
 
     private static IReadOnlyList<string> GetTemplateResourceNames(Assembly assembly, string normalizedPrefix)
-        => assembly.GetManifestResourceNames()
-                   .Where(name => name.StartsWith(normalizedPrefix, StringComparison.Ordinal))
-                   .Order(StringComparer.Ordinal)
-                   .ToArray();
+    {
+        return assembly.GetManifestResourceNames()
+            .Where(name => name.StartsWith(normalizedPrefix, StringComparison.Ordinal))
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+    }
 
     private static string NormalizeResourcePrefix(string resourcePrefix)
     {
         var normalizedPrefix = resourcePrefix.Trim().Replace('\\', '/');
 
         return normalizedPrefix.EndsWith('/')
-                   ? normalizedPrefix
-                   : normalizedPrefix + "/";
+            ? normalizedPrefix
+            : normalizedPrefix + "/";
     }
 }

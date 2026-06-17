@@ -25,7 +25,7 @@ public sealed class PerTypeSnapshotTests : IDisposable
     {
         var first = NewService();
         await first.StartAsync(CancellationToken.None);
-        await first.GetDataAccess<TestPlayer, Serial>().UpsertAsync(new() { Id = new(1), Name = "Bob" });
+        await first.GetDataAccess<TestPlayer, Serial>().UpsertAsync(new TestPlayer { Id = new Serial(1), Name = "Bob" });
         await first.SaveSnapshotAsync();
         await first.StopAsync(CancellationToken.None);
 
@@ -35,7 +35,7 @@ public sealed class PerTypeSnapshotTests : IDisposable
         var second = NewService();
         await second.StartAsync(CancellationToken.None);
 
-        Assert.Equal("Bob", (await second.GetDataAccess<TestPlayer, Serial>().GetByIdAsync(new(1)))!.Name);
+        Assert.Equal("Bob", (await second.GetDataAccess<TestPlayer, Serial>().GetByIdAsync(new Serial(1)))!.Name);
         await second.StopAsync(CancellationToken.None);
     }
 
@@ -45,9 +45,9 @@ public sealed class PerTypeSnapshotTests : IDisposable
         var first = NewService();
         await first.StartAsync(CancellationToken.None);
         var players = first.GetDataAccess<TestPlayer, Serial>();
-        await players.UpsertAsync(new() { Id = new(1), Name = "Bob" });
+        await players.UpsertAsync(new TestPlayer { Id = new Serial(1), Name = "Bob" });
         await first.SaveSnapshotAsync();
-        await players.RemoveAsync(new(1));
+        await players.RemoveAsync(new Serial(1));
         await first.SaveSnapshotAsync();
         await first.StopAsync(CancellationToken.None);
 
@@ -57,7 +57,7 @@ public sealed class PerTypeSnapshotTests : IDisposable
         var second = NewService();
         await second.StartAsync(CancellationToken.None);
 
-        Assert.Null(await second.GetDataAccess<TestPlayer, Serial>().GetByIdAsync(new(1)));
+        Assert.Null(await second.GetDataAccess<TestPlayer, Serial>().GetByIdAsync(new Serial(1)));
         Assert.Equal(0, await second.GetDataAccess<TestPlayer, Serial>().CountAsync());
         await second.StopAsync(CancellationToken.None);
     }
@@ -67,9 +67,9 @@ public sealed class PerTypeSnapshotTests : IDisposable
     {
         var first = NewService();
         await first.StartAsync(CancellationToken.None);
-        await first.GetDataAccess<TestPlayer, Serial>().UpsertAsync(new() { Id = new(1), Name = "Bob" });
+        await first.GetDataAccess<TestPlayer, Serial>().UpsertAsync(new TestPlayer { Id = new Serial(1), Name = "Bob" });
         await first.GetDataAccess<TestItem, Serial>()
-                   .UpsertAsync(new() { Id = new(Serial.ItemOffset + 1), Label = "Sword" });
+            .UpsertAsync(new TestItem { Id = new Serial(Serial.ItemOffset + 1), Label = "Sword" });
         await first.SaveSnapshotAsync();
         await first.StopAsync(CancellationToken.None);
 
@@ -81,10 +81,10 @@ public sealed class PerTypeSnapshotTests : IDisposable
         var second = NewService();
         await second.StartAsync(CancellationToken.None);
 
-        Assert.Equal("Bob", (await second.GetDataAccess<TestPlayer, Serial>().GetByIdAsync(new(1)))!.Name);
+        Assert.Equal("Bob", (await second.GetDataAccess<TestPlayer, Serial>().GetByIdAsync(new Serial(1)))!.Name);
         Assert.Equal(
             "Sword",
-            (await second.GetDataAccess<TestItem, Serial>().GetByIdAsync(new(Serial.ItemOffset + 1)))!.Label
+            (await second.GetDataAccess<TestItem, Serial>().GetByIdAsync(new Serial(Serial.ItemOffset + 1)))!.Label
         );
         await second.StopAsync(CancellationToken.None);
     }
@@ -100,6 +100,6 @@ public sealed class PerTypeSnapshotTests : IDisposable
             new(new PersistenceEntityDescriptor<TestItem, Serial>(2, "TestItem", 1, i => i.Id))
         };
 
-        return new(_dir, config, registrations);
+        return new PersistenceService(_dir, config, registrations);
     }
 }

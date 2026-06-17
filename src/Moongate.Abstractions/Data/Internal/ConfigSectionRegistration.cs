@@ -1,8 +1,8 @@
 namespace Moongate.Abstractions.Data.Internal;
 
 /// <summary>
-/// Boot-time declaration of a config section: how to name it, default it, and bind it from YAML.
-/// Accumulated in the container and consumed by the config loader at startup.
+///     Boot-time declaration of a config section: how to name it, default it, and bind it from YAML.
+///     Accumulated in the container and consumed by the config loader at startup.
 /// </summary>
 public sealed class ConfigSectionRegistration
 {
@@ -27,5 +27,7 @@ public sealed class ConfigSectionRegistration
 
     /// <summary>Creates a fresh default instance of the config.</summary>
     public object CreateDefault()
-        => _defaultFactory();
+    {
+        return _defaultFactory();
+    }
 }

@@ -12,51 +12,6 @@ namespace Moongate.Tests.Server.Commands;
 
 public sealed class SpeechCommandPacketHandlerTests
 {
-    private sealed class CapturingCommandSystemService : ICommandSystemService
-    {
-        public string? CommandText { get; private set; }
-        public CommandSourceType? Source { get; private set; }
-        public long? SessionId { get; private set; }
-        public PlayerSession? PlayerSession { get; private set; }
-
-        public Task ExecuteCommandAsync(
-            string commandWithArgs,
-            CommandSourceType source = CommandSourceType.Console,
-            long? sessionId = null,
-            PlayerSession? playerSession = null,
-            CancellationToken cancellationToken = default
-        )
-        {
-            CommandText = commandWithArgs;
-            Source = source;
-            SessionId = sessionId;
-            PlayerSession = playerSession;
-
-            return Task.CompletedTask;
-        }
-
-        public Task<IReadOnlyList<string>> ExecuteCommandWithOutputAsync(
-            string commandWithArgs,
-            CommandSourceType source = CommandSourceType.Console,
-            long? sessionId = null,
-            PlayerSession? playerSession = null,
-            CancellationToken cancellationToken = default
-        )
-            => Task.FromResult<IReadOnlyList<string>>([]);
-
-        public IReadOnlyList<string> GetAutocompleteSuggestions(string commandWithArgs)
-            => [];
-
-        public IReadOnlyList<CommandDefinition> GetRegisteredCommands()
-            => [];
-
-        public Task StartAsync(CancellationToken cancellationToken)
-            => Task.CompletedTask;
-
-        public Task StopAsync(CancellationToken cancellationToken)
-            => Task.CompletedTask;
-    }
-
     [Fact]
     public async Task HandleAsync_NormalSpeech_DoesNotDispatchCommand()
     {
@@ -87,11 +42,68 @@ public sealed class SpeechCommandPacketHandlerTests
     }
 
     private static PacketContext<UnicodeSpeechPacket> CreateUnicodeContext(string text)
-        => new(
+    {
+        return new PacketContext<UnicodeSpeechPacket>(
             new FakeGameSession { SessionId = 42 },
-            new() { Text = text },
+            new UnicodeSpeechPacket { Text = text },
             DateTimeOffset.UtcNow,
             static (_, _, _) => Task.CompletedTask,
             static () => [42]
         );
+    }
+
+    private sealed class CapturingCommandSystemService : ICommandSystemService
+    {
+        public string? CommandText { get; private set; }
+        public CommandSourceType? Source { get; private set; }
+        public long? SessionId { get; private set; }
+        public PlayerSession? PlayerSession { get; private set; }
+
+        public Task ExecuteCommandAsync(
+            string commandWithArgs,
+            CommandSourceType source = CommandSourceType.Console,
+            long? sessionId = null,
+            PlayerSession? playerSession = null,
+            CancellationToken cancellationToken = default
+        )
+        {
+            CommandText = commandWithArgs;
+            Source = source;
+            SessionId = sessionId;
+            PlayerSession = playerSession;
+
+            return Task.CompletedTask;
+        }
+
+        public Task<IReadOnlyList<string>> ExecuteCommandWithOutputAsync(
+            string commandWithArgs,
+            CommandSourceType source = CommandSourceType.Console,
+            long? sessionId = null,
+            PlayerSession? playerSession = null,
+            CancellationToken cancellationToken = default
+        )
+        {
+            return Task.FromResult<IReadOnlyList<string>>([]);
+        }
+
+        public IReadOnlyList<string> GetAutocompleteSuggestions(string commandWithArgs)
+        {
+            return [];
+        }
+
+        public IReadOnlyList<CommandDefinition> GetRegisteredCommands()
+        {
+            return [];
+        }
+
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+    }
 }

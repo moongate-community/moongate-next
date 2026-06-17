@@ -8,7 +8,7 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Outgoing.World;
 
 /// <summary>
-/// Represents a per-mobile light level packet.
+///     Represents a per-mobile light level packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Personal Light Level")]
 public class PersonalLightLevelPacket : BaseGameNetworkPacket
@@ -16,11 +16,10 @@ public class PersonalLightLevelPacket : BaseGameNetworkPacket
     private const byte OpCodeValue = 0x4E;
     private const int LengthValue = 6;
 
-    public LightLevelType LightLevel { get; set; }
-    public Serial MobileSerial { get; set; }
-
     public PersonalLightLevelPacket()
-        : base(OpCodeValue, LengthValue) { }
+        : base(OpCodeValue, LengthValue)
+    {
+    }
 
     public PersonalLightLevelPacket(Serial mobileSerial, LightLevelType lightLevel)
         : this()
@@ -28,6 +27,9 @@ public class PersonalLightLevelPacket : BaseGameNetworkPacket
         MobileSerial = mobileSerial;
         LightLevel = lightLevel;
     }
+
+    public LightLevelType LightLevel { get; set; }
+    public Serial MobileSerial { get; set; }
 
     public override void Write(ref SpanWriter writer)
     {

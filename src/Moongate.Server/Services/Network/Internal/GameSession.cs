@@ -7,43 +7,15 @@ using Moongate.Network.Spans;
 namespace Moongate.Server.Services.Network.Internal;
 
 /// <summary>
-/// Minimal per-connection session: tracks the owning client and a pending byte buffer that the
-/// network parser accumulates into until full packets can be extracted.
+///     Minimal per-connection session: tracks the owning client and a pending byte buffer that the
+///     network parser accumulates into until full packets can be extracted.
 /// </summary>
 public sealed class GameSession : IGameSession
 {
     private const int DefaultPacketBufferCapacity = 256;
-
-    private readonly Lock _pendingBytesSync = new();
     private readonly List<byte> _pendingBytes = [];
 
-    /// <summary>
-    /// Unique identifier of the session, sourced from the owning client.
-    /// </summary>
-    public long SessionId { get; }
-
-    /// <summary>
-    /// Owning TCP client.
-    /// </summary>
-    public MoongateTCPClient Client { get; }
-
-    /// <summary>
-    /// Remote endpoint of the connecting client, captured at session creation (stable for the
-    /// session's lifetime, unlike the live socket endpoint which becomes null once the socket closes).
-    /// </summary>
-    public IPEndPoint? ClientEndPoint { get; }
-
-    /// <summary>
-    /// Local endpoint the client connected to — the server IP:port that answered — captured at
-    /// session creation. Useful e.g. to advertise the shard address back to the client.
-    /// </summary>
-    public IPEndPoint? ServerEndPoint { get; }
-
-    /// <summary>Per-session parser state for the initial seed phase (touched only under the parse lock).</summary>
-    internal PacketStreamState Stream { get; } = new();
-
-    /// <summary>The connection seed captured on the game-server reconnect path; null otherwise.</summary>
-    public uint? Seed => Stream.Seed;
+    private readonly Lock _pendingBytesSync = new();
 
     public GameSession(MoongateTCPClient client)
     {
@@ -56,8 +28,36 @@ public sealed class GameSession : IGameSession
     }
 
     /// <summary>
-    /// Enables UO transport compression for this session's outgoing packets (idempotent). Called
-    /// after game login: every server packet from that point on must be compressed.
+    ///     Owning TCP client.
+    /// </summary>
+    public MoongateTCPClient Client { get; }
+
+    /// <summary>Per-session parser state for the initial seed phase (touched only under the parse lock).</summary>
+    internal PacketStreamState Stream { get; } = new();
+
+    /// <summary>
+    ///     Unique identifier of the session, sourced from the owning client.
+    /// </summary>
+    public long SessionId { get; }
+
+    /// <summary>
+    ///     Remote endpoint of the connecting client, captured at session creation (stable for the
+    ///     session's lifetime, unlike the live socket endpoint which becomes null once the socket closes).
+    /// </summary>
+    public IPEndPoint? ClientEndPoint { get; }
+
+    /// <summary>
+    ///     Local endpoint the client connected to — the server IP:port that answered — captured at
+    ///     session creation. Useful e.g. to advertise the shard address back to the client.
+    /// </summary>
+    public IPEndPoint? ServerEndPoint { get; }
+
+    /// <summary>The connection seed captured on the game-server reconnect path; null otherwise.</summary>
+    public uint? Seed => Stream.Seed;
+
+    /// <summary>
+    ///     Enables UO transport compression for this session's outgoing packets (idempotent). Called
+    ///     after game login: every server packet from that point on must be compressed.
     /// </summary>
     public void EnableCompression()
     {
@@ -68,35 +68,43 @@ public sealed class GameSession : IGameSession
     }
 
     /// <summary>
-    /// Serializes and sends a packet to the owning client.
+    ///     Serializes and sends a packet to the owning client.
     /// </summary>
     public Task SendPacket<TPacket>(TPacket packet, CancellationToken cancellationToken = default)
         where TPacket : IGameNetworkPacket
-        => SendPacketAsync(packet, cancellationToken);
+    {
+        return SendPacketAsync(packet, cancellationToken);
+    }
 
     /// <summary>
-    /// Creates, serializes and sends a packet to the owning client.
+    ///     Creates, serializes and sends a packet to the owning client.
     /// </summary>
     public Task SendPacket<TPacket>(CancellationToken cancellationToken = default)
         where TPacket : IGameNetworkPacket, new()
-        => SendPacketAsync<TPacket>(cancellationToken);
+    {
+        return SendPacketAsync<TPacket>(cancellationToken);
+    }
 
     /// <summary>
-    /// Serializes and sends a packet to the owning client.
+    ///     Serializes and sends a packet to the owning client.
     /// </summary>
     public Task SendPacketAsync<TPacket>(TPacket packet, CancellationToken cancellationToken = default)
         where TPacket : IGameNetworkPacket
-        => SendPacketAsync(packet, null, cancellationToken);
+    {
+        return SendPacketAsync(packet, null, cancellationToken);
+    }
 
     /// <summary>
-    /// Creates, serializes and sends a packet to the owning client.
+    ///     Creates, serializes and sends a packet to the owning client.
     /// </summary>
     public Task SendPacketAsync<TPacket>(CancellationToken cancellationToken = default)
         where TPacket : IGameNetworkPacket, new()
-        => SendPacketAsync(new TPacket(), cancellationToken);
+    {
+        return SendPacketAsync(new TPacket(), cancellationToken);
+    }
 
     /// <summary>
-    /// Executes <paramref name="action" /> with exclusive access to the pending byte buffer.
+    ///     Executes <paramref name="action" /> with exclusive access to the pending byte buffer.
     /// </summary>
     /// <param name="action">Action receiving the locked pending byte list.</param>
     public void WithPendingBytes(Action<List<byte>> action)
@@ -115,7 +123,9 @@ public sealed class GameSession : IGameSession
         CancellationToken cancellationToken = default
     )
         where TPacket : IGameNetworkPacket
-        => SendPacketAsync(packet, onSerialized, cancellationToken);
+    {
+        return SendPacketAsync(packet, onSerialized, cancellationToken);
+    }
 
     internal Task SendPacketAsync<TPacket>(
         TPacket packet,

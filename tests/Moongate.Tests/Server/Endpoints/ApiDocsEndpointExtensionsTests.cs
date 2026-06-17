@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi;
 using Moongate.Server.Extensions.Endpoints;
 
 namespace Moongate.Tests.Server.Endpoints;
@@ -24,12 +25,11 @@ public sealed class ApiDocsEndpointExtensionsTests
         builder.WebHost.UseUrls("http://127.0.0.1:0");
         builder.Host.UseServiceProviderFactory(new DryIocServiceProviderFactory());
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen(
-            options =>
+        builder.Services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc(
                     "v1",
-                    new()
+                    new OpenApiInfo
                     {
                         Title = "Moongate API",
                         Version = "v1"
@@ -40,7 +40,7 @@ public sealed class ApiDocsEndpointExtensionsTests
 
         await using var app = builder.Build();
         app.MapGet("/api/test", () => "ok")
-           .WithName("Test");
+            .WithName("Test");
         app.UseSwagger();
         app.MapMoongateApiDocs();
 
@@ -52,7 +52,7 @@ public sealed class ApiDocsEndpointExtensionsTests
             var address = server.Features.Get<IServerAddressesFeature>()!.Addresses.Single();
             using var client = new HttpClient();
 
-            var response = await client.GetAsync(new Uri(new(address), "/swagger/v1/swagger.json"));
+            var response = await client.GetAsync(new Uri(new Uri(address), "/swagger/v1/swagger.json"));
             var body = await response.Content.ReadAsStringAsync();
 
             Assert.True(response.IsSuccessStatusCode, $"{(int)response.StatusCode} {response.StatusCode}: {body}");

@@ -10,8 +10,8 @@ using Serilog;
 namespace Moongate.UO.Data.Multi;
 
 /// <summary>
-/// Loads UO multi component lists, preferring <c>MultiCollection.uop</c> (zlib) and falling back to
-/// classic <c>multi.idx</c>/<c>multi.mul</c>. A missing multi file yields an empty store.
+///     Loads UO multi component lists, preferring <c>MultiCollection.uop</c> (zlib) and falling back to
+///     classic <c>multi.idx</c>/<c>multi.mul</c>. A missing multi file yields an empty store.
 /// </summary>
 public sealed class MultiDataStore : IMultiDataStore
 {
@@ -23,7 +23,7 @@ public sealed class MultiDataStore : IMultiDataStore
     {
         ArgumentNullException.ThrowIfNull(resolver);
 
-        _components = new();
+        _components = new Dictionary<int, MultiComponentList>();
 
         var uopPath = resolver.Resolve("MultiCollection.uop");
 
@@ -52,7 +52,9 @@ public sealed class MultiDataStore : IMultiDataStore
     public int Count => _components.Count;
 
     public MultiComponentList GetComponents(int multiId)
-        => _components.GetValueOrDefault(multiId & 0x3FFF, MultiComponentList.Empty);
+    {
+        return _components.GetValueOrDefault(multiId & 0x3FFF, MultiComponentList.Empty);
+    }
 
     public static List<MultiTileEntry> ParseUopEntry(ReadOnlySpan<byte> data)
     {
@@ -77,16 +79,16 @@ public sealed class MultiDataStore : IMultiDataStore
 
             var flags = flagValue switch
             {
-                1   => UoTileFlag.None,
+                1 => UoTileFlag.None,
                 257 => UoTileFlag.Generic,
-                _   => UoTileFlag.Background
+                _ => UoTileFlag.Background
             };
 
             var clilocsCount = BinaryPrimitives.ReadUInt32LittleEndian(data[pos..]);
             pos += 4;
             pos += (int)clilocsCount * 4;
 
-            list.Add(new(itemId, x, y, z, flags));
+            list.Add(new MultiTileEntry(itemId, x, y, z, flags));
         }
 
         return list;
@@ -113,7 +115,7 @@ public sealed class MultiDataStore : IMultiDataStore
             }
 
             mul.Seek(lookup, SeekOrigin.Begin);
-            _components[i] = new(mulReader, length, true);
+            _components[i] = new MultiComponentList(mulReader, length, true);
         }
     }
 
@@ -146,7 +148,7 @@ public sealed class MultiDataStore : IMultiDataStore
                 stream.ReadExactly(data, 0, entry.Size);
             }
 
-            _components[index] = new(ParseUopEntry(data));
+            _components[index] = new MultiComponentList(ParseUopEntry(data));
         }
     }
 }

@@ -22,37 +22,37 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.Network;
 
 /// <summary>
-/// Owns the TCP game listeners (one per local interface), the UDP ping echo server and the
-/// background ingress thread that parses inbound bytes into packets and republishes them as
-/// tick events on the event bus.
+///     Owns the TCP game listeners (one per local interface), the UDP ping echo server and the
+///     background ingress thread that parses inbound bytes into packets and republishes them as
+///     tick events on the event bus.
 /// </summary>
 public sealed class NetworkService : INetworkService, IMetricProvider, IDisposable
 {
     private const int IngressIdleWaitMs = 5;
     private const int OutboundIdleWaitMs = 5;
+    private readonly NetworkConfig _config;
+    private readonly IEventBusService _eventBus;
 
     private readonly ILogger _logger = Log.ForContext<NetworkService>();
-    private readonly IEventBusService _eventBus;
-    private readonly ISessionService _sessions;
-    private readonly IOutgoingPacketQueue _outgoingPackets;
-    private readonly NetworkConfig _config;
     private readonly LoggerConfig _loggerConfig;
+    private readonly IOutgoingPacketQueue _outgoingPackets;
     private readonly PacketParser _parser;
+    private readonly ConcurrentDictionary<long, NetworkParserSessionMetrics> _parserMetrics = new();
+    private readonly ConcurrentQueue<PendingClientData> _pendingClientDataQueue = new();
+    private readonly AutoResetEvent _pendingClientDataSignal = new(false);
+    private readonly ISessionService _sessions;
 
     private readonly List<MoongateTCPServer> _tcpServers = [];
-    private readonly ConcurrentQueue<PendingClientData> _pendingClientDataQueue = new();
-    private readonly ConcurrentDictionary<long, NetworkParserSessionMetrics> _parserMetrics = new();
-    private readonly AutoResetEvent _pendingClientDataSignal = new(false);
+    private long _droppedOutgoingPackets;
+    private long _ingressQueueDepth;
+    private volatile bool _ingressStopRequested;
+    private Thread? _ingressThread;
+    private volatile bool _outboundStopRequested;
+    private Thread? _outboundThread;
+    private long _outgoingSendErrors;
 
     private MoongateUDPServer? _pingServer;
-    private Thread? _ingressThread;
-    private Thread? _outboundThread;
-    private volatile bool _ingressStopRequested;
-    private volatile bool _outboundStopRequested;
-    private long _ingressQueueDepth;
     private long _sentPackets;
-    private long _droppedOutgoingPackets;
-    private long _outgoingSendErrors;
 
     public NetworkService(
         IEventBusService eventBus,
@@ -67,27 +67,18 @@ public sealed class NetworkService : INetworkService, IMetricProvider, IDisposab
         _sessions = sessions;
         _outgoingPackets = outgoingPackets;
         _config = config;
-        _loggerConfig = loggerConfig ?? new();
-        _parser = new(packetRegistry, config.MaxPendingBufferBytes, config.MaxDeclaredPacketLength);
+        _loggerConfig = loggerConfig ?? new LoggerConfig();
+        _parser = new PacketParser(packetRegistry, config.MaxPendingBufferBytes, config.MaxDeclaredPacketLength);
     }
 
-    public int ConnectedSessionCount => _sessions.Count;
+    public void Dispose()
+    {
+        StopIngressLoop();
+        StopOutboundLoop();
+        _pendingClientDataSignal.Dispose();
+    }
 
     public string Prefix => "network";
-
-    private readonly struct PendingClientData
-    {
-        public long SessionId { get; }
-        public byte[] Data { get; }
-
-        public PendingClientData(long sessionId, byte[] data)
-        {
-            ArgumentNullException.ThrowIfNull(data);
-
-            SessionId = sessionId;
-            Data = data;
-        }
-    }
 
     public IReadOnlyList<MetricSample> Collect()
     {
@@ -109,58 +100,58 @@ public sealed class NetworkService : INetworkService, IMetricProvider, IDisposab
 
         return
         [
-            new(
+            new MetricSample(
                 "active_sessions",
                 _sessions.Count,
                 Help: "Currently connected sessions"
             ),
-            new(
+            new MetricSample(
                 "ingress_queue_depth",
                 Interlocked.Read(ref _ingressQueueDepth),
                 Help: "Pending client data items awaiting parsing"
             ),
-            new(
+            new MetricSample(
                 "received_bytes_total",
                 receivedBytes,
                 MetricType.Counter,
                 Help: "Total bytes received across sessions"
             ),
-            new(
+            new MetricSample(
                 "parsed_packets_total",
                 parsedPackets,
                 MetricType.Counter,
                 Help: "Total packets parsed across sessions"
             ),
-            new(
+            new MetricSample(
                 "unknown_opcode_drops_total",
                 unknownOpcodeDrops,
                 MetricType.Counter,
                 Help: "Total bytes dropped for unknown opcodes"
             ),
-            new(
+            new MetricSample(
                 "parser_errors_total",
                 parserErrors,
                 MetricType.Counter,
                 Help: "Total parser errors across sessions"
             ),
-            new(
+            new MetricSample(
                 "outgoing_queue_depth",
                 _outgoingPackets.Count,
                 Help: "Pending outbound packets awaiting delivery"
             ),
-            new(
+            new MetricSample(
                 "sent_packets_total",
                 Interlocked.Read(ref _sentPackets),
                 MetricType.Counter,
                 Help: "Total outbound packets sent"
             ),
-            new(
+            new MetricSample(
                 "dropped_outgoing_packets_total",
                 Interlocked.Read(ref _droppedOutgoingPackets),
                 MetricType.Counter,
                 Help: "Total outbound packets dropped before send"
             ),
-            new(
+            new MetricSample(
                 "outgoing_send_errors_total",
                 Interlocked.Read(ref _outgoingSendErrors),
                 MetricType.Counter,
@@ -169,12 +160,7 @@ public sealed class NetworkService : INetworkService, IMetricProvider, IDisposab
         ];
     }
 
-    public void Dispose()
-    {
-        StopIngressLoop();
-        StopOutboundLoop();
-        _pendingClientDataSignal.Dispose();
-    }
+    public int ConnectedSessionCount => _sessions.Count;
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
@@ -277,7 +263,8 @@ public sealed class NetworkService : INetworkService, IMetricProvider, IDisposab
     }
 
     private void LogOutgoingPacket(OutgoingPacketEnvelope envelope, byte[] payload)
-        => _logger.Information(
+    {
+        _logger.Information(
             ">> packet Session={SessionId} OpCode=0x{OpCode:X2} Name={PacketName} Length={Length}{NewLine}{Dump}",
             envelope.SessionId,
             envelope.Packet.OpCode,
@@ -286,11 +273,12 @@ public sealed class NetworkService : INetworkService, IMetricProvider, IDisposab
             Environment.NewLine,
             BuildHexDump(payload)
         );
+    }
 
     private void OnClientConnected(object? sender, MoongateTCPClientEventArgs e)
     {
         var session = _sessions.GetOrCreate(e.Client);
-        _parserMetrics.TryAdd(session.SessionId, new());
+        _parserMetrics.TryAdd(session.SessionId, new NetworkParserSessionMetrics());
 
         _logger.Information(
             "Client connected. SessionId={SessionId}, RemoteEndPoint={RemoteEndPoint}",
@@ -306,7 +294,7 @@ public sealed class NetworkService : INetworkService, IMetricProvider, IDisposab
             return;
         }
 
-        _pendingClientDataQueue.Enqueue(new(e.Client.SessionId, e.Data.ToArray()));
+        _pendingClientDataQueue.Enqueue(new PendingClientData(e.Client.SessionId, e.Data.ToArray()));
         Interlocked.Increment(ref _ingressQueueDepth);
         _pendingClientDataSignal.Set();
     }
@@ -325,7 +313,9 @@ public sealed class NetworkService : INetworkService, IMetricProvider, IDisposab
     }
 
     private void OnClientException(object? sender, MoongateTCPExceptionEventArgs e)
-        => _logger.Error(e.Exception, "Client network exception");
+    {
+        _logger.Error(e.Exception, "Client network exception");
+    }
 
     private void ProcessClientData(long sessionId, byte[] data)
     {
@@ -334,10 +324,9 @@ public sealed class NetworkService : INetworkService, IMetricProvider, IDisposab
             return;
         }
 
-        var metrics = _parserMetrics.GetOrAdd(sessionId, static _ => new());
+        var metrics = _parserMetrics.GetOrAdd(sessionId, static _ => new NetworkParserSessionMetrics());
 
-        session.WithPendingBytes(
-            pendingBytes => _parser.Append(
+        session.WithPendingBytes(pendingBytes => _parser.Append(
                 pendingBytes,
                 data,
                 metrics,
@@ -421,8 +410,8 @@ public sealed class NetworkService : INetworkService, IMetricProvider, IDisposab
             if (_loggerConfig.LogPackets)
             {
                 session.SendPacket(envelope.Packet, payload => LogOutgoingPacket(envelope, payload))
-                       .GetAwaiter()
-                       .GetResult();
+                    .GetAwaiter()
+                    .GetResult();
             }
             else
             {
@@ -448,7 +437,7 @@ public sealed class NetworkService : INetworkService, IMetricProvider, IDisposab
         }
 
         _ingressStopRequested = false;
-        _ingressThread = new(RunIngressLoop)
+        _ingressThread = new Thread(RunIngressLoop)
         {
             IsBackground = true,
             Name = "Moongate-NetworkIngress"
@@ -464,7 +453,7 @@ public sealed class NetworkService : INetworkService, IMetricProvider, IDisposab
         }
 
         _outboundStopRequested = false;
-        _outboundThread = new(RunOutboundLoop)
+        _outboundThread = new Thread(RunOutboundLoop)
         {
             IsBackground = true,
             Name = "Moongate-NetworkOutbound"
@@ -479,15 +468,15 @@ public sealed class NetworkService : INetworkService, IMetricProvider, IDisposab
             return;
         }
 
-        _pingServer = new(new(IPAddress.Any, _config.PingServerPort));
+        _pingServer = new MoongateUDPServer(new IPEndPoint(IPAddress.Any, _config.PingServerPort));
         _ = _pingServer.StartAsync(cancellationToken);
     }
 
     private void StartTcpServers(CancellationToken cancellationToken)
     {
-        foreach (var endPoint in NetworkUtils.GetListeningAddresses(new(IPAddress.Any, _config.Port)))
+        foreach (var endPoint in NetworkUtils.GetListeningAddresses(new IPEndPoint(IPAddress.Any, _config.Port)))
         {
-            var server = new MoongateTCPServer(new(endPoint.Address, _config.Port));
+            var server = new MoongateTCPServer(new IPEndPoint(endPoint.Address, _config.Port));
             server.OnClientConnect += OnClientConnected;
             server.OnClientDisconnect += OnClientDisconnected;
             server.OnDataReceived += OnClientData;
@@ -522,5 +511,19 @@ public sealed class NetworkService : INetworkService, IMetricProvider, IDisposab
         _outboundStopRequested = true;
         _outboundThread.Join(TimeSpan.FromSeconds(2));
         _outboundThread = null;
+    }
+
+    private readonly struct PendingClientData
+    {
+        public long SessionId { get; }
+        public byte[] Data { get; }
+
+        public PendingClientData(long sessionId, byte[] data)
+        {
+            ArgumentNullException.ThrowIfNull(data);
+
+            SessionId = sessionId;
+            Data = data;
+        }
     }
 }

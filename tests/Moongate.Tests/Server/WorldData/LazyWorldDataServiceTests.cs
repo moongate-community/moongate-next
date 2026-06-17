@@ -21,7 +21,7 @@ public sealed class LazyWorldDataServiceTests : IDisposable
     {
         WriteSpawnYaml("first");
         var service = new ServerAssetDataBootService();
-        var spawns = new SpawnsDataService(new(_dataDirectory));
+        var spawns = new SpawnsDataService(new ServerAssetDataLoader(_dataDirectory));
 
         await service.StartAsync(CancellationToken.None);
 
@@ -32,7 +32,7 @@ public sealed class LazyWorldDataServiceTests : IDisposable
     public void SpawnsDataService_GetAllEntries_LoadsSpawnsOnlyOnFirstQuery()
     {
         WriteSpawnYaml("first");
-        var service = new SpawnsDataService(new(_dataDirectory));
+        var service = new SpawnsDataService(new ServerAssetDataLoader(_dataDirectory));
 
         Assert.True(service.IsLazy);
         Assert.False(service.IsLoaded);
@@ -49,7 +49,7 @@ public sealed class LazyWorldDataServiceTests : IDisposable
     [Fact]
     public void SpawnsDataService_ImplementsCommonDataServiceContract()
     {
-        var service = new SpawnsDataService(new(_dataDirectory));
+        var service = new SpawnsDataService(new ServerAssetDataLoader(_dataDirectory));
 
         Assert.IsAssignableFrom<IDataService>(service);
         Assert.True(service.IsLazy);
@@ -59,7 +59,7 @@ public sealed class LazyWorldDataServiceTests : IDisposable
     public void SpawnsDataService_Reload_ReplacesCachedEntries()
     {
         WriteSpawnYaml("first");
-        var service = new SpawnsDataService(new(_dataDirectory));
+        var service = new SpawnsDataService(new ServerAssetDataLoader(_dataDirectory));
 
         Assert.Equal("first", Assert.Single(service.GetAllEntries()).Name);
         WriteSpawnYaml("second");
@@ -79,7 +79,8 @@ public sealed class LazyWorldDataServiceTests : IDisposable
     }
 
     private void WriteSpawnYaml(string name)
-        => WriteFile(
+    {
+        WriteFile(
             Path.Combine(_dataDirectory, "spawns", "shared", "felucca", "Test.yaml"),
             $$"""
               spawn:
@@ -99,4 +100,5 @@ public sealed class LazyWorldDataServiceTests : IDisposable
                       probability: 100
               """
         );
+    }
 }

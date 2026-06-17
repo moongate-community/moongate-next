@@ -8,8 +8,8 @@ using ZLinq.Linq;
 namespace Moongate.Tests.Support;
 
 /// <summary>
-/// IPlayerSessionService stub holding a fixed set of sessions returned by <see cref="GetAll" />.
-/// Supports mutation via <see cref="Set" /> and <see cref="Clear" />; other members throw.
+///     IPlayerSessionService stub holding a fixed set of sessions returned by <see cref="GetAll" />.
+///     Supports mutation via <see cref="Set" /> and <see cref="Clear" />; other members throw.
 /// </summary>
 public sealed class StubPlayerSessions : IPlayerSessionService
 {
@@ -23,13 +23,14 @@ public sealed class StubPlayerSessions : IPlayerSessionService
     public int Count => _sessions.Length;
 
     public PlayerSession Authenticate(long sessionId, Serial userId, string username, DateTimeOffset authenticatedAt)
-        => throw new NotSupportedException();
-
-    public void Clear()
-        => _sessions = [];
+    {
+        throw new NotSupportedException();
+    }
 
     public bool Disconnect(long sessionId, DateTimeOffset disconnectedAt)
-        => throw new NotSupportedException();
+    {
+        throw new NotSupportedException();
+    }
 
     public PlayerSession EnterWorld(
         long sessionId,
@@ -37,32 +38,57 @@ public sealed class StubPlayerSessions : IPlayerSessionService
         Serial mobileSerial,
         DateTimeOffset enteredWorldAt
     )
-        => throw new NotSupportedException();
+    {
+        throw new NotSupportedException();
+    }
 
     public IReadOnlyCollection<PlayerSession> GetAll()
-        => _sessions;
+    {
+        return _sessions;
+    }
 
     public PlayerSession GetOrCreateConnected(long sessionId, string? remoteEndPoint, DateTimeOffset connectedAt)
-        => throw new NotSupportedException();
+    {
+        throw new NotSupportedException();
+    }
 
     public ValueEnumerable<FromArray<PlayerSession>, PlayerSession> Query()
-        => throw new NotSupportedException();
+    {
+        throw new NotSupportedException();
+    }
 
     public bool Remove(long sessionId)
-        => throw new NotSupportedException();
-
-    public void Set(params PlayerSession[] sessions)
-        => _sessions = sessions ?? [];
+    {
+        throw new NotSupportedException();
+    }
 
     public bool TryGetByMobileSerial(Serial mobileSerial, out PlayerSession session)
-        => throw new NotSupportedException();
+    {
+        throw new NotSupportedException();
+    }
 
     public bool TryGetBySessionId(long sessionId, out PlayerSession session)
-        => throw new NotSupportedException();
+    {
+        throw new NotSupportedException();
+    }
 
     public PlayerSession UpdateClient(long sessionId, ClientVersion? clientVersion = null, int? viewRange = null)
-        => throw new NotSupportedException();
+    {
+        throw new NotSupportedException();
+    }
 
     public void UpdateMovementState(long sessionId, byte moveSequence, long moveCredit, long moveTime)
-        => throw new NotSupportedException();
+    {
+        throw new NotSupportedException();
+    }
+
+    public void Clear()
+    {
+        _sessions = [];
+    }
+
+    public void Set(params PlayerSession[] sessions)
+    {
+        _sessions = sessions ?? [];
+    }
 }

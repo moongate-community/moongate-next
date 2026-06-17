@@ -10,24 +10,6 @@ namespace Moongate.Tests.Server.Endpoints;
 
 public sealed class UoItemEndpointExtensionsTests
 {
-    private sealed class TestTileDataStore : ITileDataStore
-    {
-        public TestTileDataStore(IReadOnlyList<ItemData> itemTable)
-        {
-            ItemTable = itemTable;
-        }
-
-        public IReadOnlyList<LandData> LandTable { get; } = [];
-
-        public IReadOnlyList<ItemData> ItemTable { get; }
-
-        public ItemData GetItem(int id)
-            => id >= 0 && id < ItemTable.Count ? ItemTable[id] : default;
-
-        public LandData GetLand(int id)
-            => default;
-    }
-
     [Fact]
     public void HandleDetail_ExistingItem_ReturnsDetail()
     {
@@ -108,8 +90,13 @@ public sealed class UoItemEndpointExtensionsTests
         Assert.Equal(["gold coin", "wooden crate"], ok.Value.Items.Select(static item => item.Name));
     }
 
-    [Theory, InlineData("crate", "wooden crate"), InlineData("1", "wooden crate"), InlineData("0x0001", "wooden crate"),
-     InlineData("0x001", "wooden crate"), InlineData("0x1", "wooden crate"), InlineData("wearable", "longsword")]
+    [Theory]
+    [InlineData("crate", "wooden crate")]
+    [InlineData("1", "wooden crate")]
+    [InlineData("0x0001", "wooden crate")]
+    [InlineData("0x001", "wooden crate")]
+    [InlineData("0x1", "wooden crate")]
+    [InlineData("wearable", "longsword")]
     public void HandleList_SearchesNameDecimalAndHex(string search, string expectedName)
     {
         var result = UoItemEndpointExtensions.HandleList(
@@ -125,12 +112,36 @@ public sealed class UoItemEndpointExtensionsTests
     }
 
     private static TestTileDataStore SeedTileData()
-        => new(
+    {
+        return new TestTileDataStore(
             [
-                new("gold coin", UoTileFlag.Generic, 1, 0, 0, 0, 1, 1),
-                new("wooden crate", UoTileFlag.Container | UoTileFlag.Surface, 10, 0, 0, 0, 5, 6),
-                new("longsword", UoTileFlag.Weapon | UoTileFlag.Wearable, 5, 0, 0, 0, 45, 1),
+                new ItemData("gold coin", UoTileFlag.Generic, 1, 0, 0, 0, 1, 1),
+                new ItemData("wooden crate", UoTileFlag.Container | UoTileFlag.Surface, 10, 0, 0, 0, 5, 6),
+                new ItemData("longsword", UoTileFlag.Weapon | UoTileFlag.Wearable, 5, 0, 0, 0, 45, 1),
                 default
             ]
         );
+    }
+
+    private sealed class TestTileDataStore : ITileDataStore
+    {
+        public TestTileDataStore(IReadOnlyList<ItemData> itemTable)
+        {
+            ItemTable = itemTable;
+        }
+
+        public IReadOnlyList<LandData> LandTable { get; } = [];
+
+        public IReadOnlyList<ItemData> ItemTable { get; }
+
+        public ItemData GetItem(int id)
+        {
+            return id >= 0 && id < ItemTable.Count ? ItemTable[id] : default;
+        }
+
+        public LandData GetLand(int id)
+        {
+            return default;
+        }
+    }
 }

@@ -10,9 +10,9 @@ using Moongate.Persistence.Internal;
 namespace Moongate.Persistence.Data;
 
 /// <summary>
-/// Default descriptor for a persisted entity kind. Serializes via a composite MessagePack resolver
-/// (<see cref="SerialMessagePackFormatter" /> first, then contractless), so plain POCO entities —
-/// including those with <c>Serial</c> fields/keys — need no attributes.
+///     Default descriptor for a persisted entity kind. Serializes via a composite MessagePack resolver
+///     (<see cref="SerialMessagePackFormatter" /> first, then contractless), so plain POCO entities —
+///     including those with <c>Serial</c> fields/keys — need no attributes.
 /// </summary>
 public sealed class PersistenceEntityDescriptor<TEntity, TKey>
     : IPersistenceEntityDescriptor<TEntity, TKey>, IInternalEntityApplier
@@ -53,38 +53,10 @@ public sealed class PersistenceEntityDescriptor<TEntity, TKey>
         _keySelector = keySelector;
     }
 
-    public ushort TypeId { get; }
-    public string TypeName { get; }
-    public int SchemaVersion { get; }
-    public Type EntityType => typeof(TEntity);
-    public Type KeyType => typeof(TKey);
-
-    public TEntity Clone(TEntity entity)
-        => DeserializeEntity(SerializeEntity(entity));
-
-    public IReadOnlyList<TEntity> DeserializeBucket(byte[] payload)
-        => MessagePackSerializer.Deserialize<List<TEntity>>(payload, SerializerOptions) ?? [];
-
-    public TEntity DeserializeEntity(byte[] payload)
-        => MessagePackSerializer.Deserialize<TEntity>(payload, SerializerOptions)!;
-
-    public TKey DeserializeKey(byte[] payload)
-        => MessagePackSerializer.Deserialize<TKey>(payload, SerializerOptions)!;
-
-    public TKey GetKey(TEntity entity)
-        => _keySelector(entity);
-
-    public byte[] SerializeBucket(IReadOnlyCollection<TEntity> entities)
-        => MessagePackSerializer.Serialize(entities, SerializerOptions);
-
-    public byte[] SerializeEntity(TEntity entity)
-        => MessagePackSerializer.Serialize(entity, SerializerOptions);
-
-    public byte[] SerializeKey(TKey key)
-        => MessagePackSerializer.Serialize(key, SerializerOptions);
-
     void IInternalEntityApplier.ApplyRemove(PersistenceStateStore stateStore, byte[] payload)
-        => stateStore.GetBucket<TEntity, TKey>(TypeId).Remove(DeserializeKey(payload));
+    {
+        stateStore.GetBucket<TEntity, TKey>(TypeId).Remove(DeserializeKey(payload));
+    }
 
     void IInternalEntityApplier.ApplyUpsert(PersistenceStateStore stateStore, byte[] payload)
     {
@@ -107,7 +79,7 @@ public sealed class PersistenceEntityDescriptor<TEntity, TKey>
             return null;
         }
 
-        return new()
+        return new EntitySnapshotBucket
         {
             TypeId = TypeId,
             TypeName = TypeName,
@@ -117,7 +89,9 @@ public sealed class PersistenceEntityDescriptor<TEntity, TKey>
     }
 
     int IInternalEntityApplier.Count(PersistenceStateStore stateStore)
-        => stateStore.GetBucket<TEntity, TKey>(TypeId).Count;
+    {
+        return stateStore.GetBucket<TEntity, TKey>(TypeId).Count;
+    }
 
     void IInternalEntityApplier.LoadBucket(PersistenceStateStore stateStore, EntitySnapshotBucket bucket)
     {
@@ -134,5 +108,51 @@ public sealed class PersistenceEntityDescriptor<TEntity, TKey>
                 stateStore.TrackKey(TypeId, autoKey);
             }
         }
+    }
+
+    public ushort TypeId { get; }
+    public string TypeName { get; }
+    public int SchemaVersion { get; }
+    public Type EntityType => typeof(TEntity);
+    public Type KeyType => typeof(TKey);
+
+    public TEntity Clone(TEntity entity)
+    {
+        return DeserializeEntity(SerializeEntity(entity));
+    }
+
+    public IReadOnlyList<TEntity> DeserializeBucket(byte[] payload)
+    {
+        return MessagePackSerializer.Deserialize<List<TEntity>>(payload, SerializerOptions) ?? [];
+    }
+
+    public TEntity DeserializeEntity(byte[] payload)
+    {
+        return MessagePackSerializer.Deserialize<TEntity>(payload, SerializerOptions)!;
+    }
+
+    public TKey DeserializeKey(byte[] payload)
+    {
+        return MessagePackSerializer.Deserialize<TKey>(payload, SerializerOptions)!;
+    }
+
+    public TKey GetKey(TEntity entity)
+    {
+        return _keySelector(entity);
+    }
+
+    public byte[] SerializeBucket(IReadOnlyCollection<TEntity> entities)
+    {
+        return MessagePackSerializer.Serialize(entities, SerializerOptions);
+    }
+
+    public byte[] SerializeEntity(TEntity entity)
+    {
+        return MessagePackSerializer.Serialize(entity, SerializerOptions);
+    }
+
+    public byte[] SerializeKey(TKey key)
+    {
+        return MessagePackSerializer.Serialize(key, SerializerOptions);
     }
 }

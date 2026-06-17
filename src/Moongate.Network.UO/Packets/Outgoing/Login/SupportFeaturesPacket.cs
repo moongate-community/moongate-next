@@ -7,7 +7,7 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Outgoing.Login;
 
 /// <summary>
-/// Represents a supported client features packet.
+///     Represents a supported client features packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Variable, Description = "Enable Locked Client Features")]
 public class SupportFeaturesPacket : BaseGameNetworkPacket
@@ -16,11 +16,10 @@ public class SupportFeaturesPacket : BaseGameNetworkPacket
     private const int ExtendedLength = 5;
     private const int LegacyLength = 3;
 
-    public FeatureFlags Flags { get; set; }
-    public bool UseExtendedFormat { get; set; }
-
     public SupportFeaturesPacket()
-        : this(FeatureFlags.ExpansionEj, true) { }
+        : this(FeatureFlags.ExpansionEj, true)
+    {
+    }
 
     public SupportFeaturesPacket(FeatureFlags flags, bool useExtendedFormat)
         : base(OpCodeValue, useExtendedFormat ? ExtendedLength : LegacyLength)
@@ -28,6 +27,9 @@ public class SupportFeaturesPacket : BaseGameNetworkPacket
         Flags = flags;
         UseExtendedFormat = useExtendedFormat;
     }
+
+    public FeatureFlags Flags { get; set; }
+    public bool UseExtendedFormat { get; set; }
 
     public override void Write(ref SpanWriter writer)
     {

@@ -6,22 +6,24 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.Commands;
 
 /// <summary>
-/// Reads command lines from stdin when an interactive console is available.
+///     Reads command lines from stdin when an interactive console is available.
 /// </summary>
 public sealed class ConsoleCommandService : IConsoleCommandService, IDisposable
 {
     internal const string Prompt = "MG> ";
+    private readonly ICommandSystemService _commands;
+    private readonly Func<bool> _isInputRedirected;
+    private readonly IHostApplicationLifetime _lifetime;
 
     private readonly ILogger _logger = Log.ForContext<ConsoleCommandService>();
-    private readonly ICommandSystemService _commands;
-    private readonly IHostApplicationLifetime _lifetime;
-    private readonly Func<bool> _isInputRedirected;
+    private Task? _loop;
     private CancellationTokenRegistration _startupRegistration;
     private CancellationTokenSource? _stop;
-    private Task? _loop;
 
     public ConsoleCommandService(ICommandSystemService commands, IHostApplicationLifetime lifetime)
-        : this(commands, lifetime, static () => Console.IsInputRedirected) { }
+        : this(commands, lifetime, static () => Console.IsInputRedirected)
+    {
+    }
 
     internal ConsoleCommandService(
         ICommandSystemService commands,
@@ -36,12 +38,6 @@ public sealed class ConsoleCommandService : IConsoleCommandService, IDisposable
         _commands = commands;
         _lifetime = lifetime;
         _isInputRedirected = isInputRedirected;
-    }
-
-    public void Dispose()
-    {
-        _startupRegistration.Dispose();
-        _stop?.Dispose();
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -81,6 +77,12 @@ public sealed class ConsoleCommandService : IConsoleCommandService, IDisposable
         {
             await _loop.WaitAsync(cancellationToken);
         }
+    }
+
+    public void Dispose()
+    {
+        _startupRegistration.Dispose();
+        _stop?.Dispose();
     }
 
     internal static bool IsLoopTerminatingCommand(string line)

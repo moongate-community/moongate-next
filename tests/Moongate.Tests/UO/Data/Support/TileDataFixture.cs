@@ -3,27 +3,13 @@ using System.Text;
 namespace Moongate.Tests.UO.Data.Support;
 
 /// <summary>
-/// Writes a minimal but structurally valid <c>tiledata.mul</c> (32-bit flags, 0x4000 land + 0x4000
-/// item entries) to a temp directory, with a few caller-specified entries populated.
+///     Writes a minimal but structurally valid <c>tiledata.mul</c> (32-bit flags, 0x4000 land + 0x4000
+///     item entries) to a temp directory, with a few caller-specified entries populated.
 /// </summary>
 public static class TileDataFixture
 {
     private const int LandLength = 0x4000;
     private const int ItemLength = 0x4000;
-
-    public sealed record LandEntry(int Index, uint Flags, string Name);
-
-    public sealed record ItemEntry(
-        int Index,
-        uint Flags,
-        string Name,
-        int Weight,
-        int Quality,
-        int Animation,
-        int Quantity,
-        int Value,
-        int Height
-    );
 
     public static string Write(string directory, IEnumerable<LandEntry> land, IEnumerable<ItemEntry> items)
     {
@@ -81,4 +67,18 @@ public static class TileDataFixture
         bytes.AsSpan(0, count).CopyTo(buffer);
         bw.Write(buffer);
     }
+
+    public sealed record LandEntry(int Index, uint Flags, string Name);
+
+    public sealed record ItemEntry(
+        int Index,
+        uint Flags,
+        string Name,
+        int Weight,
+        int Quality,
+        int Animation,
+        int Quantity,
+        int Value,
+        int Height
+    );
 }

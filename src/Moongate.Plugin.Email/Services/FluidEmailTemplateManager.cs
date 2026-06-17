@@ -14,11 +14,11 @@ public sealed class FluidEmailTemplateManager : IEmailTemplateManager
     private const string TextFileName = "text.liquid";
     private const string HtmlFileName = "html.liquid";
     private static readonly FluidParser Parser = new();
+    private readonly EmailPluginConfig _config;
+    private readonly TemplateOptions _options;
+    private readonly EmailPluginRuntimePaths _paths;
 
     private readonly ConcurrentDictionary<string, CachedTemplate> _templates = new(StringComparer.OrdinalIgnoreCase);
-    private readonly EmailPluginConfig _config;
-    private readonly EmailPluginRuntimePaths _paths;
-    private readonly TemplateOptions _options;
 
     public FluidEmailTemplateManager(EmailPluginConfig config, EmailPluginRuntimePaths paths)
     {
@@ -38,8 +38,6 @@ public sealed class FluidEmailTemplateManager : IEmailTemplateManager
 
     internal string TemplatesRoot => EmailTemplateAssetsBootstrapper.ResolveTemplatesRoot(_config, _paths);
 
-    private sealed record CachedTemplate(IFluidTemplate Template, DateTime LastModified);
-
     public async ValueTask<RenderedEmailTemplate> RenderActivationAsync(
         string templateId,
         ActivationEmailModel model,
@@ -51,19 +49,19 @@ public sealed class FluidEmailTemplateManager : IEmailTemplateManager
 
         var templateDirectory = GetTemplateDirectory(templateId);
         var subject = await RenderAsync(
-                          await LoadTemplateAsync(Path.Combine(templateDirectory, SubjectFileName), true, cancellationToken),
-                          model,
-                          false
-                      );
+            await LoadTemplateAsync(Path.Combine(templateDirectory, SubjectFileName), true, cancellationToken),
+            model,
+            false
+        );
         var text = await RenderAsync(
-                       await LoadTemplateAsync(Path.Combine(templateDirectory, TextFileName), true, cancellationToken),
-                       model,
-                       false
-                   );
+            await LoadTemplateAsync(Path.Combine(templateDirectory, TextFileName), true, cancellationToken),
+            model,
+            false
+        );
         var htmlTemplate = await LoadTemplateAsync(Path.Combine(templateDirectory, HtmlFileName), false, cancellationToken);
         var html = htmlTemplate is null ? null : await RenderAsync(htmlTemplate, model, true);
 
-        return new(subject.Trim(), text, string.IsNullOrWhiteSpace(html) ? null : html);
+        return new RenderedEmailTemplate(subject.Trim(), text, string.IsNullOrWhiteSpace(html) ? null : html);
     }
 
     private static TemplateOptions CreateOptions()
@@ -81,7 +79,9 @@ public sealed class FluidEmailTemplateManager : IEmailTemplateManager
     }
 
     private string GetTemplateDirectory(string templateId)
-        => Path.Combine(TemplatesRoot, templateId);
+    {
+        return Path.Combine(TemplatesRoot, templateId);
+    }
 
     private async ValueTask<IFluidTemplate?> LoadTemplateAsync(
         string path,
@@ -119,7 +119,7 @@ public sealed class FluidEmailTemplateManager : IEmailTemplateManager
             throw new InvalidOperationException($"Email template file '{path}' is invalid: {error}");
         }
 
-        _templates[path] = new(template, lastModified);
+        _templates[path] = new CachedTemplate(template, lastModified);
 
         return template;
     }
@@ -129,7 +129,9 @@ public sealed class FluidEmailTemplateManager : IEmailTemplateManager
         var context = new TemplateContext(model, _options, false);
 
         return htmlEncode
-                   ? await template.RenderAsync(context, HtmlEncoder.Default)
-                   : await template.RenderAsync(context);
+            ? await template.RenderAsync(context, HtmlEncoder.Default)
+            : await template.RenderAsync(context);
     }
+
+    private sealed record CachedTemplate(IFluidTemplate Template, DateTime LastModified);
 }

@@ -1,6 +1,7 @@
 using Moongate.Core.Ids;
 using Moongate.Persistence.Interfaces.Persistence;
 using Moongate.Server.Services.Mobiles;
+using Moongate.UO.Data.Data.Mobiles;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Entities.Mobiles;
 using Moongate.UO.Data.Types.Items;
@@ -10,74 +11,12 @@ namespace Moongate.Tests.Server.Mobiles;
 
 public sealed class MobileServiceTests
 {
-    private sealed class FakeMobileAccess : IAutoDataAccess<MobileEntity, Serial>
-    {
-        private readonly Dictionary<Serial, MobileEntity> _store = [];
-        private uint _next = 1;
-
-        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(_store.Count);
-
-        public ValueTask<IReadOnlyCollection<MobileEntity>> GetAllAsync(CancellationToken cancellationToken = default)
-            => ValueTask.FromResult<IReadOnlyCollection<MobileEntity>>(_store.Values.ToArray());
-
-        public ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(_store.TryGetValue(id, out var e) ? e : null);
-
-        public ValueTask<Serial> NextIdAsync(CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(new Serial(_next++));
-
-        public IQueryable<MobileEntity> Query()
-            => _store.Values.AsQueryable();
-
-        public ValueTask<bool> RemoveAsync(Serial id, CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(_store.Remove(id));
-
-        public ValueTask UpsertAsync(MobileEntity entity, CancellationToken cancellationToken = default)
-        {
-            _store[entity.Id] = entity;
-
-            return ValueTask.CompletedTask;
-        }
-    }
-
-    private sealed class FakeItemAccess : IAutoDataAccess<ItemEntity, Serial>
-    {
-        private readonly Dictionary<Serial, ItemEntity> _store = [];
-        private uint _next = 1;
-
-        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(_store.Count);
-
-        public ValueTask<IReadOnlyCollection<ItemEntity>> GetAllAsync(CancellationToken cancellationToken = default)
-            => ValueTask.FromResult<IReadOnlyCollection<ItemEntity>>(_store.Values.ToArray());
-
-        public ValueTask<ItemEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(_store.TryGetValue(id, out var e) ? e : null);
-
-        public ValueTask<Serial> NextIdAsync(CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(new Serial(_next++));
-
-        public IQueryable<ItemEntity> Query()
-            => _store.Values.AsQueryable();
-
-        public ValueTask<bool> RemoveAsync(Serial id, CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(_store.Remove(id));
-
-        public ValueTask UpsertAsync(ItemEntity entity, CancellationToken cancellationToken = default)
-        {
-            _store[entity.Id] = entity;
-
-            return ValueTask.CompletedTask;
-        }
-    }
-
     [Fact]
     public async Task CreateAsync_AllocatesSerialInMobileRange()
     {
         var service = new MobileService(new FakeMobileAccess(), new FakeItemAccess());
 
-        var mobile = await service.CreateAsync(new() { Name = "npc" });
+        var mobile = await service.CreateAsync(new MobileEntity { Name = "npc" });
 
         Assert.True(mobile.Id.IsValid);
         Assert.True(mobile.Id.Value < Serial.ItemOffset);
@@ -90,9 +29,9 @@ public sealed class MobileServiceTests
         var items = new FakeItemAccess();
         var service = new MobileService(mobiles, items);
 
-        var first = await service.CreateAsync(new());
-        var second = await service.CreateAsync(new());
-        var sword = new ItemEntity { Id = new(Serial.ItemOffset + 1), ItemId = 0x0F5E };
+        var first = await service.CreateAsync(new MobileEntity());
+        var second = await service.CreateAsync(new MobileEntity());
+        var sword = new ItemEntity { Id = new Serial(Serial.ItemOffset + 1), ItemId = 0x0F5E };
         await items.UpsertAsync(sword);
 
         await service.EquipAsync(first, sword, ItemLayerType.OneHanded);
@@ -111,9 +50,10 @@ public sealed class MobileServiceTests
         var items = new FakeItemAccess();
         var service = new MobileService(mobiles, items);
 
-        var mobile = await service.CreateAsync(new());
+        var mobile = await service.CreateAsync(new MobileEntity());
         var containerId = new Serial(Serial.ItemOffset + 10);
-        var sword = new ItemEntity { Id = new(Serial.ItemOffset + 1), ItemId = 0x0F5E, ParentContainerId = containerId };
+        var sword = new ItemEntity
+        { Id = new Serial(Serial.ItemOffset + 1), ItemId = 0x0F5E, ParentContainerId = containerId };
         var container = new ItemEntity { Id = containerId, ItemId = 0x0E75 };
         container.ContainedItemIds.Add(sword.Id);
         await items.UpsertAsync(sword);
@@ -134,8 +74,9 @@ public sealed class MobileServiceTests
         var items = new FakeItemAccess();
         var service = new MobileService(mobiles, items);
 
-        var mobile = await service.CreateAsync(new());
-        var sword = new ItemEntity { Id = new(Serial.ItemOffset + 1), ItemId = 0x0F5E, ParentContainerId = new(5) };
+        var mobile = await service.CreateAsync(new MobileEntity());
+        var sword = new ItemEntity
+        { Id = new Serial(Serial.ItemOffset + 1), ItemId = 0x0F5E, ParentContainerId = new Serial(5) };
         await items.UpsertAsync(sword);
 
         var equipped = await service.EquipAsync(mobile, sword, ItemLayerType.OneHanded);
@@ -151,10 +92,10 @@ public sealed class MobileServiceTests
     public async Task EquipAsync_OccupiedLayer_ReturnsFalse()
     {
         var service = new MobileService(new FakeMobileAccess(), new FakeItemAccess());
-        var mobile = await service.CreateAsync(new());
-        mobile.EquippedItemIds[ItemLayerType.Helm] = new(Serial.ItemOffset + 9);
+        var mobile = await service.CreateAsync(new MobileEntity());
+        mobile.EquippedItemIds[ItemLayerType.Helm] = new Serial(Serial.ItemOffset + 9);
 
-        var hat = new ItemEntity { Id = new(Serial.ItemOffset + 1), ItemId = 0x1718 };
+        var hat = new ItemEntity { Id = new Serial(Serial.ItemOffset + 1), ItemId = 0x1718 };
 
         Assert.False(await service.EquipAsync(mobile, hat, ItemLayerType.Helm));
     }
@@ -163,8 +104,8 @@ public sealed class MobileServiceTests
     public async Task EquipAsync_SameItemSameLayer_IsIdempotent()
     {
         var service = new MobileService(new FakeMobileAccess(), new FakeItemAccess());
-        var mobile = await service.CreateAsync(new());
-        var sword = new ItemEntity { Id = new(Serial.ItemOffset + 1), ItemId = 0x0F5E };
+        var mobile = await service.CreateAsync(new MobileEntity());
+        var sword = new ItemEntity { Id = new Serial(Serial.ItemOffset + 1), ItemId = 0x0F5E };
 
         Assert.True(await service.EquipAsync(mobile, sword, ItemLayerType.OneHanded));
         Assert.True(await service.EquipAsync(mobile, sword, ItemLayerType.OneHanded));
@@ -176,7 +117,7 @@ public sealed class MobileServiceTests
     {
         var service = new MobileService(new FakeMobileAccess(), new FakeItemAccess());
 
-        var result = await service.GetByAccountIdAsync(new(999));
+        var result = await service.GetByAccountIdAsync(new Serial(999));
 
         Assert.Empty(result);
     }
@@ -190,9 +131,9 @@ public sealed class MobileServiceTests
         var accountA = new Serial(100);
         var accountB = new Serial(200);
 
-        var m1 = await service.CreateAsync(new() { AccountId = accountA, Name = "Alice" });
-        var m2 = await service.CreateAsync(new() { AccountId = accountA, Name = "Bob" });
-        await service.CreateAsync(new() { AccountId = accountB, Name = "Charlie" });
+        var m1 = await service.CreateAsync(new MobileEntity { AccountId = accountA, Name = "Alice" });
+        var m2 = await service.CreateAsync(new MobileEntity { AccountId = accountA, Name = "Bob" });
+        await service.CreateAsync(new MobileEntity { AccountId = accountB, Name = "Charlie" });
 
         var result = await service.GetByAccountIdAsync(accountA);
 
@@ -206,7 +147,7 @@ public sealed class MobileServiceTests
     {
         var service = new MobileService(new FakeMobileAccess(), new FakeItemAccess());
 
-        var skill = service.GetSkill(new(), UOSkillName.Alchemy);
+        var skill = service.GetSkill(new MobileEntity(), UOSkillName.Alchemy);
 
         Assert.Equal(0.0, skill.Value);
     }
@@ -215,7 +156,7 @@ public sealed class MobileServiceTests
     public async Task SetSkillAsync_CreatesEntry_AndGetSkillReturnsIt()
     {
         var service = new MobileService(new FakeMobileAccess(), new FakeItemAccess());
-        var mobile = await service.CreateAsync(new());
+        var mobile = await service.CreateAsync(new MobileEntity());
 
         await service.SetSkillAsync(mobile, UOSkillName.Magery, 75.0);
 
@@ -228,8 +169,8 @@ public sealed class MobileServiceTests
     public async Task SetSkillAsync_ExistingSkill_PreservesCapAndLock()
     {
         var service = new MobileService(new FakeMobileAccess(), new FakeItemAccess());
-        var mobile = await service.CreateAsync(new());
-        mobile.Skills[UOSkillName.Swords] = new() { Value = 10, Base = 10, Cap = 1200, Lock = UOSkillLock.Locked };
+        var mobile = await service.CreateAsync(new MobileEntity());
+        mobile.Skills[UOSkillName.Swords] = new SkillEntry { Value = 10, Base = 10, Cap = 1200, Lock = UOSkillLock.Locked };
 
         var entry = await service.SetSkillAsync(mobile, UOSkillName.Swords, 90.0);
 
@@ -242,7 +183,7 @@ public sealed class MobileServiceTests
     public async Task SetSkillAsync_NewSkill_GetsDefaultCapAndLock()
     {
         var service = new MobileService(new FakeMobileAccess(), new FakeItemAccess());
-        var mobile = await service.CreateAsync(new());
+        var mobile = await service.CreateAsync(new MobileEntity());
 
         var entry = await service.SetSkillAsync(mobile, UOSkillName.Magery, 50.0);
 
@@ -257,8 +198,8 @@ public sealed class MobileServiceTests
         var items = new FakeItemAccess();
         var service = new MobileService(mobiles, items);
 
-        var mobile = await service.CreateAsync(new());
-        var sword = new ItemEntity { Id = new(Serial.ItemOffset + 1), ItemId = 0x0F5E };
+        var mobile = await service.CreateAsync(new MobileEntity());
+        var sword = new ItemEntity { Id = new Serial(Serial.ItemOffset + 1), ItemId = 0x0F5E };
         await items.UpsertAsync(sword);
         await service.EquipAsync(mobile, sword, ItemLayerType.OneHanded);
 
@@ -267,5 +208,91 @@ public sealed class MobileServiceTests
         Assert.True(removed);
         Assert.False(mobile.EquippedItemIds.ContainsKey(ItemLayerType.OneHanded));
         Assert.Equal(default, (await items.GetByIdAsync(sword.Id))!.EquippedMobileId);
+    }
+
+    private sealed class FakeMobileAccess : IAutoDataAccess<MobileEntity, Serial>
+    {
+        private readonly Dictionary<Serial, MobileEntity> _store = [];
+        private uint _next = 1;
+
+        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
+        {
+            return ValueTask.FromResult(_store.Count);
+        }
+
+        public ValueTask<IReadOnlyCollection<MobileEntity>> GetAllAsync(CancellationToken cancellationToken = default)
+        {
+            return ValueTask.FromResult<IReadOnlyCollection<MobileEntity>>(_store.Values.ToArray());
+        }
+
+        public ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
+        {
+            return ValueTask.FromResult(_store.TryGetValue(id, out var e) ? e : null);
+        }
+
+        public ValueTask<Serial> NextIdAsync(CancellationToken cancellationToken = default)
+        {
+            return ValueTask.FromResult(new Serial(_next++));
+        }
+
+        public IQueryable<MobileEntity> Query()
+        {
+            return _store.Values.AsQueryable();
+        }
+
+        public ValueTask<bool> RemoveAsync(Serial id, CancellationToken cancellationToken = default)
+        {
+            return ValueTask.FromResult(_store.Remove(id));
+        }
+
+        public ValueTask UpsertAsync(MobileEntity entity, CancellationToken cancellationToken = default)
+        {
+            _store[entity.Id] = entity;
+
+            return ValueTask.CompletedTask;
+        }
+    }
+
+    private sealed class FakeItemAccess : IAutoDataAccess<ItemEntity, Serial>
+    {
+        private readonly Dictionary<Serial, ItemEntity> _store = [];
+        private uint _next = 1;
+
+        public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
+        {
+            return ValueTask.FromResult(_store.Count);
+        }
+
+        public ValueTask<IReadOnlyCollection<ItemEntity>> GetAllAsync(CancellationToken cancellationToken = default)
+        {
+            return ValueTask.FromResult<IReadOnlyCollection<ItemEntity>>(_store.Values.ToArray());
+        }
+
+        public ValueTask<ItemEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
+        {
+            return ValueTask.FromResult(_store.TryGetValue(id, out var e) ? e : null);
+        }
+
+        public ValueTask<Serial> NextIdAsync(CancellationToken cancellationToken = default)
+        {
+            return ValueTask.FromResult(new Serial(_next++));
+        }
+
+        public IQueryable<ItemEntity> Query()
+        {
+            return _store.Values.AsQueryable();
+        }
+
+        public ValueTask<bool> RemoveAsync(Serial id, CancellationToken cancellationToken = default)
+        {
+            return ValueTask.FromResult(_store.Remove(id));
+        }
+
+        public ValueTask UpsertAsync(ItemEntity entity, CancellationToken cancellationToken = default)
+        {
+            _store[entity.Id] = entity;
+
+            return ValueTask.CompletedTask;
+        }
     }
 }

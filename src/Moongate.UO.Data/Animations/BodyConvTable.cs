@@ -3,10 +3,10 @@ using System.Text.RegularExpressions;
 namespace Moongate.UO.Data.Animations;
 
 /// <summary>
-/// Parses <c>Bodyconv.def</c> into a routing table: a body that lives in an expansion animation file
-/// maps to <c>(fileType, translatedIndex)</c>, where fileType 2..5 = anim2.mul..anim5.mul. The first of
-/// the anim2/anim3/anim4/anim5 columns with a value other than -1 wins. A missing or malformed file
-/// yields an empty table (every <see cref="TryRoute" /> returns false, so the caller falls back to anim.mul).
+///     Parses <c>Bodyconv.def</c> into a routing table: a body that lives in an expansion animation file
+///     maps to <c>(fileType, translatedIndex)</c>, where fileType 2..5 = anim2.mul..anim5.mul. The first of
+///     the anim2/anim3/anim4/anim5 columns with a value other than -1 wins. A missing or malformed file
+///     yields an empty table (every <see cref="TryRoute" /> returns false, so the caller falls back to anim.mul).
 /// </summary>
 public sealed class BodyConvTable
 {
@@ -64,5 +64,7 @@ public sealed class BodyConvTable
     public int Count => _map.Count;
 
     public bool TryRoute(int body, out (int FileType, int TranslatedIndex) route)
-        => _map.TryGetValue(body, out route);
+    {
+        return _map.TryGetValue(body, out route);
+    }
 }

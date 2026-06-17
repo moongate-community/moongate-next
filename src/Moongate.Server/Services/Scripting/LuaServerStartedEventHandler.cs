@@ -15,8 +15,10 @@ public sealed class LuaServerStartedEventHandler : ITickEventHandler<ServerStart
     }
 
     public void Handle(ServerStartedEvent evt)
-        => _events.Publish(
+    {
+        _events.Publish(
             "server.started",
             LuaPayloadBuilder.ServerStarted(evt.At)
         );
+    }
 }

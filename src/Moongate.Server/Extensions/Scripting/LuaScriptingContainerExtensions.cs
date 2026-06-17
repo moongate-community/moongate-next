@@ -17,16 +17,16 @@ using Moongate.Server.Services.Scripting;
 namespace Moongate.Server.Extensions.Scripting;
 
 /// <summary>
-/// DryIoc-native registration helpers for the Moongate Lua scripting engine.
+///     DryIoc-native registration helpers for the Moongate Lua scripting engine.
 /// </summary>
 public static class LuaScriptingContainerExtensions
 {
     private const int LuaScriptingPriority = 30;
 
     /// <summary>
-    /// Registers the MoonSharp Lua <see cref="IScriptEngineService" /> and drives its lifecycle
-    /// through the Moongate hosting orchestrator. The engine resolves the DryIoc
-    /// <see cref="IContainer" /> itself to register and resolve script-module types at runtime.
+    ///     Registers the MoonSharp Lua <see cref="IScriptEngineService" /> and drives its lifecycle
+    ///     through the Moongate hosting orchestrator. The engine resolves the DryIoc
+    ///     <see cref="IContainer" /> itself to register and resolve script-module types at runtime.
     /// </summary>
     /// <param name="container">DryIoc container.</param>
     /// <param name="directoriesConfig">Resolved directories configuration.</param>

@@ -3,7 +3,7 @@ using Moongate.Abstractions.Data.Metrics;
 namespace Moongate.Abstractions.Interfaces.Metrics;
 
 /// <summary>
-/// Implemented by services that expose runtime metrics.
+///     Implemented by services that expose runtime metrics.
 /// </summary>
 public interface IMetricProvider
 {
@@ -11,8 +11,8 @@ public interface IMetricProvider
     string Prefix { get; }
 
     /// <summary>
-    /// Collects current samples. Must be cheap and thread-safe.
-    /// Sample names returned MUST NOT include the prefix — the collector applies it.
+    ///     Collects current samples. Must be cheap and thread-safe.
+    ///     Sample names returned MUST NOT include the prefix — the collector applies it.
     /// </summary>
     IReadOnlyList<MetricSample> Collect();
 }

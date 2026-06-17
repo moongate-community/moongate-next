@@ -9,50 +9,14 @@ public sealed class PluginCatalogServiceTests : IDisposable
 {
     private readonly string _root = Path.Combine(Path.GetTempPath(), $"moongate-plugin-catalog-{Guid.NewGuid():N}");
 
-    private sealed class FakePlugin : IMoongatePlugin
+    public void Dispose()
     {
-        public PluginMetadata Metadata { get; } = new()
+        if (Directory.Exists(_root))
         {
-            Id = "moongate.fixture.catalog",
-            Name = "Catalog Fixture",
-            Version = new(1, 2, 3),
-            Author = "Moongate Tests",
-            Description = "Fixture plugin for catalog tests",
-            Dependencies = ["moongate.core"]
-        };
-
-        public void Configure(IContainer container, PluginContext context) { }
-    }
-
-    private sealed class FakeConfigurablePlugin : IMoongatePlugin, IConfigurablePlugin, ITestablePlugin
-    {
-        public PluginMetadata Metadata { get; } = new()
-        {
-            Id = "moongate.fixture.configurable",
-            Name = "Configurable Fixture",
-            Version = new(1, 0, 0),
-            Author = "Moongate Tests"
-        };
-
-        public PluginConfigSaveRequest? LastRequest { get; private set; }
-
-        public void Configure(IContainer container, PluginContext context) { }
-
-        public ValueTask<PluginConfigForm> GetConfigFormAsync(CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(new PluginConfigForm([new("general", "General", [])]));
-
-        public ValueTask<PluginConfigSaveResult> SaveConfigAsync(
-            PluginConfigSaveRequest request,
-            CancellationToken cancellationToken = default
-        )
-        {
-            LastRequest = request;
-
-            return ValueTask.FromResult(new PluginConfigSaveResult(true, true, [], null));
+            Directory.Delete(_root, true);
         }
 
-        public ValueTask<PluginTestResult> TestAsync(CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(new PluginTestResult(true, "OK", []));
+        GC.SuppressFinalize(this);
     }
 
     [Fact]
@@ -62,18 +26,13 @@ public sealed class PluginCatalogServiceTests : IDisposable
         var service = new PluginCatalogService([plugin]);
 
         Assert.Null(await service.GetConfigFormAsync("moongate.fixture.catalog"));
-        Assert.Null(await service.SaveConfigAsync("moongate.fixture.catalog", new(new())));
+        Assert.Null(
+            await service.SaveConfigAsync(
+                "moongate.fixture.catalog",
+                new PluginConfigSaveRequest(new Dictionary<string, object?>())
+            )
+        );
         Assert.Null(await service.TestAsync("moongate.fixture.catalog"));
-    }
-
-    public void Dispose()
-    {
-        if (Directory.Exists(_root))
-        {
-            Directory.Delete(_root, true);
-        }
-
-        GC.SuppressFinalize(this);
     }
 
     [Fact]
@@ -187,7 +146,7 @@ public sealed class PluginCatalogServiceTests : IDisposable
         File.WriteAllText(Path.Combine(plugin.PluginDirectory, "plugin.yaml"), "enabled: true\npassword: secret\n");
         var service = new PluginCatalogService([plugin]);
         var request = new PluginConfigSaveRequest(
-            new()
+            new Dictionary<string, object?>
             {
                 ["enabled"] = false
             }
@@ -216,16 +175,74 @@ public sealed class PluginCatalogServiceTests : IDisposable
     }
 
     private LoadedPlugin CreateLoadedPlugin(string directoryName)
-        => CreateLoadedPlugin(directoryName, new FakePlugin());
+    {
+        return CreateLoadedPlugin(directoryName, new FakePlugin());
+    }
 
     private LoadedPlugin CreateLoadedPlugin(string directoryName, IMoongatePlugin plugin)
     {
         var pluginDirectory = Path.Combine(_root, directoryName);
         Directory.CreateDirectory(pluginDirectory);
 
-        return new(pluginDirectory, plugin, plugin.GetType().Assembly);
+        return new LoadedPlugin(pluginDirectory, plugin, plugin.GetType().Assembly);
     }
 
     private static string NormalizePath(string path)
-        => path.Replace(Path.DirectorySeparatorChar, '/');
+    {
+        return path.Replace(Path.DirectorySeparatorChar, '/');
+    }
+
+    private sealed class FakePlugin : IMoongatePlugin
+    {
+        public PluginMetadata Metadata { get; } = new()
+        {
+            Id = "moongate.fixture.catalog",
+            Name = "Catalog Fixture",
+            Version = new Version(1, 2, 3),
+            Author = "Moongate Tests",
+            Description = "Fixture plugin for catalog tests",
+            Dependencies = ["moongate.core"]
+        };
+
+        public void Configure(IContainer container, PluginContext context)
+        {
+        }
+    }
+
+    private sealed class FakeConfigurablePlugin : IMoongatePlugin, IConfigurablePlugin, ITestablePlugin
+    {
+        public PluginConfigSaveRequest? LastRequest { get; private set; }
+
+        public ValueTask<PluginConfigForm> GetConfigFormAsync(CancellationToken cancellationToken = default)
+        {
+            return ValueTask.FromResult(new PluginConfigForm([new PluginConfigSection("general", "General", [])]));
+        }
+
+        public ValueTask<PluginConfigSaveResult> SaveConfigAsync(
+            PluginConfigSaveRequest request,
+            CancellationToken cancellationToken = default
+        )
+        {
+            LastRequest = request;
+
+            return ValueTask.FromResult(new PluginConfigSaveResult(true, true, [], null));
+        }
+
+        public PluginMetadata Metadata { get; } = new()
+        {
+            Id = "moongate.fixture.configurable",
+            Name = "Configurable Fixture",
+            Version = new Version(1, 0, 0),
+            Author = "Moongate Tests"
+        };
+
+        public void Configure(IContainer container, PluginContext context)
+        {
+        }
+
+        public ValueTask<PluginTestResult> TestAsync(CancellationToken cancellationToken = default)
+        {
+            return ValueTask.FromResult(new PluginTestResult(true, "OK", []));
+        }
+    }
 }

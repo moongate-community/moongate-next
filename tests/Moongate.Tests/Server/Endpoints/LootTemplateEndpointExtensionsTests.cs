@@ -45,9 +45,11 @@ public sealed class LootTemplateEndpointExtensionsTests
     }
 
     private static LootTableDefinition Table(string id)
-        => new()
+    {
+        return new LootTableDefinition
         {
             Id = id,
-            Content = [new() { Item = "gold_coin" }]
+            Content = [new LootNode { Item = "gold_coin" }]
         };
+    }
 }

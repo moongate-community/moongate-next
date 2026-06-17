@@ -6,7 +6,7 @@ using Moongate.UO.Data.Types.Maps;
 namespace Moongate.UO.Data.Maps;
 
 /// <summary>
-/// Registry of the standard UO map facets, each backed by a lazily-loaded <see cref="Map" />.
+///     Registry of the standard UO map facets, each backed by a lazily-loaded <see cref="Map" />.
 /// </summary>
 public sealed class MapService : IMapService
 {
@@ -21,15 +21,16 @@ public sealed class MapService : IMapService
         new(0x7F, 0x7F, 0x7F, 1, 1, "Internal", MapRulesType.Internal, SeasonType.Spring)
     ];
 
-    private readonly Dictionary<int, Map> _maps;
     private readonly Map[] _all;
+
+    private readonly Dictionary<int, Map> _maps;
 
     public MapService(IUoFileResolver resolver)
     {
         ArgumentNullException.ThrowIfNull(resolver);
 
         _all = new Map[_definitions.Length];
-        _maps = new(_definitions.Length);
+        _maps = new Dictionary<int, Map>(_definitions.Length);
 
         for (var i = 0; i < _definitions.Length; i++)
         {
@@ -42,5 +43,7 @@ public sealed class MapService : IMapService
     public IReadOnlyList<Map> Maps => _all;
 
     public Map? GetMap(int mapId)
-        => _maps.GetValueOrDefault(mapId);
+    {
+        return _maps.GetValueOrDefault(mapId);
+    }
 }

@@ -7,9 +7,9 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.Metrics;
 
 /// <summary>
-/// Default <see cref="IProcessRuntimeSampler" /> reading from <see cref="Process" />, <see cref="GC" /> and
-/// <see cref="Environment" />.
-/// A read failure yields an empty (zeroed) reading so the provider keeps emitting valid samples.
+///     Default <see cref="IProcessRuntimeSampler" /> reading from <see cref="Process" />, <see cref="GC" /> and
+///     <see cref="Environment" />.
+///     A read failure yields an empty (zeroed) reading so the provider keeps emitting valid samples.
 /// </summary>
 public sealed class ProcessRuntimeSampler : IProcessRuntimeSampler
 {
@@ -26,7 +26,7 @@ public sealed class ProcessRuntimeSampler : IProcessRuntimeSampler
             using var process = Process.GetCurrentProcess();
             var gcInfo = GC.GetGCMemoryInfo();
 
-            return new()
+            return new ProcessRuntimeReading
             {
                 TotalProcessorTime = process.TotalProcessorTime,
                 WorkingSetBytes = process.WorkingSet64,
@@ -43,7 +43,7 @@ public sealed class ProcessRuntimeSampler : IProcessRuntimeSampler
         {
             _logger.Warning(ex, "ProcessRuntimeSampler failed to read; returning empty reading");
 
-            return new() { Timestamp = timestamp };
+            return new ProcessRuntimeReading { Timestamp = timestamp };
         }
     }
 }

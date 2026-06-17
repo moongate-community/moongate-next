@@ -13,14 +13,16 @@ using Serilog;
 namespace Moongate.Plugins.Services;
 
 /// <summary>
-/// Boot-time loader for trusted .NET plugins.
+///     Boot-time loader for trusted .NET plugins.
 /// </summary>
 public sealed class PluginLoaderService
 {
     private readonly ILogger _logger = Log.ForContext<PluginLoaderService>();
 
     public IReadOnlyList<LoadedPlugin> LoadAndConfigure(IContainer container, DirectoriesConfig directories)
-        => LoadAndConfigure(container, directories, []);
+    {
+        return LoadAndConfigure(container, directories, []);
+    }
 
     public IReadOnlyList<LoadedPlugin> LoadAndConfigure(
         IContainer container,
@@ -36,8 +38,8 @@ public sealed class PluginLoaderService
         Directory.CreateDirectory(pluginsDirectory);
 
         var loadedFromDirectory = Directory.EnumerateDirectories(pluginsDirectory)
-                                           .Order(StringComparer.OrdinalIgnoreCase)
-                                           .Select(LoadPluginDirectory);
+            .Order(StringComparer.OrdinalIgnoreCase)
+            .Select(LoadPluginDirectory);
         var loadedEmbedded = embeddedPlugins.Select(plugin => LoadEmbeddedPlugin(directories, plugin));
         var loaded = loadedFromDirectory.Concat(loadedEmbedded).ToArray();
 
@@ -112,14 +114,14 @@ public sealed class PluginLoaderService
         var pluginDirectory = Path.Combine(directories[DirectoryType.Config], "plugins", metadata.Id.Trim());
         Directory.CreateDirectory(pluginDirectory);
 
-        return new(pluginDirectory, plugin, plugin.GetType().Assembly);
+        return new LoadedPlugin(pluginDirectory, plugin, plugin.GetType().Assembly);
     }
 
     private LoadedPlugin LoadPluginDirectory(string pluginDirectory)
     {
         var dlls = Directory.EnumerateFiles(pluginDirectory, "*.dll", SearchOption.TopDirectoryOnly)
-                            .Order(StringComparer.OrdinalIgnoreCase)
-                            .ToArray();
+            .Order(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
 
         if (dlls.Length == 0)
         {
@@ -132,8 +134,7 @@ public sealed class PluginLoaderService
         foreach (var dll in dlls)
         {
             var assemblyName = AssemblyName.GetAssemblyName(dll);
-            var shared = AssemblyLoadContext.Default.Assemblies.FirstOrDefault(
-                assembly => string.Equals(
+            var shared = AssemblyLoadContext.Default.Assemblies.FirstOrDefault(assembly => string.Equals(
                     assembly.GetName().Name,
                     assemblyName.Name,
                     StringComparison.OrdinalIgnoreCase
@@ -161,12 +162,11 @@ public sealed class PluginLoaderService
         }
 
         var pluginTypes = assemblies.SelectMany(GetLoadableTypes)
-                                    .Where(
-                                        type =>
-                                            type is { IsAbstract: false, IsInterface: false } &&
-                                            typeof(IMoongatePlugin).IsAssignableFrom(type)
-                                    )
-                                    .ToArray();
+            .Where(type =>
+                type is { IsAbstract: false, IsInterface: false } &&
+                typeof(IMoongatePlugin).IsAssignableFrom(type)
+            )
+            .ToArray();
 
         if (pluginTypes.Length == 0)
         {
@@ -189,7 +189,7 @@ public sealed class PluginLoaderService
                                $"Plugin type '{pluginTypes[0].FullName}' could not be instantiated."
                            );
 
-            return new(pluginDirectory, instance, pluginTypes[0].Assembly);
+            return new LoadedPlugin(pluginDirectory, instance, pluginTypes[0].Assembly);
         }
         catch (Exception ex) when (ex is not InvalidOperationException)
         {

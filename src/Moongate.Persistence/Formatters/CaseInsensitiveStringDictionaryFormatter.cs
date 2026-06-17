@@ -4,10 +4,10 @@ using MessagePack.Formatters;
 namespace Moongate.Persistence.Formatters;
 
 /// <summary>
-/// MessagePack formatter for <see cref="Dictionary{TKey,TValue}" /> with string keys that
-/// reconstructs the dictionary with <see cref="StringComparer.OrdinalIgnoreCase" /> on
-/// deserialize. The contractless resolver otherwise rebuilds string-keyed dictionaries with the
-/// default ordinal comparer, silently dropping case-insensitive lookups across a round-trip.
+///     MessagePack formatter for <see cref="Dictionary{TKey,TValue}" /> with string keys that
+///     reconstructs the dictionary with <see cref="StringComparer.OrdinalIgnoreCase" /> on
+///     deserialize. The contractless resolver otherwise rebuilds string-keyed dictionaries with the
+///     default ordinal comparer, silently dropping case-insensitive lookups across a round-trip.
 /// </summary>
 public sealed class CaseInsensitiveStringDictionaryFormatter<TValue> : IMessagePackFormatter<Dictionary<string, TValue>?>
 {

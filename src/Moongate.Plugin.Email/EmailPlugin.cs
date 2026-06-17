@@ -23,7 +23,9 @@ public sealed class EmailPlugin : ConfigurablePlugin<EmailPluginConfig>, IMoonga
     private EmailPluginRuntimePaths? _paths;
 
     public EmailPlugin()
-        : this((string?)null) { }
+        : this((string?)null)
+    {
+    }
 
     public EmailPlugin(string? defaultActivationBaseUrl)
     {
@@ -42,7 +44,7 @@ public sealed class EmailPlugin : ConfigurablePlugin<EmailPluginConfig>, IMoonga
     {
         Id = "moongate.email",
         Name = "Moongate Email Plugin",
-        Version = new(0, 1, 0),
+        Version = new Version(0, 1, 0),
         Author = "Moongate",
         Description = "Sends account activation emails."
     };
@@ -81,19 +83,21 @@ public sealed class EmailPlugin : ConfigurablePlugin<EmailPluginConfig>, IMoonga
 
             if (errors.Length > 0)
             {
-                return new(false, "Email plugin config is invalid.", errors);
+                return new PluginTestResult(false, "Email plugin config is invalid.", errors);
             }
 
             return await _testerFactory(config).TestAsync(config, cancellationToken);
         }
         catch (Exception ex)
         {
-            return new(false, "Email plugin test failed.", [ex.Message]);
+            return new PluginTestResult(false, "Email plugin test failed.", [ex.Message]);
         }
     }
 
     protected override ValueTask<EmailPluginConfig> LoadConfigAsync(CancellationToken cancellationToken)
-        => LoadLatestConfigAsync(cancellationToken);
+    {
+        return LoadLatestConfigAsync(cancellationToken);
+    }
 
     protected override async ValueTask<PluginConfigSaveResult> SaveTypedConfigAsync(
         EmailPluginConfig config,
@@ -111,7 +115,7 @@ public sealed class EmailPlugin : ConfigurablePlugin<EmailPluginConfig>, IMoonga
 
         if (errors.Count > 0)
         {
-            return new(false, false, errors, null);
+            return new PluginConfigSaveResult(false, false, errors, null);
         }
 
         Directory.CreateDirectory(Path.GetDirectoryName(configPath)!);
@@ -122,7 +126,7 @@ public sealed class EmailPlugin : ConfigurablePlugin<EmailPluginConfig>, IMoonga
         );
         _config = config;
 
-        return new(true, true, [], null);
+        return new PluginConfigSaveResult(true, true, [], null);
     }
 
     private static string? BuildDefaultActivationUrlTemplate(string? baseUrl)
@@ -149,10 +153,14 @@ public sealed class EmailPlugin : ConfigurablePlugin<EmailPluginConfig>, IMoonga
     }
 
     private static PluginConfigSaveResult Failure(string error)
-        => new(false, false, [error], null);
+    {
+        return new PluginConfigSaveResult(false, false, [error], null);
+    }
 
     private string? GetConfigPath()
-        => _paths is null ? null : Path.Combine(_paths.PluginDirectory, PluginContext.PluginConfigFileName);
+    {
+        return _paths is null ? null : Path.Combine(_paths.PluginDirectory, PluginContext.PluginConfigFileName);
+    }
 
     private async ValueTask<EmailPluginConfig> LoadLatestConfigAsync(CancellationToken cancellationToken)
     {
@@ -165,6 +173,6 @@ public sealed class EmailPlugin : ConfigurablePlugin<EmailPluginConfig>, IMoonga
 
         var yaml = await File.ReadAllTextAsync(configPath, cancellationToken);
 
-        return ConfigYamlOptions.Deserializer.Deserialize<EmailPluginConfig>(yaml) ?? new();
+        return ConfigYamlOptions.Deserializer.Deserialize<EmailPluginConfig>(yaml) ?? new EmailPluginConfig();
     }
 }

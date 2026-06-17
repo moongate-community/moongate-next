@@ -5,11 +5,11 @@ using Moongate.Core.Interfaces.Ids;
 namespace Moongate.Core.Ids;
 
 /// <summary>
-/// Represents a UO entity serial identifier.
+///     Represents a UO entity serial identifier.
 /// </summary>
 public readonly struct Serial
     : IAutoIncrementKey<Serial>, IComparable<Serial>, IComparable<uint>, IEquatable<Serial>, ISpanFormattable,
-      ISpanParsable<Serial>
+        ISpanParsable<Serial>
 {
     public const uint ItemOffset = 0x40000000;
     public const uint MaxItemSerial = 0x7EEEEEEE;
@@ -49,119 +49,175 @@ public readonly struct Serial
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int CompareTo(Serial other)
-        => Value.CompareTo(other.Value);
+    {
+        return Value.CompareTo(other.Value);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int CompareTo(uint other)
-        => Value.CompareTo(other);
+    {
+        return Value.CompareTo(other);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Equals(Serial other)
-        => Value == other.Value;
+    {
+        return Value == other.Value;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override bool Equals(object? obj)
-        => obj switch
+    {
+        return obj switch
         {
             Serial serial => this == serial,
-            uint raw      => Value == raw,
-            _             => false
+            uint raw => Value == raw,
+            _ => false
         };
+    }
 
     public static Serial FromSequence(ulong value)
-        => new((uint)value);
+    {
+        return new Serial((uint)value);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override int GetHashCode()
-        => Value.GetHashCode();
+    {
+        return Value.GetHashCode();
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Serial operator +(Serial left, Serial right)
-        => (Serial)(left.Value + right.Value);
+    {
+        return (Serial)(left.Value + right.Value);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Serial operator +(Serial left, uint right)
-        => (Serial)(left.Value + right);
+    {
+        return (Serial)(left.Value + right);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Serial operator --(Serial value)
-        => (Serial)(value.Value - 1);
+    {
+        return (Serial)(value.Value - 1);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator ==(Serial left, Serial right)
-        => left.Value == right.Value;
+    {
+        return left.Value == right.Value;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator ==(Serial left, uint right)
-        => left.Value == right;
+    {
+        return left.Value == right;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator uint(Serial value)
-        => value.Value;
+    {
+        return value.Value;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static explicit operator Serial(uint value)
-        => new(value);
+    {
+        return new Serial(value);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator >(Serial left, Serial right)
-        => left.Value > right.Value;
+    {
+        return left.Value > right.Value;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator >(Serial left, uint right)
-        => left.Value > right;
+    {
+        return left.Value > right;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator >=(Serial left, Serial right)
-        => left.Value >= right.Value;
+    {
+        return left.Value >= right.Value;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator >=(Serial left, uint right)
-        => left.Value >= right;
+    {
+        return left.Value >= right;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Serial operator ++(Serial value)
-        => (Serial)(value.Value + 1);
+    {
+        return (Serial)(value.Value + 1);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator !=(Serial left, Serial right)
-        => left.Value != right.Value;
+    {
+        return left.Value != right.Value;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator !=(Serial left, uint right)
-        => left.Value != right;
+    {
+        return left.Value != right;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator <(Serial left, Serial right)
-        => left.Value < right.Value;
+    {
+        return left.Value < right.Value;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator <(Serial left, uint right)
-        => left.Value < right;
+    {
+        return left.Value < right;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator <=(Serial left, Serial right)
-        => left.Value <= right.Value;
+    {
+        return left.Value <= right.Value;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool operator <=(Serial left, uint right)
-        => left.Value <= right;
+    {
+        return left.Value <= right;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Serial operator -(Serial left, Serial right)
-        => (Serial)(left.Value - right.Value);
+    {
+        return (Serial)(left.Value - right.Value);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Serial operator -(Serial left, uint right)
-        => (Serial)(left.Value - right);
+    {
+        return (Serial)(left.Value - right);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Serial Parse(string s)
-        => Parse(s, null);
+    {
+        return Parse(s, null);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Serial Parse(string s, IFormatProvider? provider)
-        => Parse(s.AsSpan(), provider);
+    {
+        return Parse(s.AsSpan(), provider);
+    }
 
     public static Serial Parse(ReadOnlySpan<char> s, IFormatProvider? provider)
     {
@@ -175,11 +231,15 @@ public readonly struct Serial
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Serial RandomSerial()
-        => new((uint)System.Random.Shared.Next(1, int.MaxValue));
+    {
+        return new Serial((uint)System.Random.Shared.Next(1, int.MaxValue));
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int ToInt32()
-        => (int)Value;
+    {
+        return (int)Value;
+    }
 
     public override string ToString()
     {
@@ -190,7 +250,9 @@ public readonly struct Serial
     }
 
     public string ToString(string? format, IFormatProvider? formatProvider)
-        => ToString();
+    {
+        return ToString();
+    }
 
     public bool TryFormat(
         Span<char> destination,
@@ -198,13 +260,17 @@ public readonly struct Serial
         ReadOnlySpan<char> format,
         IFormatProvider? provider
     )
-        => format != ReadOnlySpan<char>.Empty
-               ? Value.TryFormat(destination, out charsWritten, format, provider)
-               : destination.TryWrite(provider, $"0x{Value:X8}", out charsWritten);
+    {
+        return format != ReadOnlySpan<char>.Empty
+            ? Value.TryFormat(destination, out charsWritten, format, provider)
+            : destination.TryWrite(provider, $"0x{Value:X8}", out charsWritten);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParse(string? s, IFormatProvider? provider, out Serial result)
-        => TryParse(s.AsSpan(), provider, out result);
+    {
+        return TryParse(s.AsSpan(), provider, out result);
+    }
 
     public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, out Serial result)
     {
@@ -216,7 +282,7 @@ public readonly struct Serial
 
             if (uint.TryParse(s, NumberStyles.HexNumber, null, out var hexValue))
             {
-                result = new(hexValue);
+                result = new Serial(hexValue);
 
                 return true;
             }
@@ -224,7 +290,7 @@ public readonly struct Serial
 
         if (uint.TryParse(s, out var value))
         {
-            result = new(value);
+            result = new Serial(value);
 
             return true;
         }

@@ -5,11 +5,19 @@ namespace Moongate.Tests.UO.Data.Animations;
 
 public sealed class EquipmentDrawOrderTests
 {
-    [Theory, InlineData(ItemLayerType.Ring), InlineData(ItemLayerType.Talisman), InlineData(ItemLayerType.Bracelet),
-     InlineData(ItemLayerType.Earrings), InlineData(ItemLayerType.Backpack), InlineData(ItemLayerType.Bank),
-     InlineData(ItemLayerType.Mount), InlineData(ItemLayerType.Invalid)]
+    [Theory]
+    [InlineData(ItemLayerType.Ring)]
+    [InlineData(ItemLayerType.Talisman)]
+    [InlineData(ItemLayerType.Bracelet)]
+    [InlineData(ItemLayerType.Earrings)]
+    [InlineData(ItemLayerType.Backpack)]
+    [InlineData(ItemLayerType.Bank)]
+    [InlineData(ItemLayerType.Mount)]
+    [InlineData(ItemLayerType.Invalid)]
     public void Priority_NonDrawableLayers_ReturnSkip(ItemLayerType layer)
-        => Assert.Equal(EquipmentDrawOrder.Skip, EquipmentDrawOrder.Priority(layer));
+    {
+        Assert.Equal(EquipmentDrawOrder.Skip, EquipmentDrawOrder.Priority(layer));
+    }
 
     [Fact]
     public void Priority_OrdersFromInnerToOuterToWeapons()

@@ -9,32 +9,41 @@ public sealed class ItemTemplateValueDefinition
 
     public int? Sell { get; set; }
 
-    [YamlIgnore]
-    public int BaseSell => Sell ?? Buy / 2;
+    [YamlIgnore] public int BaseSell => Sell ?? Buy / 2;
 
     public ItemTemplateValueDefinition Clone()
-        => new()
+    {
+        return new ItemTemplateValueDefinition
         {
             Buy = Buy,
             Sell = Sell
         };
+    }
 
     public int EffectiveBuy(ItemRarity rarity)
-        => ApplyMultiplier(Buy, RarityMultiplier(rarity));
+    {
+        return ApplyMultiplier(Buy, RarityMultiplier(rarity));
+    }
 
     public int EffectiveSell(ItemRarity rarity)
-        => ApplyMultiplier(BaseSell, RarityMultiplier(rarity));
+    {
+        return ApplyMultiplier(BaseSell, RarityMultiplier(rarity));
+    }
 
     public decimal RarityMultiplier(ItemRarity rarity)
-        => rarity switch
+    {
+        return rarity switch
         {
-            ItemRarity.Uncommon  => 1.25m,
-            ItemRarity.Rare      => 1.5m,
-            ItemRarity.Epic      => 2.0m,
+            ItemRarity.Uncommon => 1.25m,
+            ItemRarity.Rare => 1.5m,
+            ItemRarity.Epic => 2.0m,
             ItemRarity.Legendary => 3.0m,
-            _                    => 1.0m
+            _ => 1.0m
         };
+    }
 
     private static int ApplyMultiplier(int value, decimal multiplier)
-        => (int)Math.Round(value * multiplier, MidpointRounding.AwayFromZero);
+    {
+        return (int)Math.Round(value * multiplier, MidpointRounding.AwayFromZero);
+    }
 }

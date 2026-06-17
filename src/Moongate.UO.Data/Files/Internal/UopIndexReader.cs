@@ -3,8 +3,8 @@ using Moongate.UO.Data.Data.Internal;
 namespace Moongate.UO.Data.Files.Internal;
 
 /// <summary>
-/// Reads the block index of a UOP container, mapping each logical entry index to its
-/// <see cref="UopEntry" />. Ported from the Mythic.Package format reader.
+///     Reads the block index of a UOP container, mapping each logical entry index to its
+///     <see cref="UopEntry" />. Ported from the Mythic.Package format reader.
 /// </summary>
 public static class UopIndexReader
 {
@@ -13,7 +13,7 @@ public static class UopIndexReader
         var length = s.Length;
 
         uint b,
-             c;
+            c;
         var a = b = c = 0xDEADBEEF + (uint)length;
 
         var k = 0;
@@ -173,7 +173,7 @@ public static class UopIndexReader
                     compressedLength > 0 &&
                     decompressedLength > 0)
                 {
-                    entries[fileIndex] = new(offset + headerLength, decompressedLength)
+                    entries[fileIndex] = new UopEntry(offset + headerLength, decompressedLength)
                     {
                         Compressed = compressed,
                         CompressedSize = compressedLength

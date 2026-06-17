@@ -1,7 +1,7 @@
 namespace Moongate.Abstractions.Types.Metrics;
 
 /// <summary>
-/// Subset of Prometheus / OpenMetrics metric kinds supported in v1.
+///     Subset of Prometheus / OpenMetrics metric kinds supported in v1.
 /// </summary>
 public enum MetricType
 {

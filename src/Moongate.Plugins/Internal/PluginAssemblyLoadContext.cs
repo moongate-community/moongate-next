@@ -11,13 +11,12 @@ internal sealed class PluginAssemblyLoadContext : AssemblyLoadContext
         : base($"Moongate.Plugin:{Path.GetFileNameWithoutExtension(pluginAssemblyPath)}")
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(pluginAssemblyPath);
-        _resolver = new(pluginAssemblyPath);
+        _resolver = new AssemblyDependencyResolver(pluginAssemblyPath);
     }
 
     protected override Assembly? Load(AssemblyName assemblyName)
     {
-        var shared = Default.Assemblies.FirstOrDefault(
-            assembly => string.Equals(
+        var shared = Default.Assemblies.FirstOrDefault(assembly => string.Equals(
                 assembly.GetName().Name,
                 assemblyName.Name,
                 StringComparison.OrdinalIgnoreCase

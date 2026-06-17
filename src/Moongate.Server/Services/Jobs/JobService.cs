@@ -10,15 +10,15 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.Jobs;
 
 /// <summary>
-/// Registry of named operational jobs layered over <see cref="ITimerService" />. Each job registers an
-/// underlying timer whose callback is wrapped to record run metadata; jobs run on the game-loop thread.
+///     Registry of named operational jobs layered over <see cref="ITimerService" />. Each job registers an
+///     underlying timer whose callback is wrapped to record run metadata; jobs run on the game-loop thread.
 /// </summary>
 public sealed class JobService : IJobService
 {
-    private readonly ILogger _logger = Log.ForContext<JobService>();
-    private readonly ITimerService _timers;
     private readonly Dictionary<string, JobEntry> _jobs = new(StringComparer.Ordinal);
+    private readonly ILogger _logger = Log.ForContext<JobService>();
     private readonly Lock _sync = new();
+    private readonly ITimerService _timers;
 
     public JobService(ITimerService timers)
     {
@@ -27,8 +27,8 @@ public sealed class JobService : IJobService
     }
 
     /// <summary>
-    /// Cancels and removes a job and its recurring timer. An already-scheduled <see cref="RunNow" />
-    /// one-shot for this job may still fire once after cancellation (harmless: it updates a detached entry).
+    ///     Cancels and removes a job and its recurring timer. An already-scheduled <see cref="RunNow" />
+    ///     one-shot for this job may still fire once after cancellation (harmless: it updates a detached entry).
     /// </summary>
     public bool Cancel(string jobId)
     {
@@ -55,24 +55,23 @@ public sealed class JobService : IJobService
         lock (_sync)
         {
             return _jobs.Values
-                        .Select(
-                            entry => new JobSnapshot(
-                                entry.Id,
-                                entry.Name,
-                                entry.Description,
-                                entry.Source,
-                                entry.Interval.TotalMilliseconds,
-                                entry.Repeat,
-                                entry.NextRunAt,
-                                entry.LastRunAt,
-                                entry.LastDurationMs,
-                                entry.LastStatus,
-                                entry.LastError,
-                                entry.RunCount
-                            )
-                        )
-                        .OrderBy(job => job.Name, StringComparer.OrdinalIgnoreCase)
-                        .ToArray();
+                .Select(entry => new JobSnapshot(
+                        entry.Id,
+                        entry.Name,
+                        entry.Description,
+                        entry.Source,
+                        entry.Interval.TotalMilliseconds,
+                        entry.Repeat,
+                        entry.NextRunAt,
+                        entry.LastRunAt,
+                        entry.LastDurationMs,
+                        entry.LastStatus,
+                        entry.LastError,
+                        entry.RunCount
+                    )
+                )
+                .OrderBy(job => job.Name, StringComparer.OrdinalIgnoreCase)
+                .ToArray();
         }
     }
 
@@ -153,10 +152,14 @@ public sealed class JobService : IJobService
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
-        => Task.CompletedTask;
+    {
+        return Task.CompletedTask;
+    }
 
     public Task StopAsync(CancellationToken cancellationToken)
-        => Task.CompletedTask;
+    {
+        return Task.CompletedTask;
+    }
 
     private void Execute(JobEntry entry)
     {
@@ -197,7 +200,8 @@ public sealed class JobService : IJobService
         bool repeat,
         Action handler
     )
-        => new()
+    {
+        return new JobEntry
         {
             Id = Guid.NewGuid().ToString("N"),
             Name = name,
@@ -207,4 +211,5 @@ public sealed class JobService : IJobService
             Repeat = repeat,
             Handler = handler
         };
+    }
 }

@@ -12,6 +12,42 @@ namespace Moongate.Tests.Server.Items;
 
 public sealed class ContainerDoubleClickPacketHandlerTests
 {
+    [Fact]
+    public async Task HandleAsync_ItemSerial_CallsContentService()
+    {
+        var item = new ItemEntity { Id = new Serial(Serial.ItemOffset + 10), ItemId = 3651 };
+        var items = new FakeItemService(item);
+        var contents = new CapturingContainerContentService();
+        var handler = new ContainerDoubleClickPacketHandler(items, contents);
+
+        await handler.HandleAsync(Context(item.Id));
+
+        Assert.Same(item, contents.Container);
+    }
+
+    [Fact]
+    public async Task HandleAsync_UnknownSerial_DoesNotCallContentService()
+    {
+        var items = new FakeItemService();
+        var contents = new CapturingContainerContentService();
+        var handler = new ContainerDoubleClickPacketHandler(items, contents);
+
+        await handler.HandleAsync(Context(new Serial(Serial.ItemOffset + 99)));
+
+        Assert.Null(contents.Container);
+    }
+
+    private static PacketContext<DoubleClickPacket> Context(Serial serial)
+    {
+        return new PacketContext<DoubleClickPacket>(
+            new FakeGameSession { SessionId = 42 },
+            new DoubleClickPacket { TargetSerial = serial },
+            DateTimeOffset.UtcNow,
+            static (_, _, _) => Task.CompletedTask,
+            static () => [42]
+        );
+    }
+
     private sealed class CapturingContainerContentService : IContainerContentService
     {
         public ItemEntity? Container { get; private set; }
@@ -39,74 +75,62 @@ public sealed class ContainerDoubleClickPacketHandlerTests
             Point2D position,
             CancellationToken cancellationToken = default
         )
-            => throw new NotSupportedException();
+        {
+            throw new NotSupportedException();
+        }
 
         public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
+        {
+            throw new NotSupportedException();
+        }
 
         public ValueTask<ItemEntity> CreateAsync(ItemEntity item, CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
+        {
+            throw new NotSupportedException();
+        }
 
         public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
+        {
+            throw new NotSupportedException();
+        }
 
         public ValueTask<ItemEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
-            => ValueTask.FromResult(_item is not null && _item.Id == id ? _item : null);
+        {
+            return ValueTask.FromResult(_item is not null && _item.Id == id ? _item : null);
+        }
 
         public bool IsContainer(ItemEntity item)
-            => throw new NotSupportedException();
+        {
+            throw new NotSupportedException();
+        }
 
         public bool IsContainer(int itemId)
-            => throw new NotSupportedException();
+        {
+            throw new NotSupportedException();
+        }
 
         public bool IsDoor(ItemEntity item)
-            => throw new NotSupportedException();
+        {
+            throw new NotSupportedException();
+        }
 
         public bool IsDoor(int itemId)
-            => throw new NotSupportedException();
+        {
+            throw new NotSupportedException();
+        }
 
         public ValueTask<bool> RemoveItemAsync(
             ItemEntity container,
             Serial itemId,
             CancellationToken cancellationToken = default
         )
-            => throw new NotSupportedException();
+        {
+            throw new NotSupportedException();
+        }
 
         public ValueTask<int> TotalWeightAsync(ItemEntity item, CancellationToken cancellationToken = default)
-            => throw new NotSupportedException();
+        {
+            throw new NotSupportedException();
+        }
     }
-
-    [Fact]
-    public async Task HandleAsync_ItemSerial_CallsContentService()
-    {
-        var item = new ItemEntity { Id = new(Serial.ItemOffset + 10), ItemId = 3651 };
-        var items = new FakeItemService(item);
-        var contents = new CapturingContainerContentService();
-        var handler = new ContainerDoubleClickPacketHandler(items, contents);
-
-        await handler.HandleAsync(Context(item.Id));
-
-        Assert.Same(item, contents.Container);
-    }
-
-    [Fact]
-    public async Task HandleAsync_UnknownSerial_DoesNotCallContentService()
-    {
-        var items = new FakeItemService();
-        var contents = new CapturingContainerContentService();
-        var handler = new ContainerDoubleClickPacketHandler(items, contents);
-
-        await handler.HandleAsync(Context(new(Serial.ItemOffset + 99)));
-
-        Assert.Null(contents.Container);
-    }
-
-    private static PacketContext<DoubleClickPacket> Context(Serial serial)
-        => new(
-            new FakeGameSession { SessionId = 42 },
-            new() { TargetSerial = serial },
-            DateTimeOffset.UtcNow,
-            static (_, _, _) => Task.CompletedTask,
-            static () => [42]
-        );
 }

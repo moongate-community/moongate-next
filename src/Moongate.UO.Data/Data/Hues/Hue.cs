@@ -3,7 +3,7 @@ using Moongate.UO.Data.Internal.Colors;
 namespace Moongate.UO.Data.Data.Hues;
 
 /// <summary>
-/// A single UO hue: 32 RGB555 gradient colours, the table start/end shade indices, and its name.
+///     A single UO hue: 32 RGB555 gradient colours, the table start/end shade indices, and its name.
 /// </summary>
 public sealed class Hue
 {
@@ -24,5 +24,7 @@ public sealed class Hue
     public string Name { get; }
 
     public (byte R, byte G, byte B) GetRgb(int colorIndex)
-        => Rgb555.ToRgb(Colors[colorIndex]);
+    {
+        return Rgb555.ToRgb(Colors[colorIndex]);
+    }
 }

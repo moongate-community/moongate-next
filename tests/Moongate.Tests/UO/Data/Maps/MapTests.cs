@@ -20,7 +20,7 @@ public class MapTests
                 0,
                 8,
                 8,
-                [new(1, 1, 0x15, 3)],
+                [new MapFixture.LandCell(1, 1, 0x15, 3)],
                 []
             );
             var definition = new MapDefinition(0, 0, 0, 8, 8, "Test", MapRulesType.FeluccaRules, SeasonType.Spring);

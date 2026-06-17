@@ -8,7 +8,9 @@ public sealed class TestTileDataStore : ITileDataStore
 {
     private readonly Dictionary<int, ItemData> _items = [];
 
-    public TestTileDataStore() { }
+    public TestTileDataStore()
+    {
+    }
 
     public TestTileDataStore(params (int Id, string Name)[] items)
     {
@@ -23,11 +25,17 @@ public sealed class TestTileDataStore : ITileDataStore
     public IReadOnlyList<ItemData> ItemTable => [];
 
     public ItemData GetItem(int id)
-        => _items.TryGetValue(id, out var item) ? item : CreateItem("");
+    {
+        return _items.TryGetValue(id, out var item) ? item : CreateItem("");
+    }
 
     public LandData GetLand(int id)
-        => default;
+    {
+        return default;
+    }
 
     private static ItemData CreateItem(string name)
-        => new(name, UoTileFlag.None, 0, 0, 0, 0, 0, 0);
+    {
+        return new ItemData(name, UoTileFlag.None, 0, 0, 0, 0, 0, 0);
+    }
 }

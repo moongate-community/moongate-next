@@ -6,7 +6,7 @@ using Serilog;
 namespace Moongate.Scripting.Lua.Services;
 
 /// <summary>
-/// Default Lua event bridge backed by named MoonSharp closures.
+///     Default Lua event bridge backed by named MoonSharp closures.
 /// </summary>
 public sealed class LuaEventBridge : ILuaEventBridge
 {

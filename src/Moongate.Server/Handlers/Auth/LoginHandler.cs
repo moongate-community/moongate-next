@@ -18,11 +18,10 @@ namespace Moongate.Server.Handlers.Auth;
 [RegisterPacketHandler]
 public class LoginHandler : PacketHandlerBase<LoginSeedPacket>, IPacketHandler<AccountLoginPacket>
 {
-    private readonly IUserService _userService;
+    private readonly ILogger _logger = Log.ForContext<LoginHandler>();
 
     private readonly ServerConfig _serverConfig;
-
-    private readonly ILogger _logger = Log.ForContext<LoginHandler>();
+    private readonly IUserService _userService;
 
     public LoginHandler(
         IEventBusService eventBus,
@@ -36,24 +35,6 @@ public class LoginHandler : PacketHandlerBase<LoginSeedPacket>, IPacketHandler<A
         _serverConfig = serverConfig;
     }
 
-    public override Task HandleAsync(PacketContext<LoginSeedPacket> context, CancellationToken cancellationToken = default)
-    {
-        if (PlayerSessions.TryGetBySessionId(context.SessionId, out var playerSession))
-        {
-            PlayerSessions.UpdateClient(context.SessionId, context.Packet.ClientVersion);
-
-            _logger.Information(
-                "Player session {@PlayerSession} - Version {Version}",
-                playerSession.SessionId,
-                context.Packet.ClientVersion
-            );
-
-            return Task.CompletedTask;
-        }
-
-        return Task.CompletedTask;
-    }
-
     public async Task HandleAsync(PacketContext<AccountLoginPacket> context, CancellationToken cancellationToken = default)
     {
         if (!PlayerSessions.TryGetBySessionId(context.SessionId, out _) || context.Session.ServerEndPoint is null)
@@ -62,10 +43,10 @@ public class LoginHandler : PacketHandlerBase<LoginSeedPacket>, IPacketHandler<A
         }
 
         var userEntity = await _userService.LoginAsync(
-                             context.Packet.Account,
-                             context.Packet.Password,
-                             cancellationToken
-                         );
+            context.Packet.Account,
+            context.Packet.Password,
+            cancellationToken
+        );
 
         if (userEntity == null)
         {
@@ -96,5 +77,23 @@ public class LoginHandler : PacketHandlerBase<LoginSeedPacket>, IPacketHandler<A
         );
 
         await context.SendAsync(serverListPacket, cancellationToken);
+    }
+
+    public override Task HandleAsync(PacketContext<LoginSeedPacket> context, CancellationToken cancellationToken = default)
+    {
+        if (PlayerSessions.TryGetBySessionId(context.SessionId, out var playerSession))
+        {
+            PlayerSessions.UpdateClient(context.SessionId, context.Packet.ClientVersion);
+
+            _logger.Information(
+                "Player session {@PlayerSession} - Version {Version}",
+                playerSession.SessionId,
+                context.Packet.ClientVersion
+            );
+
+            return Task.CompletedTask;
+        }
+
+        return Task.CompletedTask;
     }
 }

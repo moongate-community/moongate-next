@@ -6,16 +6,16 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.Mobiles;
 
 /// <summary>
-/// Loads and validates all mobile templates at boot. Any invalid template throws
-/// here and prevents the server from starting (fail fast).
+///     Loads and validates all mobile templates at boot. Any invalid template throws
+///     here and prevents the server from starting (fail fast).
 /// </summary>
 public sealed class MobileTemplateBootService : IMoongateService
 {
-    private readonly ILogger _logger = Log.ForContext<MobileTemplateBootService>();
-    private readonly MobileTemplateYamlLoader _loader;
-    private readonly IMobileTemplateService _templates;
     private readonly IItemTemplateService _items;
+    private readonly MobileTemplateYamlLoader _loader;
+    private readonly ILogger _logger = Log.ForContext<MobileTemplateBootService>();
     private readonly ILootService _loot;
+    private readonly IMobileTemplateService _templates;
 
     public MobileTemplateBootService(
         MobileTemplateYamlLoader loader,

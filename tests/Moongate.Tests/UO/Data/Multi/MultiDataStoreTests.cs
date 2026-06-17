@@ -37,7 +37,7 @@ public class MultiDataStoreTests
                 new Dictionary<int, IReadOnlyList<MultiFixture.Tile>>
                 {
                     [0] = [],
-                    [1] = [new(0x100, 0, 0, 0, 1), new(0x101, 1, 0, 0, 1)]
+                    [1] = [new MultiFixture.Tile(0x100, 0, 0, 0, 1), new MultiFixture.Tile(0x101, 1, 0, 0, 1)]
                 }
             );
             var store = new MultiDataStore(new UoFileResolver(dir.FullName));

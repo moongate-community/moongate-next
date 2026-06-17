@@ -5,15 +5,13 @@ using Moongate.UO.Data.Templates.Loot;
 namespace Moongate.Server.Services.Loot;
 
 /// <summary>
-/// Immutable boot-time snapshot: loot tables by case-insensitive id plus an
-/// index of concrete item templates by tag (for category resolution).
+///     Immutable boot-time snapshot: loot tables by case-insensitive id plus an
+///     index of concrete item templates by tag (for category resolution).
 /// </summary>
 public sealed class LootTableRegistry
 {
     private readonly Dictionary<string, LootTableDefinition> _byId;
     private readonly Dictionary<string, IReadOnlyList<ItemTemplateDefinition>> _byTag;
-
-    public int Count => _byId.Count;
 
     public LootTableRegistry(
         IEnumerable<LootTableDefinition> tables,
@@ -23,7 +21,7 @@ public sealed class LootTableRegistry
         ArgumentNullException.ThrowIfNull(tables);
         ArgumentNullException.ThrowIfNull(templates);
 
-        _byId = new(StringComparer.OrdinalIgnoreCase);
+        _byId = new Dictionary<string, LootTableDefinition>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var table in tables)
         {
@@ -58,12 +56,20 @@ public sealed class LootTableRegistry
         );
     }
 
+    public int Count => _byId.Count;
+
     public IReadOnlyList<LootTableDefinition> GetAll()
-        => _byId.Values.OrderBy(static table => table.Id, StringComparer.OrdinalIgnoreCase).ToArray();
+    {
+        return _byId.Values.OrderBy(static table => table.Id, StringComparer.OrdinalIgnoreCase).ToArray();
+    }
 
     public bool TryGet(string id, [NotNullWhen(true)] out LootTableDefinition? table)
-        => _byId.TryGetValue(id, out table);
+    {
+        return _byId.TryGetValue(id, out table);
+    }
 
     public bool TryGetByTag(string tag, [NotNullWhen(true)] out IReadOnlyList<ItemTemplateDefinition>? templates)
-        => _byTag.TryGetValue(tag, out templates);
+    {
+        return _byTag.TryGetValue(tag, out templates);
+    }
 }

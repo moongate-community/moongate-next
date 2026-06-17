@@ -1,3 +1,4 @@
+using Moongate.Abstractions.Data.Timing;
 using Moongate.Abstractions.Types.Metrics;
 using Moongate.Server.Services.Timing;
 
@@ -80,11 +81,13 @@ public class TimerWheelServiceMetricsTests
     }
 
     private static TimerWheelService NewService(int tickDurationMs = 8, int wheelSize = 16)
-        => new(
-            new()
+    {
+        return new TimerWheelService(
+            new TimerWheelConfig
             {
                 TickDuration = TimeSpan.FromMilliseconds(tickDurationMs),
                 WheelSize = wheelSize
             }
         );
+    }
 }

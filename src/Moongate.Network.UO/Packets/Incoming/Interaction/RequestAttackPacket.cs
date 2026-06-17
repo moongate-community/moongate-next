@@ -7,16 +7,17 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Incoming.Interaction;
 
 [PacketHandler(0x05, PacketSizing.Fixed, Length = 5, Description = "Request Attack")]
-
 /// <summary>
 /// Represents RequestAttackPacket.
 /// </summary>
 public class RequestAttackPacket : BaseGameNetworkPacket
 {
-    public Serial TargetSerial { get; private set; }
-
     public RequestAttackPacket()
-        : base(0x05, 5) { }
+        : base(0x05, 5)
+    {
+    }
+
+    public Serial TargetSerial { get; private set; }
 
     protected override bool ParsePayload(ref SpanReader reader)
     {

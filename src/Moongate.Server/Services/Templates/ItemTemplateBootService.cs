@@ -6,13 +6,13 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.Templates;
 
 /// <summary>
-/// Loads and validates all item templates at boot. Any invalid template file
-/// throws here and prevents the server from starting (fail fast).
+///     Loads and validates all item templates at boot. Any invalid template file
+///     throws here and prevents the server from starting (fail fast).
 /// </summary>
 public sealed class ItemTemplateBootService : IMoongateService
 {
-    private readonly ILogger _logger = Log.ForContext<ItemTemplateBootService>();
     private readonly ItemTemplateYamlLoader _loader;
+    private readonly ILogger _logger = Log.ForContext<ItemTemplateBootService>();
     private readonly IItemTemplateService _templates;
 
     public ItemTemplateBootService(ItemTemplateYamlLoader loader, IItemTemplateService templates)

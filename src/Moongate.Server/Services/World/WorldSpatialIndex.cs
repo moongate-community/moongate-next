@@ -9,14 +9,14 @@ using Moongate.UO.Data.Utils;
 namespace Moongate.Server.Services.World;
 
 /// <summary>
-/// Thread-safe in-memory spatial index of live in-world entities, bucketed by map sector.
+///     Thread-safe in-memory spatial index of live in-world entities, bucketed by map sector.
 /// </summary>
 public sealed class WorldSpatialIndex : IWorldSpatialIndex
 {
-    private readonly Lock _sync = new();
+    private readonly Dictionary<Serial, (int MapId, int SectorX, int SectorY)> _entitySector = [];
     private readonly Dictionary<Serial, MobileEntity> _mobiles = [];
     private readonly Dictionary<(int MapId, int SectorX, int SectorY), SpatialSector> _sectors = [];
-    private readonly Dictionary<Serial, (int MapId, int SectorX, int SectorY)> _entitySector = [];
+    private readonly Lock _sync = new();
 
     public IReadOnlyCollection<MobileEntity> All
     {
@@ -128,16 +128,21 @@ public sealed class WorldSpatialIndex : IWorldSpatialIndex
 
         lock (_sync)
         {
-            ForEachSectorInRange(mapId, center, range, sector =>
-            {
-                foreach (var mobile in sector.Mobiles.Values)
+            ForEachSectorInRange(
+                mapId,
+                center,
+                range,
+                sector =>
                 {
-                    if (center.InRange(mobile.Location, range))
+                    foreach (var mobile in sector.Mobiles.Values)
                     {
-                        results.Add(mobile);
+                        if (center.InRange(mobile.Location, range))
+                        {
+                            results.Add(mobile);
+                        }
                     }
                 }
-            });
+            );
         }
 
         return results;
@@ -149,16 +154,21 @@ public sealed class WorldSpatialIndex : IWorldSpatialIndex
 
         lock (_sync)
         {
-            ForEachSectorInRange(mapId, center, range, sector =>
-            {
-                foreach (var player in sector.Players.Values)
+            ForEachSectorInRange(
+                mapId,
+                center,
+                range,
+                sector =>
                 {
-                    if (center.InRange(player.Location, range))
+                    foreach (var player in sector.Players.Values)
                     {
-                        results.Add(player);
+                        if (center.InRange(player.Location, range))
+                        {
+                            results.Add(player);
+                        }
                     }
                 }
-            });
+            );
         }
 
         return results;
@@ -170,16 +180,21 @@ public sealed class WorldSpatialIndex : IWorldSpatialIndex
 
         lock (_sync)
         {
-            ForEachSectorInRange(mapId, center, range, sector =>
-            {
-                foreach (var item in sector.Items.Values)
+            ForEachSectorInRange(
+                mapId,
+                center,
+                range,
+                sector =>
                 {
-                    if (center.InRange(item.Location, range))
+                    foreach (var item in sector.Items.Values)
                     {
-                        results.Add(item);
+                        if (center.InRange(item.Location, range))
+                        {
+                            results.Add(item);
+                        }
                     }
                 }
-            });
+            );
         }
 
         return results;
@@ -232,7 +247,9 @@ public sealed class WorldSpatialIndex : IWorldSpatialIndex
     }
 
     private static (int MapId, int SectorX, int SectorY) SectorKey(int mapId, Point3D location)
-        => (mapId, location.X >> MapSectorConsts.SectorShift, location.Y >> MapSectorConsts.SectorShift);
+    {
+        return (mapId, location.X >> MapSectorConsts.SectorShift, location.Y >> MapSectorConsts.SectorShift);
+    }
 
     private void ForEachSectorInRange(int mapId, Point3D center, int range, Action<SpatialSector> action)
     {

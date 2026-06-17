@@ -1,3 +1,5 @@
+using Moongate.Core.Geometry;
+using Moongate.Server.Data.World;
 using Moongate.Server.Services.World;
 using Moongate.Server.Services.WorldData;
 using Moongate.Server.Types.World;
@@ -22,7 +24,7 @@ public sealed class SpawnsDataLoaderTests : IDisposable
         var service = new SpawnsDataService();
         service.SetEntries(
             [
-                new(
+                new SpawnDefinitionEntry(
                     0,
                     "felucca",
                     "shared/felucca",
@@ -30,14 +32,14 @@ public sealed class SpawnsDataLoaderTests : IDisposable
                     Guid.NewGuid(),
                     SpawnDefinitionKind.Spawner,
                     "Existing Spawner",
-                    new(100, 200, 0),
+                    new Point3D(100, 200, 0),
                     1,
                     TimeSpan.FromMinutes(1),
                     TimeSpan.FromMinutes(2),
                     0,
                     10,
                     10,
-                    [new("Vendor", 1, 100)]
+                    [new SpawnEntryDefinition("Vendor", 1, 100)]
                 )
             ]
         );

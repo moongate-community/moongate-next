@@ -4,7 +4,7 @@ using Moongate.Network.UO.Base;
 namespace Moongate.Tests.Support;
 
 /// <summary>
-/// Serializes an outgoing packet to its on-the-wire bytes for assertions in tests.
+///     Serializes an outgoing packet to its on-the-wire bytes for assertions in tests.
 /// </summary>
 public static class PacketSerializer
 {

@@ -5,7 +5,7 @@ using Moongate.UO.Data.Templates.Mobiles;
 namespace Moongate.Server.Services.Mobiles;
 
 /// <summary>
-/// Default in-memory mobile template registry keyed by case-insensitive id.
+///     Default in-memory mobile template registry keyed by case-insensitive id.
 /// </summary>
 public sealed class MobileTemplateService : IMobileTemplateService
 {
@@ -17,10 +17,14 @@ public sealed class MobileTemplateService : IMobileTemplateService
     public int Count => _templates.Count;
 
     public void Clear()
-        => ReplaceAll([]);
+    {
+        ReplaceAll([]);
+    }
 
     public IReadOnlyCollection<MobileTemplateDefinition> GetAll()
-        => _templates.Values.ToArray();
+    {
+        return _templates.Values.ToArray();
+    }
 
     public void ReplaceAll(IEnumerable<MobileTemplateDefinition> templates)
     {
@@ -37,7 +41,9 @@ public sealed class MobileTemplateService : IMobileTemplateService
     }
 
     public bool TryGet(string id, [NotNullWhen(true)] out MobileTemplateDefinition? definition)
-        => _templates.TryGetValue(id, out definition);
+    {
+        return _templates.TryGetValue(id, out definition);
+    }
 
     public void UpsertRange(IEnumerable<MobileTemplateDefinition> templates)
     {

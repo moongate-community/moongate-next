@@ -6,7 +6,7 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Incoming.UI;
 
 /// <summary>
-/// Represents a help request packet.
+///     Represents a help request packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Request Help")]
 public class RequestHelpPacket : BaseGameNetworkPacket
@@ -14,10 +14,12 @@ public class RequestHelpPacket : BaseGameNetworkPacket
     private const byte OpCodeValue = 0x9B;
     private const int LengthValue = 258;
 
-    public byte[] Payload { get; private set; } = [];
-
     public RequestHelpPacket()
-        : base(OpCodeValue, LengthValue) { }
+        : base(OpCodeValue, LengthValue)
+    {
+    }
+
+    public byte[] Payload { get; private set; } = [];
 
     protected override bool ParsePayload(ref SpanReader reader)
     {

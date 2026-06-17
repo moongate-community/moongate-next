@@ -37,15 +37,15 @@ using Moongate.UO.Data.Tiles;
 namespace Moongate.Server.Extensions.UoData;
 
 /// <summary>
-/// DryIoc-native registration helpers for the Moongate UO static-data layer.
+///     DryIoc-native registration helpers for the Moongate UO static-data layer.
 /// </summary>
 public static class UoDataContainerExtensions
 {
     private const int UoDataBootPriority = 10;
 
     /// <summary>
-    /// Registers the <c>uo</c> config section, the client-file resolver, the verdata patch source
-    /// and the tile-data store.
+    ///     Registers the <c>uo</c> config section, the client-file resolver, the verdata patch source
+    ///     and the tile-data store.
     /// </summary>
     /// <param name="container">DryIoc container.</param>
     public static IContainer AddMoongateUoData(this IContainer container, string dataDirectory)
@@ -106,8 +106,8 @@ public static class UoDataContainerExtensions
 
                 return new AnimationService(
                     fileResolver,
-                    new(bodyDefPath),
-                    new(bodyConvPath),
+                    new BodyDefTable(bodyDefPath),
+                    new BodyConvTable(bodyConvPath),
                     resolver.Resolve<IHueStore>()
                 );
             },
@@ -125,7 +125,7 @@ public static class UoDataContainerExtensions
                     resolver.Resolve<IAnimationService>(),
                     resolver.Resolve<ITileDataStore>(),
                     resolver.Resolve<IItemTemplateService>(),
-                    new(equipConvPath)
+                    new EquipConvTable(equipConvPath)
                 );
             },
             Reuse.Singleton

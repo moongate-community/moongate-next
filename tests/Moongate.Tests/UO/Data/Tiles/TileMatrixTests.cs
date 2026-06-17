@@ -37,7 +37,7 @@ public class TileMatrixTests
                 0,
                 8,
                 8,
-                [new(3, 2, 0x0A, 5)],
+                [new MapFixture.LandCell(3, 2, 0x0A, 5)],
                 []
             );
             using var matrix = new TileMatrix(new UoFileResolver(dir.FullName), 0, 0, 8, 8);
@@ -66,7 +66,7 @@ public class TileMatrixTests
                 8,
                 8,
                 [],
-                [new(0, 0, 0x4000, 3, 2, 10, 0)]
+                [new MapFixture.StaticTileSpec(0, 0, 0x4000, 3, 2, 10, 0)]
             );
             using var matrix = new TileMatrix(new UoFileResolver(dir.FullName), 0, 0, 8, 8);
 

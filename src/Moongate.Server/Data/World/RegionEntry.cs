@@ -4,30 +4,10 @@ using Moongate.UO.Data.Types.Maps;
 namespace Moongate.Server.Data.World;
 
 /// <summary>
-/// Represents one world region definition loaded from server asset data.
+///     Represents one world region definition loaded from server asset data.
 /// </summary>
 public readonly record struct RegionEntry
 {
-    public string Type { get; }
-
-    public int MapId { get; }
-
-    public string Map { get; }
-
-    public string Name { get; }
-
-    public int Priority { get; }
-
-    public IReadOnlyList<RegionAreaEntry> Area { get; }
-
-    public string Music { get; }
-
-    public Point3D? Entrance { get; }
-
-    public Point3D? GoLocation { get; }
-
-    public RegionType Kind => RegionTypeParser.FromAssetType(Type);
-
     public RegionEntry(
         string type,
         int mapId,
@@ -52,4 +32,24 @@ public readonly record struct RegionEntry
         Entrance = entrance;
         GoLocation = goLocation;
     }
+
+    public string Type { get; }
+
+    public int MapId { get; }
+
+    public string Map { get; }
+
+    public string Name { get; }
+
+    public int Priority { get; }
+
+    public IReadOnlyList<RegionAreaEntry> Area { get; }
+
+    public string Music { get; }
+
+    public Point3D? Entrance { get; }
+
+    public Point3D? GoLocation { get; }
+
+    public RegionType Kind => RegionTypeParser.FromAssetType(Type);
 }

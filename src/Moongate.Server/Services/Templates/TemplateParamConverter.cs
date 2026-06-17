@@ -6,8 +6,8 @@ using Moongate.UO.Data.Types.Properties;
 namespace Moongate.Server.Services.Templates;
 
 /// <summary>
-/// Shared conversion from a template param definition to an entity custom property,
-/// used by both the item and mobile factories.
+///     Shared conversion from a template param definition to an entity custom property,
+///     used by both the item and mobile factories.
 /// </summary>
 public static class TemplateParamConverter
 {
@@ -17,14 +17,14 @@ public static class TemplateParamConverter
 
         if (param.Type == ItemTemplateParamType.String)
         {
-            return new()
+            return new CustomProperty
             {
                 Type = CustomPropertyType.String,
                 StringValue = param.Value
             };
         }
 
-        return new()
+        return new CustomProperty
         {
             Type = CustomPropertyType.Integer,
             IntegerValue = ItemTemplateYamlLoader.ParseLong(param.Value)

@@ -7,17 +7,6 @@ namespace Moongate.Tests.Hosting.EventBus;
 
 public class HandlerRegistryTests
 {
-    private sealed class CountingAsyncHandler : IAsyncEventHandler<TestAsyncEvent>
-    {
-        public Task HandleAsync(TestAsyncEvent evt, CancellationToken cancellationToken)
-            => Task.CompletedTask;
-    }
-
-    private sealed class CountingTickHandler : ITickEventHandler<TestTickEvent>
-    {
-        public void Handle(TestTickEvent evt) { }
-    }
-
     [Fact]
     public void ResolveAsync_CachedAcrossCalls_ReturnsSameArrayInstance()
     {
@@ -89,5 +78,20 @@ public class HandlerRegistryTests
 
         Assert.Single(handlers);
         Assert.Same(handler, handlers[0]);
+    }
+
+    private sealed class CountingAsyncHandler : IAsyncEventHandler<TestAsyncEvent>
+    {
+        public Task HandleAsync(TestAsyncEvent evt, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class CountingTickHandler : ITickEventHandler<TestTickEvent>
+    {
+        public void Handle(TestTickEvent evt)
+        {
+        }
     }
 }

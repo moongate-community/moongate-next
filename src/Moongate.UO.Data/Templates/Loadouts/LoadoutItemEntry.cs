@@ -3,7 +3,7 @@ using Moongate.UO.Data.Types.Loadouts;
 namespace Moongate.UO.Data.Templates.Loadouts;
 
 /// <summary>
-/// One item entry in a starter loadout section, referencing an item template by id.
+///     One item entry in a starter loadout section, referencing an item template by id.
 /// </summary>
 public sealed class LoadoutItemEntry
 {

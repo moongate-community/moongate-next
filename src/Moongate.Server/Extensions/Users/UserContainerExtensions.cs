@@ -8,7 +8,7 @@ using Moongate.UO.Domain.Interfaces.Services;
 namespace Moongate.Server.Extensions.Users;
 
 /// <summary>
-/// DryIoc-native registration helpers for UO user services.
+///     DryIoc-native registration helpers for UO user services.
 /// </summary>
 public static class UserContainerExtensions
 {
@@ -16,7 +16,7 @@ public static class UserContainerExtensions
     private const int UserEntitySchemaVersion = 1;
 
     /// <summary>
-    /// Registers the UO user entity and user service available to server code and plugins.
+    ///     Registers the UO user entity and user service available to server code and plugins.
     /// </summary>
     public static IContainer AddMoongateUsers(this IContainer container)
     {

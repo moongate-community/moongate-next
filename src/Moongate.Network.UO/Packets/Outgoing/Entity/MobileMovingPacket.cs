@@ -14,8 +14,6 @@ public class MobileMovingPacket : BaseGameNetworkPacket
     private const byte OpCodeValue = 0x77;
     private const int LengthValue = 17;
 
-    public MobileEntity Mobile { get; }
-
     public MobileMovingPacket(MobileEntity mobile)
         : base(OpCodeValue, LengthValue)
     {
@@ -23,6 +21,8 @@ public class MobileMovingPacket : BaseGameNetworkPacket
 
         Mobile = mobile;
     }
+
+    public MobileEntity Mobile { get; }
 
     public override void Write(ref SpanWriter writer)
     {
@@ -39,5 +39,7 @@ public class MobileMovingPacket : BaseGameNetworkPacket
     }
 
     protected override bool ParsePayload(ref SpanReader reader)
-        => false;
+    {
+        return false;
+    }
 }

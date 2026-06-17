@@ -15,8 +15,7 @@ public class GameLoopServiceTests
     public async Task RunLoop_DrainsPublishedTickEvents()
     {
         var timeline = new List<string>();
-        var (bus, loop) = Build(
-            services =>
+        var (bus, loop) = Build(services =>
             {
                 services.AddSingleton<ITickEventHandler<TestTickEvent>>(_ => new TimelineTickHandler("A", timeline));
             }
@@ -48,7 +47,7 @@ public class GameLoopServiceTests
     [Fact]
     public async Task RunLoop_IdleWhenNoWork_DoesNotSpinAtFullCpu()
     {
-        var (_, loop) = Build(_ => { }, new() { IdleSleepMs = 5 });
+        var (_, loop) = Build(_ => { }, new GameLoopConfig { IdleSleepMs = 5 });
 
         await loop.StartAsync(CancellationToken.None);
         await Task.Delay(50);
@@ -71,7 +70,7 @@ public class GameLoopServiceTests
 
         var loop = new GameLoopService(
             bus,
-            new() { IdleSleepMs = 1 },
+            new GameLoopConfig { IdleSleepMs = 1 },
             timer
         );
 
@@ -105,8 +104,7 @@ public class GameLoopServiceTests
     public async Task StopAsync_DrainsResidualQueueGracefully()
     {
         var timeline = new List<string>();
-        var (bus, loop) = Build(
-            services =>
+        var (bus, loop) = Build(services =>
             {
                 services.AddSingleton<ITickEventHandler<TestTickEvent>>(_ => new TimelineTickHandler("A", timeline));
             }

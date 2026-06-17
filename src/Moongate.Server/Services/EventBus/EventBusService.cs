@@ -11,28 +11,26 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.EventBus;
 
 /// <summary>
-/// Default <see cref="IEventBusService" /> implementation. Routes IAsyncEvent through
-/// sequential handler invocation on the calling thread (with await per handler), and
-/// queues ITickEvent into a bounded-by-budget channel drained by the game loop.
+///     Default <see cref="IEventBusService" /> implementation. Routes IAsyncEvent through
+///     sequential handler invocation on the calling thread (with await per handler), and
+///     queues ITickEvent into a bounded-by-budget channel drained by the game loop.
 /// </summary>
 public sealed class EventBusService : IEventBusService, IMetricProvider
 {
     private readonly ILogger _logger = Log.ForContext<EventBusService>();
     private readonly HandlerRegistry _registry;
     private readonly Channel<TickEnvelope> _tickQueue;
+    private long _asyncEventsPublished;
+    private long _handlerErrors;
+    private long _tickEventsPublished;
 
     private int _tickQueueDepth;
-    private long _asyncEventsPublished;
-    private long _tickEventsPublished;
-    private long _handlerErrors;
-
-    public string Prefix => "bus";
 
     public EventBusService(IServiceProvider serviceProvider)
     {
-        _registry = new(serviceProvider);
+        _registry = new HandlerRegistry(serviceProvider);
         _tickQueue = Channel.CreateUnbounded<TickEnvelope>(
-            new()
+            new UnboundedChannelOptions
             {
                 SingleReader = true,
                 SingleWriter = false
@@ -43,34 +41,6 @@ public sealed class EventBusService : IEventBusService, IMetricProvider
     public Action<Type, Exception, IMoongateEvent>? OnEventError { get; set; }
 
     public int CurrentTickQueueDepth => Volatile.Read(ref _tickQueueDepth);
-
-    public IReadOnlyList<MetricSample> Collect()
-        =>
-        [
-            new(
-                "async_events_total",
-                Interlocked.Read(ref _asyncEventsPublished),
-                MetricType.Counter,
-                Help: "Total async events published"
-            ),
-            new(
-                "tick_events_total",
-                Interlocked.Read(ref _tickEventsPublished),
-                MetricType.Counter,
-                Help: "Total tick events enqueued"
-            ),
-            new(
-                "tick_queue_depth",
-                Volatile.Read(ref _tickQueueDepth),
-                Help: "Current number of tick events queued"
-            ),
-            new(
-                "handler_errors_total",
-                Interlocked.Read(ref _handlerErrors),
-                MetricType.Counter,
-                Help: "Total handler exceptions across async and tick paths"
-            )
-        ];
 
     public int DrainTickEvents(int maxItems)
     {
@@ -123,13 +93,47 @@ public sealed class EventBusService : IEventBusService, IMetricProvider
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
-        => Task.CompletedTask;
+    {
+        return Task.CompletedTask;
+    }
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
         _tickQueue.Writer.TryComplete();
 
         return Task.CompletedTask;
+    }
+
+    public string Prefix => "bus";
+
+    public IReadOnlyList<MetricSample> Collect()
+    {
+        return
+        [
+            new MetricSample(
+                "async_events_total",
+                Interlocked.Read(ref _asyncEventsPublished),
+                MetricType.Counter,
+                Help: "Total async events published"
+            ),
+            new MetricSample(
+                "tick_events_total",
+                Interlocked.Read(ref _tickEventsPublished),
+                MetricType.Counter,
+                Help: "Total tick events enqueued"
+            ),
+            new MetricSample(
+                "tick_queue_depth",
+                Volatile.Read(ref _tickQueueDepth),
+                Help: "Current number of tick events queued"
+            ),
+            new MetricSample(
+                "handler_errors_total",
+                Interlocked.Read(ref _handlerErrors),
+                MetricType.Counter,
+                Help: "Total handler exceptions across async and tick paths"
+            )
+        ];
     }
 
     internal void InvokeTickHandlers<TEvent>(TEvent evt)

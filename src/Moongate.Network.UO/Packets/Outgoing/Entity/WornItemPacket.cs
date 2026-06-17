@@ -9,17 +9,13 @@ using Moongate.UO.Data.Types.Items;
 namespace Moongate.Network.UO.Packets.Outgoing.Entity;
 
 /// <summary>
-/// Outgoing "Worn Item" (0x2E): equips a single visible item on a mobile's figure/paperdoll.
+///     Outgoing "Worn Item" (0x2E): equips a single visible item on a mobile's figure/paperdoll.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Worn Item")]
 public class WornItemPacket : BaseGameNetworkPacket
 {
     private const byte OpCodeValue = 0x2E;
     private const int LengthValue = 15;
-
-    public MobileEntity Mobile { get; }
-    public ItemEntity Item { get; }
-    public ItemLayerType Layer { get; }
 
     public WornItemPacket(MobileEntity mobile, ItemEntity item, ItemLayerType layer)
         : base(OpCodeValue, LengthValue)
@@ -31,6 +27,10 @@ public class WornItemPacket : BaseGameNetworkPacket
         Item = item;
         Layer = layer;
     }
+
+    public MobileEntity Mobile { get; }
+    public ItemEntity Item { get; }
+    public ItemLayerType Layer { get; }
 
     public override void Write(ref SpanWriter writer)
     {
@@ -44,5 +44,7 @@ public class WornItemPacket : BaseGameNetworkPacket
     }
 
     protected override bool ParsePayload(ref SpanReader reader)
-        => false;
+    {
+        return false;
+    }
 }

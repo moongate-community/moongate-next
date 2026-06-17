@@ -10,15 +10,15 @@ using Moongate.UO.Data.Types.Skills;
 namespace Moongate.Server.Services.Mobiles;
 
 /// <summary>
-/// Default mobile service backed by auto-increment persistence, with skill access
-/// and equipment behavior that keeps mobile and item references in sync.
+///     Default mobile service backed by auto-increment persistence, with skill access
+///     and equipment behavior that keeps mobile and item references in sync.
 /// </summary>
 public sealed class MobileService : IMobileService
 {
     private const int DefaultSkillCap = 1000;
+    private readonly IAutoDataAccess<ItemEntity, Serial> _items;
 
     private readonly IAutoDataAccess<MobileEntity, Serial> _mobiles;
-    private readonly IAutoDataAccess<ItemEntity, Serial> _items;
 
     public MobileService(IAutoDataAccess<MobileEntity, Serial> mobiles, IAutoDataAccess<ItemEntity, Serial> items)
     {
@@ -27,7 +27,9 @@ public sealed class MobileService : IMobileService
     }
 
     public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
-        => _mobiles.CountAsync(cancellationToken);
+    {
+        return _mobiles.CountAsync(cancellationToken);
+    }
 
     public async ValueTask<MobileEntity> CreateAsync(MobileEntity mobile, CancellationToken cancellationToken = default)
     {
@@ -46,7 +48,9 @@ public sealed class MobileService : IMobileService
     }
 
     public ValueTask<bool> DeleteAsync(Serial id, CancellationToken cancellationToken = default)
-        => _mobiles.RemoveAsync(id, cancellationToken);
+    {
+        return _mobiles.RemoveAsync(id, cancellationToken);
+    }
 
     public async ValueTask<bool> EquipAsync(
         MobileEntity mobile,
@@ -86,20 +90,22 @@ public sealed class MobileService : IMobileService
     )
     {
         var result = _mobiles.Query()
-                             .Where(m => m.AccountId == accountId)
-                             .ToList();
+            .Where(m => m.AccountId == accountId)
+            .ToList();
 
         return ValueTask.FromResult<IReadOnlyList<MobileEntity>>(result);
     }
 
     public ValueTask<MobileEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
-        => _mobiles.GetByIdAsync(id, cancellationToken);
+    {
+        return _mobiles.GetByIdAsync(id, cancellationToken);
+    }
 
     public SkillEntry GetSkill(MobileEntity mobile, UOSkillName skill)
     {
         ArgumentNullException.ThrowIfNull(mobile);
 
-        return mobile.Skills.TryGetValue(skill, out var entry) ? entry : new();
+        return mobile.Skills.TryGetValue(skill, out var entry) ? entry : new SkillEntry();
     }
 
     public async ValueTask<SkillEntry> SetSkillAsync(
@@ -113,7 +119,7 @@ public sealed class MobileService : IMobileService
 
         if (!mobile.Skills.TryGetValue(skill, out var entry))
         {
-            entry = new() { Cap = DefaultSkillCap, Lock = UOSkillLock.Up };
+            entry = new SkillEntry { Cap = DefaultSkillCap, Lock = UOSkillLock.Up };
             mobile.Skills[skill] = entry;
         }
 

@@ -7,20 +7,21 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Incoming.Interaction;
 
 [PacketHandler(0x95, PacketSizing.Fixed, Length = 9, Description = "Dye Window")]
-
 /// <summary>
 /// Represents DyeWindowPacket.
 /// </summary>
 public class DyeWindowPacket : BaseGameNetworkPacket
 {
+    public DyeWindowPacket()
+        : base(0x95, 9)
+    {
+    }
+
     public Serial TargetSerial { get; set; }
 
     public ushort Model { get; set; }
 
     public ushort Hue { get; set; }
-
-    public DyeWindowPacket()
-        : base(0x95, 9) { }
 
     protected override bool ParsePayload(ref SpanReader reader)
     {

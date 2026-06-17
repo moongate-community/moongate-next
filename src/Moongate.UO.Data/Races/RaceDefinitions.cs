@@ -6,9 +6,9 @@ namespace Moongate.UO.Data.Races;
 public static class RaceDefinitions
 {
     /// <summary>
-    /// Adds (or replaces) a race in the registry by its index, keeping the indexed
-    /// <see cref="Race.Races" /> slot and the <see cref="Race.AllRaces" /> list in sync so
-    /// repeated registration of the same index stays idempotent.
+    ///     Adds (or replaces) a race in the registry by its index, keeping the indexed
+    ///     <see cref="Race.Races" /> slot and the <see cref="Race.AllRaces" /> list in sync so
+    ///     repeated registration of the same index stays idempotent.
     /// </summary>
     public static void RegisterRace(Race race)
     {

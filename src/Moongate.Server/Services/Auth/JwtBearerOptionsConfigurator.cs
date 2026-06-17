@@ -40,7 +40,7 @@ public sealed class JwtBearerOptionsConfigurator : IConfigureNamedOptions<JwtBea
         }
 
         options.MapInboundClaims = true;
-        options.TokenValidationParameters = new()
+        options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidIssuer = jwt.Issuer,
@@ -54,29 +54,29 @@ public sealed class JwtBearerOptionsConfigurator : IConfigureNamedOptions<JwtBea
             RoleClaimType = ClaimTypes.Role
         };
 
-        options.Events = new()
+        options.Events = new JwtBearerEvents
         {
             OnMessageReceived = context =>
-                                {
-                                    var token = ResolveWebSocketToken(
-                                        context.HttpContext.Request.Query,
-                                        context.HttpContext.Request.Path
-                                    );
+            {
+                var token = ResolveWebSocketToken(
+                    context.HttpContext.Request.Query,
+                    context.HttpContext.Request.Path
+                );
 
-                                    if (token is not null)
-                                    {
-                                        context.Token = token;
-                                    }
+                if (token is not null)
+                {
+                    context.Token = token;
+                }
 
-                                    return Task.CompletedTask;
-                                }
+                return Task.CompletedTask;
+            }
         };
     }
 
     /// <summary>
-    /// Pulls the bearer token from the <c>access_token</c> query string for SignalR WebSocket
-    /// requests to the console hub (browsers can't set the Authorization header on a WS handshake).
-    /// Returns null for any other path or when the token is absent.
+    ///     Pulls the bearer token from the <c>access_token</c> query string for SignalR WebSocket
+    ///     requests to the console hub (browsers can't set the Authorization header on a WS handshake).
+    ///     Returns null for any other path or when the token is absent.
     /// </summary>
     internal static string? ResolveWebSocketToken(IQueryCollection query, PathString path)
     {

@@ -1,7 +1,7 @@
 namespace Moongate.Network.UO.Types.Environment;
 
 /// <summary>
-/// Defines UO weather modes.
+///     Defines UO weather modes.
 /// </summary>
 public enum WeatherType : byte
 {

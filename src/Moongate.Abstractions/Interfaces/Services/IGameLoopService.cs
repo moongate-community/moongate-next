@@ -1,7 +1,7 @@
 namespace Moongate.Abstractions.Interfaces.Services;
 
 /// <summary>
-/// Owns the dedicated game-loop thread that drains tick events from <see cref="IEventBusService" />.
+///     Owns the dedicated game-loop thread that drains tick events from <see cref="IEventBusService" />.
 /// </summary>
 public interface IGameLoopService : IMoongateService
 {

@@ -7,7 +7,7 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Outgoing.Login;
 
 /// <summary>
-/// Represents a login denied packet.
+///     Represents a login denied packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Login Denied Response")]
 public class LoginDeniedPacket : BaseGameNetworkPacket
@@ -15,16 +15,18 @@ public class LoginDeniedPacket : BaseGameNetworkPacket
     private const byte OpCodeValue = 0x82;
     private const int LengthValue = 2;
 
-    public LoginDeniedReasonType Reason { get; set; }
-
     public LoginDeniedPacket()
-        : base(OpCodeValue, LengthValue) { }
+        : base(OpCodeValue, LengthValue)
+    {
+    }
 
     public LoginDeniedPacket(LoginDeniedReasonType reason)
         : this()
     {
         Reason = reason;
     }
+
+    public LoginDeniedReasonType Reason { get; set; }
 
     public override void Write(ref SpanWriter writer)
     {

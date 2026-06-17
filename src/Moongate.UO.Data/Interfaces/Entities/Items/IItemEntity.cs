@@ -8,10 +8,10 @@ using Moongate.UO.Data.Types.Items;
 namespace Moongate.UO.Data.Interfaces.Entities.Items;
 
 /// <summary>
-/// Data contract for item entities: a world entity with item-specific graphic,
-/// stacking, placement (in a container or equipped on a mobile) and persisted
-/// containment ids. Derived facts (IsContainer/IsDoor, total weight) and
-/// containment behavior live in the item/container service layer, not here.
+///     Data contract for item entities: a world entity with item-specific graphic,
+///     stacking, placement (in a container or equipped on a mobile) and persisted
+///     containment ids. Derived facts (IsContainer/IsDoor, total weight) and
+///     containment behavior live in the item/container service layer, not here.
 /// </summary>
 public interface IItemEntity : IWorldEntity
 {

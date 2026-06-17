@@ -1,3 +1,4 @@
+using Moongate.Abstractions.Data.Logging;
 using Moongate.Core.Types;
 using Moongate.Server.Services.LiveConsole;
 using Moongate.Server.Services.Logging;
@@ -14,7 +15,7 @@ public class LiveConsoleLoggerWiringTests
         var logsDir = Path.Combine(Path.GetTempPath(), $"lc-logtest-{Guid.NewGuid():N}");
 
         using var logger = LoggerService.CreateLogger(
-            new()
+            new LoggerConfig
             {
                 Level = LogLevelType.Information,
                 WriteToFile = false

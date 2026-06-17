@@ -63,7 +63,9 @@ public sealed class PluginCatalogService : IPluginCatalogService
     }
 
     public IReadOnlyList<PluginCatalogEntry> GetLoadedPlugins()
-        => _plugins.Select(ToEntry).ToArray();
+    {
+        return _plugins.Select(ToEntry).ToArray();
+    }
 
     public async ValueTask<PluginConfigSaveResult?> SaveConfigAsync(
         string pluginId,
@@ -132,7 +134,9 @@ public sealed class PluginCatalogService : IPluginCatalogService
     }
 
     private static string ConfigDisplayPath(LoadedPlugin plugin)
-        => Path.Combine(Path.GetFileName(plugin.PluginDirectory), PluginContext.PluginConfigFileName);
+    {
+        return Path.Combine(Path.GetFileName(plugin.PluginDirectory), PluginContext.PluginConfigFileName);
+    }
 
     private LoadedPlugin? FindPlugin(string pluginId)
     {
@@ -141,8 +145,11 @@ public sealed class PluginCatalogService : IPluginCatalogService
             return null;
         }
 
-        return _plugins.FirstOrDefault(
-            candidate => string.Equals(candidate.Metadata.Id, pluginId.Trim(), StringComparison.OrdinalIgnoreCase)
+        return _plugins.FirstOrDefault(candidate => string.Equals(
+                candidate.Metadata.Id,
+                pluginId.Trim(),
+                StringComparison.OrdinalIgnoreCase
+            )
         );
     }
 
@@ -156,13 +163,13 @@ public sealed class PluginCatalogService : IPluginCatalogService
 
         if (!File.Exists(configPath))
         {
-            return new(plugin.Metadata.Id, false, displayPath, "", []);
+            return new PluginConfigView(plugin.Metadata.Id, false, displayPath, "", []);
         }
 
         var yaml = await File.ReadAllTextAsync(configPath, cancellationToken);
         var sanitizedYaml = SanitizeYaml(yaml, out var redactedKeys);
 
-        return new(plugin.Metadata.Id, true, displayPath, sanitizedYaml, redactedKeys);
+        return new PluginConfigView(plugin.Metadata.Id, true, displayPath, sanitizedYaml, redactedKeys);
     }
 
     private static bool IsSecretReferenceKey(string key)
@@ -224,7 +231,8 @@ public sealed class PluginCatalogService : IPluginCatalogService
     }
 
     private static PluginCatalogEntry ToEntry(LoadedPlugin plugin)
-        => new(
+    {
+        return new PluginCatalogEntry(
             plugin.Metadata.Id,
             plugin.Metadata.Name,
             plugin.Metadata.Version.ToString(),
@@ -237,4 +245,5 @@ public sealed class PluginCatalogService : IPluginCatalogService
             plugin.Instance is IConfigurablePlugin,
             plugin.Instance is ITestablePlugin
         );
+    }
 }

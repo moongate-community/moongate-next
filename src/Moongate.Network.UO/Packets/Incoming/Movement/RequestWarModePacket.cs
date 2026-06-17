@@ -6,7 +6,7 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Incoming.Movement;
 
 /// <summary>
-/// Represents a war mode request packet.
+///     Represents a war mode request packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Request War Mode")]
 public class RequestWarModePacket : BaseGameNetworkPacket
@@ -14,10 +14,12 @@ public class RequestWarModePacket : BaseGameNetworkPacket
     private const byte OpCodeValue = 0x72;
     private const int LengthValue = 5;
 
-    public bool IsWarMode { get; private set; }
-
     public RequestWarModePacket()
-        : base(OpCodeValue, LengthValue) { }
+        : base(OpCodeValue, LengthValue)
+    {
+    }
+
+    public bool IsWarMode { get; private set; }
 
     protected override bool ParsePayload(ref SpanReader reader)
     {

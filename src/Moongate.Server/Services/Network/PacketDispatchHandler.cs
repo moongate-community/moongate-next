@@ -11,7 +11,7 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.Network;
 
 /// <summary>
-/// Dispatches parsed packet events to typed packet handlers registered in DI.
+///     Dispatches parsed packet events to typed packet handlers registered in DI.
 /// </summary>
 public sealed class PacketDispatchHandler : ITickEventHandler<PacketReceivedEvent>
 {
@@ -20,11 +20,12 @@ public sealed class PacketDispatchHandler : ITickEventHandler<PacketReceivedEven
         BindingFlags.Instance | BindingFlags.NonPublic
     )!;
 
-    private readonly ILogger _logger = Log.ForContext<PacketDispatchHandler>();
-    private readonly IServiceProvider _serviceProvider;
-    private readonly IOutgoingPacketQueue _outgoingPackets;
-    private readonly INetworkSessionManager _sessions;
     private readonly ConcurrentDictionary<Type, Action<PacketDispatchHandler, PacketReceivedEvent>> _dispatchers = new();
+
+    private readonly ILogger _logger = Log.ForContext<PacketDispatchHandler>();
+    private readonly IOutgoingPacketQueue _outgoingPackets;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly INetworkSessionManager _sessions;
 
     public PacketDispatchHandler(
         IServiceProvider serviceProvider,
@@ -108,5 +109,7 @@ public sealed class PacketDispatchHandler : ITickEventHandler<PacketReceivedEven
     }
 
     private IReadOnlyCollection<long> GetSessionIds()
-        => _sessions.GetSessionIds();
+    {
+        return _sessions.GetSessionIds();
+    }
 }

@@ -13,12 +13,14 @@ public class MetricsExtensionsTests : IDisposable
     private readonly string _dir = Path.Combine(Path.GetTempPath(), $"nh-metrics-config-{Guid.NewGuid():N}");
     private string Path_ => Path.Combine(_dir, "moongate.yaml");
 
-    private sealed class NamedProvider : IMetricProvider
+    public void Dispose()
     {
-        public string Prefix => "named";
+        if (Directory.Exists(_dir))
+        {
+            Directory.Delete(_dir, true);
+        }
 
-        public IReadOnlyList<MetricSample> Collect()
-            => [new("v", 1)];
+        GC.SuppressFinalize(this);
     }
 
     [Fact]
@@ -74,13 +76,13 @@ public class MetricsExtensionsTests : IDisposable
         Assert.NotNull(container.Resolve<MetricsConfig>());
     }
 
-    public void Dispose()
+    private sealed class NamedProvider : IMetricProvider
     {
-        if (Directory.Exists(_dir))
-        {
-            Directory.Delete(_dir, true);
-        }
+        public string Prefix => "named";
 
-        GC.SuppressFinalize(this);
+        public IReadOnlyList<MetricSample> Collect()
+        {
+            return [new("v", 1)];
+        }
     }
 }

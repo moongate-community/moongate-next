@@ -6,7 +6,7 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Incoming.UI;
 
 /// <summary>
-/// Represents a response to a dialog box packet.
+///     Represents a response to a dialog box packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Response To Dialog Box")]
 public class DialogResponsePacket : BaseGameNetworkPacket
@@ -14,12 +14,14 @@ public class DialogResponsePacket : BaseGameNetworkPacket
     private const byte OpCodeValue = 0x7D;
     private const int LengthValue = 13;
 
+    public DialogResponsePacket()
+        : base(OpCodeValue, LengthValue)
+    {
+    }
+
     public uint DialogId { get; private set; }
     public uint ButtonId { get; private set; }
     public uint Unknown { get; private set; }
-
-    public DialogResponsePacket()
-        : base(OpCodeValue, LengthValue) { }
 
     protected override bool ParsePayload(ref SpanReader reader)
     {

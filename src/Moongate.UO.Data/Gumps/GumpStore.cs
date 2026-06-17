@@ -9,10 +9,10 @@ using SixLabors.ImageSharp.PixelFormats;
 namespace Moongate.UO.Data.Gumps;
 
 /// <summary>
-/// Reads and decodes gumps via a <see cref="FileIndex" />, supporting both the legacy
-/// <c>gumpidx.mul</c>/<c>gumpart.mul</c> pair (dimensions come from the index <c>extra</c>, data is raw)
-/// and the modern <c>gumpartLegacyMUL.uop</c> (zlib-compressed; the decompressed data is prefixed with
-/// the width/height as two little-endian <c>uint</c>s, followed by the row-lookup table + RLE).
+///     Reads and decodes gumps via a <see cref="FileIndex" />, supporting both the legacy
+///     <c>gumpidx.mul</c>/<c>gumpart.mul</c> pair (dimensions come from the index <c>extra</c>, data is raw)
+///     and the modern <c>gumpartLegacyMUL.uop</c> (zlib-compressed; the decompressed data is prefixed with
+///     the width/height as two little-endian <c>uint</c>s, followed by the row-lookup table + RLE).
 /// </summary>
 public sealed class GumpStore : IGumpStore
 {
@@ -26,7 +26,7 @@ public sealed class GumpStore : IGumpStore
     {
         ArgumentNullException.ThrowIfNull(resolver);
 
-        _index = new(
+        _index = new FileIndex(
             resolver.Resolve("gumpidx.mul"),
             resolver.Resolve("gumpart.mul"),
             resolver.Resolve("gumpartLegacyMUL.uop"),

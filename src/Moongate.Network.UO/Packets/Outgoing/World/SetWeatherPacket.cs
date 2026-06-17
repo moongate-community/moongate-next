@@ -7,7 +7,7 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Outgoing.World;
 
 /// <summary>
-/// Represents a weather update packet.
+///     Represents a weather update packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Set Weather")]
 public class SetWeatherPacket : BaseGameNetworkPacket
@@ -17,12 +17,10 @@ public class SetWeatherPacket : BaseGameNetworkPacket
     private const byte OpCodeValue = 0x65;
     private const int LengthValue = 4;
 
-    public WeatherType Type { get; set; }
-    public byte EffectCount { get; set; }
-    public byte Temperature { get; set; }
-
     public SetWeatherPacket()
-        : base(OpCodeValue, LengthValue) { }
+        : base(OpCodeValue, LengthValue)
+    {
+    }
 
     public SetWeatherPacket(WeatherType type, byte effectCount, byte temperature)
         : this()
@@ -31,6 +29,10 @@ public class SetWeatherPacket : BaseGameNetworkPacket
         EffectCount = effectCount;
         Temperature = temperature;
     }
+
+    public WeatherType Type { get; set; }
+    public byte EffectCount { get; set; }
+    public byte Temperature { get; set; }
 
     public override void Write(ref SpanWriter writer)
     {

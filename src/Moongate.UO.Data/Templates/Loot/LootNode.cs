@@ -1,9 +1,9 @@
 namespace Moongate.UO.Data.Templates.Loot;
 
 /// <summary>
-/// One node in a loot tree. Exactly one of <see cref="Item" />,
-/// <see cref="Category" />, <see cref="PickOneOf" /> or <see cref="Group" />
-/// identifies the node kind (enforced at boot validation).
+///     One node in a loot tree. Exactly one of <see cref="Item" />,
+///     <see cref="Category" />, <see cref="PickOneOf" /> or <see cref="Group" />
+///     identifies the node kind (enforced at boot validation).
 /// </summary>
 public sealed class LootNode
 {

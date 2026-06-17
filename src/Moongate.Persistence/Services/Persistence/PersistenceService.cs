@@ -18,23 +18,23 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Persistence.Services.Persistence;
 
 /// <summary>
-/// Default <see cref="IPersistenceService" />: builds the registry from boot registrations, performs
-/// snapshot load + journal replay, exposes data access, and reports metrics.
+///     Default <see cref="IPersistenceService" />: builds the registry from boot registrations, performs
+///     snapshot load + journal replay, exposes data access, and reports metrics.
 /// </summary>
 public sealed class PersistenceService : IPersistenceService, IMetricProvider, IDisposable
 {
-    private readonly ILogger _logger = Log.ForContext<PersistenceService>();
-    private readonly PersistenceStateStore _stateStore = new();
-    private readonly PersistenceEntityRegistry _registry = new();
-    private readonly BinaryJournalService _journal;
-    private readonly MessagePackSnapshotService _snapshot;
     private readonly PersistenceConfig _config;
     private readonly IEventBusService? _eventBus;
+    private readonly BinaryJournalService _journal;
+    private readonly ILogger _logger = Log.ForContext<PersistenceService>();
     private readonly IReadOnlyList<PersistenceEntityRegistration> _registrations;
+    private readonly PersistenceEntityRegistry _registry = new();
+    private readonly MessagePackSnapshotService _snapshot;
+    private readonly PersistenceStateStore _stateStore = new();
+    private int _autosaveInFlight;
+    private long _lastSnapshotUnixMilliseconds;
 
     private long _snapshotsWritten;
-    private long _lastSnapshotUnixMilliseconds;
-    private int _autosaveInFlight;
 
     public PersistenceService(
         string saveDirectory,
@@ -60,8 +60,8 @@ public sealed class PersistenceService : IPersistenceService, IMetricProvider, I
             RegisterDescriptor(registration.Descriptor);
         }
 
-        _journal = new(Path.Combine(saveDirectory, config.JournalFileName), config.EnableFileLock);
-        _snapshot = new(saveDirectory, config.SnapshotFileSuffix);
+        _journal = new BinaryJournalService(Path.Combine(saveDirectory, config.JournalFileName), config.EnableFileLock);
+        _snapshot = new MessagePackSnapshotService(saveDirectory, config.SnapshotFileSuffix);
 
         timerService?.RegisterTimer(
             "world_save",
@@ -70,6 +70,12 @@ public sealed class PersistenceService : IPersistenceService, IMetricProvider, I
             _config.AutosaveInterval,
             true
         );
+    }
+
+    public void Dispose()
+    {
+        _journal.DisposeAsync().AsTask().GetAwaiter().GetResult();
+        _snapshot.Dispose();
     }
 
     public string Prefix => "persistence";
@@ -87,31 +93,33 @@ public sealed class PersistenceService : IPersistenceService, IMetricProvider, I
 
         return
         [
-            new("entities_total", entities, Help: "Total persisted entities across types"),
-            new("last_sequence_id", lastSequenceId, Help: "Last applied journal sequence id"),
-            new(
+            new MetricSample("entities_total", entities, Help: "Total persisted entities across types"),
+            new MetricSample("last_sequence_id", lastSequenceId, Help: "Last applied journal sequence id"),
+            new MetricSample(
                 "snapshots_written_total",
                 Interlocked.Read(ref _snapshotsWritten),
                 MetricType.Counter,
                 Help: "Total snapshots written"
             ),
-            new("last_snapshot_unixms", Interlocked.Read(ref _lastSnapshotUnixMilliseconds), Help: "Last snapshot time")
+            new MetricSample(
+                "last_snapshot_unixms",
+                Interlocked.Read(ref _lastSnapshotUnixMilliseconds),
+                Help: "Last snapshot time"
+            )
         ];
-    }
-
-    public void Dispose()
-    {
-        _journal.DisposeAsync().AsTask().GetAwaiter().GetResult();
-        _snapshot.Dispose();
     }
 
     public IAutoDataAccess<TEntity, TKey> GetAutoDataAccess<TEntity, TKey>()
         where TKey : struct, IAutoIncrementKey<TKey>
-        => new AutoDataAccess<TEntity, TKey>(_stateStore, _journal, _registry.GetDescriptor<TEntity, TKey>());
+    {
+        return new AutoDataAccess<TEntity, TKey>(_stateStore, _journal, _registry.GetDescriptor<TEntity, TKey>());
+    }
 
     public IDataAccess<TEntity, TKey> GetDataAccess<TEntity, TKey>()
         where TKey : notnull
-        => new GenericDataAccess<TEntity, TKey>(_stateStore, _journal, _registry.GetDescriptor<TEntity, TKey>());
+    {
+        return new GenericDataAccess<TEntity, TKey>(_stateStore, _journal, _registry.GetDescriptor<TEntity, TKey>());
+    }
 
     public async ValueTask InitializeAsync(CancellationToken cancellationToken = default)
     {
@@ -183,8 +191,8 @@ public sealed class PersistenceService : IPersistenceService, IMetricProvider, I
             {
                 lastSequenceId = _stateStore.LastSequenceId;
                 captured = _registry.GetRegisteredDescriptors()
-                                    .Select(d => (d.TypeName, Bucket: Applier(d.TypeId).CaptureBucket(_stateStore)))
-                                    .ToList();
+                    .Select(d => (d.TypeName, Bucket: Applier(d.TypeId).CaptureBucket(_stateStore)))
+                    .ToList();
             }
 
             var typesWritten = 0;
@@ -235,11 +243,15 @@ public sealed class PersistenceService : IPersistenceService, IMetricProvider, I
     }
 
     public async Task StopAsync(CancellationToken cancellationToken)
-        => await SaveSnapshotAsync(cancellationToken);
+    {
+        await SaveSnapshotAsync(cancellationToken);
+    }
 
     /// <summary>Test/diagnostic hook: stops without writing a snapshot (forces journal-only recovery).</summary>
     public ValueTask StopWithoutSnapshotAsync()
-        => ValueTask.CompletedTask;
+    {
+        return ValueTask.CompletedTask;
+    }
 
     private IInternalEntityApplier Applier(ushort typeId)
     {
@@ -272,27 +284,30 @@ public sealed class PersistenceService : IPersistenceService, IMetricProvider, I
 
     private Task PublishSnapshotEventAsync<TEvent>(TEvent evt, CancellationToken cancellationToken)
         where TEvent : IAsyncEvent
-        => _eventBus?.PublishAsync(evt, cancellationToken) ?? Task.CompletedTask;
+    {
+        return _eventBus?.PublishAsync(evt, cancellationToken) ?? Task.CompletedTask;
+    }
 
     private void RegisterDescriptor(IPersistenceEntityDescriptor descriptor)
     {
         var method = typeof(PersistenceEntityRegistry).GetMethod(nameof(PersistenceEntityRegistry.Register))!
-                                                      .MakeGenericMethod(descriptor.EntityType, descriptor.KeyType);
+            .MakeGenericMethod(descriptor.EntityType, descriptor.KeyType);
         method.Invoke(_registry, [descriptor]);
     }
 
     private void SaveSnapshotTimerCallback()
-        => _ = Task.Run(
-               async () =>
-               {
-                   try
-                   {
-                       await SaveSnapshotAsync(CancellationToken.None);
-                   }
-                   catch (Exception ex)
-                   {
-                       _logger.Error(ex, "Autosave snapshot failed");
-                   }
-               }
-           );
+    {
+        _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await SaveSnapshotAsync(CancellationToken.None);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex, "Autosave snapshot failed");
+                }
+            }
+        );
+    }
 }

@@ -62,8 +62,12 @@ public sealed class LootTableRegistryTests
     }
 
     private static LootTableDefinition Table(string id)
-        => new() { Id = id, Content = [new() { Item = "apple" }] };
+    {
+        return new LootTableDefinition { Id = id, Content = [new LootNode { Item = "apple" }] };
+    }
 
     private static ItemTemplateDefinition Tmpl(string id, bool isAbstract, params string[] tags)
-        => new() { Id = id, IsAbstract = isAbstract, Tags = [.. tags] };
+    {
+        return new ItemTemplateDefinition { Id = id, IsAbstract = isAbstract, Tags = [.. tags] };
+    }
 }

@@ -11,29 +11,27 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.Timing;
 
 /// <summary>
-/// Hashed timer wheel driven by <see cref="ITimerService.UpdateTicksDelta" /> from the game loop.
+///     Hashed timer wheel driven by <see cref="ITimerService.UpdateTicksDelta" /> from the game loop.
 /// </summary>
 public sealed class TimerWheelService : ITimerService, IMetricProvider
 {
     private readonly ILogger _logger = Log.ForContext<TimerWheelService>();
+    private readonly Lock _syncRoot = new();
     private readonly TimeSpan _tickDuration;
     private readonly double _tickDurationMs;
-    private readonly LinkedList<TimerEntry>[] _wheel;
-    private readonly Lock _syncRoot = new();
-    private readonly Dictionary<string, TimerEntry> _timersById = new(StringComparer.Ordinal);
     private readonly Dictionary<string, HashSet<string>> _timerIdsByName = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, TimerEntry> _timersById = new(StringComparer.Ordinal);
+    private readonly LinkedList<TimerEntry>[] _wheel;
+    private double _accumulatedMilliseconds;
+    private long _callbackErrors;
 
     private long _currentTick;
     private long _lastTimestampMilliseconds = -1;
-    private double _accumulatedMilliseconds;
-
-    private long _totalRegistered;
-    private long _totalExecuted;
-    private long _callbackErrors;
     private long _totalCallbackElapsedStopwatchTicks;
+    private long _totalExecuted;
     private long _totalProcessedTicks;
 
-    public string Prefix => "timer";
+    private long _totalRegistered;
 
     public TimerWheelService(TimerWheelConfig config)
     {
@@ -59,9 +57,11 @@ public sealed class TimerWheelService : ITimerService, IMetricProvider
 
         for (var i = 0; i < _wheel.Length; i++)
         {
-            _wheel[i] = new();
+            _wheel[i] = new LinkedList<TimerEntry>();
         }
     }
+
+    public string Prefix => "timer";
 
     public IReadOnlyList<MetricSample> Collect()
     {
@@ -75,40 +75,40 @@ public sealed class TimerWheelService : ITimerService, IMetricProvider
         var executed = Interlocked.Read(ref _totalExecuted);
         var elapsedSwTicks = Interlocked.Read(ref _totalCallbackElapsedStopwatchTicks);
         var avgMs = executed == 0
-                        ? 0
-                        : Stopwatch.GetElapsedTime(0, elapsedSwTicks / executed).TotalMilliseconds;
+            ? 0
+            : Stopwatch.GetElapsedTime(0, elapsedSwTicks / executed).TotalMilliseconds;
 
         return
         [
-            new(
+            new MetricSample(
                 "active",
                 active,
                 Help: "Currently registered timers"
             ),
-            new(
+            new MetricSample(
                 "registered_total",
                 Interlocked.Read(ref _totalRegistered),
                 MetricType.Counter,
                 Help: "Total registrations since start"
             ),
-            new(
+            new MetricSample(
                 "executed_total",
                 executed,
                 MetricType.Counter,
                 Help: "Total callback invocations"
             ),
-            new(
+            new MetricSample(
                 "callback_errors_total",
                 Interlocked.Read(ref _callbackErrors),
                 MetricType.Counter,
                 Help: "Total callback exceptions"
             ),
-            new(
+            new MetricSample(
                 "callback_avg_ms",
                 avgMs,
                 Help: "Average callback duration"
             ),
-            new(
+            new MetricSample(
                 "processed_ticks_total",
                 Interlocked.Read(ref _totalProcessedTicks),
                 MetricType.Counter,
@@ -172,7 +172,9 @@ public sealed class TimerWheelService : ITimerService, IMetricProvider
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
-        => Task.CompletedTask;
+    {
+        return Task.CompletedTask;
+    }
 
     public Task StopAsync(CancellationToken cancellationToken)
     {

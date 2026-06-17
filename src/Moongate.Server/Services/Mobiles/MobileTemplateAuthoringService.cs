@@ -31,7 +31,7 @@ public sealed class MobileTemplateAuthoringService : IMobileTemplateAuthoringSer
         ArgumentNullException.ThrowIfNull(lootRegistryStore);
 
         _mobilesDirectory = directories[DirectoryType.Templates_Mobiles];
-        _documents = new(_mobilesDirectory);
+        _documents = new MobileTemplateYamlDocumentStore(_mobilesDirectory);
         _templates = templates;
         _itemTemplates = itemTemplates;
         _lootRegistryStore = lootRegistryStore;
@@ -112,9 +112,9 @@ public sealed class MobileTemplateAuthoringService : IMobileTemplateAuthoringSer
         var saved = reloaded.Single(t => string.Equals(t.Id, def.Id, StringComparison.OrdinalIgnoreCase));
 
         var relative = Path.GetRelativePath(_mobilesDirectory, sourceFile)
-                           .Replace(Path.DirectorySeparatorChar, '/');
+            .Replace(Path.DirectorySeparatorChar, '/');
 
-        return new(MobileTemplateDetail.FromDefinition(saved), relative);
+        return new MobileTemplateSaveResult(MobileTemplateDetail.FromDefinition(saved), relative);
     }
 
     private static MobileTemplateDefinition ToDefinition(MobileTemplateEditRequest r)
@@ -122,23 +122,24 @@ public sealed class MobileTemplateAuthoringService : IMobileTemplateAuthoringSer
         var id = r.Id.Trim();
 
         var tags = (r.Tags ?? [])
-                   .Select(static tag => tag.Trim())
-                   .Where(static tag => tag.Length > 0)
-                   .Distinct(StringComparer.OrdinalIgnoreCase)
-                   .ToList();
+            .Select(static tag => tag.Trim())
+            .Where(static tag => tag.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
 
         var skills = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var (key, value) in r.Skills ?? new(StringComparer.OrdinalIgnoreCase))
+        foreach (var (key, value) in r.Skills ?? new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase))
         {
             skills[key.Trim()] = value;
         }
 
         var parameters = new Dictionary<string, ItemTemplateParamDefinition>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var (key, param) in r.Params ?? new(StringComparer.OrdinalIgnoreCase))
+        foreach (var (key, param) in r.Params ??
+                                     new Dictionary<string, ItemTemplateParamDefinition>(StringComparer.OrdinalIgnoreCase))
         {
-            parameters[key.Trim()] = new()
+            parameters[key.Trim()] = new ItemTemplateParamDefinition
             {
                 Type = param.Type,
                 Value = param.Value
@@ -146,16 +147,16 @@ public sealed class MobileTemplateAuthoringService : IMobileTemplateAuthoringSer
         }
 
         var equipment = (r.Equipment ?? [])
-                        .Where(static item => !string.IsNullOrWhiteSpace(item))
-                        .Select(static item => new MobileEquipmentEntry { Item = item.Trim() })
-                        .ToList();
+            .Where(static item => !string.IsNullOrWhiteSpace(item))
+            .Select(static item => new MobileEquipmentEntry { Item = item.Trim() })
+            .ToList();
 
         var lootTables = (r.LootTables ?? [])
-                         .Select(static id => id.Trim())
-                         .Where(static id => id.Length > 0)
-                         .ToList();
+            .Select(static id => id.Trim())
+            .Where(static id => id.Length > 0)
+            .ToList();
 
-        return new()
+        return new MobileTemplateDefinition
         {
             Id = id,
             BaseMobile = string.IsNullOrWhiteSpace(r.BaseMobile) ? null : r.BaseMobile.Trim(),

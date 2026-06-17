@@ -6,19 +6,19 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.LiveConsole;
 
 /// <summary>
-/// Default <see cref="ILiveConsoleBroadcaster" />: a thread-safe ring buffer of the last
-/// <see cref="BacklogCapacity" /> entries plus an event fan-out. Publishing never throws so a
-/// misbehaving subscriber can never break logging or command execution.
+///     Default <see cref="ILiveConsoleBroadcaster" />: a thread-safe ring buffer of the last
+///     <see cref="BacklogCapacity" /> entries plus an event fan-out. Publishing never throws so a
+///     misbehaving subscriber can never break logging or command execution.
 /// </summary>
 public sealed class LiveConsoleBroadcaster : ILiveConsoleBroadcaster
 {
     private const int BacklogCapacity = 200;
 
-    private readonly ILogger _logger = Log.ForContext<LiveConsoleBroadcaster>();
-    private readonly object _lock = new();
-
     // Initial capacity hint only; the trim loop in Publish enforces the hard cap of BacklogCapacity.
     private readonly Queue<LiveConsoleEntry> _backlog = new(BacklogCapacity);
+    private readonly object _lock = new();
+
+    private readonly ILogger _logger = Log.ForContext<LiveConsoleBroadcaster>();
 
     public event Action<LiveConsoleEntry>? EntryPublished;
 

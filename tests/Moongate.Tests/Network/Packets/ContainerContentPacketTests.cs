@@ -1,3 +1,4 @@
+using Moongate.Core.Geometry;
 using Moongate.Core.Ids;
 using Moongate.Network.UO.Packets.Outgoing.Entity;
 using Moongate.Tests.Support;
@@ -14,12 +15,12 @@ public sealed class ContainerContentPacketTests
         {
             new()
             {
-                Id = new(Serial.ItemOffset + 2), ItemId = 0x0EED, Amount = 0,
-                ContainerPosition = new(0, 0), Hue = (Hue)0
+                Id = new Serial(Serial.ItemOffset + 2), ItemId = 0x0EED, Amount = 0,
+                ContainerPosition = new Point2D(0, 0), Hue = (Hue)0
             }
         };
 
-        var bytes = PacketSerializer.Serialize(new ContainerContentPacket(new(Serial.ItemOffset + 1), items));
+        var bytes = PacketSerializer.Serialize(new ContainerContentPacket(new Serial(Serial.ItemOffset + 1), items));
 
         Assert.Equal(1, (short)((bytes[12] << 8) | bytes[13])); // amount 0 -> clamped to 1
     }
@@ -32,8 +33,8 @@ public sealed class ContainerContentPacketTests
         {
             new()
             {
-                Id = new(Serial.ItemOffset + 2), ItemId = 0x0EED, Amount = 5,
-                ContainerPosition = new(10, 20), Hue = (Hue)0
+                Id = new Serial(Serial.ItemOffset + 2), ItemId = 0x0EED, Amount = 5,
+                ContainerPosition = new Point2D(10, 20), Hue = (Hue)0
             }
         };
 

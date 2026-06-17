@@ -6,9 +6,9 @@ using Serilog;
 namespace Moongate.Abstractions.Internal;
 
 /// <summary>
-/// The single <see cref="IHostedService" /> registered with the host. Dispatches
-/// <see cref="IHostedService.StartAsync" /> and <see cref="IHostedService.StopAsync" />
-/// to every registered <see cref="IMoongateService" /> in priority order.
+///     The single <see cref="IHostedService" /> registered with the host. Dispatches
+///     <see cref="IHostedService.StartAsync" /> and <see cref="IHostedService.StopAsync" />
+///     to every registered <see cref="IMoongateService" /> in priority order.
 /// </summary>
 internal sealed class MoongateServiceOrchestrator : IHostedService
 {

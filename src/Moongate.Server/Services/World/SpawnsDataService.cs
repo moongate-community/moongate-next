@@ -6,7 +6,7 @@ using Moongate.Server.Services.WorldData;
 namespace Moongate.Server.Services.World;
 
 /// <summary>
-/// Lazy in-memory store for spawn definitions.
+///     Lazy in-memory store for spawn definitions.
 /// </summary>
 public class SpawnsDataService : LazyDataService, ISpawnsDataService
 {
@@ -15,7 +15,9 @@ public class SpawnsDataService : LazyDataService, ISpawnsDataService
     private List<SpawnDefinitionEntry> _entries = [];
     private Dictionary<int, List<SpawnDefinitionEntry>> _entriesByMap = [];
 
-    public SpawnsDataService() { }
+    public SpawnsDataService()
+    {
+    }
 
     public SpawnsDataService(ServerAssetDataLoader loader)
     {
@@ -59,16 +61,18 @@ public class SpawnsDataService : LazyDataService, ISpawnsDataService
         {
             _entries = snapshot;
             _entriesByMap = snapshot
-                            .GroupBy(static entry => entry.MapId)
-                            .ToDictionary(
-                                static grouping => grouping.Key,
-                                static grouping => grouping.ToList()
-                            );
+                .GroupBy(static entry => entry.MapId)
+                .ToDictionary(
+                    static grouping => grouping.Key,
+                    static grouping => grouping.ToList()
+                );
         }
 
         MarkLoaded();
     }
 
     protected override void LoadCore()
-        => _loader?.LoadSpawns(this);
+    {
+        _loader?.LoadSpawns(this);
+    }
 }

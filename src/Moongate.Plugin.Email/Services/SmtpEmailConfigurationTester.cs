@@ -27,7 +27,11 @@ public sealed class SmtpEmailConfigurationTester : IEmailConfigurationTester
 
         if (string.IsNullOrEmpty(password))
         {
-            return new(false, "SMTP secret was not found.", [$"Missing secret: {config.Smtp.PasswordSecret}"]);
+            return new PluginTestResult(
+                false,
+                "SMTP secret was not found.",
+                [$"Missing secret: {config.Smtp.PasswordSecret}"]
+            );
         }
 
         try
@@ -44,11 +48,11 @@ public sealed class SmtpEmailConfigurationTester : IEmailConfigurationTester
             await smtp.AuthenticateAsync(config.Smtp.Username, password, cancellationToken);
             await smtp.DisconnectAsync(true, cancellationToken);
 
-            return new(true, "SMTP connection and authentication succeeded.", []);
+            return new PluginTestResult(true, "SMTP connection and authentication succeeded.", []);
         }
         catch (Exception ex)
         {
-            return new(false, "SMTP connection or authentication failed.", [ex.Message]);
+            return new PluginTestResult(false, "SMTP connection or authentication failed.", [ex.Message]);
         }
     }
 }

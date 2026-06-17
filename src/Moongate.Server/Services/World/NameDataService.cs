@@ -6,7 +6,7 @@ using Moongate.Server.Services.WorldData;
 namespace Moongate.Server.Services.World;
 
 /// <summary>
-/// Lazy in-memory store for name groups.
+///     Lazy in-memory store for name groups.
 /// </summary>
 public class NameDataService : LazyDataService, INameDataService
 {
@@ -14,7 +14,9 @@ public class NameDataService : LazyDataService, INameDataService
     private readonly Lock _sync = new();
     private List<NameGroupEntry> _groups = [];
 
-    public NameDataService() { }
+    public NameDataService()
+    {
+    }
 
     public NameDataService(ServerAssetDataLoader loader)
     {
@@ -48,5 +50,7 @@ public class NameDataService : LazyDataService, INameDataService
     }
 
     protected override void LoadCore()
-        => _loader?.LoadNames(this);
+    {
+        _loader?.LoadNames(this);
+    }
 }

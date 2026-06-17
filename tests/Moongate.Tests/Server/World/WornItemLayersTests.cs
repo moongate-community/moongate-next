@@ -11,10 +11,10 @@ public sealed class WornItemLayersTests
     public void VisibleEquipped_ExcludesBackpackAndBank()
     {
         var mobile = new MobileEntity();
-        mobile.EquippedItemIds[ItemLayerType.OuterTorso] = new(Serial.ItemOffset + 1);
-        mobile.EquippedItemIds[ItemLayerType.Backpack] = new(Serial.ItemOffset + 2);
-        mobile.EquippedItemIds[ItemLayerType.Bank] = new(Serial.ItemOffset + 3);
-        mobile.EquippedItemIds[ItemLayerType.Helm] = new(Serial.ItemOffset + 4);
+        mobile.EquippedItemIds[ItemLayerType.OuterTorso] = new Serial(Serial.ItemOffset + 1);
+        mobile.EquippedItemIds[ItemLayerType.Backpack] = new Serial(Serial.ItemOffset + 2);
+        mobile.EquippedItemIds[ItemLayerType.Bank] = new Serial(Serial.ItemOffset + 3);
+        mobile.EquippedItemIds[ItemLayerType.Helm] = new Serial(Serial.ItemOffset + 4);
 
         var visible = WornItemLayers.VisibleEquipped(mobile).Select(kv => kv.Key).ToHashSet();
 

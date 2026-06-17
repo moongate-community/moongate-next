@@ -7,14 +7,14 @@ using Moongate.Server.Services.WorldData;
 namespace Moongate.Server.Extensions.WorldData;
 
 /// <summary>
-/// DryIoc-native registration helpers for server asset world data.
+///     DryIoc-native registration helpers for server asset world data.
 /// </summary>
 public static class WorldDataContainerExtensions
 {
     private const int WorldDataBootPriority = 11;
 
     /// <summary>
-    /// Registers server asset world data services and startup loading.
+    ///     Registers server asset world data services and startup loading.
     /// </summary>
     /// <param name="container">DryIoc container.</param>
     /// <param name="dataDirectory">Runtime data directory containing server world data YAML files.</param>
@@ -28,51 +28,51 @@ public static class WorldDataContainerExtensions
         container.RegisterDelegate(_ => new ServerAssetDataLoader(normalizedDataDirectory), Reuse.Singleton);
         RegisterDataService<IDoorDataService, DoorDataService>(
             container,
-            resolver => new(resolver.Resolve<ServerAssetDataLoader>())
+            resolver => new DoorDataService(resolver.Resolve<ServerAssetDataLoader>())
         );
         RegisterDataService<ISpawnsDataService, SpawnsDataService>(
             container,
-            resolver => new(resolver.Resolve<ServerAssetDataLoader>())
+            resolver => new SpawnsDataService(resolver.Resolve<ServerAssetDataLoader>())
         );
         RegisterDataService<ITeleportersDataService, TeleportersDataService>(
             container,
-            resolver => new(resolver.Resolve<ServerAssetDataLoader>())
+            resolver => new TeleportersDataService(resolver.Resolve<ServerAssetDataLoader>())
         );
         RegisterDataService<IRegionDataService, RegionDataService>(
             container,
-            resolver => new(resolver.Resolve<ServerAssetDataLoader>())
+            resolver => new RegionDataService(resolver.Resolve<ServerAssetDataLoader>())
         );
         RegisterDataService<IWeatherDataService, WeatherDataService>(
             container,
-            resolver => new(resolver.Resolve<ServerAssetDataLoader>())
+            resolver => new WeatherDataService(resolver.Resolve<ServerAssetDataLoader>())
         );
         RegisterDataService<IContainerDataService, ContainerDataService>(
             container,
-            resolver => new(resolver.Resolve<ServerAssetDataLoader>())
+            resolver => new ContainerDataService(resolver.Resolve<ServerAssetDataLoader>())
         );
         RegisterDataService<ILocationCatalogService, LocationCatalogService>(
             container,
-            resolver => new(resolver.Resolve<ServerAssetDataLoader>())
+            resolver => new LocationCatalogService(resolver.Resolve<ServerAssetDataLoader>())
         );
         RegisterDataService<INameDataService, NameDataService>(
             container,
-            resolver => new(resolver.Resolve<ServerAssetDataLoader>())
+            resolver => new NameDataService(resolver.Resolve<ServerAssetDataLoader>())
         );
         RegisterDataService<IProfessionDataService, ProfessionDataService>(
             container,
-            resolver => new(resolver.Resolve<ServerAssetDataLoader>())
+            resolver => new ProfessionDataService(resolver.Resolve<ServerAssetDataLoader>())
         );
         RegisterDataService<ISignDataService, SignDataService>(
             container,
-            resolver => new(resolver.Resolve<ServerAssetDataLoader>())
+            resolver => new SignDataService(resolver.Resolve<ServerAssetDataLoader>())
         );
         RegisterDataService<IDecorationDataService, DecorationDataService>(
             container,
-            resolver => new(resolver.Resolve<ServerAssetDataLoader>())
+            resolver => new DecorationDataService(resolver.Resolve<ServerAssetDataLoader>())
         );
         RegisterDataService<IMountDataService, MountDataService>(
             container,
-            resolver => new(resolver.Resolve<ServerAssetDataLoader>())
+            resolver => new MountDataService(resolver.Resolve<ServerAssetDataLoader>())
         );
 
         container.Register<IRegionResolverService, RegionResolverService>(Reuse.Singleton);

@@ -3,30 +3,10 @@ using Moongate.Core.Geometry;
 namespace Moongate.Server.Data.World;
 
 /// <summary>
-/// Represents one decoration placement entry loaded from server asset data.
+///     Represents one decoration placement entry loaded from server asset data.
 /// </summary>
 public readonly record struct DecorationEntry
 {
-    public int MapId { get; }
-
-    public string SourceGroup { get; }
-
-    public string SourceFile { get; }
-
-    public string TypeName { get; }
-
-    public string Description { get; }
-
-    public int ItemId { get; }
-
-    public IReadOnlyDictionary<string, string> Parameters { get; }
-
-    public Point3D Location { get; }
-
-    public Point3D? Target { get; }
-
-    public string Extra { get; }
-
     public DecorationEntry(
         int mapId,
         string sourceGroup,
@@ -53,4 +33,24 @@ public readonly record struct DecorationEntry
         Target = target;
         Extra = extra;
     }
+
+    public int MapId { get; }
+
+    public string SourceGroup { get; }
+
+    public string SourceFile { get; }
+
+    public string TypeName { get; }
+
+    public string Description { get; }
+
+    public int ItemId { get; }
+
+    public IReadOnlyDictionary<string, string> Parameters { get; }
+
+    public Point3D Location { get; }
+
+    public Point3D? Target { get; }
+
+    public string Extra { get; }
 }

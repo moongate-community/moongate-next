@@ -303,11 +303,13 @@ public class TimerWheelServiceTests
     }
 
     private static TimerWheelService NewService(int tickDurationMs = 8, int wheelSize = 16)
-        => new(
-            new()
+    {
+        return new TimerWheelService(
+            new TimerWheelConfig
             {
                 TickDuration = TimeSpan.FromMilliseconds(tickDurationMs),
                 WheelSize = wheelSize
             }
         );
+    }
 }

@@ -4,9 +4,9 @@ using Moongate.UO.Data.Interfaces.Files;
 namespace Moongate.UO.Data.Animations;
 
 /// <summary>
-/// Owns the <see cref="FileIndex" /> for each animation file (fileType 1 = anim.mul, 2..5 = anim2..anim5)
-/// and routes a <see cref="Seek" /> to the right one. Files that are absent build an empty index, so a
-/// missing expansion file simply yields <c>null</c> for the bodies routed to it (non-fatal).
+///     Owns the <see cref="FileIndex" /> for each animation file (fileType 1 = anim.mul, 2..5 = anim2..anim5)
+///     and routes a <see cref="Seek" /> to the right one. Files that are absent build an empty index, so a
+///     missing expansion file simply yields <c>null</c> for the bodies routed to it (non-fatal).
 /// </summary>
 public sealed class AnimationFileSet
 {
@@ -40,11 +40,13 @@ public sealed class AnimationFileSet
     }
 
     private static FileIndex Build(IUoFileResolver resolver, string idxName, string mulName)
-        => new(
+    {
+        return new FileIndex(
             resolver.Resolve(idxName),
             resolver.Resolve(mulName),
             AnimIndexLength,
             AnimFileId,
             new NullVerdataPatchSource()
         );
+    }
 }

@@ -1,7 +1,7 @@
 namespace Moongate.Server.Data.World;
 
 /// <summary>
-/// Holds the mounted display item ids loaded from server asset data.
+///     Holds the mounted display item ids loaded from server asset data.
 /// </summary>
 public sealed class MountTileData
 {
@@ -10,7 +10,9 @@ public sealed class MountTileData
     public IReadOnlySet<int> ItemIds => _itemIds;
 
     public bool Contains(int itemId)
-        => _itemIds.Contains(itemId);
+    {
+        return _itemIds.Contains(itemId);
+    }
 
     public void Replace(IEnumerable<int> itemIds)
     {

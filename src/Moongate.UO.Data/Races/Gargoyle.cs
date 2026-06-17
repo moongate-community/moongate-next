@@ -15,7 +15,9 @@ public class Gargoyle : Race
     };
 
     public Gargoyle(int raceID, int raceIndex)
-        : base(raceID, raceIndex, "Gargoyle", "Gargoyles", 666, 667, 402, 403) { }
+        : base(raceID, raceIndex, "Gargoyle", "Gargoyles", 666, 667, 402, 403)
+    {
+    }
 
     public override int ClipHairHue(int hue)
     {
@@ -31,10 +33,14 @@ public class Gargoyle : Race
     }
 
     public override int ClipSkinHue(int hue)
-        => hue;
+    {
+        return hue;
+    }
 
     public override int RandomFacialHair(bool female)
-        => female ? 0 : RandomUtils.RandomList(0, 0x42AD, 0x42AE, 0x42AF, 0x42B0);
+    {
+        return female ? 0 : RandomUtils.RandomList(0, 0x42AD, 0x42AE, 0x42AF, 0x42B0);
+    }
 
     public override int RandomHair(bool female)
     {
@@ -64,13 +70,19 @@ public class Gargoyle : Race
     }
 
     public override int RandomHairHue()
-        => m_HornHues.RandomElement();
+    {
+        return m_HornHues.RandomElement();
+    }
 
     public override int RandomSkinHue()
-        => RandomUtils.Random(1755, 25) | 0x8000;
+    {
+        return RandomUtils.Random(1755, 25) | 0x8000;
+    }
 
     public override bool ValidateFacialHair(bool female, int itemID)
-        => !female && itemID is >= 0x42AD and <= 0x42B0;
+    {
+        return !female && itemID is >= 0x42AD and <= 0x42B0;
+    }
 
     public override bool ValidateHair(bool female, int itemID)
     {

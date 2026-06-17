@@ -7,7 +7,7 @@ using Moongate.Server.Services.WorldData;
 namespace Moongate.Server.Services.World;
 
 /// <summary>
-/// Lazy in-memory storage for door component metadata and precomputed toggle definitions.
+///     Lazy in-memory storage for door component metadata and precomputed toggle definitions.
 /// </summary>
 public class DoorDataService : LazyDataService, IDoorDataService
 {
@@ -40,7 +40,9 @@ public class DoorDataService : LazyDataService, IDoorDataService
     private List<DoorComponentEntry> _entries = [];
     private Dictionary<int, DoorToggleDefinition> _toggleByItemId = [];
 
-    public DoorDataService() { }
+    public DoorDataService()
+    {
+    }
 
     public DoorDataService(ServerAssetDataLoader loader)
     {
@@ -85,7 +87,9 @@ public class DoorDataService : LazyDataService, IDoorDataService
     }
 
     protected override void LoadCore()
-        => _loader?.LoadDoors(this);
+    {
+        _loader?.LoadDoors(this);
+    }
 
     private static Dictionary<int, DoorToggleDefinition> BuildToggleMap(IReadOnlyList<DoorComponentEntry> entries)
     {
@@ -118,14 +122,14 @@ public class DoorDataService : LazyDataService, IDoorDataService
                 var doorFacingIndex = _pieceIndexToDoorFacing[pieceIndex];
                 var offset = _offsetsByDoorFacing[doorFacingIndex];
 
-                map[closedId] = new(closedId, openedId, true, offset);
-                map[openedId] = new(openedId, closedId, false, InvertOffset(offset));
+                map[closedId] = new DoorToggleDefinition(closedId, openedId, true, offset);
+                map[openedId] = new DoorToggleDefinition(openedId, closedId, false, InvertOffset(offset));
 
                 var legacyClosedId = closedId - 1;
 
                 if (legacyClosedId > 0 && !map.ContainsKey(legacyClosedId))
                 {
-                    map[legacyClosedId] = new(legacyClosedId, openedId, true, offset);
+                    map[legacyClosedId] = new DoorToggleDefinition(legacyClosedId, openedId, true, offset);
                 }
             }
         }
@@ -134,5 +138,7 @@ public class DoorDataService : LazyDataService, IDoorDataService
     }
 
     private static Point3D InvertOffset(Point3D offset)
-        => new(-offset.X, -offset.Y, -offset.Z);
+    {
+        return new Point3D(-offset.X, -offset.Y, -offset.Z);
+    }
 }

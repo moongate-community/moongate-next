@@ -18,8 +18,8 @@ using Moongate.UO.Data.Entities.Mobiles;
 namespace Moongate.Server.Handlers.Movement;
 
 /// <summary>
-/// Handles movement requests (0x02): sequence sync, fastwalk throttle, turn-then-step, validation,
-/// and the matching confirm (0x22) or deny (0x21) reply.
+///     Handles movement requests (0x02): sequence sync, fastwalk throttle, turn-then-step, validation,
+///     and the matching confirm (0x22) or deny (0x21) reply.
 /// </summary>
 [RegisterPacketHandler]
 public class MoveRequestHandler : PacketHandlerBase<MoveRequestPacket>
@@ -70,7 +70,12 @@ public class MoveRequestHandler : PacketHandlerBase<MoveRequestPacket>
 
         if (IsThrottled(session))
         {
-            PlayerSessions.UpdateMovementState(context.SessionId, session.MoveSequence, session.MoveCredit, session.MoveTime);
+            PlayerSessions.UpdateMovementState(
+                context.SessionId,
+                session.MoveSequence,
+                session.MoveCredit,
+                session.MoveTime
+            );
             await SendDenyAsync(context, mobile, packet.Sequence, cancellationToken);
 
             return;
@@ -88,7 +93,12 @@ public class MoveRequestHandler : PacketHandlerBase<MoveRequestPacket>
             if (!_validation.TryResolveMove(mobile, packet.Direction, out var newLocation))
             {
                 session.MoveSequence = 0;
-                PlayerSessions.UpdateMovementState(context.SessionId, session.MoveSequence, session.MoveCredit, session.MoveTime);
+                PlayerSessions.UpdateMovementState(
+                    context.SessionId,
+                    session.MoveSequence,
+                    session.MoveCredit,
+                    session.MoveTime
+                );
                 await SendDenyAsync(context, mobile, packet.Sequence, cancellationToken);
 
                 return;
@@ -98,7 +108,10 @@ public class MoveRequestHandler : PacketHandlerBase<MoveRequestPacket>
             _index.MoveMobile(mobile, newLocation);
             mobile.Direction = packet.Direction;
 
-            await EventBus.PublishAsync(new MobileMovedEvent(mobile.Id, mobile.MapId, oldLocation, newLocation, packet.Direction), cancellationToken);
+            await EventBus.PublishAsync(
+                new MobileMovedEvent(mobile.Id, mobile.MapId, oldLocation, newLocation, packet.Direction),
+                cancellationToken
+            );
         }
 
         var nextSequence = packet.Sequence + 1;
@@ -117,7 +130,9 @@ public class MoveRequestHandler : PacketHandlerBase<MoveRequestPacket>
     }
 
     private static int ComputeSpeedMs(DirectionType direction)
-        => (direction & DirectionType.Running) != 0 ? RunFootDelayMs : WalkFootDelayMs;
+    {
+        return (direction & DirectionType.Running) != 0 ? RunFootDelayMs : WalkFootDelayMs;
+    }
 
     private static bool IsThrottled(PlayerSession session)
     {
@@ -149,7 +164,8 @@ public class MoveRequestHandler : PacketHandlerBase<MoveRequestPacket>
         byte sequence,
         CancellationToken cancellationToken
     )
-        => context.SendAsync(
+    {
+        return context.SendAsync(
             new MoveDenyPacket(
                 sequence,
                 (short)mobile.Location.X,
@@ -159,4 +175,5 @@ public class MoveRequestHandler : PacketHandlerBase<MoveRequestPacket>
             ),
             cancellationToken
         );
+    }
 }

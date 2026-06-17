@@ -4,12 +4,12 @@ using Moongate.UO.Data.Types.Localization;
 namespace Moongate.UO.Data.Data.Localization;
 
 /// <summary>
-/// A single localized cliloc string: its number, text and origin flag, with placeholder formatting.
+///     A single localized cliloc string: its number, text and origin flag, with placeholder formatting.
 /// </summary>
 public sealed partial class StringEntry
 {
-    private string _text;
     private string? _fmtTxt;
+    private string _text;
 
     public StringEntry(int number, string text, byte flag)
     {
@@ -50,7 +50,9 @@ public sealed partial class StringEntry
     }
 
     public override string ToString()
-        => $"{Number} - {Text} ({Flag})";
+    {
+        return $"{Number} - {Text} ({Flag})";
+    }
 
     private static object[] BuildArgs(IReadOnlyList<object> args)
     {

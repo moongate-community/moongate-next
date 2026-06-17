@@ -3,16 +3,10 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Data.Packets;
 
 /// <summary>
-/// Describes a registered UO packet.
+///     Describes a registered UO packet.
 /// </summary>
 public readonly record struct PacketDescriptor
 {
-    public byte OpCode { get; }
-    public PacketSizing Sizing { get; }
-    public int Length { get; }
-    public string Description { get; }
-    public Type HandlerType { get; }
-
     public PacketDescriptor(
         byte opCode,
         PacketSizing sizing,
@@ -30,4 +24,10 @@ public readonly record struct PacketDescriptor
         Description = description;
         HandlerType = handlerType;
     }
+
+    public byte OpCode { get; }
+    public PacketSizing Sizing { get; }
+    public int Length { get; }
+    public string Description { get; }
+    public Type HandlerType { get; }
 }

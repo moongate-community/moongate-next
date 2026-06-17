@@ -5,16 +5,16 @@ using Moongate.Abstractions.Configuration;
 namespace Moongate.Plugins.Configuration;
 
 /// <summary>
-/// Overlays a flat set of dotted-path config values onto an existing typed config object and
-/// returns the merged typed object. Values absent from <c>flatValues</c> are preserved from
-/// <c>existing</c>. Binding goes through <see cref="ConfigYamlOptions" /> so it uses the same
-/// naming convention and converters the config uses on disk.
+///     Overlays a flat set of dotted-path config values onto an existing typed config object and
+///     returns the merged typed object. Values absent from <c>flatValues</c> are preserved from
+///     <c>existing</c>. Binding goes through <see cref="ConfigYamlOptions" /> so it uses the same
+///     naming convention and converters the config uses on disk.
 /// </summary>
 public static class PluginConfigBinder
 {
     /// <summary>
-    /// Returns a copy of <paramref name="existing" /> with the leaves named by the dotted keys of
-    /// <paramref name="flatValues" /> overwritten. Throws if a value cannot be bound to the target type.
+    ///     Returns a copy of <paramref name="existing" /> with the leaves named by the dotted keys of
+    ///     <paramref name="flatValues" /> overwritten. Throws if a value cannot be bound to the target type.
     /// </summary>
     public static T Apply<T>(T existing, IReadOnlyDictionary<string, object?> flatValues)
         where T : class
@@ -77,13 +77,13 @@ public static class PluginConfigBinder
 
         return element.ValueKind switch
         {
-            JsonValueKind.String    => element.GetString(),
-            JsonValueKind.True      => true,
-            JsonValueKind.False     => false,
-            JsonValueKind.Number    => element.TryGetInt64(out var number) ? number : element.GetDouble(),
-            JsonValueKind.Null      => null,
+            JsonValueKind.String => element.GetString(),
+            JsonValueKind.True => true,
+            JsonValueKind.False => false,
+            JsonValueKind.Number => element.TryGetInt64(out var number) ? number : element.GetDouble(),
+            JsonValueKind.Null => null,
             JsonValueKind.Undefined => null,
-            _                       => element.GetRawText()
+            _ => element.GetRawText()
         };
     }
 }

@@ -50,7 +50,7 @@ public sealed class LootTemplateProjectionServiceTests
     public void Project_DirectItem_AddsItemImageAndAmount()
     {
         var service = new LootTemplateProjectionService([Item("gold_coin", 0x0EED, true, "Gold Coin")]);
-        var table = Table("orc_common", new LootNode { Item = "gold_coin", Amount = new(20, 90), Chance = 1.0 });
+        var table = Table("orc_common", new LootNode { Item = "gold_coin", Amount = new LootAmount(20, 90), Chance = 1.0 });
 
         var detail = service.Project(table);
 
@@ -110,5 +110,7 @@ public sealed class LootTemplateProjectionServiceTests
     }
 
     private static LootTableDefinition Table(string id, params LootNode[] nodes)
-        => new() { Id = id, Content = [.. nodes] };
+    {
+        return new LootTableDefinition { Id = id, Content = [.. nodes] };
+    }
 }

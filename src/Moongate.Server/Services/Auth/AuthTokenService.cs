@@ -20,24 +20,22 @@ public sealed class AuthTokenService : IAuthTokenService
     private const int RefreshTokenByteCount = 32;
 
     private readonly ILogger _logger = Log.ForContext<AuthTokenService>();
-    private readonly Func<IUserService> _usersFactory;
-    private readonly Func<IAutoDataAccess<AuthRefreshTokenEntity, Serial>> _refreshTokensFactory;
-    private readonly WebConfig _webConfig;
     private readonly Func<DateTimeOffset> _now;
-
-    private IUserService? _users;
+    private readonly Func<IAutoDataAccess<AuthRefreshTokenEntity, Serial>> _refreshTokensFactory;
+    private readonly Func<IUserService> _usersFactory;
+    private readonly WebConfig _webConfig;
     private IAutoDataAccess<AuthRefreshTokenEntity, Serial>? _refreshTokens;
 
-    private IUserService Users => _users ??= _usersFactory();
-
-    private IAutoDataAccess<AuthRefreshTokenEntity, Serial> RefreshTokens => _refreshTokens ??= _refreshTokensFactory();
+    private IUserService? _users;
 
     public AuthTokenService(
         Func<IUserService> usersFactory,
         Func<IAutoDataAccess<AuthRefreshTokenEntity, Serial>> refreshTokensFactory,
         WebConfig webConfig
     )
-        : this(usersFactory, refreshTokensFactory, webConfig, static () => DateTimeOffset.UtcNow) { }
+        : this(usersFactory, refreshTokensFactory, webConfig, static () => DateTimeOffset.UtcNow)
+    {
+    }
 
     internal AuthTokenService(
         IUserService users,
@@ -45,7 +43,9 @@ public sealed class AuthTokenService : IAuthTokenService
         WebConfig webConfig,
         Func<DateTimeOffset> now
     )
-        : this(() => users, () => refreshTokens, webConfig, now) { }
+        : this(() => users, () => refreshTokens, webConfig, now)
+    {
+    }
 
     internal AuthTokenService(
         Func<IUserService> usersFactory,
@@ -64,6 +64,10 @@ public sealed class AuthTokenService : IAuthTokenService
             _logger.Warning("Using development JWT signing key. Configure web.jwt.signing_key for production.");
         }
     }
+
+    private IUserService Users => _users ??= _usersFactory();
+
+    private IAutoDataAccess<AuthRefreshTokenEntity, Serial> RefreshTokens => _refreshTokens ??= _refreshTokensFactory();
 
     public async ValueTask<AuthTokenResponse?> LoginAsync(
         string username,
@@ -127,7 +131,7 @@ public sealed class AuthTokenService : IAuthTokenService
 
         var accessTokenExpiresAt = now.AddMinutes(_webConfig.Jwt.AccessTokenMinutes);
 
-        return new(
+        return new AuthTokenResponse(
             CreateAccessToken(user, now, accessTokenExpiresAt),
             refreshToken,
             accessTokenExpiresAt,
@@ -169,7 +173,9 @@ public sealed class AuthTokenService : IAuthTokenService
     }
 
     private static AuthUserResponse CreateUserResponse(UserEntity user)
-        => new(user.Id.ToString(), user.Username, user.Level.ToString(), user.IsActive);
+    {
+        return new AuthUserResponse(user.Id.ToString(), user.Username, user.Level.ToString(), user.IsActive);
+    }
 
     private AuthRefreshTokenEntity? FindRefreshToken(string refreshToken)
     {
@@ -222,7 +228,7 @@ public sealed class AuthTokenService : IAuthTokenService
 
         await RefreshTokens.UpsertAsync(entity, cancellationToken);
 
-        return new(
+        return new AuthTokenResponse(
             CreateAccessToken(user, now, accessTokenExpiresAt),
             refreshToken,
             accessTokenExpiresAt,

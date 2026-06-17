@@ -2,10 +2,6 @@ namespace Moongate.Scripting.Lua.Data.Config;
 
 public sealed record LuaEngineConfig
 {
-    public string LuarcDirectory { get; }
-    public string ScriptsDirectory { get; }
-    public string EngineVersion { get; }
-
     public LuaEngineConfig(string luarcDirectory, string scriptsDirectory, string engineVersion)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(luarcDirectory);
@@ -16,4 +12,8 @@ public sealed record LuaEngineConfig
         ScriptsDirectory = scriptsDirectory;
         EngineVersion = engineVersion;
     }
+
+    public string LuarcDirectory { get; }
+    public string ScriptsDirectory { get; }
+    public string EngineVersion { get; }
 }

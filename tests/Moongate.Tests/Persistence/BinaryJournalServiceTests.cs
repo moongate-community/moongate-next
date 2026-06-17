@@ -8,6 +8,16 @@ public class BinaryJournalServiceTests : IDisposable
 {
     private readonly string _path = Path.Combine(Path.GetTempPath(), $"nh-journal-{Guid.NewGuid():N}.bin");
 
+    public void Dispose()
+    {
+        if (File.Exists(_path))
+        {
+            File.Delete(_path);
+        }
+
+        GC.SuppressFinalize(this);
+    }
+
     [Fact]
     public async Task AppendBatch_WritesAll()
     {
@@ -29,16 +39,6 @@ public class BinaryJournalServiceTests : IDisposable
         Assert.Equal(2, all.Length);
         Assert.Equal(1, all[0].SequenceId);
         Assert.Equal(2, all[1].SequenceId);
-    }
-
-    public void Dispose()
-    {
-        if (File.Exists(_path))
-        {
-            File.Delete(_path);
-        }
-
-        GC.SuppressFinalize(this);
     }
 
     [Fact]
@@ -96,7 +96,8 @@ public class BinaryJournalServiceTests : IDisposable
     }
 
     private static JournalEntry Entry(long seq)
-        => new()
+    {
+        return new JournalEntry
         {
             SequenceId = seq,
             TimestampUnixMilliseconds = seq * 10,
@@ -104,4 +105,5 @@ public class BinaryJournalServiceTests : IDisposable
             Operation = JournalEntityOperationType.Upsert,
             Payload = [(byte)seq]
         };
+    }
 }

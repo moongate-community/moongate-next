@@ -7,8 +7,8 @@ using Serilog;
 namespace Moongate.UO.Data.Bodies;
 
 /// <summary>
-/// Loads the body-id classification table from <c>bodies.yaml</c> in the data directory. A missing
-/// or malformed file yields an empty table (non-fatal).
+///     Loads the body-id classification table from <c>bodies.yaml</c> in the data directory. A missing
+///     or malformed file yields an empty table (non-fatal).
 /// </summary>
 public sealed class BodyDataStore : IBodyDataStore
 {
@@ -74,7 +74,9 @@ public sealed class BodyDataStore : IBodyDataStore
     }
 
     public UoBodyType GetBodyType(int bodyId)
-        => bodyId >= 0 && bodyId < _types.Length ? _types[bodyId] : UoBodyType.Empty;
+    {
+        return bodyId >= 0 && bodyId < _types.Length ? _types[bodyId] : UoBodyType.Empty;
+    }
 
     public IReadOnlyCollection<int> GetClassifiedBodies()
     {

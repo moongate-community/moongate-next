@@ -11,10 +11,14 @@ public sealed class EnvironmentSecretManagerService : ISecretManagerService
     private readonly Func<string, string?> _getEnvironmentVariable;
 
     public EnvironmentSecretManagerService(SecretManagerConfig config)
-        : this(config.Environment) { }
+        : this(config.Environment)
+    {
+    }
 
     public EnvironmentSecretManagerService(EnvironmentSecretManagerConfig config)
-        : this(config, Environment.GetEnvironmentVariable) { }
+        : this(config, Environment.GetEnvironmentVariable)
+    {
+    }
 
     internal EnvironmentSecretManagerService(
         EnvironmentSecretManagerConfig config,

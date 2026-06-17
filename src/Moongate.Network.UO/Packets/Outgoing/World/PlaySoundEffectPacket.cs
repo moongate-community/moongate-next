@@ -7,7 +7,7 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Outgoing.World;
 
 /// <summary>
-/// Represents a sound effect packet.
+///     Represents a sound effect packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Play Sound Effect")]
 public class PlaySoundEffectPacket : BaseGameNetworkPacket
@@ -15,13 +15,10 @@ public class PlaySoundEffectPacket : BaseGameNetworkPacket
     private const byte OpCodeValue = 0x54;
     private const int LengthValue = 12;
 
-    public byte Mode { get; set; } = 0x01;
-    public ushort SoundModel { get; set; }
-    public ushort Unknown3 { get; set; }
-    public Point3D Location { get; set; }
-
     public PlaySoundEffectPacket()
-        : base(OpCodeValue, LengthValue) { }
+        : base(OpCodeValue, LengthValue)
+    {
+    }
 
     public PlaySoundEffectPacket(byte mode, ushort soundModel, ushort unknown3, Point3D location)
         : this()
@@ -31,6 +28,11 @@ public class PlaySoundEffectPacket : BaseGameNetworkPacket
         Unknown3 = unknown3;
         Location = location;
     }
+
+    public byte Mode { get; set; } = 0x01;
+    public ushort SoundModel { get; set; }
+    public ushort Unknown3 { get; set; }
+    public Point3D Location { get; set; }
 
     public override void Write(ref SpanWriter writer)
     {
@@ -56,7 +58,7 @@ public class PlaySoundEffectPacket : BaseGameNetworkPacket
         var x = reader.ReadUInt16();
         var y = reader.ReadUInt16();
         var z = reader.ReadInt16();
-        Location = new(x, y, z);
+        Location = new Point3D(x, y, z);
 
         return reader.Remaining == 0;
     }

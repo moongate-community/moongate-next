@@ -7,16 +7,17 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Incoming.Interaction;
 
 [PacketHandler(0x09, PacketSizing.Fixed, Length = 5, Description = "Single Click")]
-
 /// <summary>
 /// Represents SingleClickPacket.
 /// </summary>
 public class SingleClickPacket : BaseGameNetworkPacket
 {
-    public Serial TargetSerial { get; set; }
-
     public SingleClickPacket()
-        : base(0x09, 5) { }
+        : base(0x09, 5)
+    {
+    }
+
+    public Serial TargetSerial { get; set; }
 
     protected override bool ParsePayload(ref SpanReader reader)
     {

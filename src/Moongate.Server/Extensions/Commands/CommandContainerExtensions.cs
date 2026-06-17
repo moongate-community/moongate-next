@@ -9,7 +9,7 @@ using Moongate.Server.Services.Commands;
 namespace Moongate.Server.Extensions.Commands;
 
 /// <summary>
-/// DryIoc-native registration helpers for server commands.
+///     DryIoc-native registration helpers for server commands.
 /// </summary>
 public static class CommandContainerExtensions
 {
@@ -17,7 +17,7 @@ public static class CommandContainerExtensions
     private const int ConsoleCommandPriority = 35;
 
     /// <summary>
-    /// Registers command registry, command dispatch, built-in commands, console input, and in-game speech hooks.
+    ///     Registers command registry, command dispatch, built-in commands, console input, and in-game speech hooks.
     /// </summary>
     /// <param name="container">DryIoc container.</param>
     public static IContainer AddMoongateCommands(this IContainer container)

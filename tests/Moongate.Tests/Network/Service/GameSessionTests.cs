@@ -11,25 +11,11 @@ namespace Moongate.Tests.Network.Service;
 
 public class GameSessionTests
 {
-    private sealed class TestOutgoingPacket : BaseGameNetworkPacket
-    {
-        public TestOutgoingPacket()
-            : base(0xAA, 3) { }
-
-        public override void Write(ref SpanWriter writer)
-        {
-            writer.Write(OpCode);
-            writer.Write((byte)0x01);
-            writer.Write((byte)0x02);
-        }
-
-        protected override bool ParsePayload(ref SpanReader reader)
-            => true;
-    }
-
     [Fact]
     public void Ctor_NullClient_Throws()
-        => Assert.Throws<ArgumentNullException>(() => new GameSession(null!));
+    {
+        Assert.Throws<ArgumentNullException>(() => new GameSession(null!));
+    }
 
     [Fact]
     public async Task EnableCompression_CompressesOutgoingPackets_AndIsIdempotent()
@@ -165,5 +151,27 @@ public class GameSessionTests
     }
 
     private static MoongateTCPClient NewClient()
-        => new(new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp));
+    {
+        return new MoongateTCPClient(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp));
+    }
+
+    private sealed class TestOutgoingPacket : BaseGameNetworkPacket
+    {
+        public TestOutgoingPacket()
+            : base(0xAA, 3)
+        {
+        }
+
+        public override void Write(ref SpanWriter writer)
+        {
+            writer.Write(OpCode);
+            writer.Write((byte)0x01);
+            writer.Write((byte)0x02);
+        }
+
+        protected override bool ParsePayload(ref SpanReader reader)
+        {
+            return true;
+        }
+    }
 }

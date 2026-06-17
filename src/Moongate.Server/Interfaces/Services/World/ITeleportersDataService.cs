@@ -4,25 +4,25 @@ using Moongate.Server.Data.World;
 namespace Moongate.Server.Interfaces.Services.World;
 
 /// <summary>
-/// Provides access to teleporter definitions loaded from server asset data.
+///     Provides access to teleporter definitions loaded from server asset data.
 /// </summary>
 public interface ITeleportersDataService : IDataService
 {
     /// <summary>
-    /// Returns all loaded teleporter definitions.
+    ///     Returns all loaded teleporter definitions.
     /// </summary>
     /// <returns>All teleporter definitions.</returns>
     IReadOnlyList<TeleporterEntry> GetAllEntries();
 
     /// <summary>
-    /// Returns teleporter definitions filtered by source map id.
+    ///     Returns teleporter definitions filtered by source map id.
     /// </summary>
     /// <param name="mapId">Source map id.</param>
     /// <returns>Teleporter definitions for the requested source map.</returns>
     IReadOnlyList<TeleporterEntry> GetEntriesBySourceMap(int mapId);
 
     /// <summary>
-    /// Returns teleporter definitions filtered by source map sector.
+    ///     Returns teleporter definitions filtered by source map sector.
     /// </summary>
     /// <param name="mapId">Source map id.</param>
     /// <param name="sectorX">Sector X.</param>
@@ -31,13 +31,13 @@ public interface ITeleportersDataService : IDataService
     IReadOnlyList<TeleporterEntry> GetEntriesBySourceSector(int mapId, int sectorX, int sectorY);
 
     /// <summary>
-    /// Replaces all currently loaded teleporter definitions.
+    ///     Replaces all currently loaded teleporter definitions.
     /// </summary>
     /// <param name="entries">Teleporter definitions.</param>
     void SetEntries(IReadOnlyList<TeleporterEntry> entries);
 
     /// <summary>
-    /// Tries to resolve an exact source-location teleporter entry.
+    ///     Tries to resolve an exact source-location teleporter entry.
     /// </summary>
     /// <param name="mapId">Source map id.</param>
     /// <param name="location">Source location.</param>
@@ -46,7 +46,7 @@ public interface ITeleportersDataService : IDataService
     bool TryGetEntryAtLocation(int mapId, Point3D location, out TeleporterEntry entry);
 
     /// <summary>
-    /// Tries to resolve a teleporter destination, following chained teleporters up to a hop limit.
+    ///     Tries to resolve a teleporter destination, following chained teleporters up to a hop limit.
     /// </summary>
     /// <param name="mapId">Source map id.</param>
     /// <param name="location">Source location.</param>

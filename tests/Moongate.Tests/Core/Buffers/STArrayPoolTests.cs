@@ -19,8 +19,7 @@ public class STArrayPoolTests
 
         for (var t = 0; t < threadCount; t++)
         {
-            threads[t] = new(
-                () =>
+            threads[t] = new Thread(() =>
                 {
                     try
                     {

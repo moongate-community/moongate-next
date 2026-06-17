@@ -3,12 +3,12 @@ using System.Collections;
 namespace Moongate.Core.Extensions.Env;
 
 /// <summary>
-/// Provides extension methods for expanding environment variables in strings
+///     Provides extension methods for expanding environment variables in strings
 /// </summary>
 public static class EnvExtensions
 {
     /// <summary>
-    /// Expands environment variables in a string using custom $VARIABLE syntax
+    ///     Expands environment variables in a string using custom $VARIABLE syntax
     /// </summary>
     /// <param name="input">The input string containing environment variable references</param>
     /// <returns>The string with environment variables expanded to their values</returns>

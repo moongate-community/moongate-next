@@ -13,8 +13,6 @@ public class ObjectInformationPacket : BaseGameNetworkPacket
     private const byte OpCodeValue = 0xF3;
     private const int LengthValue = 26;
 
-    public ItemEntity Item { get; }
-
     public ObjectInformationPacket(ItemEntity item)
         : base(OpCodeValue, LengthValue)
     {
@@ -22,6 +20,8 @@ public class ObjectInformationPacket : BaseGameNetworkPacket
 
         Item = item;
     }
+
+    public ItemEntity Item { get; }
 
     public override void Write(ref SpanWriter writer)
     {
@@ -43,5 +43,7 @@ public class ObjectInformationPacket : BaseGameNetworkPacket
     }
 
     protected override bool ParsePayload(ref SpanReader reader)
-        => false;
+    {
+        return false;
+    }
 }

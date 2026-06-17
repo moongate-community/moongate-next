@@ -6,13 +6,18 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Incoming.System;
 
 /// <summary>
-/// Represents a client hardware and installation information packet.
+///     Represents a client hardware and installation information packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Spy On Client")]
 public class SpyOnClientPacket : BaseGameNetworkPacket
 {
     private const byte OpCodeValue = 0xD9;
     private const int LengthValue = 0x10C;
+
+    public SpyOnClientPacket()
+        : base(OpCodeValue, LengthValue)
+    {
+    }
 
     public byte ClientInfoVersion { get; private set; }
     public uint InstanceId { get; private set; }
@@ -40,9 +45,6 @@ public class SpyOnClientPacket : BaseGameNetworkPacket
     public byte PartialInstalled { get; private set; }
     public string LanguageCode { get; private set; } = "";
     public string UnknownEnding { get; private set; } = "";
-
-    public SpyOnClientPacket()
-        : base(OpCodeValue, LengthValue) { }
 
     protected override bool ParsePayload(ref SpanReader reader)
     {

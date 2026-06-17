@@ -4,17 +4,19 @@ using Moongate.Plugins.Interfaces.Plugins;
 namespace Moongate.Plugins.Configuration;
 
 /// <summary>
-/// Base class for plugins exposing an admin-editable config form. It binds the flat request values
-/// onto the plugin's existing typed config (preserving fields the request omits) and hands the
-/// merged, strongly-typed object to <see cref="SaveTypedConfigAsync" />, so subclasses never deal
-/// with the stringly-typed value dictionary.
+///     Base class for plugins exposing an admin-editable config form. It binds the flat request values
+///     onto the plugin's existing typed config (preserving fields the request omits) and hands the
+///     merged, strongly-typed object to <see cref="SaveTypedConfigAsync" />, so subclasses never deal
+///     with the stringly-typed value dictionary.
 /// </summary>
 /// <typeparam name="TConfig">The plugin's strongly-typed configuration object.</typeparam>
 public abstract class ConfigurablePlugin<TConfig> : IConfigurablePlugin
     where TConfig : class
 {
     public virtual async ValueTask<PluginConfigForm> GetConfigFormAsync(CancellationToken cancellationToken = default)
-        => ConfigFormScanner.BuildForm(await LoadConfigAsync(cancellationToken));
+    {
+        return ConfigFormScanner.BuildForm(await LoadConfigAsync(cancellationToken));
+    }
 
     public async ValueTask<PluginConfigSaveResult> SaveConfigAsync(
         PluginConfigSaveRequest request,
@@ -25,7 +27,7 @@ public abstract class ConfigurablePlugin<TConfig> : IConfigurablePlugin
 
         if (request.Values is null)
         {
-            return new(false, false, ["Config values are required."], null);
+            return new PluginConfigSaveResult(false, false, ["Config values are required."], null);
         }
 
         TConfig merged;
@@ -37,7 +39,7 @@ public abstract class ConfigurablePlugin<TConfig> : IConfigurablePlugin
         }
         catch (Exception ex)
         {
-            return new(false, false, [$"Invalid configuration: {ex.Message}"], null);
+            return new PluginConfigSaveResult(false, false, [$"Invalid configuration: {ex.Message}"], null);
         }
 
         return await SaveTypedConfigAsync(merged, cancellationToken);

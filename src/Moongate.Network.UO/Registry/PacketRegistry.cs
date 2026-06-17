@@ -8,7 +8,7 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Registry;
 
 /// <summary>
-/// Represents PacketRegistry.
+///     Represents PacketRegistry.
 /// </summary>
 public class PacketRegistry
 {
@@ -18,8 +18,8 @@ public class PacketRegistry
         =>
         [
             .. _registrations.Values
-                             .Select(static registration => registration.Descriptor)
-                             .OrderBy(static descriptor => descriptor.OpCode)
+                .Select(static registration => registration.Descriptor)
+                .OrderBy(static descriptor => descriptor.OpCode)
         ];
 
     public void RegisterFixed<TPacket>(byte opcode, int length, string? description = null)
@@ -34,8 +34,8 @@ public class PacketRegistry
     }
 
     /// <summary>
-    /// Scans <paramref name="assembly" /> for non-abstract <see cref="IGameNetworkPacket" /> types
-    /// annotated with <see cref="PacketHandlerAttribute" /> and registers each one.
+    ///     Scans <paramref name="assembly" /> for non-abstract <see cref="IGameNetworkPacket" /> types
+    ///     annotated with <see cref="PacketHandlerAttribute" /> and registers each one.
     /// </summary>
     /// <param name="assembly">Assembly to scan for packet types.</param>
     /// <returns>The number of packets registered.</returns>
@@ -53,8 +53,8 @@ public class PacketRegistry
             }
 
             var attribute = type.GetCustomAttributes(typeof(PacketHandlerAttribute), false)
-                                .OfType<PacketHandlerAttribute>()
-                                .SingleOrDefault();
+                .OfType<PacketHandlerAttribute>()
+                .SingleOrDefault();
 
             if (attribute is null)
             {
@@ -72,8 +72,8 @@ public class PacketRegistry
         where TPacket : IGameNetworkPacket, new()
     {
         var attribute = typeof(TPacket).GetCustomAttributes(typeof(PacketHandlerAttribute), false)
-                                       .OfType<PacketHandlerAttribute>()
-                                       .SingleOrDefault();
+            .OfType<PacketHandlerAttribute>()
+            .SingleOrDefault();
 
         if (attribute is null)
         {
@@ -92,7 +92,9 @@ public class PacketRegistry
 
     public void RegisterVariable<TPacket>(byte opcode, string? description = null)
         where TPacket : IGameNetworkPacket, new()
-        => Register<TPacket>(opcode, PacketSizing.Variable, -1, description);
+    {
+        Register<TPacket>(opcode, PacketSizing.Variable, -1, description);
+    }
 
     public bool TryCreatePacket(byte opcode, out IGameNetworkPacket? packet)
     {
@@ -165,7 +167,7 @@ public class PacketRegistry
         _ = opcode;
 
         return !string.IsNullOrWhiteSpace(explicitDescription)
-                   ? explicitDescription
-                   : packetType.Name.Replace("Packet", "", StringComparison.Ordinal);
+            ? explicitDescription
+            : packetType.Name.Replace("Packet", "", StringComparison.Ordinal);
     }
 }

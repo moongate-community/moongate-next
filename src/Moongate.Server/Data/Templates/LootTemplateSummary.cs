@@ -11,6 +11,6 @@ public sealed record LootTemplateSummary(
     {
         ArgumentNullException.ThrowIfNull(table);
 
-        return new(table.Id, table.Content.Count);
+        return new LootTemplateSummary(table.Id, table.Content.Count);
     }
 }

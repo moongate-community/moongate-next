@@ -16,6 +16,16 @@ public sealed class PluginContainerExtensionsTests : IDisposable
 {
     private readonly string _root = Path.Combine(Path.GetTempPath(), $"nh-plugin-container-{Guid.NewGuid():N}");
 
+    public void Dispose()
+    {
+        if (Directory.Exists(_root))
+        {
+            Directory.Delete(_root, true);
+        }
+
+        GC.SuppressFinalize(this);
+    }
+
     [Fact]
     public void AddMoongatePlugins_LoadsPluginsBeforeGlobalConfigBinding()
     {
@@ -55,15 +65,5 @@ public sealed class PluginContainerExtensionsTests : IDisposable
         Assert.True(
             File.Exists(Path.Combine(directories[DirectoryType.Config], "plugins", "moongate.fixture.basic", "plugin.yaml"))
         );
-    }
-
-    public void Dispose()
-    {
-        if (Directory.Exists(_root))
-        {
-            Directory.Delete(_root, true);
-        }
-
-        GC.SuppressFinalize(this);
     }
 }

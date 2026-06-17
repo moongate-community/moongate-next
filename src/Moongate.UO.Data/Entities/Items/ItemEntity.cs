@@ -8,9 +8,9 @@ using Moongate.UO.Data.Types.Items;
 namespace Moongate.UO.Data.Entities.Items;
 
 /// <summary>
-/// Concrete persisted item entity. Holds item state only; derived facts
-/// (IsContainer/IsDoor, total weight) and containment behavior are provided by
-/// the item/container service layer. Serialized via contractless MessagePack.
+///     Concrete persisted item entity. Holds item state only; derived facts
+///     (IsContainer/IsDoor, total weight) and containment behavior are provided by
+///     the item/container service layer. Serialized via contractless MessagePack.
 /// </summary>
 public sealed class ItemEntity : IItemEntity
 {

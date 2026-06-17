@@ -8,12 +8,17 @@ using Moongate.UO.Data.Types.Expansions;
 namespace Moongate.Network.UO.Packets.Outgoing.Login;
 
 /// <summary>
-/// Represents the Characters / Starting Locations packet (0xA9).
+///     Represents the Characters / Starting Locations packet (0xA9).
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Variable, Description = "Characters / Starting Locations")]
 public class CharactersStartingLocationsPacket : BaseGameNetworkPacket
 {
     private const byte OpCodeValue = 0xA9;
+
+    public CharactersStartingLocationsPacket()
+        : base(OpCodeValue)
+    {
+    }
 
     public List<CityInfo> Cities { get; } = [];
 
@@ -21,9 +26,6 @@ public class CharactersStartingLocationsPacket : BaseGameNetworkPacket
 
     public CharacterListFlags Flags { get; set; } =
         CharacterListFlags.ExpansionEj | CharacterListFlags.SixthCharacterSlot | CharacterListFlags.SeventhCharacterSlot;
-
-    public CharactersStartingLocationsPacket()
-        : base(OpCodeValue) { }
 
     public void FillCharacters(IReadOnlyList<CharacterEntry>? characters = null, int size = 7)
     {
@@ -103,5 +105,7 @@ public class CharactersStartingLocationsPacket : BaseGameNetworkPacket
     }
 
     protected override bool ParsePayload(ref SpanReader reader)
-        => true;
+    {
+        return true;
+    }
 }

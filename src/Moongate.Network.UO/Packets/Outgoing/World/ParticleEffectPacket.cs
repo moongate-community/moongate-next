@@ -9,13 +9,18 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Outgoing.World;
 
 /// <summary>
-/// Represents a particle effect packet.
+///     Represents a particle effect packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Particle Effect")]
 public class ParticleEffectPacket : BaseGameNetworkPacket
 {
     private const byte OpCodeValue = 0xC7;
     private const int LengthValue = 49;
+
+    public ParticleEffectPacket()
+        : base(OpCodeValue, LengthValue)
+    {
+    }
 
     public EffectDirectionType DirectionType { get; set; }
     public Serial SourceSerial { get; set; }
@@ -37,9 +42,6 @@ public class ParticleEffectPacket : BaseGameNetworkPacket
     public Serial EffectSerial { get; set; }
     public byte Layer { get; set; }
     public ushort Unknown3 { get; set; }
-
-    public ParticleEffectPacket()
-        : base(OpCodeValue, LengthValue) { }
 
     public override void Write(ref SpanWriter writer)
     {
@@ -104,8 +106,8 @@ public class ParticleEffectPacket : BaseGameNetworkPacket
         var targetY = reader.ReadInt16();
         var targetZ = reader.ReadSByte();
 
-        SourceLocation = new(sourceX, sourceY, sourceZ);
-        TargetLocation = new(targetX, targetY, targetZ);
+        SourceLocation = new Point3D(sourceX, sourceY, sourceZ);
+        TargetLocation = new Point3D(targetX, targetY, targetZ);
     }
 
     private void WriteLocations(ref SpanWriter writer)

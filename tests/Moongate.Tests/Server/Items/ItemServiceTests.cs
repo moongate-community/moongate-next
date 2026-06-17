@@ -1,7 +1,9 @@
+using Moongate.Core.Geometry;
 using Moongate.Core.Ids;
 using Moongate.Server.Services.Items;
 using Moongate.Server.Services.World;
 using Moongate.Tests.Server.Items.Support;
+using Moongate.UO.Data.Data;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Types.Properties;
 
@@ -20,10 +22,10 @@ public sealed class ItemServiceTests
         var access = new FakeItemAccess();
         var service = new ItemService(access, new FakeTileDataStore(), new WorldSpatialIndex());
 
-        var plain = await service.CreateAsync(new() { ItemId = ArrowItemId });
-        var child = await service.CreateAsync(new() { ItemId = ArrowItemId });
+        var plain = await service.CreateAsync(new ItemEntity { ItemId = ArrowItemId });
+        var child = await service.CreateAsync(new ItemEntity { ItemId = ArrowItemId });
 
-        Assert.False(await service.AddItemAsync(plain, child, new(0, 0)));
+        Assert.False(await service.AddItemAsync(plain, child, new Point2D(0, 0)));
         Assert.Empty(plain.ContainedItemIds);
     }
 
@@ -35,19 +37,19 @@ public sealed class ItemServiceTests
         tiles.Container(BackpackItemId);
         var service = new ItemService(access, tiles, new WorldSpatialIndex());
 
-        var backpack = await service.CreateAsync(new() { ItemId = BackpackItemId, Weight = 3 });
+        var backpack = await service.CreateAsync(new ItemEntity { ItemId = BackpackItemId, Weight = 3 });
 
         for (var i = 0; i < ChildCount; i++)
         {
             var child = new ItemEntity { ItemId = ArrowItemId, Weight = 1, Amount = 1 };
-            child.CustomProperties["index"] = new()
+            child.CustomProperties["index"] = new CustomProperty
             {
                 Type = CustomPropertyType.Integer,
                 IntegerValue = i
             };
 
             await service.CreateAsync(child);
-            var added = await service.AddItemAsync(backpack, child, new(i, 0));
+            var added = await service.AddItemAsync(backpack, child, new Point2D(i, 0));
 
             Assert.True(added);
             Assert.Equal(backpack.Id, child.ParentContainerId);
@@ -75,7 +77,7 @@ public sealed class ItemServiceTests
     {
         var service = new ItemService(new FakeItemAccess(), new FakeTileDataStore(), new WorldSpatialIndex());
 
-        var item = await service.CreateAsync(new() { ItemId = ArrowItemId, Weight = 1 });
+        var item = await service.CreateAsync(new ItemEntity { ItemId = ArrowItemId, Weight = 1 });
 
         Assert.True(item.Id.Value >= Serial.ItemOffset);
     }
@@ -108,9 +110,9 @@ public sealed class ItemServiceTests
         tiles.Container(BackpackItemId);
         var service = new ItemService(access, tiles, new WorldSpatialIndex());
 
-        var backpack = await service.CreateAsync(new() { ItemId = BackpackItemId });
-        var child = await service.CreateAsync(new() { ItemId = ArrowItemId });
-        await service.AddItemAsync(backpack, child, new(0, 0));
+        var backpack = await service.CreateAsync(new ItemEntity { ItemId = BackpackItemId });
+        var child = await service.CreateAsync(new ItemEntity { ItemId = ArrowItemId });
+        await service.AddItemAsync(backpack, child, new Point2D(0, 0));
 
         var removed = await service.RemoveItemAsync(backpack, child.Id);
 

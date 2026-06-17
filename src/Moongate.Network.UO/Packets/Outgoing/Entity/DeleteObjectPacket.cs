@@ -13,13 +13,13 @@ public class DeleteObjectPacket : BaseGameNetworkPacket
     private const byte OpCodeValue = 0x1D;
     private const int LengthValue = 5;
 
-    public Serial Serial { get; }
-
     public DeleteObjectPacket(Serial serial)
         : base(OpCodeValue, LengthValue)
     {
         Serial = serial;
     }
+
+    public Serial Serial { get; }
 
     public override void Write(ref SpanWriter writer)
     {
@@ -28,5 +28,7 @@ public class DeleteObjectPacket : BaseGameNetworkPacket
     }
 
     protected override bool ParsePayload(ref SpanReader reader)
-        => false;
+    {
+        return false;
+    }
 }

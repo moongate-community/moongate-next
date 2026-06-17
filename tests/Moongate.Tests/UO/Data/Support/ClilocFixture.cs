@@ -3,13 +3,11 @@ using System.Text;
 namespace Moongate.Tests.UO.Data.Support;
 
 /// <summary>
-/// Writes a minimal uncompressed <c>cliloc.enu</c> (6-byte header then number/flag/length/utf8
-/// records) into a directory.
+///     Writes a minimal uncompressed <c>cliloc.enu</c> (6-byte header then number/flag/length/utf8
+///     records) into a directory.
 /// </summary>
 public static class ClilocFixture
 {
-    public sealed record Entry(int Number, byte Flag, string Text);
-
     public static string Write(string directory, IReadOnlyList<Entry> entries)
     {
         var path = Path.Combine(directory, "cliloc.enu");
@@ -31,4 +29,6 @@ public static class ClilocFixture
 
         return path;
     }
+
+    public sealed record Entry(int Number, byte Flag, string Text);
 }

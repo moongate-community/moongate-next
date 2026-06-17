@@ -7,7 +7,6 @@ using Moongate.Server.Services.Player;
 using Moongate.Server.Services.World;
 using Moongate.Tests.Support;
 using Moongate.UO.Data.Entities.Mobiles;
-using Xunit;
 
 namespace Moongate.Tests.Server.World;
 
@@ -23,7 +22,8 @@ public sealed class PlayerDisconnectedInterestHandlerTests
         var observerSerial = new Serial(10);
         sessions.GetOrCreateConnected(1, null, DateTimeOffset.UtcNow);
         sessions.EnterWorld(1, new Serial(900), observerSerial, DateTimeOffset.UtcNow);
-        var observer = new MobileEntity { Id = observerSerial, MapId = 0, Location = new Point3D(100, 100, 0), IsPlayer = true };
+        var observer = new MobileEntity
+        { Id = observerSerial, MapId = 0, Location = new Point3D(100, 100, 0), IsPlayer = true };
         index.AddMobile(observer);
 
         var leaverSerial = new Serial(11);
@@ -39,7 +39,10 @@ public sealed class PlayerDisconnectedInterestHandlerTests
         var handler = new PlayerDisconnectedInterestHandler(sessions, interest);
         handler.Handle(new PlayerDisconnectedEvent(2, null, DateTimeOffset.UtcNow));
 
-        Assert.Contains(outgoing.Sent, s => s.SessionId == 1 && s.Packet is DeleteObjectPacket d && d.Serial == leaverSerial);
+        Assert.Contains(
+            outgoing.Sent,
+            s => s.SessionId == 1 && s.Packet is DeleteObjectPacket d && d.Serial == leaverSerial
+        );
     }
 
     [Fact]

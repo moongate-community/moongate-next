@@ -15,8 +15,10 @@ public sealed class LuaPlayerConnectedEventHandler : ITickEventHandler<PlayerCon
     }
 
     public void Handle(PlayerConnectedEvent evt)
-        => _events.Publish(
+    {
+        _events.Publish(
             "player.connected",
             LuaPayloadBuilder.PlayerConnection(evt.SessionId, evt.RemoteEndPoint, evt.At)
         );
+    }
 }

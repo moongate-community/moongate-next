@@ -8,7 +8,7 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Abstractions.Extensions.DryIoc;
 
 /// <summary>
-/// DryIoc-native registration helpers for typed packet handlers.
+///     DryIoc-native registration helpers for typed packet handlers.
 /// </summary>
 public static class PacketHandlerContainerExtensions
 {
@@ -17,7 +17,7 @@ public static class PacketHandlerContainerExtensions
     extension(IContainer container)
     {
         /// <summary>
-        /// Registers a typed packet handler.
+        ///     Registers a typed packet handler.
         /// </summary>
         public IContainer AddPacketHandler<THandler, TPacket>()
             where THandler : class, IPacketHandler<TPacket>
@@ -30,8 +30,8 @@ public static class PacketHandlerContainerExtensions
         }
 
         /// <summary>
-        /// Scans an assembly for classes marked with <see cref="RegisterPacketHandlerAttribute" /> and
-        /// registers each (mapping every <c>IPacketHandler&lt;&gt;</c> interface it implements).
+        ///     Scans an assembly for classes marked with <see cref="RegisterPacketHandlerAttribute" /> and
+        ///     registers each (mapping every <c>IPacketHandler&lt;&gt;</c> interface it implements).
         /// </summary>
         public IContainer AddPacketHandlersFromAssembly(Assembly assembly)
         {
@@ -41,9 +41,9 @@ public static class PacketHandlerContainerExtensions
         }
 
         /// <summary>
-        /// Registers every class in <paramref name="handlerTypes" /> that is marked with
-        /// <see cref="RegisterPacketHandlerAttribute" /> as a singleton, mapping each
-        /// <c>IPacketHandler&lt;&gt;</c> interface it implements. Throws if a marked class implements none.
+        ///     Registers every class in <paramref name="handlerTypes" /> that is marked with
+        ///     <see cref="RegisterPacketHandlerAttribute" /> as a singleton, mapping each
+        ///     <c>IPacketHandler&lt;&gt;</c> interface it implements. Throws if a marked class implements none.
         /// </summary>
         internal IContainer AddPacketHandlers(IEnumerable<Type> handlerTypes)
         {
@@ -59,13 +59,12 @@ public static class PacketHandlerContainerExtensions
                 }
 
                 var handlerInterfaces = handlerType.GetInterfaces()
-                                                   .Where(
-                                                       static interfaceType =>
-                                                           interfaceType.IsGenericType &&
-                                                           interfaceType.GetGenericTypeDefinition() ==
-                                                           typeof(IPacketHandler<>)
-                                                   )
-                                                   .ToArray();
+                    .Where(static interfaceType =>
+                        interfaceType.IsGenericType &&
+                        interfaceType.GetGenericTypeDefinition() ==
+                        typeof(IPacketHandler<>)
+                    )
+                    .ToArray();
 
                 if (handlerInterfaces.Length == 0)
                 {

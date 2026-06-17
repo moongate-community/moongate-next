@@ -1,3 +1,4 @@
+using Moongate.Abstractions.Data.Logging;
 using Moongate.Core.Types;
 using Moongate.Server.Services.Logging;
 using Serilog;
@@ -9,11 +10,23 @@ public sealed class LoggerServiceTests : IDisposable
 {
     private readonly string _dir = Path.Combine(Path.GetTempPath(), $"nr-logger-{Guid.NewGuid():N}");
 
+    public void Dispose()
+    {
+        Log.CloseAndFlush();
+
+        if (Directory.Exists(_dir))
+        {
+            Directory.Delete(_dir, true);
+        }
+
+        GC.SuppressFinalize(this);
+    }
+
     [Fact]
     public void CreateLogger_HonorsMinimumLevel()
     {
         using var logger = LoggerService.CreateLogger(
-            new()
+            new LoggerConfig
             {
                 Level = LogLevelType.Warning,
                 WriteToFile = true,
@@ -36,7 +49,7 @@ public sealed class LoggerServiceTests : IDisposable
     public void CreateLogger_WhenFileEnabled_WritesToConfiguredFile()
     {
         using var logger = LoggerService.CreateLogger(
-            new()
+            new LoggerConfig
             {
                 Level = LogLevelType.Information,
                 WriteToFile = true,
@@ -49,17 +62,5 @@ public sealed class LoggerServiceTests : IDisposable
         logger.Dispose();
 
         Assert.Contains("file sink works", File.ReadAllText(Path.Combine(_dir, "server.log")));
-    }
-
-    public void Dispose()
-    {
-        Log.CloseAndFlush();
-
-        if (Directory.Exists(_dir))
-        {
-            Directory.Delete(_dir, true);
-        }
-
-        GC.SuppressFinalize(this);
     }
 }

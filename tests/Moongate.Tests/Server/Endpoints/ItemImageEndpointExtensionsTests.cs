@@ -11,45 +11,12 @@ namespace Moongate.Tests.Server.Endpoints;
 
 public class ItemImageEndpointExtensionsTests : IDisposable
 {
-    private readonly string _root = Path.Combine(Path.GetTempPath(), $"moongate-item-endpoint-{Guid.NewGuid():N}");
     private readonly DirectoriesConfig _directories;
+    private readonly string _root = Path.Combine(Path.GetTempPath(), $"moongate-item-endpoint-{Guid.NewGuid():N}");
 
     public ItemImageEndpointExtensionsTests()
     {
-        _directories = new(_root, Enum.GetNames<DirectoryType>());
-    }
-
-    private sealed class TestArtService : IArtService
-    {
-        private readonly HashSet<int> _availableItemIds;
-
-        public TestArtService(IEnumerable<int> availableItemIds, int maxItemId = 10)
-        {
-            _availableItemIds = availableItemIds.ToHashSet();
-            MaxItemId = maxItemId;
-        }
-
-        public int MaxItemId { get; }
-
-        public int RenderCount { get; private set; }
-
-        public Image<Rgba32>? GetArt(int itemId, bool clone = true)
-        {
-            RenderCount++;
-
-            if (!_availableItemIds.Contains(itemId))
-            {
-                return null;
-            }
-
-            var image = new Image<Rgba32>(3, 3);
-            image[1, 1] = new(255, 255, 255, 255);
-
-            return image;
-        }
-
-        public bool IsValidArt(int itemId)
-            => _availableItemIds.Contains(itemId);
+        _directories = new DirectoriesConfig(_root, Enum.GetNames<DirectoryType>());
     }
 
     public void Dispose()
@@ -77,10 +44,10 @@ public class ItemImageEndpointExtensionsTests : IDisposable
         var service = new TestArtService([0], 0);
 
         var result = await ItemImageEndpointExtensions.HandleBuildItemImagesAsync(
-                         service,
-                         _directories,
-                         CancellationToken.None
-                     );
+            service,
+            _directories,
+            CancellationToken.None
+        );
 
         var ok = Assert.IsType<Ok<ItemImageBuildResult>>(result);
         Assert.NotNull(ok.Value);
@@ -96,10 +63,10 @@ public class ItemImageEndpointExtensionsTests : IDisposable
         var service = new TestArtService([0, 2], 2);
 
         var result = await ItemImageEndpointExtensions.HandleBuildItemImagesAsync(
-                         service,
-                         _directories,
-                         CancellationToken.None
-                     );
+            service,
+            _directories,
+            CancellationToken.None
+        );
 
         var ok = Assert.IsType<Ok<ItemImageBuildResult>>(result);
         Assert.NotNull(ok.Value);
@@ -119,11 +86,11 @@ public class ItemImageEndpointExtensionsTests : IDisposable
         var service = new TestArtService([2]);
 
         _ = await ItemImageEndpointExtensions.HandleGetItemImageAsync(
-                "0x002",
-                service,
-                _directories,
-                CancellationToken.None
-            );
+            "0x002",
+            service,
+            _directories,
+            CancellationToken.None
+        );
 
         Assert.Equal(0, service.RenderCount);
     }
@@ -134,11 +101,11 @@ public class ItemImageEndpointExtensionsTests : IDisposable
         var service = new TestArtService([1]);
 
         var result = await ItemImageEndpointExtensions.HandleGetItemImageAsync(
-                         "0x001",
-                         service,
-                         _directories,
-                         CancellationToken.None
-                     );
+            "0x001",
+            service,
+            _directories,
+            CancellationToken.None
+        );
 
         var cachePath = Path.Combine(_directories[DirectoryType.Cache], "images", "items", "0x001.png");
         Assert.True(File.Exists(cachePath));
@@ -156,11 +123,11 @@ public class ItemImageEndpointExtensionsTests : IDisposable
         var service = new TestArtService([1]);
 
         var result = await ItemImageEndpointExtensions.HandleGetItemImageAsync(
-                         "1",
-                         service,
-                         _directories,
-                         CancellationToken.None
-                     );
+            "1",
+            service,
+            _directories,
+            CancellationToken.None
+        );
 
         Assert.Contains("BadRequest", result.GetType().Name, StringComparison.OrdinalIgnoreCase);
     }
@@ -171,12 +138,47 @@ public class ItemImageEndpointExtensionsTests : IDisposable
         var service = new TestArtService([]);
 
         var result = await ItemImageEndpointExtensions.HandleGetItemImageAsync(
-                         "0x001",
-                         service,
-                         _directories,
-                         CancellationToken.None
-                     );
+            "0x001",
+            service,
+            _directories,
+            CancellationToken.None
+        );
 
         Assert.Contains("NotFound", result.GetType().Name, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private sealed class TestArtService : IArtService
+    {
+        private readonly HashSet<int> _availableItemIds;
+
+        public TestArtService(IEnumerable<int> availableItemIds, int maxItemId = 10)
+        {
+            _availableItemIds = availableItemIds.ToHashSet();
+            MaxItemId = maxItemId;
+        }
+
+        public int RenderCount { get; private set; }
+
+        public int MaxItemId { get; }
+
+        public Image<Rgba32>? GetArt(int itemId, bool clone = true)
+        {
+            RenderCount++;
+
+            if (!_availableItemIds.Contains(itemId))
+            {
+                return null;
+            }
+
+            var image = new Image<Rgba32>(3, 3);
+            image[1, 1] = new Rgba32(255, 255, 255, 255);
+
+            return image;
+        }
+
+        public bool IsValidArt(int itemId)
+        {
+            return _availableItemIds.Contains(itemId);
+        }
     }
 }

@@ -16,8 +16,8 @@ public class UoMultiIntegrationTests
         Assert.True(store.Count > 0);
 
         var anyWithGeometry = Enumerable.Range(0, 0x4000)
-                                        .Select(store.GetComponents)
-                                        .Any(m => m.Width > 0 && m.List.Length > 0);
+            .Select(store.GetComponents)
+            .Any(m => m.Width > 0 && m.List.Length > 0);
 
         Assert.True(anyWithGeometry);
     }
@@ -30,19 +30,18 @@ public class UoMultiIntegrationTests
 
         var hasMulti = Directory.Exists(candidate) &&
                        Directory.EnumerateFiles(candidate)
-                                .Any(
-                                    f =>
-                                    {
-                                        var name = Path.GetFileName(f);
+                           .Any(f =>
+                               {
+                                   var name = Path.GetFileName(f);
 
-                                        return string.Equals(
-                                                   name,
-                                                   "MultiCollection.uop",
-                                                   StringComparison.OrdinalIgnoreCase
-                                               ) ||
-                                               string.Equals(name, "multi.mul", StringComparison.OrdinalIgnoreCase);
-                                    }
-                                );
+                                   return string.Equals(
+                                              name,
+                                              "MultiCollection.uop",
+                                              StringComparison.OrdinalIgnoreCase
+                                          ) ||
+                                          string.Equals(name, "multi.mul", StringComparison.OrdinalIgnoreCase);
+                               }
+                           );
 
         return hasMulti ? candidate : null;
     }

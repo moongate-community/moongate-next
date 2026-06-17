@@ -1,7 +1,7 @@
 namespace Moongate.Network.UO.Types.Environment;
 
 /// <summary>
-/// Defines UO client light levels.
+///     Defines UO client light levels.
 /// </summary>
 public enum LightLevelType : byte
 {

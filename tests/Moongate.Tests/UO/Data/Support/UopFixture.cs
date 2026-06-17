@@ -3,8 +3,8 @@ using Moongate.UO.Data.Files.Internal;
 namespace Moongate.Tests.UO.Data.Support;
 
 /// <summary>
-/// Writes a minimal valid UOP container with a single data block, so the index reader can be
-/// exercised without a real client file.
+///     Writes a minimal valid UOP container with a single data block, so the index reader can be
+///     exercised without a real client file.
 /// </summary>
 public static class UopFixture
 {

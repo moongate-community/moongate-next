@@ -159,7 +159,9 @@ public class LuaScriptEngineServiceTests
         Assert.Equal(PlatformUtils.GetCurrentPlatform().ToString(), fixture.Engine.ExecuteFunction("PLATFORM").Data);
     }
 
-    [Theory, InlineData("MyFunction", "my_function"), InlineData("DoThing", "do_thing")]
+    [Theory]
+    [InlineData("MyFunction", "my_function")]
+    [InlineData("DoThing", "do_thing")]
     public void ToScriptEngineFunctionName_ConvertsToSnakeCase(string input, string expected)
     {
         using var fixture = new LuaEngineFixture();

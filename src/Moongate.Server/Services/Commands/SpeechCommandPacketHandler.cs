@@ -10,12 +10,12 @@ using Moongate.Network.UO.Packets.Incoming.Speech;
 namespace Moongate.Server.Services.Commands;
 
 /// <summary>
-/// Converts in-game speech commands into command-system invocations.
+///     Converts in-game speech commands into command-system invocations.
 /// </summary>
 [RegisterPacketHandler]
 public sealed class SpeechCommandPacketHandler
     : IPacketHandler<UnicodeSpeechPacket>,
-      IPacketHandler<TalkRequestPacket>
+        IPacketHandler<TalkRequestPacket>
 {
     private const char CommandPrefix = '.';
 
@@ -35,7 +35,7 @@ public sealed class SpeechCommandPacketHandler
     }
 
     public Task HandleAsync(
-        PacketContext<UnicodeSpeechPacket> context,
+        PacketContext<TalkRequestPacket> context,
         CancellationToken cancellationToken = default
     )
     {
@@ -45,7 +45,7 @@ public sealed class SpeechCommandPacketHandler
     }
 
     public Task HandleAsync(
-        PacketContext<TalkRequestPacket> context,
+        PacketContext<UnicodeSpeechPacket> context,
         CancellationToken cancellationToken = default
     )
     {

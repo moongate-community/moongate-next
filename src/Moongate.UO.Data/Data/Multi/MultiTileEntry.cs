@@ -3,7 +3,7 @@ using Moongate.UO.Data.Types.Tiles;
 namespace Moongate.UO.Data.Data.Multi;
 
 /// <summary>
-/// One component of a multi: an item id placed at an offset from the multi's centre, with flags.
+///     One component of a multi: an item id placed at an offset from the multi's centre, with flags.
 /// </summary>
 public struct MultiTileEntry
 {

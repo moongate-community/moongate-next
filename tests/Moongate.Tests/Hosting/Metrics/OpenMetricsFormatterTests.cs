@@ -11,7 +11,7 @@ public class OpenMetricsFormatterTests
     {
         var snapshot = new MetricsSnapshot(
             DateTimeOffset.UtcNow,
-            [new("requests_total", 123, MetricType.Counter)]
+            [new MetricSample("requests_total", 123, MetricType.Counter)]
         );
 
         var text = OpenMetricsFormatter.Format(snapshot);
@@ -25,7 +25,7 @@ public class OpenMetricsFormatterTests
     {
         var snapshot = new MetricsSnapshot(
             DateTimeOffset.UtcNow,
-            [new("connections", 7, MetricType.Counter)]
+            [new MetricSample("connections", 7, MetricType.Counter)]
         );
 
         var text = OpenMetricsFormatter.Format(snapshot);
@@ -49,8 +49,14 @@ public class OpenMetricsFormatterTests
         var snapshot = new MetricsSnapshot(
             DateTimeOffset.UtcNow,
             [
-                new("conn", 1, MetricType.Gauge, new Dictionary<string, string> { ["zone"] = "a" }, "Active connections"),
-                new("conn", 2, MetricType.Gauge, new Dictionary<string, string> { ["zone"] = "b" })
+                new MetricSample(
+                    "conn",
+                    1,
+                    MetricType.Gauge,
+                    new Dictionary<string, string> { ["zone"] = "a" },
+                    "Active connections"
+                ),
+                new MetricSample("conn", 2, MetricType.Gauge, new Dictionary<string, string> { ["zone"] = "b" })
             ]
         );
 
@@ -67,7 +73,7 @@ public class OpenMetricsFormatterTests
     {
         var snapshot = new MetricsSnapshot(
             DateTimeOffset.UtcNow,
-            [new("tick_queue_depth", 42, Help: "Tick events pending")]
+            [new MetricSample("tick_queue_depth", 42, Help: "Tick events pending")]
         );
 
         var text = OpenMetricsFormatter.Format(snapshot);
@@ -83,7 +89,7 @@ public class OpenMetricsFormatterTests
     {
         var snapshot = new MetricsSnapshot(
             DateTimeOffset.UtcNow,
-            [new("x", 1, MetricType.Gauge, new Dictionary<string, string> { ["k"] = "line1\nline2" })]
+            [new MetricSample("x", 1, MetricType.Gauge, new Dictionary<string, string> { ["k"] = "line1\nline2" })]
         );
 
         var text = OpenMetricsFormatter.Format(snapshot);
@@ -97,7 +103,7 @@ public class OpenMetricsFormatterTests
         var snapshot = new MetricsSnapshot(
             DateTimeOffset.UtcNow,
             [
-                new(
+                new MetricSample(
                     "x",
                     1,
                     MetricType.Gauge,
@@ -117,7 +123,7 @@ public class OpenMetricsFormatterTests
         var snapshot = new MetricsSnapshot(
             DateTimeOffset.UtcNow,
             [
-                new(
+                new MetricSample(
                     "handler_errors_total",
                     5,
                     MetricType.Counter,

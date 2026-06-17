@@ -4,8 +4,8 @@ using Moongate.UO.Data.Types.Mobiles;
 namespace Moongate.UO.Data.Templates.Mobiles;
 
 /// <summary>
-/// Declarative NPC mobile template loaded from YAML. The <see cref="BaseMobile" />
-/// chain is resolved at boot before the template enters the registry.
+///     Declarative NPC mobile template loaded from YAML. The <see cref="BaseMobile" />
+///     chain is resolved at boot before the template enters the registry.
 /// </summary>
 public sealed class MobileTemplateDefinition
 {

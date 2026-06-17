@@ -9,8 +9,7 @@ public class PluginDependencySorterTests
     [Fact]
     public void ValidateAndSort_Cycle_Throws()
     {
-        var ex = Assert.Throws<InvalidOperationException>(
-            () => PluginDependencySorter.ValidateAndSort(
+        var ex = Assert.Throws<InvalidOperationException>(() => PluginDependencySorter.ValidateAndSort(
                 [
                     Loaded("moongate.a", "moongate.b"),
                     Loaded("moongate.b", "moongate.a")
@@ -38,14 +37,17 @@ public class PluginDependencySorterTests
     [Fact]
     public void ValidateAndSort_DuplicateId_Throws()
     {
-        var ex = Assert.Throws<InvalidOperationException>(
-            () => PluginDependencySorter.ValidateAndSort([Loaded("moongate.duplicate"), Loaded("moongate.duplicate")])
+        var ex = Assert.Throws<InvalidOperationException>(() =>
+            PluginDependencySorter.ValidateAndSort([Loaded("moongate.duplicate"), Loaded("moongate.duplicate")])
         );
 
         Assert.Contains("Duplicate plugin id", ex.Message);
     }
 
-    [Theory, InlineData(""), InlineData("Moongate.Bad"), InlineData("moongate bad")]
+    [Theory]
+    [InlineData("")]
+    [InlineData("Moongate.Bad")]
+    [InlineData("moongate bad")]
     public void ValidateAndSort_InvalidId_Throws(string id)
     {
         var ex = Assert.Throws<InvalidOperationException>(() => PluginDependencySorter.ValidateAndSort([Loaded(id)]));
@@ -56,17 +58,19 @@ public class PluginDependencySorterTests
     [Fact]
     public void ValidateAndSort_MissingDependency_Throws()
     {
-        var ex = Assert.Throws<InvalidOperationException>(
-            () => PluginDependencySorter.ValidateAndSort([Loaded("moongate.dependent", "moongate.missing")])
+        var ex = Assert.Throws<InvalidOperationException>(() =>
+            PluginDependencySorter.ValidateAndSort([Loaded("moongate.dependent", "moongate.missing")])
         );
 
         Assert.Contains("missing dependency", ex.Message);
     }
 
     private static LoadedPlugin Loaded(string id, params string[] dependencies)
-        => new(
+    {
+        return new LoadedPlugin(
             Path.Combine(Path.GetTempPath(), $"nh-plugin-{Guid.NewGuid():N}"),
             new FakePlugin(id, dependencies),
             typeof(FakePlugin).Assembly
         );
+    }
 }

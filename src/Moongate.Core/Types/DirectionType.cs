@@ -1,7 +1,6 @@
 namespace Moongate.Core.Types;
 
 [Flags]
-
 /// <summary>
 /// Represents DirectionType.
 /// </summary>

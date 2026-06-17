@@ -21,80 +21,6 @@ namespace Moongate.Core.Extensions.Strings;
 
 public static class StringHelpers
 {
-    extension(string value)
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public string Capitalize()
-        {
-            if (string.IsNullOrEmpty(value))
-            {
-                return value;
-            }
-
-            var chrs = STArrayPool<char>.Shared.Rent(value.Length);
-            var span = chrs.AsSpan(0, value.Length);
-
-            var sliced = value.AsSpan();
-
-            // Copy over the previous span
-            sliced.CopyTo(span);
-
-            var index = 0;
-
-            while (true)
-            {
-                // Special case for titles: skip "the " words except the first one,
-                // so "the lord of the rings" becomes "The Lord Of the Rings".
-                if (index > 0 && sliced.InsensitiveStartsWith("the "))
-                {
-                    sliced = sliced[4..];
-                    index += 4;
-
-                    continue;
-                }
-
-                span[index] = char.ToUpperInvariant(sliced[0]);
-
-                var indexOf = sliced.IndexOf(' ');
-
-                if (indexOf == -1)
-                {
-                    break;
-                }
-
-                if (indexOf == sliced.Length - 1)
-                {
-                    break;
-                }
-
-                sliced = sliced[(indexOf + 1)..];
-                index += indexOf + 1;
-            }
-
-            var str = span.ToString();
-
-            STArrayPool<char>.Shared.Return(chrs);
-
-            return str;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public string DefaultIfNullOrEmpty(string def)
-            => string.IsNullOrWhiteSpace(value) ? def : value;
-
-        public string IndentMultiline(string indent = "\t", string lineSeparator = "\n")
-        {
-            var parts = value.Split(lineSeparator);
-
-            for (var i = 0; i < parts.Length; i++)
-            {
-                parts[i] = $"{indent}{parts[i]}";
-            }
-
-            return string.Join(lineSeparator, parts);
-        }
-    }
-
     public static void AppendSpaceWithArticle(this ref ValueStringBuilder builder, string text, bool articleAn)
     {
         if (builder.Length != 0)
@@ -335,5 +261,81 @@ public static class StringHelpers
         }
 
         return list;
+    }
+
+    extension(string value)
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string Capitalize()
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return value;
+            }
+
+            var chrs = STArrayPool<char>.Shared.Rent(value.Length);
+            var span = chrs.AsSpan(0, value.Length);
+
+            var sliced = value.AsSpan();
+
+            // Copy over the previous span
+            sliced.CopyTo(span);
+
+            var index = 0;
+
+            while (true)
+            {
+                // Special case for titles: skip "the " words except the first one,
+                // so "the lord of the rings" becomes "The Lord Of the Rings".
+                if (index > 0 && sliced.InsensitiveStartsWith("the "))
+                {
+                    sliced = sliced[4..];
+                    index += 4;
+
+                    continue;
+                }
+
+                span[index] = char.ToUpperInvariant(sliced[0]);
+
+                var indexOf = sliced.IndexOf(' ');
+
+                if (indexOf == -1)
+                {
+                    break;
+                }
+
+                if (indexOf == sliced.Length - 1)
+                {
+                    break;
+                }
+
+                sliced = sliced[(indexOf + 1)..];
+                index += indexOf + 1;
+            }
+
+            var str = span.ToString();
+
+            STArrayPool<char>.Shared.Return(chrs);
+
+            return str;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public string DefaultIfNullOrEmpty(string def)
+        {
+            return string.IsNullOrWhiteSpace(value) ? def : value;
+        }
+
+        public string IndentMultiline(string indent = "\t", string lineSeparator = "\n")
+        {
+            var parts = value.Split(lineSeparator);
+
+            for (var i = 0; i < parts.Length; i++)
+            {
+                parts[i] = $"{indent}{parts[i]}";
+            }
+
+            return string.Join(lineSeparator, parts);
+        }
     }
 }

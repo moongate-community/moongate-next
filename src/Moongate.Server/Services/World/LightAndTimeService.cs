@@ -17,7 +17,7 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.World;
 
 /// <summary>
-/// Computes and broadcasts day/night light and supplies the accelerated world clock.
+///     Computes and broadcasts day/night light and supplies the accelerated world clock.
 /// </summary>
 public sealed class LightAndTimeService : ILightAndTimeService
 {
@@ -25,17 +25,17 @@ public sealed class LightAndTimeService : ILightAndTimeService
     private const int JailLevel = 9;
     private const int PersonalLightLevel = 0;
     private const string JobName = "light_and_time_update";
+    private readonly IJobService _jobs;
+    private readonly Dictionary<long, int> _lastBySession = [];
 
     private readonly ILogger _logger = Log.ForContext<LightAndTimeService>();
-    private readonly IPlayerSessionService _playerSessions;
     private readonly Lazy<IMobileService> _mobiles;
     private readonly IOutgoingPacketQueue _outgoing;
+    private readonly IPlayerSessionService _playerSessions;
     private readonly IRegionResolverService _regions;
-    private readonly IJobService _jobs;
-    private readonly Lock _sync = new();
-    private readonly Dictionary<long, int> _lastBySession = [];
-    private readonly DateTime _worldStartUtc;
     private readonly double _secondsPerUoMinute;
+    private readonly Lock _sync = new();
+    private readonly DateTime _worldStartUtc;
     private volatile int _forcedGlobalLightLevel = -1;
     private string? _jobId;
 
@@ -63,14 +63,14 @@ public sealed class LightAndTimeService : ILightAndTimeService
 
         _secondsPerUoMinute = config.LightSecondsPerUoMinute > 0 ? config.LightSecondsPerUoMinute : 5.0;
         _worldStartUtc = DateTime.TryParse(
-                             config.LightWorldStartUtc,
-                             null,
-                             DateTimeStyles.AdjustToUniversal |
-                             DateTimeStyles.AssumeUniversal,
-                             out var parsed
-                         )
-                             ? parsed
-                             : new(1997, 9, 1, 0, 0, 0, DateTimeKind.Utc);
+            config.LightWorldStartUtc,
+            null,
+            DateTimeStyles.AdjustToUniversal |
+            DateTimeStyles.AssumeUniversal,
+            out var parsed
+        )
+            ? parsed
+            : new DateTime(1997, 9, 1, 0, 0, 0, DateTimeKind.Utc);
     }
 
     public int ComputeGlobalLightLevel(int mapId, Point3D location, DateTime? utcNow = null)

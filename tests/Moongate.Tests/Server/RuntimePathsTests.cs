@@ -6,8 +6,8 @@ namespace Moongate.Tests.Server;
 
 public sealed class RuntimePathsTests : IDisposable
 {
-    private readonly string? _oldPrimary = Environment.GetEnvironmentVariable("MOONGATE_ROOT");
     private readonly string? _oldLegacy = Environment.GetEnvironmentVariable("NIGHTHEAVEN_ROOT");
+    private readonly string? _oldPrimary = Environment.GetEnvironmentVariable("MOONGATE_ROOT");
     private readonly string _root = Path.Combine(Path.GetTempPath(), $"nr-runtime-paths-{Guid.NewGuid():N}");
 
     public void Dispose()
@@ -92,5 +92,7 @@ public sealed class RuntimePathsTests : IDisposable
     }
 
     private DirectoriesConfig Directories()
-        => new(_root, Enum.GetNames<DirectoryType>());
+    {
+        return new DirectoriesConfig(_root, Enum.GetNames<DirectoryType>());
+    }
 }

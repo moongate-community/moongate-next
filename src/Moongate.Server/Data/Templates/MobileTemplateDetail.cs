@@ -54,22 +54,21 @@ public sealed record MobileTemplateDetail(
         var summary = MobileTemplateSummary.FromDefinition(template);
 
         var skills = template.Skills
-                             .OrderBy(static pair => pair.Key, StringComparer.OrdinalIgnoreCase)
-                             .Select(static pair => new MobileSkillSummary(pair.Key, pair.Value))
-                             .ToArray();
+            .OrderBy(static pair => pair.Key, StringComparer.OrdinalIgnoreCase)
+            .Select(static pair => new MobileSkillSummary(pair.Key, pair.Value))
+            .ToArray();
 
         var parameters = template.Params
-                                 .OrderBy(static pair => pair.Key, StringComparer.OrdinalIgnoreCase)
-                                 .Select(
-                                     static pair => new MobileTemplateParamSummary(
-                                         pair.Key,
-                                         pair.Value.Type.ToString(),
-                                         pair.Value.Value
-                                     )
-                                 )
-                                 .ToArray();
+            .OrderBy(static pair => pair.Key, StringComparer.OrdinalIgnoreCase)
+            .Select(static pair => new MobileTemplateParamSummary(
+                    pair.Key,
+                    pair.Value.Type.ToString(),
+                    pair.Value.Value
+                )
+            )
+            .ToArray();
 
-        return new(
+        return new MobileTemplateDetail(
             summary.Id,
             summary.Name,
             summary.Title,

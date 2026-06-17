@@ -1,18 +1,10 @@
 namespace Moongate.Server.Data.World;
 
 /// <summary>
-/// Represents one rectangular area attached to a world region.
+///     Represents one rectangular area attached to a world region.
 /// </summary>
 public readonly record struct RegionAreaEntry
 {
-    public int X1 { get; }
-
-    public int Y1 { get; }
-
-    public int X2 { get; }
-
-    public int Y2 { get; }
-
     public RegionAreaEntry(int x1, int y1, int x2, int y2)
     {
         X1 = x1;
@@ -21,6 +13,16 @@ public readonly record struct RegionAreaEntry
         Y2 = y2;
     }
 
+    public int X1 { get; }
+
+    public int Y1 { get; }
+
+    public int X2 { get; }
+
+    public int Y2 { get; }
+
     public bool Contains(int x, int y)
-        => x >= Math.Min(X1, X2) && x <= Math.Max(X1, X2) && y >= Math.Min(Y1, Y2) && y <= Math.Max(Y1, Y2);
+    {
+        return x >= Math.Min(X1, X2) && x <= Math.Max(X1, X2) && y >= Math.Min(Y1, Y2) && y <= Math.Max(Y1, Y2);
+    }
 }

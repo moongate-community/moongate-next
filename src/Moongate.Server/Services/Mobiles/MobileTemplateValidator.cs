@@ -8,8 +8,8 @@ using Moongate.UO.Data.Types.Skills;
 namespace Moongate.Server.Services.Mobiles;
 
 /// <summary>
-/// Boot-time fail-fast validation for mobile templates against the item template
-/// registry and the loot service. Any violation throws so the server refuses to start.
+///     Boot-time fail-fast validation for mobile templates against the item template
+///     registry and the loot service. Any violation throws so the server refuses to start.
 /// </summary>
 public static class MobileTemplateValidator
 {

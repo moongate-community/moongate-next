@@ -80,5 +80,7 @@ public sealed class PluginLoaderServiceTests : IDisposable
     }
 
     private DirectoriesConfig Directories()
-        => new(_root, Enum.GetNames<DirectoryType>());
+    {
+        return new DirectoriesConfig(_root, Enum.GetNames<DirectoryType>());
+    }
 }

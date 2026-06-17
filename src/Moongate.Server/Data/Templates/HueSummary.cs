@@ -15,7 +15,9 @@ public sealed record HueSummary(
 )
 {
     public static string FormatHue(int value)
-        => $"0x{value.ToString("X3", CultureInfo.InvariantCulture)}";
+    {
+        return $"0x{value.ToString("X3", CultureInfo.InvariantCulture)}";
+    }
 
     public static HueSummary FromValue(int value, IHueStore hues)
     {
@@ -23,14 +25,14 @@ public sealed record HueSummary(
 
         if (value == 0)
         {
-            return new(0, FormatHue(value), "None", true, true, []);
+            return new HueSummary(0, FormatHue(value), "None", true, true, []);
         }
 
         var hue = hues.GetHue(value - 1);
 
         if (hue is null)
         {
-            return new(value, FormatHue(value), "Unknown hue", false, false, []);
+            return new HueSummary(value, FormatHue(value), "Unknown hue", false, false, []);
         }
 
         var colors = new List<HueColorSummary>(hue.Colors.Length);
@@ -38,9 +40,9 @@ public sealed record HueSummary(
         for (var index = 0; index < hue.Colors.Length; index++)
         {
             var (r, g, b) = hue.GetRgb(index);
-            colors.Add(new(index, r, g, b, $"#{r:X2}{g:X2}{b:X2}"));
+            colors.Add(new HueColorSummary(index, r, g, b, $"#{r:X2}{g:X2}{b:X2}"));
         }
 
-        return new(value, FormatHue(value), hue.Name, false, true, colors);
+        return new HueSummary(value, FormatHue(value), hue.Name, false, true, colors);
     }
 }

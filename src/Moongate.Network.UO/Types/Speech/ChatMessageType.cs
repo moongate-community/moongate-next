@@ -1,7 +1,7 @@
 namespace Moongate.Network.UO.Types.Speech;
 
 /// <summary>
-/// Defines UO speech message types.
+///     Defines UO speech message types.
 /// </summary>
 [Flags]
 public enum ChatMessageType : byte

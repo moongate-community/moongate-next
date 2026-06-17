@@ -5,11 +5,11 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.Loot;
 
 /// <summary>
-/// Loads loot table YAML files from a directory, merging every file's
-/// <c>loot_tables</c> list. Parsing is strict (fail fast with the file path);
-/// a missing or empty directory is a warning and yields no tables. Node
-/// collections are normalized because YamlDotNet overwrites pre-initialized
-/// collections with null when a key is present but empty.
+///     Loads loot table YAML files from a directory, merging every file's
+///     <c>loot_tables</c> list. Parsing is strict (fail fast with the file path);
+///     a missing or empty directory is a warning and yields no tables. Node
+///     collections are normalized because YamlDotNet overwrites pre-initialized
+///     collections with null when a key is present but empty.
 /// </summary>
 public sealed class LootTableYamlLoader
 {
@@ -33,8 +33,8 @@ public sealed class LootTableYamlLoader
         }
 
         var files = Directory.GetFiles(_lootDirectory, "*.yaml", SearchOption.AllDirectories)
-                             .OrderBy(static path => path, StringComparer.OrdinalIgnoreCase)
-                             .ToArray();
+            .OrderBy(static path => path, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
 
         if (files.Length == 0)
         {

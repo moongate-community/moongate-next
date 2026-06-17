@@ -1,7 +1,7 @@
 namespace Moongate.Network.UO.Types.Login;
 
 /// <summary>
-/// Defines advertised client families.
+///     Defines advertised client families.
 /// </summary>
 [Flags]
 public enum ClientType

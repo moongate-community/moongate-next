@@ -3,7 +3,7 @@ using Moongate.Abstractions.Interfaces.Network;
 namespace Moongate.Abstractions.Data.Network;
 
 /// <summary>
-/// Context passed to typed packet handlers.
+///     Context passed to typed packet handlers.
 /// </summary>
 /// <typeparam name="TPacket">Concrete inbound packet type.</typeparam>
 public sealed class PacketContext<TPacket>
@@ -33,27 +33,27 @@ public sealed class PacketContext<TPacket>
     }
 
     /// <summary>
-    /// Handler-safe view of the session that sent the inbound packet (endpoints, seed, transport toggles).
+    ///     Handler-safe view of the session that sent the inbound packet (endpoints, seed, transport toggles).
     /// </summary>
     public IGameSession Session { get; }
 
     /// <summary>
-    /// Session that sent the inbound packet.
+    ///     Session that sent the inbound packet.
     /// </summary>
     public long SessionId => Session.SessionId;
 
     /// <summary>
-    /// Parsed inbound packet.
+    ///     Parsed inbound packet.
     /// </summary>
     public TPacket Packet { get; }
 
     /// <summary>
-    /// Timestamp captured when the packet was received.
+    ///     Timestamp captured when the packet was received.
     /// </summary>
     public DateTimeOffset ReceivedAt { get; }
 
     /// <summary>
-    /// Queues an outbound packet for every active session, including the current session.
+    ///     Queues an outbound packet for every active session, including the current session.
     /// </summary>
     public Task BroadcastAsync<TOutgoingPacket>(
         TOutgoingPacket packet,
@@ -67,7 +67,7 @@ public sealed class PacketContext<TPacket>
     }
 
     /// <summary>
-    /// Queues an outbound packet for every active session except the current session.
+    ///     Queues an outbound packet for every active session except the current session.
     /// </summary>
     public Task BroadcastExceptSelfAsync<TOutgoingPacket>(
         TOutgoingPacket packet,
@@ -83,7 +83,7 @@ public sealed class PacketContext<TPacket>
     }
 
     /// <summary>
-    /// Queues an outbound packet for the current session.
+    ///     Queues an outbound packet for the current session.
     /// </summary>
     public Task SendAsync<TOutgoingPacket>(
         TOutgoingPacket packet,

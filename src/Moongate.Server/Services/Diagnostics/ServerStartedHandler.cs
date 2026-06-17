@@ -6,8 +6,8 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.Diagnostics;
 
 /// <summary>
-/// Diagnostic tick handler that logs the thread it runs on. Confirms that the
-/// game-loop service really dispatches tick handlers on its dedicated thread.
+///     Diagnostic tick handler that logs the thread it runs on. Confirms that the
+///     game-loop service really dispatches tick handlers on its dedicated thread.
 /// </summary>
 public sealed class ServerStartedHandler : ITickEventHandler<ServerStartedEvent>
 {

@@ -11,7 +11,7 @@ public class JwtBearerWebSocketAuthTests
     {
         var token = JwtBearerOptionsConfigurator.ResolveWebSocketToken(
             Query(("access_token", "abc.def.ghi")),
-            new("/hubs/console")
+            new PathString("/hubs/console")
         );
 
         Assert.Equal("abc.def.ghi", token);
@@ -22,7 +22,7 @@ public class JwtBearerWebSocketAuthTests
     {
         var token = JwtBearerOptionsConfigurator.ResolveWebSocketToken(
             Query(),
-            new("/hubs/console")
+            new PathString("/hubs/console")
         );
 
         Assert.Null(token);
@@ -33,7 +33,7 @@ public class JwtBearerWebSocketAuthTests
     {
         var token = JwtBearerOptionsConfigurator.ResolveWebSocketToken(
             Query(("access_token", "abc.def.ghi")),
-            new("/api/auth/me")
+            new PathString("/api/auth/me")
         );
 
         Assert.Null(token);
@@ -44,12 +44,14 @@ public class JwtBearerWebSocketAuthTests
     {
         var token = JwtBearerOptionsConfigurator.ResolveWebSocketToken(
             Query(("access_token", "abc.def.ghi")),
-            new("/hubs/consolexyz")
+            new PathString("/hubs/consolexyz")
         );
 
         Assert.Null(token);
     }
 
     private static IQueryCollection Query(params (string Key, string Value)[] pairs)
-        => new QueryCollection(pairs.ToDictionary(p => p.Key, p => new StringValues(p.Value)));
+    {
+        return new QueryCollection(pairs.ToDictionary(p => p.Key, p => new StringValues(p.Value)));
+    }
 }

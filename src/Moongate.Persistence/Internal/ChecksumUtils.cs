@@ -1,7 +1,7 @@
 namespace Moongate.Persistence.Internal;
 
 /// <summary>
-/// FNV-1a 32-bit checksum used to validate journal records.
+///     FNV-1a 32-bit checksum used to validate journal records.
 /// </summary>
 internal static class ChecksumUtils
 {

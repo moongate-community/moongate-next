@@ -5,8 +5,8 @@ using Moongate.Abstractions.Types.Jobs;
 namespace Moongate.Abstractions.Interfaces.Jobs;
 
 /// <summary>
-/// Registry of named operational jobs layered over <see cref="Timing.ITimerService" />. Jobs run on the
-/// game-loop thread; the service records per-job run metadata for the admin UI.
+///     Registry of named operational jobs layered over <see cref="Timing.ITimerService" />. Jobs run on the
+///     game-loop thread; the service records per-job run metadata for the admin UI.
 /// </summary>
 public interface IJobService : IMoongateService
 {

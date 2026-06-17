@@ -23,16 +23,20 @@ public sealed record MobileTemplateSummary(
 )
 {
     public static string FormatBody(int body)
-        => $"0x{body.ToString("X4", CultureInfo.InvariantCulture)}";
+    {
+        return $"0x{body.ToString("X4", CultureInfo.InvariantCulture)}";
+    }
 
     public static string FormatImageUrl(string id)
-        => $"/api/mobile-templates/{Uri.EscapeDataString(id)}/image.png";
+    {
+        return $"/api/mobile-templates/{Uri.EscapeDataString(id)}/image.png";
+    }
 
     public static MobileTemplateSummary FromDefinition(MobileTemplateDefinition template)
     {
         ArgumentNullException.ThrowIfNull(template);
 
-        return new(
+        return new MobileTemplateSummary(
             template.Id,
             template.Name ?? "",
             template.Title ?? "",

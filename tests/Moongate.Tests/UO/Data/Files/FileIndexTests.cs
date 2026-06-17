@@ -24,7 +24,7 @@ public class FileIndexTests
             var (idxPath, mulPath) = FileIndexFixture.Write(
                 dir.FullName,
                 "test",
-                [new(0, [1, 2, 3, 4])]
+                [new FileIndexFixture.Payload(0, [1, 2, 3, 4])]
             );
             using var index = new FileIndex(idxPath, mulPath, 1, -1, new NullVerdataPatchSource());
 
@@ -47,8 +47,8 @@ public class FileIndexTests
                 dir.FullName,
                 "test",
                 [
-                    new(0, [1, 2, 3, 4]),
-                    new(42, [9, 9])
+                    new FileIndexFixture.Payload(0, [1, 2, 3, 4]),
+                    new FileIndexFixture.Payload(42, [9, 9])
                 ]
             );
             using var index = new FileIndex(idxPath, mulPath, 2, -1, new NullVerdataPatchSource());

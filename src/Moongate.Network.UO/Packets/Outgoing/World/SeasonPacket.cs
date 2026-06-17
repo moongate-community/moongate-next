@@ -7,7 +7,7 @@ using Moongate.UO.Data.Types.Maps;
 namespace Moongate.Network.UO.Packets.Outgoing.World;
 
 /// <summary>
-/// Represents a season update packet.
+///     Represents a season update packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Season")]
 public class SeasonPacket : BaseGameNetworkPacket
@@ -15,11 +15,10 @@ public class SeasonPacket : BaseGameNetworkPacket
     private const byte OpCodeValue = 0xBC;
     private const int LengthValue = 3;
 
-    public bool PlaySound { get; set; }
-    public SeasonType Season { get; set; }
-
     public SeasonPacket()
-        : base(OpCodeValue, LengthValue) { }
+        : base(OpCodeValue, LengthValue)
+    {
+    }
 
     public SeasonPacket(SeasonType season, bool playSound = true)
         : this()
@@ -27,6 +26,9 @@ public class SeasonPacket : BaseGameNetworkPacket
         Season = season;
         PlaySound = playSound;
     }
+
+    public bool PlaySound { get; set; }
+    public SeasonType Season { get; set; }
 
     public override void Write(ref SpanWriter writer)
     {

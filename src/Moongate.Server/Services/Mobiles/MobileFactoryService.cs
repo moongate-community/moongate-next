@@ -3,6 +3,8 @@ using Moongate.Core.Ids;
 using Moongate.Core.Types;
 using Moongate.Network.UO.Packets.Incoming.Login;
 using Moongate.Server.Services.Templates;
+using Moongate.UO.Data.Data;
+using Moongate.UO.Data.Data.Mobiles;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Entities.Mobiles;
 using Moongate.UO.Data.Interfaces.Services;
@@ -17,21 +19,21 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.Mobiles;
 
 /// <summary>
-/// Default mobile factory: maps a resolved mobile template onto a new persisted
-/// non-player <see cref="MobileEntity" />, creating and equipping its backpack
-/// and equipment and storing loot-table references and params as custom properties.
+///     Default mobile factory: maps a resolved mobile template onto a new persisted
+///     non-player <see cref="MobileEntity" />, creating and equipping its backpack
+///     and equipment and storing loot-table references and params as custom properties.
 /// </summary>
 public sealed class MobileFactoryService : IMobileFactoryService
 {
     private const int DefaultMaleBodyId = 400;
     private const int DefaultFemaleBodyId = 401;
     private const string ProfessionPropertyKey = "profession";
+    private readonly Lazy<IItemFactoryService> _itemFactory;
+    private readonly IItemTemplateService _items;
 
     private readonly ILogger _logger = Log.ForContext<MobileFactoryService>();
-    private readonly IMobileTemplateService _templates;
-    private readonly IItemTemplateService _items;
     private readonly Lazy<IMobileService> _mobiles;
-    private readonly Lazy<IItemFactoryService> _itemFactory;
+    private readonly IMobileTemplateService _templates;
 
     public MobileFactoryService(
         IMobileTemplateService templates,
@@ -95,7 +97,7 @@ public sealed class MobileFactoryService : IMobileFactoryService
             Name = packet.CharacterName,
             AccountId = accountId,
             Direction = DirectionType.South,
-            Location = city is null ? Point3D.Zero : new(city.X, city.Y, city.Z),
+            Location = city is null ? Point3D.Zero : new Point3D(city.X, city.Y, city.Z),
             MapId = city?.MapIndex ?? 0,
             IsPlayer = true,
             IsAlive = true,
@@ -108,13 +110,13 @@ public sealed class MobileFactoryService : IMobileFactoryService
             FacialHairStyle = packet.FacialHair.Style,
             FacialHairHue = (Hue)packet.FacialHair.Hue,
             Notoriety = NotorietyType.Innocent,
-            BaseStats = new()
+            BaseStats = new MobileStats
             {
                 Strength = packet.Strength,
                 Dexterity = packet.Dexterity,
                 Intelligence = packet.Intelligence
             },
-            Resources = new()
+            Resources = new MobileResources
             {
                 Hits = packet.Strength,
                 MaxHits = packet.Strength,
@@ -125,7 +127,7 @@ public sealed class MobileFactoryService : IMobileFactoryService
             }
         };
 
-        mobile.CustomProperties[ProfessionPropertyKey] = new()
+        mobile.CustomProperties[ProfessionPropertyKey] = new CustomProperty
         {
             Type = CustomPropertyType.Integer,
             IntegerValue = packet.ProfessionId
@@ -133,7 +135,7 @@ public sealed class MobileFactoryService : IMobileFactoryService
 
         foreach (var entry in packet.Skills)
         {
-            mobile.Skills[entry.Skill] = new() { Base = entry.Value * 10, Value = entry.Value * 10 };
+            mobile.Skills[entry.Skill] = new SkillEntry { Base = entry.Value * 10, Value = entry.Value * 10 };
         }
 
         await _mobiles.Value.CreateAsync(mobile, cancellationToken);
@@ -166,13 +168,13 @@ public sealed class MobileFactoryService : IMobileFactoryService
             Karma = template.Karma,
             Fame = template.Fame,
             FactionId = template.FactionId,
-            BaseStats = new()
+            BaseStats = new MobileStats
             {
                 Strength = stats.Strength,
                 Dexterity = stats.Dexterity,
                 Intelligence = stats.Intelligence
             },
-            Resources = new()
+            Resources = new MobileResources
             {
                 Hits = resources.Hits,
                 MaxHits = resources.Hits,
@@ -181,7 +183,7 @@ public sealed class MobileFactoryService : IMobileFactoryService
                 Stamina = resources.Stamina,
                 MaxStamina = resources.Stamina
             },
-            Resistances = new()
+            Resistances = new MobileResistances
             {
                 Physical = resistances.Physical,
                 Fire = resistances.Fire,
@@ -194,12 +196,12 @@ public sealed class MobileFactoryService : IMobileFactoryService
         foreach (var (skillName, value) in template.Skills)
         {
             var skill = Enum.Parse<UOSkillName>(skillName, true);
-            mobile.Skills[skill] = new() { Base = value, Value = value };
+            mobile.Skills[skill] = new SkillEntry { Base = value, Value = value };
         }
 
         if (template.LootTables.Count > 0)
         {
-            mobile.CustomProperties[MobileTemplateDefinitionKeys.LootTables] = new()
+            mobile.CustomProperties[MobileTemplateDefinitionKeys.LootTables] = new CustomProperty
             {
                 Type = CustomPropertyType.String,
                 StringValue = string.Join(',', template.LootTables)
@@ -275,5 +277,7 @@ public sealed class MobileFactoryService : IMobileFactoryService
     }
 
     private ItemLayerType? ResolveLayer(string itemTemplateId)
-        => _items.TryGet(itemTemplateId, out var item) ? item.Layer : null;
+    {
+        return _items.TryGet(itemTemplateId, out var item) ? item.Layer : null;
+    }
 }

@@ -1,7 +1,7 @@
 namespace Moongate.UO.Data.Types.Maps;
 
 /// <summary>
-/// The kind of a world region, parsed from the server-asset region type string.
+///     The kind of a world region, parsed from the server-asset region type string.
 /// </summary>
 public enum RegionType
 {

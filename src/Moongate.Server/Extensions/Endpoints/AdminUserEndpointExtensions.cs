@@ -12,56 +12,56 @@ public static class AdminUserEndpointExtensions
     public static IEndpointRouteBuilder MapMoongateAdminUsers(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/api/admin/users")
-                             .WithTags("Admin Users")
-                             .RequireAuthorization(policy => policy.RequireRole(nameof(UserLevelType.Administrator)));
+            .WithTags("Admin Users")
+            .RequireAuthorization(policy => policy.RequireRole(nameof(UserLevelType.Administrator)));
 
         group.MapGet(
-                 "/",
-                 (IUserService users, int? page, int? pageSize, string? search, CancellationToken ct)
-                     => HandleListAsync(users, page, pageSize, search, ct)
-             )
-             .WithName("ListUsers")
-             .WithSummary("Returns a paginated, searchable list of users.");
+                "/",
+                (IUserService users, int? page, int? pageSize, string? search, CancellationToken ct)
+                    => HandleListAsync(users, page, pageSize, search, ct)
+            )
+            .WithName("ListUsers")
+            .WithSummary("Returns a paginated, searchable list of users.");
 
         group.MapPost(
-                 "/",
-                 (IUserService users, CreateUserRequest request, CancellationToken ct)
-                     => HandleCreateAsync(users, request, ct)
-             )
-             .WithName("CreateUser")
-             .WithSummary("Creates a new user.");
+                "/",
+                (IUserService users, CreateUserRequest request, CancellationToken ct)
+                    => HandleCreateAsync(users, request, ct)
+            )
+            .WithName("CreateUser")
+            .WithSummary("Creates a new user.");
 
         group.MapPut(
-                 "/{id}",
-                 (IUserService users, ClaimsPrincipal caller, string id, UpdateUserRequest request, CancellationToken ct)
-                     => HandleUpdateAsync(users, caller, id, request, ct)
-             )
-             .WithName("UpdateUser")
-             .WithSummary("Updates a user's email and level.");
+                "/{id}",
+                (IUserService users, ClaimsPrincipal caller, string id, UpdateUserRequest request, CancellationToken ct)
+                    => HandleUpdateAsync(users, caller, id, request, ct)
+            )
+            .WithName("UpdateUser")
+            .WithSummary("Updates a user's email and level.");
 
         group.MapPost(
-                 "/{id}/active",
-                 (IUserService users, ClaimsPrincipal caller, string id, SetUserActiveRequest request, CancellationToken ct)
-                     => HandleSetActiveAsync(users, caller, id, request, ct)
-             )
-             .WithName("SetUserActive")
-             .WithSummary("Locks or unlocks a user.");
+                "/{id}/active",
+                (IUserService users, ClaimsPrincipal caller, string id, SetUserActiveRequest request, CancellationToken ct)
+                    => HandleSetActiveAsync(users, caller, id, request, ct)
+            )
+            .WithName("SetUserActive")
+            .WithSummary("Locks or unlocks a user.");
 
         group.MapPost(
-                 "/{id}/password",
-                 (IUserService users, string id, ResetUserPasswordRequest request, CancellationToken ct)
-                     => HandleResetPasswordAsync(users, id, request, ct)
-             )
-             .WithName("ResetUserPassword")
-             .WithSummary("Resets a user's password.");
+                "/{id}/password",
+                (IUserService users, string id, ResetUserPasswordRequest request, CancellationToken ct)
+                    => HandleResetPasswordAsync(users, id, request, ct)
+            )
+            .WithName("ResetUserPassword")
+            .WithSummary("Resets a user's password.");
 
         group.MapDelete(
-                 "/{id}",
-                 (IUserService users, ClaimsPrincipal caller, string id, CancellationToken ct)
-                     => HandleDeleteAsync(users, caller, id, ct)
-             )
-             .WithName("DeleteUser")
-             .WithSummary("Permanently deletes a user.");
+                "/{id}",
+                (IUserService users, ClaimsPrincipal caller, string id, CancellationToken ct)
+                    => HandleDeleteAsync(users, caller, id, ct)
+            )
+            .WithName("DeleteUser")
+            .WithSummary("Permanently deletes a user.");
 
         return endpoints;
     }
@@ -80,13 +80,13 @@ public static class AdminUserEndpointExtensions
         try
         {
             var user = await users.CreateAsync(
-                           request.Username,
-                           request.Email,
-                           request.Password,
-                           level,
-                           request.IsActive,
-                           cancellationToken: cancellationToken
-                       );
+                request.Username,
+                request.Email,
+                request.Password,
+                level,
+                request.IsActive,
+                cancellationToken: cancellationToken
+            );
 
             return TypedResults.Ok(UserSummary.FromEntity(user));
         }
@@ -208,5 +208,7 @@ public static class AdminUserEndpointExtensions
     }
 
     private static Serial ParseId(string id)
-        => Serial.TryParse(id, null, out var serial) ? serial : Serial.MinusOne;
+    {
+        return Serial.TryParse(id, null, out var serial) ? serial : Serial.MinusOne;
+    }
 }

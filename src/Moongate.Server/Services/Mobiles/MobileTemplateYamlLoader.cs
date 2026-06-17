@@ -8,31 +8,24 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.Mobiles;
 
 /// <summary>
-/// Loads mobile template YAML files, merging every file's <c>mobile_templates</c>
-/// list and resolving the <c>base_mobile</c> inheritance chain. Parsing is strict
-/// (fail fast with the file path); a missing/empty directory is a warning.
+///     Loads mobile template YAML files, merging every file's <c>mobile_templates</c>
+///     list and resolving the <c>base_mobile</c> inheritance chain. Parsing is strict
+///     (fail fast with the file path); a missing/empty directory is a warning.
 /// </summary>
 /// <remarks>
-/// Inheritance merge: scalar fields use default-value sentinels (a child at its
-/// default inherits the parent); nullable blocks (stats/resources/resistances)
-/// inherit whole when the child's is null; lists inherit when the child's is
-/// empty; dictionaries (skills/params) merge key-by-key (child overrides). The
-/// sentinel strategy means a child cannot explicitly re-state a default over a
-/// non-default parent value — e.g. <c>gender: Male</c> (the zero member) over a
-/// <c>Female</c> parent, or <c>notoriety: Innocent</c> over a <c>Criminal</c>
-/// parent, both inherit the parent. Deliberate KISS tradeoff; switch the DTO
-/// fields to nullables if explicit overrides become necessary. Inherited stats/
-/// resources/resistances blocks are shared (treated as immutable template data).
+///     Inheritance merge: scalar fields use default-value sentinels (a child at its
+///     default inherits the parent); nullable blocks (stats/resources/resistances)
+///     inherit whole when the child's is null; lists inherit when the child's is
+///     empty; dictionaries (skills/params) merge key-by-key (child overrides). The
+///     sentinel strategy means a child cannot explicitly re-state a default over a
+///     non-default parent value — e.g. <c>gender: Male</c> (the zero member) over a
+///     <c>Female</c> parent, or <c>notoriety: Innocent</c> over a <c>Criminal</c>
+///     parent, both inherit the parent. Deliberate KISS tradeoff; switch the DTO
+///     fields to nullables if explicit overrides become necessary. Inherited stats/
+///     resources/resistances blocks are shared (treated as immutable template data).
 /// </remarks>
 public sealed class MobileTemplateYamlLoader
 {
-    private enum ResolveState : byte
-    {
-        Unvisited = 0,
-        Visiting = 1,
-        Done = 2
-    }
-
     private readonly ILogger _logger = Log.ForContext<MobileTemplateYamlLoader>();
     private readonly string _mobilesDirectory;
 
@@ -53,8 +46,8 @@ public sealed class MobileTemplateYamlLoader
         }
 
         var files = Directory.GetFiles(_mobilesDirectory, "*.yaml", SearchOption.AllDirectories)
-                             .OrderBy(static path => path, StringComparer.OrdinalIgnoreCase)
-                             .ToArray();
+            .OrderBy(static path => path, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
 
         if (files.Length == 0)
         {
@@ -93,11 +86,11 @@ public sealed class MobileTemplateYamlLoader
                     );
                 }
 
-                template.Skills ??= new(StringComparer.OrdinalIgnoreCase);
+                template.Skills ??= new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
                 template.Equipment ??= [];
                 template.LootTables ??= [];
                 template.Tags ??= [];
-                template.Params ??= new(StringComparer.OrdinalIgnoreCase);
+                template.Params ??= new Dictionary<string, ItemTemplateParamDefinition>(StringComparer.OrdinalIgnoreCase);
 
                 sources[template.Id] = file;
                 templates.Add(template);
@@ -182,7 +175,9 @@ public sealed class MobileTemplateYamlLoader
     }
 
     private static int InheritInt(int childValue, int parentValue)
-        => childValue == 0 ? parentValue : childValue;
+    {
+        return childValue == 0 ? parentValue : childValue;
+    }
 
     private static Dictionary<string, int> MergeInts(Dictionary<string, int> parent, Dictionary<string, int> child)
     {
@@ -205,12 +200,12 @@ public sealed class MobileTemplateYamlLoader
 
         foreach (var (key, value) in parent)
         {
-            merged[key] = new() { Type = value.Type, Value = value.Value };
+            merged[key] = new ItemTemplateParamDefinition { Type = value.Type, Value = value.Value };
         }
 
         foreach (var (key, value) in child)
         {
-            merged[key] = new() { Type = value.Type, Value = value.Value };
+            merged[key] = new ItemTemplateParamDefinition { Type = value.Type, Value = value.Value };
         }
 
         return merged;
@@ -267,5 +262,12 @@ public sealed class MobileTemplateYamlLoader
         {
             Resolve(template, byId, states);
         }
+    }
+
+    private enum ResolveState : byte
+    {
+        Unvisited = 0,
+        Visiting = 1,
+        Done = 2
     }
 }

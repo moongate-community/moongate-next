@@ -9,12 +9,6 @@ namespace Moongate.Tests.Scripting.Lua;
 
 public sealed class LuaPayloadBuilderTests
 {
-    private sealed class EmptyServiceProvider : IServiceProvider
-    {
-        public object? GetService(Type serviceType)
-            => null;
-    }
-
     [Fact]
     public void Command_WithPlayerSession_BuildsStableLuaPayload()
     {
@@ -72,5 +66,13 @@ public sealed class LuaPayloadBuilderTests
 
         Assert.Equal("spawn", payload["name"]);
         Assert.True((bool)payload["repeat"]!);
+    }
+
+    private sealed class EmptyServiceProvider : IServiceProvider
+    {
+        public object? GetService(Type serviceType)
+        {
+            return null;
+        }
     }
 }

@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi;
 using Moongate.Abstractions.Interfaces.Services;
 using Moongate.Abstractions.Internal;
 using Moongate.Server.Data.Events;
@@ -15,8 +16,8 @@ using Serilog;
 namespace Moongate.Server.Bootstrap;
 
 /// <summary>
-/// Web-host concerns split out of <see cref="MoongateBootstrap" />: ASP.NET service registration,
-/// the "server ready" lifecycle hook, and the HTTP request pipeline.
+///     Web-host concerns split out of <see cref="MoongateBootstrap" />: ASP.NET service registration,
+///     the "server ready" lifecycle hook, and the HTTP request pipeline.
 /// </summary>
 internal static class WebHostExtensions
 {
@@ -28,15 +29,14 @@ internal static class WebHostExtensions
     {
         // ASP.NET Core services (OpenAPI, Kestrel, routing, ...) register through IServiceCollection.
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.ConfigureHttpJsonOptions(
-            options => options.SerializerOptions.Converters.Add(new JsonStringEnumConverter())
+        builder.Services.ConfigureHttpJsonOptions(options =>
+            options.SerializerOptions.Converters.Add(new JsonStringEnumConverter())
         );
-        builder.Services.AddSwaggerGen(
-            options =>
+        builder.Services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc(
                     "v1",
-                    new()
+                    new OpenApiInfo
                     {
                         Title = "Moongate API",
                         Version = "v1"
@@ -51,8 +51,8 @@ internal static class WebHostExtensions
         // SignalR for the live admin console. Serialize enums as names so the client receives
         // "Log"/"CommandEcho"/"CommandOutput" instead of numbers.
         builder.Services
-               .AddSignalR()
-               .AddJsonProtocol(options => options.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+            .AddSignalR()
+            .AddJsonProtocol(options => options.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
         // Bridge the DryIoc-registered relay into the host's hosted-service collection (same pattern
         // as the orchestrator below).
@@ -109,8 +109,7 @@ internal static class WebHostExtensions
     public static WebApplication UseServerReadyHook(this WebApplication app, long startTime)
     {
         var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
-        lifetime.ApplicationStarted.Register(
-            () =>
+        lifetime.ApplicationStarted.Register(() =>
             {
                 var elapsed = Stopwatch.GetElapsedTime(startTime);
 

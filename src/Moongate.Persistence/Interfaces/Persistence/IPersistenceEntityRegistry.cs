@@ -3,7 +3,7 @@ using Moongate.Persistence.Data;
 namespace Moongate.Persistence.Interfaces.Persistence;
 
 /// <summary>
-/// Registry of persisted entity descriptors used by snapshot and journal infrastructure.
+///     Registry of persisted entity descriptors used by snapshot and journal infrastructure.
 /// </summary>
 public interface IPersistenceEntityRegistry
 {

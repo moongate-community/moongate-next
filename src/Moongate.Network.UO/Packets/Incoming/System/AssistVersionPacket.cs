@@ -7,17 +7,19 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Incoming.System;
 
 /// <summary>
-/// Represents an assistant version packet.
+///     Represents an assistant version packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Variable, Description = "Assist Version")]
 public class AssistVersionPacket : BaseGameNetworkPacket
 {
     private const byte OpCodeValue = 0xBE;
 
-    public byte[] Payload { get; private set; } = [];
-
     public AssistVersionPacket()
-        : base(OpCodeValue) { }
+        : base(OpCodeValue)
+    {
+    }
+
+    public byte[] Payload { get; private set; } = [];
 
     protected override bool ParsePayload(ref SpanReader reader)
     {

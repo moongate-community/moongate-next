@@ -1,16 +1,13 @@
 using Moongate.Abstractions.Data.Network;
-using Moongate.Abstractions.Data.Player;
-using Moongate.Abstractions.Data.Version;
 using Moongate.Abstractions.Interfaces.Network;
-using Moongate.Abstractions.Interfaces.Player;
 using Moongate.Core.Geometry;
 using Moongate.Core.Ids;
 using Moongate.Core.Types;
 using Moongate.Network.UO.Packets.Incoming.Movement;
 using Moongate.Network.UO.Packets.Outgoing.Movement;
+using Moongate.Server.Data.Events;
 using Moongate.Server.Handlers.Movement;
 using Moongate.Server.Interfaces.Services.Movement;
-using Moongate.Server.Data.Events;
 using Moongate.Server.Services.Player;
 using Moongate.Server.Services.World;
 using Moongate.Tests.Support;
@@ -22,30 +19,6 @@ public sealed class MoveRequestHandlerTests
 {
     private const long InWorldSessionId = 77;
     private static readonly Serial MobileId = new(123);
-
-    private sealed class FakeMovementValidation : IMovementValidationService
-    {
-        private readonly bool _accept;
-
-        public FakeMovementValidation(bool accept)
-        {
-            _accept = accept;
-        }
-
-        public bool TryResolveMove(MobileEntity mobile, DirectionType direction, out Point3D newLocation)
-        {
-            if (_accept)
-            {
-                newLocation = mobile.Location.Move(direction);
-
-                return true;
-            }
-
-            newLocation = mobile.Location;
-
-            return false;
-        }
-    }
 
     [Fact]
     public async Task ValidStep_UpdatesLiveMobile_AndConfirms()
@@ -60,9 +33,9 @@ public sealed class MoveRequestHandlerTests
         registry.AddMobile(mobile);
 
         var sent = new List<IGameNetworkPacket>();
-        var handler = CreateHandler(registry, accept: true);
+        var handler = CreateHandler(registry, true);
 
-        await handler.HandleAsync(Context(DirectionType.South, sequence: 0, sent));
+        await handler.HandleAsync(Context(DirectionType.South, 0, sent));
 
         Assert.Contains(sent, static p => p is MoveConfirmPacket);
         Assert.DoesNotContain(sent, static p => p is MoveDenyPacket);
@@ -83,9 +56,9 @@ public sealed class MoveRequestHandlerTests
         registry.AddMobile(mobile);
 
         var sent = new List<IGameNetworkPacket>();
-        var handler = CreateHandler(registry, accept: false);
+        var handler = CreateHandler(registry, false);
 
-        await handler.HandleAsync(Context(DirectionType.South, sequence: 0, sent));
+        await handler.HandleAsync(Context(DirectionType.South, 0, sent));
 
         Assert.Contains(sent, static p => p is MoveDenyPacket);
         Assert.DoesNotContain(sent, static p => p is MoveConfirmPacket);
@@ -106,9 +79,9 @@ public sealed class MoveRequestHandlerTests
         registry.AddMobile(mobile);
 
         var sent = new List<IGameNetworkPacket>();
-        var handler = CreateHandler(registry, accept: true);
+        var handler = CreateHandler(registry, true);
 
-        await handler.HandleAsync(Context(DirectionType.East, sequence: 0, sent));
+        await handler.HandleAsync(Context(DirectionType.East, 0, sent));
 
         Assert.Contains(sent, static p => p is MoveConfirmPacket);
         Assert.True(registry.TryGet(MobileId, out var live));
@@ -129,10 +102,10 @@ public sealed class MoveRequestHandlerTests
         registry.AddMobile(mobile);
 
         var sent = new List<IGameNetworkPacket>();
-        var handler = CreateHandler(registry, accept: true, out var sessions);
-        sessions.UpdateMovementState(InWorldSessionId, moveSequence: 0, moveCredit: 0, moveTime: 0);
+        var handler = CreateHandler(registry, true, out var sessions);
+        sessions.UpdateMovementState(InWorldSessionId, 0, 0, 0);
 
-        await handler.HandleAsync(Context(DirectionType.South, sequence: 0, sent));
+        await handler.HandleAsync(Context(DirectionType.South, 0, sent));
 
         var confirm = Assert.IsType<MoveConfirmPacket>(Assert.Single(sent));
         Assert.Equal((byte)0, confirm.Sequence);
@@ -153,10 +126,10 @@ public sealed class MoveRequestHandlerTests
         registry.AddMobile(mobile);
 
         var sent = new List<IGameNetworkPacket>();
-        var handler = CreateHandler(registry, accept: true, out var sessions);
-        sessions.UpdateMovementState(InWorldSessionId, moveSequence: 255, moveCredit: 0, moveTime: 0);
+        var handler = CreateHandler(registry, true, out var sessions);
+        sessions.UpdateMovementState(InWorldSessionId, 255, 0, 0);
 
-        await handler.HandleAsync(Context(DirectionType.South, sequence: 255, sent));
+        await handler.HandleAsync(Context(DirectionType.South, 255, sent));
 
         Assert.Contains(sent, static p => p is MoveConfirmPacket);
         Assert.True(sessions.TryGetBySessionId(InWorldSessionId, out var session));
@@ -176,10 +149,10 @@ public sealed class MoveRequestHandlerTests
         registry.AddMobile(mobile);
 
         var sent = new List<IGameNetworkPacket>();
-        var handler = CreateHandler(registry, accept: true, out var sessions);
-        sessions.UpdateMovementState(InWorldSessionId, moveSequence: 0, moveCredit: 0, moveTime: 0);
+        var handler = CreateHandler(registry, true, out var sessions);
+        sessions.UpdateMovementState(InWorldSessionId, 0, 0, 0);
 
-        await handler.HandleAsync(Context(DirectionType.South, sequence: 5, sent));
+        await handler.HandleAsync(Context(DirectionType.South, 5, sent));
 
         Assert.Empty(sent);
         Assert.True(registry.TryGet(MobileId, out var live));
@@ -199,15 +172,15 @@ public sealed class MoveRequestHandlerTests
         registry.AddMobile(mobile);
 
         var sent = new List<IGameNetworkPacket>();
-        var handler = CreateHandler(registry, accept: true, out var sessions);
+        var handler = CreateHandler(registry, true, out var sessions);
         sessions.UpdateMovementState(
             InWorldSessionId,
-            moveSequence: 1,
-            moveCredit: 0,
-            moveTime: Environment.TickCount64 + 10_000_000
+            1,
+            0,
+            Environment.TickCount64 + 10_000_000
         );
 
-        await handler.HandleAsync(Context(DirectionType.South, sequence: 1, sent));
+        await handler.HandleAsync(Context(DirectionType.South, 1, sent));
 
         Assert.Contains(sent, static p => p is MoveDenyPacket);
         Assert.DoesNotContain(sent, static p => p is MoveConfirmPacket);
@@ -230,19 +203,19 @@ public sealed class MoveRequestHandlerTests
         registry.AddMobile(mobile);
 
         var sent = new List<IGameNetworkPacket>();
-        var handler = CreateHandler(registry, accept: true, out var sessions);
+        var handler = CreateHandler(registry, true, out var sessions);
 
         // Seed fastwalk credit and a current move time so the throttle never denies the back-to-back
         // packets; this test isolates sequence persistence across packets.
         sessions.UpdateMovementState(
             InWorldSessionId,
-            moveSequence: 0,
-            moveCredit: 5000,
-            moveTime: Environment.TickCount64
+            0,
+            5000,
+            Environment.TickCount64
         );
 
-        await handler.HandleAsync(Context(DirectionType.South, sequence: 0, sent));
-        await handler.HandleAsync(Context(DirectionType.South, sequence: 1, sent));
+        await handler.HandleAsync(Context(DirectionType.South, 0, sent));
+        await handler.HandleAsync(Context(DirectionType.South, 1, sent));
 
         Assert.Equal(2, sent.Count(static p => p is MoveConfirmPacket));
         Assert.DoesNotContain(sent, static p => p is MoveDenyPacket);
@@ -264,9 +237,9 @@ public sealed class MoveRequestHandlerTests
         registry.AddMobile(mobile);
 
         var sent = new List<IGameNetworkPacket>();
-        var handler = CreateHandler(registry, accept: true, out _, out var events);
+        var handler = CreateHandler(registry, true, out _, out var events);
 
-        await handler.HandleAsync(Context(DirectionType.South, sequence: 0, sent));
+        await handler.HandleAsync(Context(DirectionType.South, 0, sent));
 
         Assert.Contains(sent, static p => p is MoveConfirmPacket);
         Assert.True(registry.TryGet(MobileId, out var live));
@@ -294,23 +267,27 @@ public sealed class MoveRequestHandlerTests
         registry.AddMobile(mobile);
 
         var sent = new List<IGameNetworkPacket>();
-        var handler = CreateHandler(registry, accept: true, out _, out var events);
+        var handler = CreateHandler(registry, true, out _, out var events);
 
-        await handler.HandleAsync(Context(DirectionType.East, sequence: 0, sent));
+        await handler.HandleAsync(Context(DirectionType.East, 0, sent));
 
         Assert.Contains(sent, static p => p is MoveConfirmPacket);
         Assert.DoesNotContain(events.Published, static e => e is MobileMovedEvent);
     }
 
     private static MoveRequestHandler CreateHandler(WorldSpatialIndex registry, bool accept)
-        => CreateHandler(registry, accept, out _, out _);
+    {
+        return CreateHandler(registry, accept, out _, out _);
+    }
 
     private static MoveRequestHandler CreateHandler(
         WorldSpatialIndex registry,
         bool accept,
         out PlayerSessionService sessions
     )
-        => CreateHandler(registry, accept, out sessions, out _);
+    {
+        return CreateHandler(registry, accept, out sessions, out _);
+    }
 
     private static MoveRequestHandler CreateHandler(
         WorldSpatialIndex registry,
@@ -338,7 +315,8 @@ public sealed class MoveRequestHandlerTests
         byte sequence,
         List<IGameNetworkPacket> sent
     )
-        => new(
+    {
+        return new PacketContext<MoveRequestPacket>(
             new FakeGameSession { SessionId = InWorldSessionId },
             new MoveRequestPacket { Direction = direction, Sequence = sequence },
             DateTimeOffset.UtcNow,
@@ -350,4 +328,29 @@ public sealed class MoveRequestHandlerTests
             },
             static () => [InWorldSessionId]
         );
+    }
+
+    private sealed class FakeMovementValidation : IMovementValidationService
+    {
+        private readonly bool _accept;
+
+        public FakeMovementValidation(bool accept)
+        {
+            _accept = accept;
+        }
+
+        public bool TryResolveMove(MobileEntity mobile, DirectionType direction, out Point3D newLocation)
+        {
+            if (_accept)
+            {
+                newLocation = mobile.Location.Move(direction);
+
+                return true;
+            }
+
+            newLocation = mobile.Location;
+
+            return false;
+        }
+    }
 }

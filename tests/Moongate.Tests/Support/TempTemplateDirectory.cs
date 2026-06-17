@@ -1,12 +1,10 @@
 namespace Moongate.Tests.Support;
 
 /// <summary>
-/// Creates a unique temp directory for YAML template test files; deleted on dispose.
+///     Creates a unique temp directory for YAML template test files; deleted on dispose.
 /// </summary>
 public sealed class TempTemplateDirectory : IDisposable
 {
-    public string Path { get; }
-
     public TempTemplateDirectory()
     {
         Path = System.IO.Path.Combine(
@@ -16,6 +14,8 @@ public sealed class TempTemplateDirectory : IDisposable
         );
         Directory.CreateDirectory(Path);
     }
+
+    public string Path { get; }
 
     public void Dispose()
     {

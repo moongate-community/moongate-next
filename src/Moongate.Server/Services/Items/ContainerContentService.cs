@@ -2,6 +2,7 @@ using Moongate.Core.Geometry;
 using Moongate.Core.Ids;
 using Moongate.Server.Interfaces.Services.Items;
 using Moongate.Server.Interfaces.Services.World;
+using Moongate.UO.Data.Data;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Types.Properties;
@@ -14,11 +15,11 @@ public sealed class ContainerContentService : IContainerContentService
     private const int FallbackStartY = 20;
     private const int GridStep = 36;
     private const int GridColumns = 5;
-
-    private readonly IItemTemplateService _templates;
+    private readonly IContainerDataService _containers;
     private readonly IItemService _items;
     private readonly ILootService _loot;
-    private readonly IContainerDataService _containers;
+
+    private readonly IItemTemplateService _templates;
 
     public ContainerContentService(
         IItemTemplateService templates,
@@ -120,18 +121,20 @@ public sealed class ContainerContentService : IContainerContentService
             }
         }
 
-        return new(
+        return new Point2D(
             startX + index % GridColumns * GridStep,
             startY + index / GridColumns * GridStep
         );
     }
 
     private static void SetIntegerProperty(ItemEntity item, string key, long value)
-        => item.CustomProperties[key] = new()
+    {
+        item.CustomProperties[key] = new CustomProperty
         {
             Type = CustomPropertyType.Integer,
             IntegerValue = value
         };
+    }
 
     private static bool TryGetIntegerProperty(ItemEntity item, string key, out long value)
     {

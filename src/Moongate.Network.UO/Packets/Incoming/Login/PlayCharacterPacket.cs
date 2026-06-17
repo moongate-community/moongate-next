@@ -6,16 +6,18 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Incoming.Login;
 
 /// <summary>
-/// Incoming "Play Character" (0x5D): the client requests to enter the world with a chosen character slot.
+///     Incoming "Play Character" (0x5D): the client requests to enter the world with a chosen character slot.
 /// </summary>
 [PacketHandler(0x5D, PacketSizing.Fixed, Length = 73, Description = "Play Character")]
 public class PlayCharacterPacket : BaseGameNetworkPacket
 {
+    public PlayCharacterPacket()
+        : base(0x5D, 73)
+    {
+    }
+
     public string CharacterName { get; set; } = string.Empty;
     public int Slot { get; set; }
-
-    public PlayCharacterPacket()
-        : base(0x5D, 73) { }
 
     protected override bool ParsePayload(ref SpanReader reader)
     {

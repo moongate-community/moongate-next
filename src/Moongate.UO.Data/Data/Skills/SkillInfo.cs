@@ -3,7 +3,7 @@ using Moongate.UO.Data.Types.Skills;
 namespace Moongate.UO.Data.Data.Skills;
 
 /// <summary>
-/// Static reference data for a single UO skill: identity, stat scales/gains and its primary stats.
+///     Static reference data for a single UO skill: identity, stat scales/gains and its primary stats.
 /// </summary>
 public sealed class SkillInfo
 {

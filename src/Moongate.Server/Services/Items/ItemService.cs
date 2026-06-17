@@ -10,14 +10,14 @@ using Moongate.UO.Data.Types.Tiles;
 namespace Moongate.Server.Services.Items;
 
 /// <summary>
-/// Default item service backed by auto-increment persistence, deriving
-/// container/door facts and weight aggregation from the tile data store.
+///     Default item service backed by auto-increment persistence, deriving
+///     container/door facts and weight aggregation from the tile data store.
 /// </summary>
 public sealed class ItemService : IItemService
 {
+    private readonly IWorldSpatialIndex _index;
     private readonly IAutoDataAccess<ItemEntity, Serial> _items;
     private readonly ITileDataStore _tileData;
-    private readonly IWorldSpatialIndex _index;
 
     public ItemService(IAutoDataAccess<ItemEntity, Serial> items, ITileDataStore tileData, IWorldSpatialIndex index)
     {
@@ -62,7 +62,9 @@ public sealed class ItemService : IItemService
     }
 
     public ValueTask<int> CountAsync(CancellationToken cancellationToken = default)
-        => _items.CountAsync(cancellationToken);
+    {
+        return _items.CountAsync(cancellationToken);
+    }
 
     public async ValueTask<ItemEntity> CreateAsync(ItemEntity item, CancellationToken cancellationToken = default)
     {
@@ -76,8 +78,8 @@ public sealed class ItemService : IItemService
             var allocated = await _items.NextIdAsync(cancellationToken);
 
             item.Id = allocated.Value < Serial.ItemOffset
-                          ? new(allocated.Value + Serial.ItemOffset)
-                          : allocated;
+                ? new Serial(allocated.Value + Serial.ItemOffset)
+                : allocated;
         }
 
         await _items.UpsertAsync(item, cancellationToken);
@@ -103,7 +105,9 @@ public sealed class ItemService : IItemService
     }
 
     public ValueTask<ItemEntity?> GetByIdAsync(Serial id, CancellationToken cancellationToken = default)
-        => _items.GetByIdAsync(id, cancellationToken);
+    {
+        return _items.GetByIdAsync(id, cancellationToken);
+    }
 
     public bool IsContainer(ItemEntity item)
     {
@@ -113,7 +117,9 @@ public sealed class ItemService : IItemService
     }
 
     public bool IsContainer(int itemId)
-        => _tileData.GetItem(itemId).Flags.HasFlag(UoTileFlag.Container);
+    {
+        return _tileData.GetItem(itemId).Flags.HasFlag(UoTileFlag.Container);
+    }
 
     public bool IsDoor(ItemEntity item)
     {
@@ -123,7 +129,9 @@ public sealed class ItemService : IItemService
     }
 
     public bool IsDoor(int itemId)
-        => _tileData.GetItem(itemId).Door;
+    {
+        return _tileData.GetItem(itemId).Door;
+    }
 
     public async ValueTask<bool> RemoveItemAsync(
         ItemEntity container,

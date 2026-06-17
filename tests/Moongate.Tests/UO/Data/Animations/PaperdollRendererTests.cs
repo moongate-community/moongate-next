@@ -20,105 +20,6 @@ public sealed class PaperdollRendererTests
     private const int MaleBody = 0x000C;
     private const int FemaleBody = 0x000D;
 
-    // ─── Fakes ───────────────────────────────────────────────────────────────
-
-    private sealed class FakeGumpStore : IGumpStore
-    {
-        public HashSet<int> Available { get; } = [];
-        public List<int> Requested { get; } = [];
-
-        public Image<Rgba32>? GetGump(int gumpId)
-        {
-            Requested.Add(gumpId);
-
-            if (!Available.Contains(gumpId))
-            {
-                return null;
-            }
-
-            var img = new Image<Rgba32>(4, 4);
-            img[0, 0] = new(128, 128, 128, 255);
-
-            return img;
-        }
-    }
-
-    private sealed class FakeItemTemplates : IItemTemplateService
-    {
-        private readonly Dictionary<string, ItemTemplateDefinition> _map = new(StringComparer.OrdinalIgnoreCase);
-
-        public int Count => _map.Count;
-
-        public void Add(string id, int itemId, ItemLayerType layer)
-            => _map[id] = new() { Id = id, ItemId = itemId, Layer = layer };
-
-        public void Clear()
-            => _map.Clear();
-
-        public IReadOnlyCollection<ItemTemplateDefinition> GetAll()
-            => _map.Values.ToArray();
-
-        public void ReplaceAll(IEnumerable<ItemTemplateDefinition> templates)
-        {
-            _map.Clear();
-            UpsertRange(templates);
-        }
-
-        public bool TryGet(string id, [NotNullWhen(true)] out ItemTemplateDefinition? definition)
-            => _map.TryGetValue(id, out definition);
-
-        public void UpsertRange(IEnumerable<ItemTemplateDefinition> templates)
-        {
-            foreach (var t in templates)
-            {
-                _map[t.Id] = t;
-            }
-        }
-    }
-
-    private sealed class FakeTileData : ITileDataStore
-    {
-        private readonly Dictionary<int, int> _animMap = [];
-
-        public IReadOnlyList<LandData> LandTable => [];
-        public IReadOnlyList<ItemData> ItemTable => [];
-
-        public ItemData GetItem(int id)
-            => new() { Animation = _animMap.GetValueOrDefault(id) };
-
-        public LandData GetLand(int id)
-            => new();
-
-        public void SetAnimation(int itemId, int animation)
-            => _animMap[itemId] = animation;
-    }
-
-    private sealed class NullHueStore : IHueStore
-    {
-        public IReadOnlyList<Hue> Hues => [];
-        public int Count => 0;
-
-        public Hue? GetHue(int index)
-            => null;
-    }
-
-    /// <summary>Returns a hue that maps every shade to pure red (RGB555 0x7C00).</summary>
-    private sealed class RecoloringHueStore : IHueStore
-    {
-        private static readonly Hue RedHue = new(
-            Enumerable.Repeat((ushort)0x7C00, 32).ToArray(),
-            0,
-            31,
-            "red"
-        );
-
-        public IReadOnlyList<Hue> Hues => [RedHue];
-        public int Count => 1;
-
-        public Hue? GetHue(int index)
-            => RedHue;
-    }
-
     [Fact]
     public void Render_AppliesSkinHue_ToBody()
     {
@@ -240,11 +141,137 @@ public sealed class PaperdollRendererTests
         FakeTileData? tiles = null,
         IHueStore? hues = null
     )
-        => new(gumps, items ?? new FakeItemTemplates(), tiles ?? new FakeTileData(), hues ?? new NullHueStore());
+    {
+        return new PaperdollRenderer(
+            gumps,
+            items ?? new FakeItemTemplates(),
+            tiles ?? new FakeTileData(),
+            hues ?? new NullHueStore()
+        );
+    }
 
     private static PaperdollRenderRequest MakeRequest(
         GenderType gender = GenderType.Male,
         IReadOnlyList<string>? equipment = null
     )
-        => new(gender, 0, 0, 0, 0, 0, equipment ?? [], false);
+    {
+        return new PaperdollRenderRequest(gender, 0, 0, 0, 0, 0, equipment ?? [], false);
+    }
+
+    // ─── Fakes ───────────────────────────────────────────────────────────────
+
+    private sealed class FakeGumpStore : IGumpStore
+    {
+        public HashSet<int> Available { get; } = [];
+        public List<int> Requested { get; } = [];
+
+        public Image<Rgba32>? GetGump(int gumpId)
+        {
+            Requested.Add(gumpId);
+
+            if (!Available.Contains(gumpId))
+            {
+                return null;
+            }
+
+            var img = new Image<Rgba32>(4, 4);
+            img[0, 0] = new Rgba32(128, 128, 128, 255);
+
+            return img;
+        }
+    }
+
+    private sealed class FakeItemTemplates : IItemTemplateService
+    {
+        private readonly Dictionary<string, ItemTemplateDefinition> _map = new(StringComparer.OrdinalIgnoreCase);
+
+        public int Count => _map.Count;
+
+        public void Clear()
+        {
+            _map.Clear();
+        }
+
+        public IReadOnlyCollection<ItemTemplateDefinition> GetAll()
+        {
+            return _map.Values.ToArray();
+        }
+
+        public void ReplaceAll(IEnumerable<ItemTemplateDefinition> templates)
+        {
+            _map.Clear();
+            UpsertRange(templates);
+        }
+
+        public bool TryGet(string id, [NotNullWhen(true)] out ItemTemplateDefinition? definition)
+        {
+            return _map.TryGetValue(id, out definition);
+        }
+
+        public void UpsertRange(IEnumerable<ItemTemplateDefinition> templates)
+        {
+            foreach (var t in templates)
+            {
+                _map[t.Id] = t;
+            }
+        }
+
+        public void Add(string id, int itemId, ItemLayerType layer)
+        {
+            _map[id] = new ItemTemplateDefinition { Id = id, ItemId = itemId, Layer = layer };
+        }
+    }
+
+    private sealed class FakeTileData : ITileDataStore
+    {
+        private readonly Dictionary<int, int> _animMap = [];
+
+        public IReadOnlyList<LandData> LandTable => [];
+        public IReadOnlyList<ItemData> ItemTable => [];
+
+        public ItemData GetItem(int id)
+        {
+            return new ItemData { Animation = _animMap.GetValueOrDefault(id) };
+        }
+
+        public LandData GetLand(int id)
+        {
+            return new LandData();
+        }
+
+        public void SetAnimation(int itemId, int animation)
+        {
+            _animMap[itemId] = animation;
+        }
+    }
+
+    private sealed class NullHueStore : IHueStore
+    {
+        public IReadOnlyList<Hue> Hues => [];
+        public int Count => 0;
+
+        public Hue? GetHue(int index)
+        {
+            return null;
+        }
+    }
+
+    /// <summary>Returns a hue that maps every shade to pure red (RGB555 0x7C00).</summary>
+    private sealed class RecoloringHueStore : IHueStore
+    {
+        private static readonly Hue RedHue = new(
+            Enumerable.Repeat((ushort)0x7C00, 32).ToArray(),
+            0,
+            31,
+            "red"
+        );
+
+        public IReadOnlyList<Hue> Hues => [RedHue];
+        public int Count => 1;
+
+        public Hue? GetHue(int index)
+        {
+            return RedHue;
+        }
+    }
 }

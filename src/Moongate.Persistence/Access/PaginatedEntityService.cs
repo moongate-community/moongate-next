@@ -5,9 +5,9 @@ using Moongate.Persistence.Interfaces.Persistence;
 namespace Moongate.Persistence.Access;
 
 /// <summary>
-/// Base class that turns an <see cref="IAutoDataAccess{TEntity,TKey}" /> into a
-/// paginated, searchable service. Subclasses define entity-specific search and
-/// ordering; reads run synchronously over the in-memory query snapshot.
+///     Base class that turns an <see cref="IAutoDataAccess{TEntity,TKey}" /> into a
+///     paginated, searchable service. Subclasses define entity-specific search and
+///     ordering; reads run synchronously over the in-memory query snapshot.
 /// </summary>
 public abstract class PaginatedEntityService<TEntity, TKey> : IPaginatedService<TEntity>
     where TKey : struct, IAutoIncrementKey<TKey>
@@ -32,16 +32,18 @@ public abstract class PaginatedEntityService<TEntity, TKey> : IPaginatedService<
 
         var total = query.Count();
         var items = query
-                    .Skip((request.Page - 1) * request.PageSize)
-                    .Take(request.PageSize)
-                    .ToList();
+            .Skip((request.Page - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .ToList();
 
         return ValueTask.FromResult(new PagedResult<TEntity>(items, request.Page, request.PageSize, total));
     }
 
     /// <summary>Applies a stable default ordering. Override to customize.</summary>
     protected virtual IQueryable<TEntity> ApplyOrder(IQueryable<TEntity> query)
-        => query;
+    {
+        return query;
+    }
 
     /// <summary>Applies an entity-specific case-insensitive search filter.</summary>
     protected abstract IQueryable<TEntity> ApplySearch(IQueryable<TEntity> query, string term);

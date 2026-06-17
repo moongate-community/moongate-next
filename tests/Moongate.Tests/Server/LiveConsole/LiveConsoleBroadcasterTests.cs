@@ -59,5 +59,7 @@ public class LiveConsoleBroadcasterTests
     }
 
     private static LiveConsoleEntry Entry(int i)
-        => new() { Kind = LiveConsoleEntryKind.Log, Timestamp = i, Message = i.ToString() };
+    {
+        return new LiveConsoleEntry { Kind = LiveConsoleEntryKind.Log, Timestamp = i, Message = i.ToString() };
+    }
 }

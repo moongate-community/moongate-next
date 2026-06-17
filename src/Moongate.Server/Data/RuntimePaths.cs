@@ -20,8 +20,8 @@ internal static class RuntimePaths
         var legacyConfigPath = Path.Combine(configDirectory, LegacyConfigFileName);
 
         return File.Exists(legacyConfigPath) && !File.Exists(configPath)
-                   ? legacyConfigPath
-                   : configPath;
+            ? legacyConfigPath
+            : configPath;
     }
 
     public static string ResolveRootDirectory(string? commandLineRootDirectory)

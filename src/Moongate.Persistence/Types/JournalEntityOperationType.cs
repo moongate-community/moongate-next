@@ -1,7 +1,7 @@
 namespace Moongate.Persistence.Types;
 
 /// <summary>
-/// Identifies a journal mutation for a registered entity type.
+///     Identifies a journal mutation for a registered entity type.
 /// </summary>
 public enum JournalEntityOperationType : byte
 {

@@ -1,7 +1,7 @@
 namespace Moongate.Server.Data.Config;
 
 /// <summary>
-/// Core server identity settings (the <c>server</c> config section).
+///     Core server identity settings (the <c>server</c> config section).
 /// </summary>
 public sealed class ServerConfig
 {

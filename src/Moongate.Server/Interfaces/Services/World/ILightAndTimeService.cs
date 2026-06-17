@@ -4,7 +4,7 @@ using Moongate.Core.Geometry;
 namespace Moongate.Server.Interfaces.Services.World;
 
 /// <summary>
-/// Drives the day/night light cycle and the accelerated world clock.
+///     Drives the day/night light cycle and the accelerated world clock.
 /// </summary>
 public interface ILightAndTimeService : IMoongateService
 {
@@ -17,8 +17,8 @@ public interface ILightAndTimeService : IMoongateService
 
     /// <summary>Forces a global light level (0-255), or clears the override with null.</summary>
     /// <remarks>
-    /// <paramref name="applyImmediately" /> = true triggers a synchronous broadcast pass; do not call it from the network
-    /// I/O thread or an async context.
+    ///     <paramref name="applyImmediately" /> = true triggers a synchronous broadcast pass; do not call it from the network
+    ///     I/O thread or an async context.
     /// </remarks>
     void SetGlobalLightOverride(int? lightLevel, bool applyImmediately = true);
 }

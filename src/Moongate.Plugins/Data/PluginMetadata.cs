@@ -1,7 +1,7 @@
 namespace Moongate.Plugins.Data;
 
 /// <summary>
-/// Describes a Moongate plugin. This is the source of truth for plugin identity.
+///     Describes a Moongate plugin. This is the source of truth for plugin identity.
 /// </summary>
 public sealed class PluginMetadata
 {

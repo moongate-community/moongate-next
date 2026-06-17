@@ -98,7 +98,7 @@ public static class MoongateBootstrap
         var packetRegistry = new PacketRegistry();
         var registeredPacketCount = PacketTable.Register(packetRegistry);
 
-        return new(directories, packetRegistry, registeredPacketCount);
+        return new MoongateBootstrapContext(directories, packetRegistry, registeredPacketCount);
     }
 
     private static void ConfigurePipeline(WebApplication app, long startTime)

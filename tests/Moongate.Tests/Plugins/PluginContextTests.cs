@@ -1,5 +1,6 @@
 using Moongate.Abstractions.Services.Commands;
 using Moongate.Abstractions.Types.Commands;
+using Moongate.Core.Data.Directories;
 using Moongate.Core.Types;
 using Moongate.Plugins.Data;
 
@@ -13,12 +14,6 @@ public sealed class PluginContextTests : IDisposable
     );
 
     private string PluginDirectory => Path.Combine(_root, "plugins", "moongate.test");
-
-    private sealed class WeatherPluginConfig
-    {
-        public int WeatherIntervalSeconds { get; set; } = 2;
-        public string Region { get; set; } = "Britannia";
-    }
 
     public void Dispose()
     {
@@ -95,5 +90,13 @@ public sealed class PluginContextTests : IDisposable
     }
 
     private PluginContext CreateContext(CommandRegistry? registry = null)
-        => new(PluginDirectory, new(_root, Enum.GetNames<DirectoryType>()), registry);
+    {
+        return new PluginContext(PluginDirectory, new DirectoriesConfig(_root, Enum.GetNames<DirectoryType>()), registry);
+    }
+
+    private sealed class WeatherPluginConfig
+    {
+        public int WeatherIntervalSeconds { get; set; } = 2;
+        public string Region { get; set; } = "Britannia";
+    }
 }

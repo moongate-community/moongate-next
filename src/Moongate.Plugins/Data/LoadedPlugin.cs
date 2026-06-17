@@ -4,7 +4,7 @@ using Moongate.Plugins.Interfaces.Plugins;
 namespace Moongate.Plugins.Data;
 
 /// <summary>
-/// A plugin instance loaded from a plugin package directory.
+///     A plugin instance loaded from a plugin package directory.
 /// </summary>
 public sealed class LoadedPlugin
 {

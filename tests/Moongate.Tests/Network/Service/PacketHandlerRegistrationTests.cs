@@ -12,63 +12,6 @@ namespace Moongate.Tests.Network.Service;
 
 public class PacketHandlerRegistrationTests
 {
-    private sealed class RegPacketA : BaseGameNetworkPacket
-    {
-        public RegPacketA()
-            : base(0xB1, 1) { }
-
-        public override void Write(ref SpanWriter writer)
-            => writer.Write(OpCode);
-
-        protected override bool ParsePayload(ref SpanReader reader)
-            => true;
-    }
-
-    private sealed class RegPacketB : BaseGameNetworkPacket
-    {
-        public RegPacketB()
-            : base(0xB2, 1) { }
-
-        public override void Write(ref SpanWriter writer)
-            => writer.Write(OpCode);
-
-        protected override bool ParsePayload(ref SpanReader reader)
-            => true;
-    }
-
-    [RegisterPacketHandler]
-    private sealed class MarkedHandlerA : IPacketHandler<RegPacketA>
-    {
-        public Task HandleAsync(PacketContext<RegPacketA> context, CancellationToken cancellationToken = default)
-            => Task.CompletedTask;
-    }
-
-    private sealed class UnmarkedHandlerA : IPacketHandler<RegPacketA>
-    {
-        public Task HandleAsync(PacketContext<RegPacketA> context, CancellationToken cancellationToken = default)
-            => Task.CompletedTask;
-    }
-
-    [RegisterPacketHandler]
-    private sealed class SecondHandlerA : IPacketHandler<RegPacketA>
-    {
-        public Task HandleAsync(PacketContext<RegPacketA> context, CancellationToken cancellationToken = default)
-            => Task.CompletedTask;
-    }
-
-    [RegisterPacketHandler]
-    private sealed class MultiHandler : IPacketHandler<RegPacketA>, IPacketHandler<RegPacketB>
-    {
-        public Task HandleAsync(PacketContext<RegPacketA> context, CancellationToken cancellationToken = default)
-            => Task.CompletedTask;
-
-        public Task HandleAsync(PacketContext<RegPacketB> context, CancellationToken cancellationToken = default)
-            => Task.CompletedTask;
-    }
-
-    [RegisterPacketHandler]
-    private sealed class MarkedNoInterfaceHandler { }
-
     [Fact]
     public void AddPacketHandlers_MarkedHandler_RegistersIt()
     {
@@ -131,5 +74,86 @@ public class PacketHandlerRegistrationTests
 
         Assert.True(container.IsRegistered<IPacketHandler<UnicodeSpeechPacket>>());
         Assert.True(container.IsRegistered<IPacketHandler<TalkRequestPacket>>());
+    }
+
+    private sealed class RegPacketA : BaseGameNetworkPacket
+    {
+        public RegPacketA()
+            : base(0xB1, 1)
+        {
+        }
+
+        public override void Write(ref SpanWriter writer)
+        {
+            writer.Write(OpCode);
+        }
+
+        protected override bool ParsePayload(ref SpanReader reader)
+        {
+            return true;
+        }
+    }
+
+    private sealed class RegPacketB : BaseGameNetworkPacket
+    {
+        public RegPacketB()
+            : base(0xB2, 1)
+        {
+        }
+
+        public override void Write(ref SpanWriter writer)
+        {
+            writer.Write(OpCode);
+        }
+
+        protected override bool ParsePayload(ref SpanReader reader)
+        {
+            return true;
+        }
+    }
+
+    [RegisterPacketHandler]
+    private sealed class MarkedHandlerA : IPacketHandler<RegPacketA>
+    {
+        public Task HandleAsync(PacketContext<RegPacketA> context, CancellationToken cancellationToken = default)
+        {
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class UnmarkedHandlerA : IPacketHandler<RegPacketA>
+    {
+        public Task HandleAsync(PacketContext<RegPacketA> context, CancellationToken cancellationToken = default)
+        {
+            return Task.CompletedTask;
+        }
+    }
+
+    [RegisterPacketHandler]
+    private sealed class SecondHandlerA : IPacketHandler<RegPacketA>
+    {
+        public Task HandleAsync(PacketContext<RegPacketA> context, CancellationToken cancellationToken = default)
+        {
+            return Task.CompletedTask;
+        }
+    }
+
+    [RegisterPacketHandler]
+    private sealed class MultiHandler : IPacketHandler<RegPacketA>, IPacketHandler<RegPacketB>
+    {
+        public Task HandleAsync(PacketContext<RegPacketA> context, CancellationToken cancellationToken = default)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task HandleAsync(PacketContext<RegPacketB> context, CancellationToken cancellationToken = default)
+        {
+            return Task.CompletedTask;
+        }
+    }
+
+    [RegisterPacketHandler]
+    private sealed class MarkedNoInterfaceHandler
+    {
     }
 }

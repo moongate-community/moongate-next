@@ -3,7 +3,7 @@ using Moongate.UO.Data.Maps;
 namespace Moongate.UO.Data.Interfaces.Maps;
 
 /// <summary>
-/// Provides access to the registered UO map facets and their static geography.
+///     Provides access to the registered UO map facets and their static geography.
 /// </summary>
 public interface IMapService
 {

@@ -4,8 +4,8 @@ using Moongate.UO.Data.Templates.Loot;
 namespace Moongate.Server.Services.Loot;
 
 /// <summary>
-/// Boot-time fail-fast validation for loot tables against the item template
-/// registry. Any violation throws so the server refuses to start.
+///     Boot-time fail-fast validation for loot tables against the item template
+///     registry. Any violation throws so the server refuses to start.
 /// </summary>
 public static class LootTableValidator
 {

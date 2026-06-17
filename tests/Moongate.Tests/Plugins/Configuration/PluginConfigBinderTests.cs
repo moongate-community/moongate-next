@@ -8,7 +8,7 @@ public class PluginConfigBinderTests
     [Fact]
     public void Apply_CoercesNumericJsonElementToInt()
     {
-        var existing = new Sample { Inner = new() { Port = 1 } };
+        var existing = new Sample { Inner = new SampleInner { Port = 1 } };
 
         var result = PluginConfigBinder.Apply(existing, new Dictionary<string, object?> { ["inner.port"] = Json("2525") });
 
@@ -21,8 +21,8 @@ public class PluginConfigBinderTests
         var existing = new Sample
         {
             Enabled = false,
-            Inner = new() { Host = "old", Port = 25 },
-            Secrets = new() { Prefix = "keep" }
+            Inner = new SampleInner { Host = "old", Port = 25 },
+            Secrets = new SampleSecrets { Prefix = "keep" }
         };
 
         var values = new Dictionary<string, object?>
@@ -70,7 +70,9 @@ public class PluginConfigBinderTests
     }
 
     private static JsonElement Json(string json)
-        => JsonSerializer.Deserialize<JsonElement>(json);
+    {
+        return JsonSerializer.Deserialize<JsonElement>(json);
+    }
 }
 
 public sealed class Sample

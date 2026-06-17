@@ -4,8 +4,8 @@ using SixLabors.ImageSharp.PixelFormats;
 namespace Moongate.UO.Data.Animations;
 
 /// <summary>
-/// Decodes a single frame from a UO <c>anim.mul</c> body-action-direction block (ARGB1555 palette + RLE)
-/// into an <see cref="Image{Rgba32}" />. Returns <c>null</c> for an out-of-range or empty frame.
+///     Decodes a single frame from a UO <c>anim.mul</c> body-action-direction block (ARGB1555 palette + RLE)
+///     into an <see cref="Image{Rgba32}" />. Returns <c>null</c> for an out-of-range or empty frame.
 /// </summary>
 public static class AnimationFrameDecoder
 {
@@ -13,7 +13,9 @@ public static class AnimationFrameDecoder
     private const int RleTerminator = 0x7FFF7FFF;
 
     public static Image<Rgba32>? Decode(byte[] block, int frame)
-        => DecodeFrame(block, frame)?.Image;
+    {
+        return DecodeFrame(block, frame)?.Image;
+    }
 
     public static DecodedFrame? DecodeFrame(byte[] block, int frame)
     {
@@ -90,13 +92,17 @@ public static class AnimationFrameDecoder
             }
         }
 
-        return new(image, xCenter, yCenter);
+        return new DecodedFrame(image, xCenter, yCenter);
     }
 
     // 5-bit -> 8-bit channel expansion via bit replication, so 0x1F maps to 0xFF (full range).
     private static byte Expand5To8(int value)
-        => (byte)((value << 3) | (value >> 2));
+    {
+        return (byte)((value << 3) | (value >> 2));
+    }
 
     private static Rgba32 FromArgb1555(ushort value)
-        => new(Expand5To8((value >> 10) & 0x1F), Expand5To8((value >> 5) & 0x1F), Expand5To8(value & 0x1F), 255);
+    {
+        return new Rgba32(Expand5To8((value >> 10) & 0x1F), Expand5To8((value >> 5) & 0x1F), Expand5To8(value & 0x1F), 255);
+    }
 }

@@ -3,15 +3,16 @@ using Microsoft.AspNetCore.SignalR;
 using Moongate.Abstractions.Interfaces.Commands;
 using Moongate.Abstractions.Types.Commands;
 using Moongate.Core.Types;
+using Moongate.Server.Data.LiveConsole;
 using Moongate.Server.Interfaces.LiveConsole;
 using Moongate.Server.Types.LiveConsole;
 
 namespace Moongate.Server.Hubs;
 
 /// <summary>
-/// SignalR hub for the live admin console. On connect it sends the recent backlog to the caller;
-/// <see cref="ExecuteCommand" /> runs a command as <see cref="CommandSourceType.Console" /> and
-/// pushes the echo + output into the shared broadcaster (seen by all connected admins).
+///     SignalR hub for the live admin console. On connect it sends the recent backlog to the caller;
+///     <see cref="ExecuteCommand" /> runs a command as <see cref="CommandSourceType.Console" /> and
+///     pushes the echo + output into the shared broadcaster (seen by all connected admins).
 /// </summary>
 [Authorize(Roles = nameof(UserLevelType.Administrator))]
 public sealed class LiveConsoleHub : Hub
@@ -32,9 +33,9 @@ public sealed class LiveConsoleHub : Hub
     }
 
     /// <summary>
-    /// Runs a command as the Console source and streams its echo + output to all admins. A command
-    /// that throws lets the exception surface to the calling admin (other clients are unaffected);
-    /// this is intentional — do not swallow it into a generic failure line.
+    ///     Runs a command as the Console source and streams its echo + output to all admins. A command
+    ///     that throws lets the exception surface to the calling admin (other clients are unaffected);
+    ///     this is intentional — do not swallow it into a generic failure line.
     /// </summary>
     public async Task ExecuteCommand(string line)
     {
@@ -44,7 +45,7 @@ public sealed class LiveConsoleHub : Hub
         }
 
         _broadcaster.Publish(
-            new()
+            new LiveConsoleEntry
             {
                 Kind = LiveConsoleEntryKind.CommandEcho,
                 Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
@@ -57,7 +58,7 @@ public sealed class LiveConsoleHub : Hub
         foreach (var outputLine in output)
         {
             _broadcaster.Publish(
-                new()
+                new LiveConsoleEntry
                 {
                     Kind = LiveConsoleEntryKind.CommandOutput,
                     Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),

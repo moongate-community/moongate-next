@@ -7,7 +7,7 @@ using Moongate.Network.UO.Types.Packets;
 namespace Moongate.Network.UO.Packets.Incoming.Movement;
 
 /// <summary>
-/// Represents a movement request packet.
+///     Represents a movement request packet.
 /// </summary>
 [PacketHandler(OpCodeValue, PacketSizing.Fixed, Length = LengthValue, Description = "Move Request")]
 public class MoveRequestPacket : BaseGameNetworkPacket
@@ -15,14 +15,16 @@ public class MoveRequestPacket : BaseGameNetworkPacket
     private const byte OpCodeValue = 0x02;
     private const int LengthValue = 7;
 
+    public MoveRequestPacket()
+        : base(OpCodeValue, LengthValue)
+    {
+    }
+
     public DirectionType Direction { get; set; }
     public DirectionType WalkDirection => (DirectionType)((byte)Direction & 0x07);
     public bool IsRunning => (Direction & DirectionType.Running) != 0;
     public byte Sequence { get; set; }
     public uint FastWalkKey { get; set; }
-
-    public MoveRequestPacket()
-        : base(OpCodeValue, LengthValue) { }
 
     protected override bool ParsePayload(ref SpanReader reader)
     {

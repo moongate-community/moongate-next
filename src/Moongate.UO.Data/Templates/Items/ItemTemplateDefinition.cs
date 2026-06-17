@@ -5,16 +5,16 @@ using YamlDotNet.Serialization;
 namespace Moongate.UO.Data.Templates.Items;
 
 /// <summary>
-/// Declarative item template loaded from YAML. The <see cref="BaseItem" />
-/// chain is resolved at boot before the template enters the registry, so
-/// registered instances are always fully merged.
+///     Declarative item template loaded from YAML. The <see cref="BaseItem" />
+///     chain is resolved at boot before the template enters the registry, so
+///     registered instances are always fully merged.
 /// </summary>
 public sealed class ItemTemplateDefinition
 {
     /// <summary>
-    /// Param key reserved for the template's <see cref="IsMovable" /> flag on
-    /// created entities: the loader rejects templates declaring it and the
-    /// factory writes it into the entity custom properties.
+    ///     Param key reserved for the template's <see cref="IsMovable" /> flag on
+    ///     created entities: the loader rejects templates declaring it and the
+    ///     factory writes it into the entity custom properties.
     /// </summary>
     public const string ReservedIsMovableParamKey = "is_movable";
 
@@ -53,8 +53,7 @@ public sealed class ItemTemplateDefinition
 
     public ItemTemplateValueDefinition? Value { get; set; }
 
-    [YamlMember(Alias = "contents")]
-    public ItemTemplateContentsDefinition? Contents { get; set; }
+    [YamlMember(Alias = "contents")] public ItemTemplateContentsDefinition? Contents { get; set; }
 
     public UserLevelType Visibility { get; set; }
 

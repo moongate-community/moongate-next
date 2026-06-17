@@ -1,7 +1,7 @@
 namespace Moongate.Abstractions.Interfaces.Config;
 
 /// <summary>
-/// Optional contract for config sections that validate their own values at load time.
+///     Optional contract for config sections that validate their own values at load time.
 /// </summary>
 public interface IValidatableConfig
 {

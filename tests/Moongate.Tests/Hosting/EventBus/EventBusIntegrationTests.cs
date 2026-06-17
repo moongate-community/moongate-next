@@ -18,44 +18,6 @@ public class EventBusIntegrationTests : IDisposable
 
     private string ConfigPath => Path.Combine(_dir, "moongate.yaml");
 
-    private sealed class IntegrationTickHandler : ITickEventHandler<TestTickEvent>
-    {
-        private readonly List<string> _timeline;
-
-        public IntegrationTickHandler(List<string> timeline)
-        {
-            _timeline = timeline;
-        }
-
-        public void Handle(TestTickEvent evt)
-        {
-            lock (_timeline)
-            {
-                _timeline.Add($"tick:Integration:{evt.Value}");
-            }
-        }
-    }
-
-    private sealed class IntegrationAsyncHandler : IAsyncEventHandler<TestAsyncEvent>
-    {
-        private readonly List<string> _timeline;
-
-        public IntegrationAsyncHandler(List<string> timeline)
-        {
-            _timeline = timeline;
-        }
-
-        public Task HandleAsync(TestAsyncEvent evt, CancellationToken cancellationToken)
-        {
-            lock (_timeline)
-            {
-                _timeline.Add($"async:Integration:{evt.Payload}");
-            }
-
-            return Task.CompletedTask;
-        }
-    }
-
     public void Dispose()
     {
         if (Directory.Exists(_dir))
@@ -116,11 +78,50 @@ public class EventBusIntegrationTests : IDisposable
                     break;
                 }
             }
+
             await Task.Delay(10);
         }
 
         await orchestrator.StopAsync(CancellationToken.None);
 
         Assert.Equal(new[] { "tick:Integration:42" }, timeline);
+    }
+
+    private sealed class IntegrationTickHandler : ITickEventHandler<TestTickEvent>
+    {
+        private readonly List<string> _timeline;
+
+        public IntegrationTickHandler(List<string> timeline)
+        {
+            _timeline = timeline;
+        }
+
+        public void Handle(TestTickEvent evt)
+        {
+            lock (_timeline)
+            {
+                _timeline.Add($"tick:Integration:{evt.Value}");
+            }
+        }
+    }
+
+    private sealed class IntegrationAsyncHandler : IAsyncEventHandler<TestAsyncEvent>
+    {
+        private readonly List<string> _timeline;
+
+        public IntegrationAsyncHandler(List<string> timeline)
+        {
+            _timeline = timeline;
+        }
+
+        public Task HandleAsync(TestAsyncEvent evt, CancellationToken cancellationToken)
+        {
+            lock (_timeline)
+            {
+                _timeline.Add($"async:Integration:{evt.Payload}");
+            }
+
+            return Task.CompletedTask;
+        }
     }
 }

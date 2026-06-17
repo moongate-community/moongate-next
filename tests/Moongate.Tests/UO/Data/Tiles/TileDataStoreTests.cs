@@ -31,8 +31,8 @@ public class TileDataStoreTests
         {
             TileDataFixture.Write(
                 dir.FullName,
-                [new(3, (uint)UoTileFlag.Impassable, "grass")],
-                [new(0x0A, (uint)UoTileFlag.Weapon, "dagger", 1, 0, 627, 3, 0, 5)]
+                [new TileDataFixture.LandEntry(3, (uint)UoTileFlag.Impassable, "grass")],
+                [new TileDataFixture.ItemEntry(0x0A, (uint)UoTileFlag.Weapon, "dagger", 1, 0, 627, 3, 0, 5)]
             );
             var store = new TileDataStore(new UoFileResolver(dir.FullName));
 

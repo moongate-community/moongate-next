@@ -5,7 +5,7 @@ using Moongate.UO.Data.Types.Maps;
 namespace Moongate.Server.Interfaces.Services.World;
 
 /// <summary>
-/// Resolves the region that applies at a map location, plus region-derived lookups.
+///     Resolves the region that applies at a map location, plus region-derived lookups.
 /// </summary>
 public interface IRegionResolverService
 {

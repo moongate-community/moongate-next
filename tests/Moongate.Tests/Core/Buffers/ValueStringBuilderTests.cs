@@ -29,10 +29,10 @@ public class ValueStringBuilderTests
     {
         Span<char> buffer = stackalloc char[8];
         using var sb = new ValueStringBuilder(buffer);
-        sb.Append(new('x', 100));
+        sb.Append(new string('x', 100));
 
         Assert.Equal(100, sb.Length);
-        Assert.Equal(new('x', 100), sb.ToString());
+        Assert.Equal(new string('x', 100), sb.ToString());
     }
 
     [Fact]

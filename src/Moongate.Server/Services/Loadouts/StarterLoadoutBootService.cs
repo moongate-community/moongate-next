@@ -7,17 +7,17 @@ using ILogger = Serilog.ILogger;
 namespace Moongate.Server.Services.Loadouts;
 
 /// <summary>
-/// Loads and validates the starter loadout at boot. An invalid loadout file
-/// throws and prevents the server from starting (fail fast); a missing file
-/// only logs a warning and leaves no loadout configured.
+///     Loads and validates the starter loadout at boot. An invalid loadout file
+///     throws and prevents the server from starting (fail fast); a missing file
+///     only logs a warning and leaves no loadout configured.
 /// </summary>
 public sealed class StarterLoadoutBootService : IMoongateService
 {
-    private readonly ILogger _logger = Log.ForContext<StarterLoadoutBootService>();
     private readonly StarterLoadoutYamlLoader _loader;
     private readonly IStarterLoadoutService _loadouts;
-    private readonly IItemTemplateService _templates;
+    private readonly ILogger _logger = Log.ForContext<StarterLoadoutBootService>();
     private readonly IProfessionDataService _professions;
+    private readonly IItemTemplateService _templates;
 
     public StarterLoadoutBootService(
         StarterLoadoutYamlLoader loader,

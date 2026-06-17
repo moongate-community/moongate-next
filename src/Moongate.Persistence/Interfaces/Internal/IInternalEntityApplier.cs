@@ -4,8 +4,8 @@ using Moongate.Persistence.Internal;
 namespace Moongate.Persistence.Interfaces.Internal;
 
 /// <summary>
-/// Type-erased hook implemented by the typed descriptor so the persistence service can apply journal
-/// mutations and capture/load snapshot buckets without knowing the entity/key generic arguments.
+///     Type-erased hook implemented by the typed descriptor so the persistence service can apply journal
+///     mutations and capture/load snapshot buckets without knowing the entity/key generic arguments.
 /// </summary>
 internal interface IInternalEntityApplier
 {

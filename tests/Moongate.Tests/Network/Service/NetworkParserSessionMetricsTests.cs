@@ -26,8 +26,7 @@ public class NetworkParserSessionMetricsTests
 
         for (var t = 0; t < threads; t++)
         {
-            workers[t] = new(
-                () =>
+            workers[t] = new Thread(() =>
                 {
                     for (var i = 0; i < perThread; i++)
                     {

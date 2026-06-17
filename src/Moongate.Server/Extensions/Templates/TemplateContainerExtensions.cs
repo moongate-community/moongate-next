@@ -10,15 +10,15 @@ using Moongate.UO.Data.Interfaces.Tiles;
 namespace Moongate.Server.Extensions.Templates;
 
 /// <summary>
-/// DryIoc-native registration helpers for item template services.
+///     DryIoc-native registration helpers for item template services.
 /// </summary>
 public static class TemplateContainerExtensions
 {
     private const int ItemTemplatesBootPriority = 12;
 
     /// <summary>
-    /// Registers the item template registry, the YAML loader and the
-    /// fail-fast boot service (priority 12: after world data, before network).
+    ///     Registers the item template registry, the YAML loader and the
+    ///     fail-fast boot service (priority 12: after world data, before network).
     /// </summary>
     /// <param name="container">DryIoc container.</param>
     public static IContainer AddMoongateItemTemplates(this IContainer container)

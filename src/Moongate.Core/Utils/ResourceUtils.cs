@@ -4,12 +4,12 @@ using System.Text.RegularExpressions;
 namespace Moongate.Core.Utils;
 
 /// <summary>
-/// Provides utilities for working with embedded resources.
+///     Provides utilities for working with embedded resources.
 /// </summary>
 public static partial class ResourceUtils
 {
     /// <summary>
-    /// Converts a resource name to a file path format.
+    ///     Converts a resource name to a file path format.
     /// </summary>
     /// <param name="resourceName">The resource name to convert.</param>
     /// <param name="baseNamespace">The base namespace to remove.</param>
@@ -39,7 +39,7 @@ public static partial class ResourceUtils
     }
 
     /// <summary>
-    /// Copies all embedded resources from an assembly to a destination directory
+    ///     Copies all embedded resources from an assembly to a destination directory
     /// </summary>
     /// <param name="assembly">The assembly containing the embedded resources</param>
     /// <param name="destinationDirectory">The directory where resources will be copied</param>
@@ -73,7 +73,7 @@ public static partial class ResourceUtils
     }
 
     /// <summary>
-    /// Converts an embedded resource name to a file path format
+    ///     Converts an embedded resource name to a file path format
     /// </summary>
     /// <param name="resourceName">The full embedded resource name</param>
     /// <param name="assemblyPrefix">The assembly prefix to remove from the resource name</param>
@@ -89,7 +89,7 @@ public static partial class ResourceUtils
     }
 
     /// <summary>
-    /// Converts an embedded resource name to a directory path structure
+    ///     Converts an embedded resource name to a directory path structure
     /// </summary>
     /// <param name="resourceName">The embedded resource name (e.g., "Assets.Fonts.DefaultUiFont.ttf")</param>
     /// <param name="baseNamespace">Optional base namespace to remove from the beginning</param>
@@ -129,7 +129,7 @@ public static partial class ResourceUtils
     }
 
     /// <summary>
-    /// Gets an embedded resource as a byte array wrapped in Memory
+    ///     Gets an embedded resource as a byte array wrapped in Memory
     /// </summary>
     /// <param name="assembly">The assembly containing the resource</param>
     /// <param name="resourceName">The full resource name</param>
@@ -146,8 +146,7 @@ public static partial class ResourceUtils
         {
             // Try to find a partial match
             var resourceNames = assembly.GetManifestResourceNames();
-            var matchingResource = resourceNames.FirstOrDefault(
-                n => n.EndsWith(
+            var matchingResource = resourceNames.FirstOrDefault(n => n.EndsWith(
                     resourceName.Replace('/', '.').Replace('\\', '.'),
                     StringComparison.Ordinal
                 )
@@ -169,12 +168,12 @@ public static partial class ResourceUtils
             using var memoryStream = new MemoryStream();
             stream.CopyTo(memoryStream);
 
-            return new(memoryStream.ToArray());
+            return new Memory<byte>(memoryStream.ToArray());
         }
     }
 
     /// <summary>
-    /// Reads the content of an embedded resource as a byte array
+    ///     Reads the content of an embedded resource as a byte array
     /// </summary>
     /// <param name="resourcePath">Resource path (e.g. "Assets/Templates/welcome.scriban")</param>
     /// <param name="assembly">The assembly to search in (if null, uses current assembly)</param>
@@ -222,7 +221,7 @@ public static partial class ResourceUtils
     }
 
     /// <summary>
-    /// Gets a list of all files in a specific embedded directory
+    ///     Gets a list of all files in a specific embedded directory
     /// </summary>
     /// <param name="assembly">The assembly to search in (if null, uses current assembly)</param>
     /// <param name="directoryPath">Directory path to search (e.g. "Assets/Templates")</param>
@@ -257,7 +256,7 @@ public static partial class ResourceUtils
     }
 
     /// <summary>
-    /// Gets a list of all embedded resources that match a given pattern
+    ///     Gets a list of all embedded resources that match a given pattern
     /// </summary>
     /// <param name="assembly">The assembly to search in (if null, uses current assembly)</param>
     /// <param name="directoryPath">Directory path to search (e.g. "Assets.Templates")</param>
@@ -290,7 +289,7 @@ public static partial class ResourceUtils
     }
 
     /// <summary>
-    /// Gets a stream for an embedded resource
+    ///     Gets a stream for an embedded resource
     /// </summary>
     /// <param name="assembly">The assembly containing the resource</param>
     /// <param name="resourceName">The full resource name</param>
@@ -307,8 +306,7 @@ public static partial class ResourceUtils
         {
             // Try to find a partial match
             var resourceNames = assembly.GetManifestResourceNames();
-            var matchingResource = resourceNames.FirstOrDefault(
-                n => n.EndsWith(
+            var matchingResource = resourceNames.FirstOrDefault(n => n.EndsWith(
                     resourceName.Replace('/', '.').Replace('\\', '.'),
                     StringComparison.Ordinal
                 )
@@ -341,8 +339,8 @@ public static partial class ResourceUtils
     }
 
     /// <summary>
-    /// Converts an embedded resource name to a proper file name by extracting the last part after the final dot
-    /// and treating everything before it as directory structure
+    ///     Converts an embedded resource name to a proper file name by extracting the last part after the final dot
+    ///     and treating everything before it as directory structure
     /// </summary>
     /// <param name="resourceName">The embedded resource name (e.g., "Assets.Fonts.DefaultUiFont.ttf")</param>
     /// <returns>The file name with extension (e.g., "DefaultUiFont.ttf")</returns>
@@ -371,7 +369,7 @@ public static partial class ResourceUtils
     }
 
     /// <summary>
-    /// Extracts the file name from an embedded resource path
+    ///     Extracts the file name from an embedded resource path
     /// </summary>
     /// <param name="resourceName">Full resource name</param>
     /// <returns>File name without path</returns>
@@ -385,23 +383,23 @@ public static partial class ResourceUtils
     }
 
     /// <summary>
-    /// Reads the content of an embedded resource as a string.
+    ///     Reads the content of an embedded resource as a string.
     /// </summary>
     /// <param name="resourceName">The name of the resource to read.</param>
     /// <param name="assembly">The assembly containing the resource.</param>
     /// <returns>The content of the resource as a string.</returns>
     /// <exception cref="Exception">Thrown when the resource cannot be found in the specified assembly.</exception>
     /// <remarks>
-    /// This method handles resource names that may contain either forward slashes (/) or
-    /// backslashes (\) by converting them to dots, which is the standard separator for
-    /// resource names in .NET assemblies.
+    ///     This method handles resource names that may contain either forward slashes (/) or
+    ///     backslashes (\) by converting them to dots, which is the standard separator for
+    ///     resource names in .NET assemblies.
     /// </remarks>
     public static string? ReadEmbeddedResource(string resourceName, Assembly assembly)
     {
         var resourcePath = resourceName.Replace('/', '.').Replace('\\', '.');
 
         var fullResourceName = assembly.GetManifestResourceNames()
-                                       .FirstOrDefault(name => name.EndsWith(resourcePath, StringComparison.Ordinal));
+            .FirstOrDefault(name => name.EndsWith(resourcePath, StringComparison.Ordinal));
 
         if (fullResourceName == null)
         {

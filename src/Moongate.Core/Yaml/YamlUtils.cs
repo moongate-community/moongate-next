@@ -8,115 +8,22 @@ using YamlDotNet.Serialization.NamingConventions;
 namespace Moongate.Core.Yaml;
 
 /// <summary>
-/// Provides YAML serialization helpers using Moongate's shared naming and scalar conventions.
+///     Provides YAML serialization helpers using Moongate's shared naming and scalar conventions.
 /// </summary>
 public static class YamlUtils
 {
     private static readonly ISerializer Serializer = new SerializerBuilder()
-                                                     .WithNamingConvention(UnderscoredNamingConvention.Instance)
-                                                     .WithTypeConverter(new TimeSpanYamlConverter())
-                                                     .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitNull)
-                                                     .Build();
+        .WithNamingConvention(UnderscoredNamingConvention.Instance)
+        .WithTypeConverter(new TimeSpanYamlConverter())
+        .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitNull)
+        .Build();
 
     private static readonly IDeserializer Deserializer = new DeserializerBuilder()
-                                                         .WithNamingConvention(UnderscoredNamingConvention.Instance)
-                                                         .WithTypeConverter(new TimeSpanYamlConverter())
-                                                         .WithTypeConverter(new SnakeCaseEnumYamlConverter())
-                                                         .IgnoreUnmatchedProperties()
-                                                         .Build();
-
-    private sealed class TimeSpanYamlConverter : IYamlTypeConverter
-    {
-        public bool Accepts(Type type)
-            => type == typeof(TimeSpan) || type == typeof(TimeSpan?);
-
-        public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
-        {
-            var scalar = parser.Consume<Scalar>();
-
-            if (string.IsNullOrWhiteSpace(scalar.Value) && type == typeof(TimeSpan?))
-            {
-                return null;
-            }
-
-            return DurationParser.Parse(scalar.Value);
-        }
-
-        public void WriteYaml(IEmitter emitter, object? value, Type type, ObjectSerializer serializer)
-        {
-            if (value is null)
-            {
-                emitter.Emit(new Scalar("null"));
-
-                return;
-            }
-
-            emitter.Emit(new Scalar(((TimeSpan)value).ToString("c", CultureInfo.InvariantCulture)));
-        }
-    }
-
-    private sealed class SnakeCaseEnumYamlConverter : IYamlTypeConverter
-    {
-        public bool Accepts(Type type)
-        {
-            var enumType = Nullable.GetUnderlyingType(type) ?? type;
-
-            return enumType.IsEnum;
-        }
-
-        public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
-        {
-            var scalar = parser.Consume<Scalar>();
-            var enumType = Nullable.GetUnderlyingType(type) ?? type;
-
-            if (string.IsNullOrWhiteSpace(scalar.Value) && Nullable.GetUnderlyingType(type) is not null)
-            {
-                return null;
-            }
-
-            if (Enum.TryParse(enumType, scalar.Value, true, out var parsed))
-            {
-                return parsed;
-            }
-
-            foreach (var name in Enum.GetNames(enumType))
-            {
-                if (string.Equals(ToSnakeCase(name), scalar.Value, StringComparison.OrdinalIgnoreCase))
-                {
-                    return Enum.Parse(enumType, name);
-                }
-            }
-
-            throw new YamlException($"Value '{scalar.Value}' is not valid for enum {enumType.Name}.");
-        }
-
-        public void WriteYaml(IEmitter emitter, object? value, Type type, ObjectSerializer serializer)
-            => serializer(value, type);
-
-        private static string ToSnakeCase(string value)
-        {
-            if (string.IsNullOrEmpty(value))
-            {
-                return value;
-            }
-
-            var chars = new List<char>(value.Length + 4);
-
-            for (var index = 0; index < value.Length; index++)
-            {
-                var character = value[index];
-
-                if (index > 0 && char.IsUpper(character))
-                {
-                    chars.Add('_');
-                }
-
-                chars.Add(char.ToLowerInvariant(character));
-            }
-
-            return new(chars.ToArray());
-        }
-    }
+        .WithNamingConvention(UnderscoredNamingConvention.Instance)
+        .WithTypeConverter(new TimeSpanYamlConverter())
+        .WithTypeConverter(new SnakeCaseEnumYamlConverter())
+        .IgnoreUnmatchedProperties()
+        .Build();
 
     /// <summary>Deserializes YAML text into the requested type.</summary>
     /// <param name="yaml">YAML text.</param>
@@ -202,5 +109,102 @@ public static class YamlUtils
         }
 
         File.WriteAllText(normalizedPath, Serialize(obj));
+    }
+
+    private sealed class TimeSpanYamlConverter : IYamlTypeConverter
+    {
+        public bool Accepts(Type type)
+        {
+            return type == typeof(TimeSpan) || type == typeof(TimeSpan?);
+        }
+
+        public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
+        {
+            var scalar = parser.Consume<Scalar>();
+
+            if (string.IsNullOrWhiteSpace(scalar.Value) && type == typeof(TimeSpan?))
+            {
+                return null;
+            }
+
+            return DurationParser.Parse(scalar.Value);
+        }
+
+        public void WriteYaml(IEmitter emitter, object? value, Type type, ObjectSerializer serializer)
+        {
+            if (value is null)
+            {
+                emitter.Emit(new Scalar("null"));
+
+                return;
+            }
+
+            emitter.Emit(new Scalar(((TimeSpan)value).ToString("c", CultureInfo.InvariantCulture)));
+        }
+    }
+
+    private sealed class SnakeCaseEnumYamlConverter : IYamlTypeConverter
+    {
+        public bool Accepts(Type type)
+        {
+            var enumType = Nullable.GetUnderlyingType(type) ?? type;
+
+            return enumType.IsEnum;
+        }
+
+        public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
+        {
+            var scalar = parser.Consume<Scalar>();
+            var enumType = Nullable.GetUnderlyingType(type) ?? type;
+
+            if (string.IsNullOrWhiteSpace(scalar.Value) && Nullable.GetUnderlyingType(type) is not null)
+            {
+                return null;
+            }
+
+            if (Enum.TryParse(enumType, scalar.Value, true, out var parsed))
+            {
+                return parsed;
+            }
+
+            foreach (var name in Enum.GetNames(enumType))
+            {
+                if (string.Equals(ToSnakeCase(name), scalar.Value, StringComparison.OrdinalIgnoreCase))
+                {
+                    return Enum.Parse(enumType, name);
+                }
+            }
+
+            throw new YamlException($"Value '{scalar.Value}' is not valid for enum {enumType.Name}.");
+        }
+
+        public void WriteYaml(IEmitter emitter, object? value, Type type, ObjectSerializer serializer)
+        {
+            serializer(value, type);
+        }
+
+        private static string ToSnakeCase(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return value;
+            }
+
+            var chars = new List<char>(value.Length + 4);
+
+            for (var index = 0; index < value.Length; index++)
+            {
+                var character = value[index];
+
+                if (index > 0 && char.IsUpper(character))
+                {
+                    chars.Add('_');
+                }
+
+                chars.Add(char.ToLowerInvariant(character));
+            }
+
+            return new string(chars.ToArray());
+        }
     }
 }

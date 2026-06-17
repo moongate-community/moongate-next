@@ -48,8 +48,8 @@ using Serilog;
 namespace Moongate.Server.Bootstrap;
 
 /// <summary>
-/// Groups the boot-time DryIoc registrations into ordered, named phases so the boot story reads
-/// top-to-bottom. The registration order is load-bearing (see each phase's remarks); do not reorder.
+///     Groups the boot-time DryIoc registrations into ordered, named phases so the boot story reads
+///     top-to-bottom. The registration order is load-bearing (see each phase's remarks); do not reorder.
 /// </summary>
 internal static class BootstrapRegistrationExtensions
 {
@@ -121,8 +121,8 @@ internal static class BootstrapRegistrationExtensions
     }
 
     /// <summary>
-    /// Logging (incl. the live-console broadcaster + relay), event bus + game loop, seeds, timer wheel and metrics
-    /// providers.
+    ///     Logging (incl. the live-console broadcaster + relay), event bus + game loop, seeds, timer wheel and metrics
+    ///     providers.
     /// </summary>
     public static IContainer AddObservability(this IContainer container)
     {

@@ -1,5 +1,6 @@
 using Moongate.Core.Ids;
 using Moongate.Server.Services.Templates;
+using Moongate.UO.Data.Data;
 using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Templates.Items;
@@ -8,14 +9,14 @@ using Moongate.UO.Data.Types.Properties;
 namespace Moongate.Server.Services.Items;
 
 /// <summary>
-/// Default item factory: maps a resolved item template onto a new persisted
-/// <see cref="ItemEntity" />. Template metadata that has no entity field
-/// (is_movable, params) is written into the entity custom properties.
+///     Default item factory: maps a resolved item template onto a new persisted
+///     <see cref="ItemEntity" />. Template metadata that has no entity field
+///     (is_movable, params) is written into the entity custom properties.
 /// </summary>
 public sealed class ItemFactoryService : IItemFactoryService
 {
-    private readonly IItemTemplateService _templates;
     private readonly IItemService _items;
+    private readonly IItemTemplateService _templates;
 
     public ItemFactoryService(IItemTemplateService templates, IItemService items)
     {
@@ -30,14 +31,18 @@ public sealed class ItemFactoryService : IItemFactoryService
         string templateId,
         CancellationToken cancellationToken = default
     )
-        => CreateInternalAsync(templateId, null, cancellationToken);
+    {
+        return CreateInternalAsync(templateId, null, cancellationToken);
+    }
 
     public ValueTask<ItemEntity> CreateFromTemplateAsync(
         string templateId,
         int amount,
         CancellationToken cancellationToken = default
     )
-        => CreateInternalAsync(templateId, amount, cancellationToken);
+    {
+        return CreateInternalAsync(templateId, amount, cancellationToken);
+    }
 
     internal static int SelectTemplateItemId(ItemTemplateDefinition template, Func<int, int>? nextIndex = null)
     {
@@ -60,8 +65,8 @@ public sealed class ItemFactoryService : IItemFactoryService
         }
 
         return index == 0
-                   ? template.ItemId
-                   : template.GraphicVariants[index - 1].ItemId;
+            ? template.ItemId
+            : template.GraphicVariants[index - 1].ItemId;
     }
 
     private async ValueTask<ItemEntity> CreateInternalAsync(
@@ -102,13 +107,13 @@ public sealed class ItemFactoryService : IItemFactoryService
             item.SellValue = template.Value.EffectiveSell(template.Rarity);
         }
 
-        item.CustomProperties[ItemTemplateDefinitionKeys.TemplateId] = new()
+        item.CustomProperties[ItemTemplateDefinitionKeys.TemplateId] = new CustomProperty
         {
             Type = CustomPropertyType.String,
             StringValue = template.Id
         };
 
-        item.CustomProperties[ItemTemplateDefinition.ReservedIsMovableParamKey] = new()
+        item.CustomProperties[ItemTemplateDefinition.ReservedIsMovableParamKey] = new CustomProperty
         {
             Type = CustomPropertyType.Boolean,
             BooleanValue = template.IsMovable

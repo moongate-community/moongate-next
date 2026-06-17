@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Moongate.Abstractions.Data;
 using Moongate.Abstractions.Types.Metrics;
 using Moongate.Server.Services.EventBus;
 using Moongate.Server.Services.GameLoop;
@@ -52,7 +53,7 @@ public class GameLoopMetricsTests
     private static (EventBusService bus, GameLoopService loop) Build()
     {
         var bus = new EventBusService(new ServiceCollection().BuildServiceProvider());
-        var loop = new GameLoopService(bus, new() { IdleSleepMs = 1 });
+        var loop = new GameLoopService(bus, new GameLoopConfig { IdleSleepMs = 1 });
 
         return (bus, loop);
     }

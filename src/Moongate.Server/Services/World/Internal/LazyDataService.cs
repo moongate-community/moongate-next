@@ -3,7 +3,7 @@ using Moongate.Server.Interfaces.Services.World;
 namespace Moongate.Server.Services.World.Internal;
 
 /// <summary>
-/// Base implementation for world data services that load their backing YAML on demand.
+///     Base implementation for world data services that load their backing YAML on demand.
 /// </summary>
 public abstract class LazyDataService : IDataService
 {
