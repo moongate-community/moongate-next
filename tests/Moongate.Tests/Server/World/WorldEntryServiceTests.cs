@@ -1,3 +1,4 @@
+using Moongate.Core.Geometry;
 using Moongate.Core.Ids;
 using Moongate.Network.UO.Packets.Outgoing.Entity;
 using Moongate.Network.UO.Packets.Outgoing.Login;
@@ -5,7 +6,9 @@ using Moongate.Network.UO.Packets.Outgoing.World;
 using Moongate.Network.UO.Types.Environment;
 using Moongate.Server.Data.Events;
 using Moongate.Server.Data.World;
+using Moongate.Server.Interfaces.Network;
 using Moongate.Server.Interfaces.Services.Items;
+using Moongate.Server.Services.Player;
 using Moongate.Server.Services.World;
 using Moongate.Tests.Support;
 using Moongate.UO.Data.Data.Maps;
@@ -13,6 +16,7 @@ using Moongate.UO.Data.Entities.Items;
 using Moongate.UO.Data.Entities.Mobiles;
 using Moongate.UO.Data.Interfaces.Files;
 using Moongate.UO.Data.Interfaces.Maps;
+using Moongate.UO.Data.Interfaces.Services;
 using Moongate.UO.Data.Maps;
 using Moongate.UO.Data.Types.Items;
 using Moongate.UO.Data.Types.Maps;
@@ -21,6 +25,14 @@ namespace Moongate.Tests.Server.World;
 
 public sealed class WorldEntryServiceTests
 {
+    /// <summary>
+    /// Builds a real InterestManagementService backed by an empty spatial index so existing
+    /// world-entry tests construct the service without altering their assertions (the snapshot
+    /// over an empty index sends nothing).
+    /// </summary>
+    private static InterestManagementService EmptyInterest(IOutgoingPacketQueue outgoing, IItemService items)
+        => new(new WorldSpatialIndex(), outgoing, new PlayerSessionService(), items);
+
     [Fact]
     public async Task EnterWorldAsync_SendsCoreSequence_AndPublishesEvent()
     {
@@ -42,7 +54,7 @@ public sealed class WorldEntryServiceTests
         var contents = new NoopContainerContentService();
         var maps = new FakeMapService();
         var events = new RecordingEventBus();
-        var service = new WorldEntryService(outgoing, items, contents, maps, events, new FakeLightAndTimeService(), new StubRegionResolver(null));
+        var service = new WorldEntryService(outgoing, items, contents, maps, events, new FakeLightAndTimeService(), new StubRegionResolver(null), EmptyInterest(outgoing, items));
 
         await service.EnterWorldAsync(42, mobile, CancellationToken.None);
 
@@ -79,7 +91,8 @@ public sealed class WorldEntryServiceTests
             new FakeMapService(),
             new RecordingEventBus(),
             new FakeLightAndTimeService(),
-            new StubRegionResolver(null)
+            new StubRegionResolver(null),
+            EmptyInterest(outgoing, new MapItemService(Array.Empty<ItemEntity>()))
         );
 
         await service.EnterWorldAsync(42, mobile, CancellationToken.None);
@@ -100,7 +113,8 @@ public sealed class WorldEntryServiceTests
             new FakeMapService(),
             new RecordingEventBus(),
             new FakeLightAndTimeService(),
-            new StubRegionResolver(null)
+            new StubRegionResolver(null),
+            EmptyInterest(outgoing, new MapItemService(Array.Empty<ItemEntity>()))
         );
 
         await service.EnterWorldAsync(42, mobile, CancellationToken.None);
@@ -127,7 +141,8 @@ public sealed class WorldEntryServiceTests
             new FakeMapService(map),
             new RecordingEventBus(),
             new FakeLightAndTimeService(),
-            new StubRegionResolver(null)
+            new StubRegionResolver(null),
+            EmptyInterest(outgoing, new MapItemService(Array.Empty<ItemEntity>()))
         );
 
         await service.EnterWorldAsync(42, mobile, CancellationToken.None);
@@ -151,7 +166,8 @@ public sealed class WorldEntryServiceTests
             new FakeMapService(),
             new RecordingEventBus(),
             new FakeLightAndTimeService(),
-            new StubRegionResolver(region));
+            new StubRegionResolver(region),
+            EmptyInterest(outgoing, new MapItemService(Array.Empty<ItemEntity>())));
 
         await service.EnterWorldAsync(42, mobile, CancellationToken.None);
 
@@ -172,11 +188,52 @@ public sealed class WorldEntryServiceTests
             new FakeMapService(),
             new RecordingEventBus(),
             new FakeLightAndTimeService(),
-            new StubRegionResolver(null));
+            new StubRegionResolver(null),
+            EmptyInterest(outgoing, new MapItemService(Array.Empty<ItemEntity>())));
 
         await service.EnterWorldAsync(42, mobile, CancellationToken.None);
 
         Assert.Empty(outgoing.Sent.Select(s => s.Packet).OfType<SetMusicPacket>());
+    }
+
+    [Fact]
+    public async Task EnterWorld_SendsNearbyMobileViaInterestSnapshot()
+    {
+        const long sid = 42;
+        var now = DateTimeOffset.UnixEpoch;
+
+        var outgoing = new RecordingOutgoingQueue();
+        var items = new MapItemService(Array.Empty<ItemEntity>());
+        var sessions = new PlayerSessionService();
+        var index = new WorldSpatialIndex();
+        var interest = new InterestManagementService(index, outgoing, sessions, items);
+
+        var service = new WorldEntryService(
+            outgoing,
+            items,
+            new NoopContainerContentService(),
+            new FakeMapService(),
+            new RecordingEventBus(),
+            new FakeLightAndTimeService(),
+            new StubRegionResolver(null),
+            interest
+        );
+
+        var viewer = new MobileEntity
+        {
+            Id = new Serial(10), MapId = 0, Location = new Point3D(100, 100, 0), IsPlayer = true
+        };
+        index.AddMobile(viewer);
+
+        var other = new MobileEntity { Id = new Serial(11), MapId = 0, Location = new Point3D(101, 100, 0) };
+        index.AddMobile(other);
+
+        sessions.GetOrCreateConnected(sid, null, now);
+        sessions.EnterWorld(sid, new Serial(900), viewer.Id, now);
+
+        await service.EnterWorldAsync(sid, viewer, CancellationToken.None);
+
+        Assert.Contains(outgoing.Sent, s => s.Packet is MobileIncomingPacket p && p.Mobile.Id == other.Id);
     }
 }
 
