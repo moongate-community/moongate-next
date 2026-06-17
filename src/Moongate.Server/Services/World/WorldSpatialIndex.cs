@@ -123,13 +123,67 @@ public sealed class WorldSpatialIndex : IWorldSpatialIndex
     }
 
     public IReadOnlyList<MobileEntity> GetMobilesInRange(int mapId, Point3D center, int range)
-        => throw new NotImplementedException();
+    {
+        var results = new List<MobileEntity>();
+
+        lock (_sync)
+        {
+            ForEachSectorInRange(mapId, center, range, sector =>
+            {
+                foreach (var mobile in sector.Mobiles.Values)
+                {
+                    if (center.InRange(mobile.Location, range))
+                    {
+                        results.Add(mobile);
+                    }
+                }
+            });
+        }
+
+        return results;
+    }
 
     public IReadOnlyList<MobileEntity> GetPlayersInRange(int mapId, Point3D center, int range)
-        => throw new NotImplementedException();
+    {
+        var results = new List<MobileEntity>();
+
+        lock (_sync)
+        {
+            ForEachSectorInRange(mapId, center, range, sector =>
+            {
+                foreach (var player in sector.Players.Values)
+                {
+                    if (center.InRange(player.Location, range))
+                    {
+                        results.Add(player);
+                    }
+                }
+            });
+        }
+
+        return results;
+    }
 
     public IReadOnlyList<ItemEntity> GetItemsInRange(int mapId, Point3D center, int range)
-        => throw new NotImplementedException();
+    {
+        var results = new List<ItemEntity>();
+
+        lock (_sync)
+        {
+            ForEachSectorInRange(mapId, center, range, sector =>
+            {
+                foreach (var item in sector.Items.Values)
+                {
+                    if (center.InRange(item.Location, range))
+                    {
+                        results.Add(item);
+                    }
+                }
+            });
+        }
+
+        return results;
+    }
 
     private bool RemoveMobileUnsafe(Serial id)
     {
@@ -179,4 +233,23 @@ public sealed class WorldSpatialIndex : IWorldSpatialIndex
 
     private static (int MapId, int SectorX, int SectorY) SectorKey(int mapId, Point3D location)
         => (mapId, location.X >> MapSectorConsts.SectorShift, location.Y >> MapSectorConsts.SectorShift);
+
+    private void ForEachSectorInRange(int mapId, Point3D center, int range, Action<SpatialSector> action)
+    {
+        var minSx = (center.X - range) >> MapSectorConsts.SectorShift;
+        var maxSx = (center.X + range) >> MapSectorConsts.SectorShift;
+        var minSy = (center.Y - range) >> MapSectorConsts.SectorShift;
+        var maxSy = (center.Y + range) >> MapSectorConsts.SectorShift;
+
+        for (var sx = minSx; sx <= maxSx; sx++)
+        {
+            for (var sy = minSy; sy <= maxSy; sy++)
+            {
+                if (_sectors.TryGetValue((mapId, sx, sy), out var sector))
+                {
+                    action(sector);
+                }
+            }
+        }
+    }
 }
