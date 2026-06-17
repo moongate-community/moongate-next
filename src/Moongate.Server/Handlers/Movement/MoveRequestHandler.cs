@@ -98,7 +98,7 @@ public class MoveRequestHandler : PacketHandlerBase<MoveRequestPacket>
             _index.MoveMobile(mobile, newLocation);
             mobile.Direction = packet.Direction;
 
-            EventBus.Publish(new MobileMovedEvent(mobile.Id, mobile.MapId, oldLocation, newLocation, packet.Direction));
+            await EventBus.PublishAsync(new MobileMovedEvent(mobile.Id, mobile.MapId, oldLocation, newLocation, packet.Direction), cancellationToken);
         }
 
         var nextSequence = packet.Sequence + 1;

@@ -4,11 +4,11 @@ using Moongate.Abstractions.Interfaces.Services;
 namespace Moongate.Tests.Support;
 
 /// <summary>
-/// IEventBusService test double that records published tick events for assertions.
+/// IEventBusService test double that records published tick and async events for assertions.
 /// </summary>
 public sealed class RecordingEventBusService : IEventBusService
 {
-    public List<ITickEvent> Published { get; } = [];
+    public List<IMoongateEvent> Published { get; } = [];
 
     public Action<Type, Exception, IMoongateEvent>? OnEventError { get; set; }
 
@@ -23,7 +23,11 @@ public sealed class RecordingEventBusService : IEventBusService
 
     public Task PublishAsync<TEvent>(TEvent evt, CancellationToken cancellationToken = default)
         where TEvent : IAsyncEvent
-        => throw new NotSupportedException();
+    {
+        Published.Add(evt);
+
+        return Task.CompletedTask;
+    }
 
     public Task StartAsync(CancellationToken cancellationToken)
         => throw new NotSupportedException();

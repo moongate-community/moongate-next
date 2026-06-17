@@ -14,4 +14,4 @@ public sealed record MobileMovedEvent(
     Point3D OldLocation,
     Point3D NewLocation,
     DirectionType Direction
-) : ITickEvent;
+) : IAsyncEvent;
